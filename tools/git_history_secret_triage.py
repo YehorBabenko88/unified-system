@@ -43,13 +43,13 @@ def scan_blocks(blocks):
         total += len(block)
         if b"\x00" in block:
             binary = True
-        for part in block.split(b"\n"):
-            line_length += len(part)
+        segments = block.split(b"\n")
+        for segment in segments[:-1]:
+            line_length += len(segment)
             maximum_line = max(maximum_line, line_length)
-            line_length = 0 if part is not block.split(b"\n")[-1] else line_length
-        # Separate line-length pass avoids splitting a blob at 4k or 64k.
-        for line in block.split(b"\n")[:-1]:
-            pass
+            line_length = 0
+        line_length += len(segments[-1])
+        maximum_line = max(maximum_line, line_length)
         window = trailing + block
         for kind, expression in PATTERNS.items():
             if expression.search(window):
