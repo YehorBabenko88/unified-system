@@ -458,6 +458,32 @@ class RetainedRootProcessStateTests(unittest.TestCase):
 
 
 
+
+@unittest.skipUnless(WINDOWS, 'requires native Windows IP Helper ownership table')
+class WindowsKernelTcpOwnershipTests(unittest.TestCase):
+    """Actual local socket; diagnostic kernel table, not a Root grant."""
+
+    def test_owned_ipv4_loopback_listener_has_current_pid(self):
+        import socket
+        from unified_system.runtime_process import _windows_tcp_listener_owner_pids
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as listener:
+            listener.bind(('127.0.0.1', 0))
+            listener.listen(1)
+            port = listener.getsockname()[1]
+            owners = _windows_tcp_listener_owner_pids(port)
+            self.assertIn(os.getpid(), owners)
+        # Port release is not itself proof old process or descendants exited.
+        self.assertIsInstance(owners, tuple)
+
+    def test_reject_unqualified_kernel_port(self):
+        from unified_system.runtime_process import _windows_tcp_listener_owner_pids
+        for bad_port in (0, -1, 65536, None, True, '18766'):
+            with self.subTest(port=bad_port):
+                with self.assertRaisesRegex(ValueError, 'unavailable'):
+                    _windows_tcp_listener_owner_pids(bad_port)
+
+
 @unittest.skipUnless(WINDOWS, 'requires disposable native Windows process identity')
 class WindowsRootProcessExitRaceTests(unittest.TestCase):
     """Exercise native retained process identity without production services.
