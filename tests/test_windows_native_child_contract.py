@@ -621,6 +621,46 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.assertFalse(self.driver._file(self.op).exists())
         self.assertNotIn(self.op, self.driver.children)
 
+    def test_native_nested_child_in_same_job_exits_on_owner_stop(self):
+        import hashlib
+        import time
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import RetainedOsProcessWait, _identity
+
+        secondary = self.worker.with_name('descendant_worker.py')
+        secondary.write_text('import time\\ntime.sleep(30)\\n', encoding='utf-8')
+        self.worker.write_text(
+            'import os, subprocess, sys, time\\n'
+            'p = subprocess.Popen([sys.executable, os.path.join(os.path.dirname(__file__),'
+            ' "descendant_worker.py")], close_fds=True)\\n'
+            'with open(os.environ["JOB_TEST_PID_FILE"], "w") as out:'
+            ' out.write(str(p.pid))\\n'
+            'time.sleep(30)\\n',
+            encoding='utf-8')
+        program = self.driver.programs['market_data']
+        program['file_pins']['job_worker.py'] = hashlib.sha256(
+            self.worker.read_bytes()).hexdigest()
+        program['file_pins']['descendant_worker.py'] = hashlib.sha256(
+            secondary.read_bytes()).hexdigest()
+        pid_file = self.worker.with_name('grandchild.pid')
+        program['env'] = {'JOB_TEST_PID_FILE': str(pid_file)}
+        op = self.driver.start(ModuleSpec('market_data', '1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        child = self.driver.children[op]
+        deadline = time.monotonic() + 5
+        while not pid_file.exists() and time.monotonic() < deadline:
+            time.sleep(.05)
+        self.assertTrue(pid_file.exists(), 'LAB child never spawned a descendant')
+        pid = int(pid_file.read_text())
+        identity = _identity(pid)
+        self.assertIsNotNone(identity)
+        with RetainedOsProcessWait(pid, identity) as witness:
+            self.assertGreaterEqual(child._job.active_process_count(), 2)
+            self.driver.stop(op)
+            self.assertTrue(witness.wait_exited(0))
+        self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
+
     def test_refuse_untrusted_job_attach_even_with_true(self):
         from unified_system.runtime_process import OwnedWindowsJob
         with OwnedWindowsJob() as job:
