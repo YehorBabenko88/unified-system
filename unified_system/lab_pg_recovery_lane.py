@@ -12,6 +12,12 @@ from dataclasses import dataclass
 from threading import Lock
 from .grid_writer_fence_model import ResourceFenceBlocked, _need
 
+# One original C owner object => at most one E recovery dispatcher, including
+# across timeouts and close(wait=False). A process restart/owner replacement
+# requires fresh A/C evidence; there is deliberately no public registry reset.
+_RECOVERY_OWNER_LOCK=Lock()
+_RECOVERY_OWNERS=set()
+
 
 @dataclass(frozen=True)
 class LabPgRecoveryObservation:
@@ -42,6 +48,10 @@ class LabPgRecoveryLane:
               and pg.major == 18 and type(pg.port) is int
               and pg.port != 5432, "LAB_PG_RECOVERY_OWNER_REQUIRED")
         pg._verify_owned()
+        with _RECOVERY_OWNER_LOCK:
+            _need(pg not in _RECOVERY_OWNERS,
+                  "LAB_PG_RECOVERY_OWNER_ALREADY_REGISTERED")
+            _RECOVERY_OWNERS.add(pg)
         self._pg=pg
         self._pool=ThreadPoolExecutor(max_workers=1,
                                       thread_name_prefix="c-lab-pg-recovery")
@@ -122,5 +132,7 @@ class LabPgRecoveryLane:
         with self._lock:
             self._closed=True
             self._poisoned=True
+        # The owner stays registered even after close(); a new dispatcher
+        # for the SAME C owner is forbidden while OS/SQL state is uncertain.
         # shutdown(wait=False) is NOT proof that C finished or PG is safe.
         self._pool.shutdown(wait=False,cancel_futures=True)
