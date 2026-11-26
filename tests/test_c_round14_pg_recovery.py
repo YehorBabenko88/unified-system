@@ -339,6 +339,7 @@ class NativeCRecoveryTests(unittest.TestCase):
         self.assertEqual(read_lab_pending(self.pg, stream_id=stream)["fingerprint"], fp)
         receipt=self._recover(streams=(stream,))
         self.assertEqual(receipt["schema"], "c-isolated-pg18-recovery-diagnostic.v2")
+        self.assertEqual(receipt["wal_recovery"],"CLEAN_SHUTDOWN_ONLY")
         self.assertEqual(receipt["old_backend_pid"], self.old["backend_pid"])
         self.assertIs(receipt["native_admitted"],False)
         self.assertIs(receipt["trading_authorized"],False)
