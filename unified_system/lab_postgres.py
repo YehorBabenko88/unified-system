@@ -294,6 +294,10 @@ class LabPostgres:
         self.sql(f"CREATE DATABASE {self.database}", database='postgres')
         self.sql(f"CREATE ROLE lab_writer LOGIN PASSWORD '{self.passwords['lab_writer']}'")
         self.sql(f"CREATE ROLE lab_reader LOGIN PASSWORD '{self.passwords['lab_reader']}'")
+        # Remove cluster-default PUBLIC access to the two initdb-created
+        # maintenance databases.  This is an isolated LAB cluster only.
+        self.sql("REVOKE CONNECT ON DATABASE postgres FROM PUBLIC", database='postgres')
+        self.sql("REVOKE CONNECT ON DATABASE template1 FROM PUBLIC", database='postgres')
         self.sql("ALTER ROLE lab_reader SET default_transaction_read_only = on")
         self.sql(f"REVOKE CONNECT, TEMPORARY ON DATABASE {self.database} FROM PUBLIC")
         self.sql(f"GRANT CONNECT ON DATABASE {self.database} TO lab_writer, lab_reader")
