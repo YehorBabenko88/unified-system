@@ -82,5 +82,41 @@ class ReconnectLifecycleTests(unittest.TestCase):
         self.assertEqual(seen, ["LS5"])
 
 
+    def test_bounded_long_reconnect_sequence_clears_history(self):
+        class ImmediatePolicy:
+            def __init__(self): self.attempts = []
+            def retryable(self, code): return code == "DISCONNECTED"
+            def delay(self, attempt):
+                self.attempts.append(attempt)
+                return 0
+        marker = object()
+        outcomes = [TransportError("DISCONNECTED") for _ in range(64)] + [marker]
+        transport, seen = self.fake_transport(outcomes)
+        policy = ImmediatePolicy()
+        self.assertIs(transport.connect_with_retry("LS5", deadline=time.monotonic()+2,
+                                                  policy=policy), marker)
+        self.assertEqual(len(seen), 65)
+        self.assertEqual(policy.attempts, list(range(64)))
+        self.assertEqual(transport.retry_counts, {})
+
+    def test_cancel_during_repeated_retry_backoff(self):
+        cancel = threading.Event()
+        class CancelAfterThird:
+            def __init__(self): self.attempts = []
+            def retryable(self, code): return code == "DISCONNECTED"
+            def delay(self, attempt):
+                self.attempts.append(attempt)
+                if attempt == 2: cancel.set()
+                return 0
+        transport, seen = self.fake_transport(
+            [TransportError("DISCONNECTED") for _ in range(5)])
+        policy = CancelAfterThird()
+        with self.assertRaisesRegex(TransportError, "CANCELLED"):
+            transport.connect_with_retry("LS5", deadline=time.monotonic()+2,
+                                         policy=policy, cancel=cancel)
+        self.assertEqual(len(seen), 3)
+        self.assertEqual(policy.attempts, [0, 1, 2])
+
+
 if __name__ == "__main__":
     unittest.main()
