@@ -11,6 +11,7 @@ from threading import Lock
 
 from .grid_writer_fence_model import ResourceFenceBlocked, _need
 from .runtime_process import ProcessDriver
+from .lab_process_extinction import observe_owned_process_extinction
 
 
 class LabRootStopLane:
@@ -58,7 +59,8 @@ class LabRootStopLane:
         _need(type(handle) is str and handle in self._driver.children,
               "LAB_OS_STOP_UNKNOWN_CHILD")
         return await self._run(
-            lambda: self._driver.alive(handle) is False,timeout=timeout)
+            lambda: observe_owned_process_extinction(self._driver, handle),
+            timeout=timeout)
 
     def close(self):
         with self._lock:
