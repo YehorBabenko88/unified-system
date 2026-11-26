@@ -357,7 +357,7 @@ class Connection:
                     if not job['error']:
                         self._emit(job['kind'],job['stream'],job['cls'],job['payload'],deadline=job['deadline'],cancel=job['cancel'],message_id=job['id'])
                 except (OSError,ValueError) as exc:
-                    job['error']='DELIVERY_UNKNOWN';self.close(str(exc))
+                    job['error']='DELIVERY_UNKNOWN';self.close(str(exc),source='SENDER')
                 finally:
                     with self.cv:
                         self.queued_bytes-=len(job['payload']);self.owner.memory.release(len(job['payload']))
