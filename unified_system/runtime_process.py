@@ -137,6 +137,81 @@ def _windows_tcp_listener_owner_pids(port):
     return tuple(sorted(owners))
 
 
+
+def _windows_service_process_roster():
+    """Read-only bounded native SCM service→PID roster; UNKNOWN raises.
+
+    Includes stopped transitions that still retain a PID. No service is
+    started, stopped, reconfigured or treated as Root-owned by this census.
+    PID alone is not an OS incarnation; compare with a retained process
+    handle and executable/creation identity before any lifecycle decision.
+    """
+    if os.name != 'nt':
+        raise ValueError('Windows SCM ownership unavailable')
+    from ctypes import wintypes as w
+
+    class ServiceStatusProcess(ctypes.Structure):
+        _fields_ = [(name, w.DWORD) for name in (
+            'service_type', 'state', 'controls', 'win32_exit',
+            'service_exit', 'checkpoint', 'wait_hint', 'pid', 'flags')]
+
+    class ServiceEntry(ctypes.Structure):
+        _fields_ = [('name', ctypes.c_wchar_p),
+                    ('display_name', ctypes.c_wchar_p),
+                    ('status', ServiceStatusProcess)]
+
+    adv = ctypes.WinDLL('advapi32', use_last_error=True)
+    adv.OpenSCManagerW.argtypes = [ctypes.c_wchar_p, ctypes.c_wchar_p, w.DWORD]
+    adv.OpenSCManagerW.restype = w.HANDLE
+    adv.CloseServiceHandle.argtypes = [w.HANDLE]
+    adv.CloseServiceHandle.restype = w.BOOL
+    adv.EnumServicesStatusExW.argtypes = [
+        w.HANDLE, w.DWORD, w.DWORD, w.DWORD, ctypes.c_void_p,
+        w.DWORD, ctypes.POINTER(w.DWORD), ctypes.POINTER(w.DWORD),
+        ctypes.POINTER(w.DWORD), ctypes.c_wchar_p]
+    adv.EnumServicesStatusExW.restype = w.BOOL
+
+    # SC_MANAGER_ENUMERATE_SERVICE only; never request control/stop rights.
+    scm = adv.OpenSCManagerW(None, None, 0x0004)
+    if not scm:
+        raise ValueError('Windows SCM access unavailable')
+    try:
+        roster = set()
+        resume = w.DWORD(0)
+        allocation = 65536
+        for _ in range(64):
+            if allocation > 2 * 1024 * 1024:
+                raise ValueError('Windows SCM census unbounded')
+            buf = ctypes.create_string_buffer(allocation)
+            need = w.DWORD(0)
+            got = w.DWORD(0)
+            completed = adv.EnumServicesStatusExW(
+                scm, 0, 0x30, 0x3, buf, allocation,
+                ctypes.byref(need), ctypes.byref(got),
+                ctypes.byref(resume), None)
+            err = ctypes.get_last_error() if not completed else 0
+            if not completed and err != 234:  # ERROR_MORE_DATA
+                raise ValueError('Windows SCM census unavailable')
+            if got.value > 4096 or len(roster) + got.value > 4096:
+                raise ValueError('Windows SCM census unbounded')
+            if got.value:
+                entries = (ServiceEntry * got.value).from_buffer(buf)
+                for entry in entries:
+                    if not entry.name or not 0 < entry.status.pid < 2**32:
+                        continue
+                    roster.add((entry.name, int(entry.status.pid)))
+            if completed:
+                return tuple(sorted(roster))
+            if got.value == 0:
+                # No forward progress means the receiving buffer must grow.
+                allocation = max(allocation * 2, int(need.value))
+            elif resume.value == 0:
+                raise ValueError('Windows SCM census pagination uncertain')
+        raise ValueError('Windows SCM census incomplete')
+    finally:
+        adv.CloseServiceHandle(scm)
+
+
 PRIVATE_DATA_CAPABILITY_ENV='UNIFIED_MARKET_DATA_READ_CAPABILITY'
 
 def _public_environment(program):
