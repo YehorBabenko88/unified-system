@@ -724,7 +724,7 @@ class LabPostgres:
                 p_start_ms bigint, p_record jsonb)
             RETURNS void LANGUAGE plpgsql SECURITY DEFINER
             SET search_path = pg_catalog, public AS $
-            DECLARE current_fence lab_writer_fence%ROWTYPE;
+            DECLARE current_fence public.lab_writer_fence%ROWTYPE;
             BEGIN
                 IF session_user <> 'lab_writer' OR p_generation IS NULL
                     OR p_token IS NULL OR p_session IS NULL OR p_instance IS NULL
@@ -779,7 +779,7 @@ class LabPostgres:
         # update state. Caller-supplied quiescence is a LAB test assertion,
         # NOT verified native process evidence and not production authority.
         q = lambda x: "'" + x + "'"
-        self.sql(f"""INSERT INTO lab_writer_fence(
+        result = self.sql(f"""INSERT INTO lab_writer_fence(
             resource,generation,high_water,session_id,instance_id,
             node_incarnation_id,source_sha256,schema_sha256,active)
             VALUES('grid-market-data-primary',{generation},{token},
@@ -799,6 +799,7 @@ class LabPostgres:
               AND EXCLUDED.high_water > lab_writer_fence.high_water
               AND EXCLUDED.generation > lab_writer_fence.generation
             RETURNING generation""")
+        need(result == str(generation), 'LAB_FENCE_CLAIM_REJECTED')
         return True
 
     def fenced_owner_revoke(self):
