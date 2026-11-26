@@ -582,17 +582,24 @@ class LanTransport:
                 if raw is not None:raw.close()
 
     def connect_with_retry(self,peer,*,deadline,cancel=None,policy=None):
+        _need(type(deadline) in (int,float) and math.isfinite(deadline),'DEADLINE')
         policy=policy or ReconnectPolicy();attempt=self.retry_counts.get(peer,0)
         old=self.connections.get(peer)
         if old is not None and time.monotonic()-old.created_at>=60:attempt=0
         while time.monotonic()<deadline:
-            try:return self.connect(peer,deadline=min(deadline,time.monotonic()+5),cancel=cancel)
+            if cancel is not None and cancel.is_set():raise TransportError('CANCELLED')
+            try:
+                connection=self.connect(peer,deadline=min(deadline,time.monotonic()+5),cancel=cancel)
+                self.retry_counts.pop(peer,None)
+                return connection
             except TransportError as exc:
+                if cancel is not None and cancel.is_set():raise TransportError('CANCELLED') from exc
                 if not policy.retryable(str(exc)):raise
                 wait=min(policy.delay(attempt),max(0,deadline-time.monotonic()));attempt+=1;self.retry_counts[peer]=attempt
                 if cancel is not None:
                     if cancel.wait(wait):raise TransportError('CANCELLED')
                 else:time.sleep(wait)
+        if cancel is not None and cancel.is_set():raise TransportError('CANCELLED')
         raise TransportError('DEADLINE')
 
     def close(self):
