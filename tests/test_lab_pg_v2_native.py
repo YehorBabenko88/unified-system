@@ -225,10 +225,15 @@ class NativePg18V2Tests(unittest.TestCase):
         self.assertEqual(canonical(rows[0]), canonical(record))
         self.assertEqual(self.pg.sql("SHOW transaction_read_only",
                                      role="lab_reader"), "on")
-        custody = self.pg.provenance_storage_witness()
-        self.assertFalse(custody["execution_authority"])
-        # The legacy custody witness checks INSERT-only writer. In fenced mode,
-        # direct INSERT is revoked; do not present the old witness as green.
+        # The original custody witness is for the legacy INSERT-only writer.
+        # Fenced mode REVOKES that grant; report it separately and never
+        # misrepresent the old catalogue witness as a success.
+        self.assertEqual(self.pg.sql(
+            "SELECT has_table_privilege('lab_writer',"
+            "'provenance_minutes','INSERT')"), "f")
+        self.assertEqual(self.pg.sql(
+            "SELECT has_table_privilege('lab_reader',"
+            "'provenance_minutes','SELECT')"), "t")
         admission = CurrentLabAdmission(self.grid_sha())
         token = "c"*64
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), read_api.Handler)
