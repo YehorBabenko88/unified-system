@@ -20,7 +20,7 @@ from pathlib import Path
 
 from unified_system.lab_pg_fence import (
     install_lab_fence, claim_lab_fence, revoke_lab_fence, fence_identity,
-    fenced_lab_witness)
+    fenced_lab_witness, revalidate_lab_fence)
 from unified_system.lab_postgres import LabPostgres
 from unified_system.lab_simulation_admission import LabAdmissionRejected
 
@@ -169,6 +169,14 @@ class NativePg18V2Tests(unittest.TestCase):
     def identity(self):
         return tuple(str(uuid.uuid4()) for _ in range(3))
 
+    def lease_identity(self, ids, token):
+        from unified_system.grid_writer_fence_model import WriterLeaseIdentity
+        return WriterLeaseIdentity(
+            owner=_OWNER, namespace=_NAMESPACE,
+            session_id=ids[0], token=token, instance_id=ids[1],
+            node_incarnation_id=ids[2], source_sha256=self.source_sha,
+            schema_sha256=self.schema_sha)
+
     def backend_pid(self, conn):
         with conn.cursor() as cur:
             cur.execute("SELECT pg_backend_pid()")
@@ -197,6 +205,24 @@ class NativePg18V2Tests(unittest.TestCase):
             self.claim(self.writer, 1, 100, self.identity(), quiescent=False)
         identities = self.identity()
         self.assertTrue(self.claim(self.writer, 1, 100, identities))
+        validated = revalidate_lab_fence(
+            self.pg, identity=self.lease_identity(identities, 100),
+            generation=1, backend_pid=self.backend_pid(self.writer))
+        self.assertTrue(validated["db_backend_observed"])
+        self.assertTrue(validated["db_fence_current_at_read"])
+        self.assertFalse(validated["native_writer_admitted"])
+        self.assertFalse(validated["root_consul_admitted"])
+        for wrong in (
+            dict(identity=self.lease_identity(identities, 101),generation=1,
+                 backend_pid=self.backend_pid(self.writer)),
+            dict(identity=self.lease_identity(identities, 100),generation=2,
+                 backend_pid=self.backend_pid(self.writer)),
+            dict(identity=self.lease_identity(identities, 100),generation=1,
+                 backend_pid=self.backend_pid(self.other)),
+        ):
+            with self.assertRaisesRegex(LabAdmissionRejected,
+                                        "LAB_FENCE_REVALIDATION_DENIED"):
+                revalidate_lab_fence(self.pg, **wrong)
         with self.assertRaises(LabAdmissionRejected):
             self.claim(self.other, 2, 101, self.identity())
         write_row(self.writer, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=1, token=100, ids=identities,
@@ -222,6 +248,11 @@ class NativePg18V2Tests(unittest.TestCase):
                       fp="3"*64, content_id="4"*64)
         self.other.rollback()
         self.assertTrue(revoke_lab_fence(self.pg, generation=1, token=100))
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_FENCE_REVALIDATION_DENIED"):
+            revalidate_lab_fence(
+                self.pg, identity=self.lease_identity(identities, 100),
+                generation=1, backend_pid=self.backend_pid(self.writer))
         with self.assertRaises(psycopg.Error):
             write_row(self.writer, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=1, token=100, ids=identities,
                       fp="5"*64, content_id="6"*64)
@@ -234,8 +265,17 @@ class NativePg18V2Tests(unittest.TestCase):
         # Closing the old backend is the deliberate LAB quiescence proof here.
         self.writer.close()
         self.writer = None
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_FENCE_REVALIDATION_DENIED"):
+            revalidate_lab_fence(
+                self.pg, identity=self.lease_identity(identities, 100),
+                generation=1, backend_pid=validated["backend_pid"])
         identities2 = self.identity()
         self.assertTrue(self.claim(self.other, 2, 101, identities2))
+        current = revalidate_lab_fence(
+            self.pg, identity=self.lease_identity(identities2, 101),
+            generation=2, backend_pid=self.backend_pid(self.other))
+        self.assertEqual(current["generation"], 2)
         with self.assertRaises(LabAdmissionRejected):
             self.claim(self.other, 3, 100, self.identity())
         write_row(self.other, source_sha=self.source_sha, schema_sha=self.schema_sha, generation=2, token=101, ids=identities2,
