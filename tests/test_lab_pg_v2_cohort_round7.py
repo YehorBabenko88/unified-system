@@ -505,6 +505,13 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
             commit_verified_lab_cursor(self.pg,**current,**fields(pending))
         clear_verified_lab_pending(self.pg,**current,stream_id=stream)
         self.assertIsNone(read_lab_pending(self.pg,stream_id=stream))
+        # Synthetic lost DELETE ACK: PostgreSQL completed the owner-only
+        # clear, but its caller retries. Refuse the repeated DELETE; verify
+        # checkpoint and absent pending separately before returning READY.
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_PENDING_CLEAR_UNVERIFIED"):
+            clear_verified_lab_pending(self.pg,**current,stream_id=stream)
+        self.assertIsNone(read_lab_pending(self.pg,stream_id=stream))
         self.assertEqual(read_lab_cursor(self.pg,stream_id=stream),
                          pending["start_ms"])
         self.assertEqual(verify_existing_lab_checkpoint(
