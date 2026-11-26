@@ -299,16 +299,17 @@ class NativePg18V2Tests(unittest.TestCase):
 
     def test_32_real_pg_contenders_same_resource_have_one_winner(self):
         from concurrent.futures import ThreadPoolExecutor
+        from queue import Queue
         import threading
 
-        # Real concurrent PostgreSQL backends. A readiness barrier prevents
-        # one contender from closing before other contenders have reached
-        # the DB. Only the PostgreSQL row/CAS serializes authority.
-        contenders = 32
-        ready = threading.Barrier(contenders + 1, timeout=30)
+        # 32 separate live PostgreSQL backends, no application mutex. They
+        # remain alive until the main thread verifies one DB/CAS winner.
+        count = 32
+        ready = threading.Barrier(count + 1, timeout=45)
         release = threading.Event()
+        results = Queue()
 
-        def one_contender(index):
+        def contender(index):
             with self.psycopg.connect(self.pg.dsn("lab_writer")) as conn:
                 with conn.cursor() as cur:
                     cur.execute("SELECT pg_backend_pid()")
@@ -316,36 +317,35 @@ class NativePg18V2Tests(unittest.TestCase):
                 ids = self.identity()
                 ready.wait()
                 try:
-                    admitted = claim_lab_fence(
-                        self.pg, owner=_OWNER, namespace=_NAMESPACE,
-                        generation=1, token=500,
-                        session_id=ids[0], instance_id=ids[1],
-                        node_incarnation_id=ids[2],
-                        source_sha256=self.source_sha,
-                        schema_sha256=self.schema_sha,
-                        backend_pid=pid,
-                        previous_quiescence_verified=True)
-                    if admitted:
-                        receipt = revalidate_lab_fence(
-                            self.pg, identity=self.lease_identity(ids, 500),
-                            generation=1, backend_pid=pid)
-                        if receipt["db_fence_current_at_read"] is not True:
-                            raise AssertionError("DB_WINNER_NOT_CURRENT")
-                    return (index, admitted)
-                except LabAdmissionRejected:
-                    return (index, False)
+                    try:
+                        accepted = claim_lab_fence(
+                            self.pg, owner=_OWNER, namespace=_NAMESPACE,
+                            generation=1, token=500,
+                            session_id=ids[0], instance_id=ids[1],
+                            node_incarnation_id=ids[2],
+                            source_sha256=self.source_sha,
+                            schema_sha256=self.schema_sha,
+                            backend_pid=pid,
+                            previous_quiescence_verified=True)
+                        if accepted:
+                            receipt = revalidate_lab_fence(
+                                self.pg, identity=self.lease_identity(ids, 500),
+                                generation=1, backend_pid=pid)
+                            if receipt["db_fence_current_at_read"] is not True:
+                                raise AssertionError("DB_WINNER_NOT_CURRENT")
+                        results.put((index, accepted))
+                    except LabAdmissionRejected:
+                        results.put((index, False))
                 finally:
-                    # Even denied backends stay alive until the complete
-                    # contender cohort has had a chance to attempt claim.
-                    if not release.wait(60):
+                    if not release.wait(90):
                         raise AssertionError("CONTENDER_RELEASE_TIMEOUT")
 
-        with ThreadPoolExecutor(max_workers=contenders) as pool:
-            futures = [pool.submit(one_contender, i) for i in range(contenders)]
+        with ThreadPoolExecutor(max_workers=count) as pool:
+            futures = [pool.submit(contender, i) for i in range(count)]
             try:
                 ready.wait()
-                results = [f.result(timeout=50) for f in futures]
-                winners = [i for i, admitted in results if admitted is True]
+                outcomes = [results.get(timeout=60) for _ in range(count)]
+                winners = [i for i, admitted in outcomes if admitted is True]
                 self.assertEqual(len(winners), 1)
                 self.assertEqual(self.pg.sql(
                     "SELECT count(*),min(generation),min(token) FROM lab_writer_fence"),
@@ -356,8 +356,8 @@ class NativePg18V2Tests(unittest.TestCase):
                 self.assertFalse(fenced_lab_witness(self.pg)["trading_authorized"])
             finally:
                 release.set()
-                for f in futures:
-                    f.result(timeout=65)
+                for future in futures:
+                    future.result(timeout=90)
 
     def test_native_crash_recovers_fence_high_water_without_old_writer(self):
         ids = self.identity()
