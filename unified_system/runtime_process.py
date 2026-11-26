@@ -426,6 +426,9 @@ class _WindowsNonServiceLabToken:
         a.EqualSid.restype = w.BOOL
         a.CheckTokenMembership.argtypes = [w.HANDLE, ctypes.c_void_p, ctypes.POINTER(w.BOOL)]
         a.CheckTokenMembership.restype = w.BOOL
+        a.DuplicateTokenEx.argtypes = [w.HANDLE, w.DWORD, ctypes.c_void_p,
+                                       ctypes.c_int, ctypes.c_int, ctypes.POINTER(w.HANDLE)]
+        a.DuplicateTokenEx.restype = w.BOOL
         a.ImpersonateLoggedOnUser.argtypes = [w.HANDLE]
         a.ImpersonateLoggedOnUser.restype = w.BOOL
         a.RevertToSelf.restype = w.BOOL
@@ -451,14 +454,11 @@ class _WindowsNonServiceLabToken:
             if not a.ConvertStringSidToSidW('S-1-16-4096', ctypes.byref(low_sid)):
                 raise ValueError('Low Integrity SID unavailable')
             disabled = SidAttributes(admin_sid, 0)
-            enabled_admin = w.BOOL()
-            if not a.CheckTokenMembership(source, admin_sid,
-                                          ctypes.byref(enabled_admin)):
-                raise ValueError('LAB parent Administrators membership unavailable')
+            enabled_admin = self._check_admin_membership(source, admin_sid)
             # LocalService/standard-user tokens may not contain an enabled
             # Administrators SID; no non-existent SID may be forced into
             # CreateRestrictedToken's disabled group list.
-            disable_count = 1 if enabled_admin.value else 0
+            disable_count = 1 if enabled_admin else 0
             disabled_ptr = ctypes.byref(disabled) if disable_count else None
             # DISABLE_MAX_PRIVILEGE only disables rights and could leave
             # re-enableable privileges. DELETE every privilege except the
@@ -502,6 +502,30 @@ class _WindowsNonServiceLabToken:
             if admin_sid: k.LocalFree(admin_sid)
             if low_sid: k.LocalFree(low_sid)
 
+    def _check_admin_membership(self, primary_token, admin_sid):
+        """Check an exact primary token through a temporary impersonation token.
+
+        CheckTokenMembership requires a TokenImpersonation handle: passing a
+        TokenPrimary is invalid on Windows and cannot be treated as a deny.
+        The duplicate is local/read-only and ALWAYS closed.
+        """
+        from ctypes import wintypes as w
+        impersonation = w.HANDLE()
+        # TOKEN_QUERY | TOKEN_IMPERSONATE, SecurityImpersonation=2,
+        # TokenImpersonation=2. No primary token or privilege is replaced.
+        if not self._a.DuplicateTokenEx(
+                primary_token, 0x0008 | 0x0004, None, 2, 2,
+                ctypes.byref(impersonation)):
+            raise ValueError('LAB membership impersonation token unavailable')
+        try:
+            enabled = w.BOOL()
+            if not self._a.CheckTokenMembership(
+                    impersonation, admin_sid, ctypes.byref(enabled)):
+                raise ValueError('LAB token Administrators membership unavailable')
+            return bool(enabled.value)
+        finally:
+            self._k.CloseHandle(impersonation)
+
     def _token_privileges(self, token):
         """Return the exact current Windows TOKEN_PRIVILEGES LUID roster."""
         import struct
@@ -540,10 +564,7 @@ class _WindowsNonServiceLabToken:
                 if not a.ConvertStringSidToSidW('S-1-16-4096', ctypes.byref(low_local)):
                     raise ValueError('LAB integrity SID verification unavailable')
                 low_sid = low_local
-            member = w.BOOL()
-            if not a.CheckTokenMembership(token, admin_sid, ctypes.byref(member)):
-                raise ValueError('LAB token admin membership unavailable')
-            if member.value:
+            if self._check_admin_membership(token, admin_sid):
                 raise ValueError('LAB token retains enabled Administrators group')
             need = w.DWORD(0)
             a.GetTokenInformation(token, 25, None, 0, ctypes.byref(need))
