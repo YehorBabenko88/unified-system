@@ -4,6 +4,13 @@ on:
     paths:
       - 'unified_system/lan_transport.py'
       - 'unified_system/grid_writer_fence_model.py'
+      - 'unified_system/market_data_entry_contract.py'
+      - 'unified_system/lab_release.py'
+      - 'unified_system/lab_runtime.py'
+      - 'unified_system/service_module_runtime.py'
+      - 'unified_system/runtime_process.py'
+      - 'tests/test_e_market_data_v2_entry_inert.py'
+      - 'tests/test_e_root_private_read_capability_inert.py'
       - 'tests/test_grid_writer_fence_model.py'
       - 'tests/test_lan_reconnect_inert.py'
       - 'tests/test_lan_close_inert.py'
@@ -39,3 +46,5 @@ jobs:
         run: python -B -m unittest discover -s tests -p 'test_lan_*_inert.py' -v
       - name: Run Grid writer-fence model regressions (no database or runtime grant)
         run: python -B -m unittest discover -s tests -p test_grid_writer_fence_model.py -v
+      - name: Verify LAB-only Grid v2 entrypoint and private read-capability negatives
+        run: python -B -m unittest discover -s tests -p 'test_e_*_inert.py' -v
