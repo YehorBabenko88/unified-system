@@ -119,9 +119,11 @@ def _snapshot(pg, streams, deadline):
         _remaining(deadline)
         # Post-restart SQL remains diagnostic only. Keep the original C
         # read helpers intact; no dynamic override of the owner object.
-        pending = read_lab_pending(pg, stream_id=stream)
+        pending = read_lab_pending(pg, stream_id=stream,
+                                   timeout=min(120, _remaining(deadline)))
         _remaining(deadline)
-        checkpoint = read_lab_checkpoint(pg, stream_id=stream)
+        checkpoint = read_lab_checkpoint(pg, stream_id=stream,
+                                         timeout=min(120, _remaining(deadline)))
         _remaining(deadline)
         result[stream] = {"pending": pending, "checkpoint": checkpoint}
     return result
@@ -158,7 +160,8 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
         # If E stop-only already completed on this same owner object, do
         # not stop a second time; verify and restart through C only.
         if pg.started is True:
-            need(observe_old_lab_backend(pg, **old) == "STILL_ALIVE",
+            need(observe_old_lab_backend(pg, **old,
+                   timeout=min(120, _remaining(deadline))) == "STILL_ALIVE",
                  "LAB_RECOVERY_OLD_BACKEND_UNVERIFIED")
             need(_fence_state(pg, old, deadline) ==
                  f"{old['generation']}|{old['token']}|t|{old['backend_pid']}",
@@ -168,13 +171,15 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
             need(pg.started is False, "LAB_RECOVERY_UNKNOWN_CLUSTER_STATE")
         _remaining(deadline)
         _restart_stopped(pg, deadline)
-        need(observe_old_lab_backend(pg, **old) == "EXTINCT",
+        need(observe_old_lab_backend(pg, **old,
+             timeout=min(120, _remaining(deadline))) == "EXTINCT",
              "LAB_RECOVERY_BACKEND_NOT_EXTINCT")
         need(_fence_state(pg, old, deadline) in (
             f"{old['generation']}|{old['token']}|t|{old['backend_pid']}",
             f"{old['generation']}|{old['token']}|f|{old['backend_pid']}"),
             "LAB_RECOVERY_HIGH_WATER_CHANGED")
-        custody = fenced_lab_witness(pg)
+        custody = fenced_lab_witness(pg,
+                                    timeout=min(120, _remaining(deadline)))
         need(custody["direct_writer_insert"] is False,
              "LAB_RECOVERY_SQL_FENCE_BYPASS")
         _revoke(pg, old, deadline)
