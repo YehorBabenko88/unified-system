@@ -59,7 +59,10 @@ class PortableContractTests(unittest.TestCase):
         self.assertNotIn('$env:', script.split('Write-Output 1')[0], 'prelude must not trust environment paths')
 
     def test_argv_refuses_relative_or_foreign_executables(self):
-        for exe in ('powershell.exe', str(self.system / 'pwsh.exe'), str(self.system / 'cmd.exe')):
+        for exe in ('powershell.exe', str(self.system / 'pwsh.exe'), str(self.system / 'cmd.exe'),
+                    str(self.system.parent / 'powershell.exe'),
+                    str(self.system / 'untrusted' / 'powershell.exe'),
+                    str(self.system / 'WindowsPowerShell/v1.0/other' / 'powershell.exe')):
             with self.subTest(exe=exe), self.assertRaises(ValueError):
                 service.powershell_argv(exe, 'x')
 
