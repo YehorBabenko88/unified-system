@@ -40,9 +40,10 @@ class SerialOwnerExecutorTests(unittest.IsolatedAsyncioTestCase):
             release.wait(2)
             return "late commit outcome"
         try:
+            task = asyncio.create_task(executor.call(stuck, timeout=.3))
+            self.assertTrue(await asyncio.to_thread(entered.wait, .2))
             with self.assertRaises(asyncio.TimeoutError):
-                await executor.call(stuck, timeout=.02)
-            self.assertTrue(entered.is_set())
+                await task
             self.assertTrue(executor.poisoned)
             with self.assertRaises(ResourceFenceBlocked):
                 await executor.call(lambda: touched.append(1), timeout=1)
