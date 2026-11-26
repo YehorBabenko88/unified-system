@@ -134,7 +134,7 @@ def readonly_metadata(p):
  env=service._environment();env['UNIFIED_SERVICE_MODULE']=str(service.MODULE)
  ps=p['native_tools']['powershell'];need(service._native_hash(ps['path'])==ps['sha256'])
  payload=canonical({'plan':p});need(len(payload)<=32768)
- output,status=service._run([ps['path'],'-NoProfile','-NonInteractive','-EncodedCommand',base64.b64encode(READONLY_BRIDGE.encode('utf-16le')).decode('ascii')],env=env,payload=payload,timeout=60,limit=65536)
+ output,status=service._run(service.powershell_argv(ps['path'],READONLY_BRIDGE),env=env,payload=payload,timeout=60,limit=65536)
  need(type(status) is int and status==0)
  nssm_registry_proof(p)
  value=json.loads(output);need(type(value) is dict and set(value)=={'service_name','service_sid','application','parameters','directory','app_exit','marker','acl_policy','code_acl_sha256','state_acl_sha256'})

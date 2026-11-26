@@ -209,8 +209,7 @@ def publish_owned_reports(context):
 def read_tool_versions(plan):
     tool = plan['native_tools']['powershell']
     need(service._native_hash(tool['path']) == tool['sha256'])
-    output, status = service._run([tool['path'], '-NoProfile', '-NonInteractive', '-Command',
-                                  '$PSVersionTable.PSVersion.ToString()'],
+    output, status = service._run(service.powershell_argv(tool['path'], '$PSVersionTable.PSVersion.ToString()'),
                                  env=service._environment(), timeout=10, limit=8192)
     need(status == 0 and re.fullmatch(r'[0-9]+(?:\.[0-9]+){1,3}', output.strip()) is not None)
     return dict(python=platform.python_version(), powershell=output.strip(), windows=platform.version(),

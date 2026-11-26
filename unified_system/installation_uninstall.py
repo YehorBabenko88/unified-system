@@ -81,7 +81,7 @@ class WindowsRemovalBoundary:
   env=service._environment();env.update(UNIFIED_REMOVAL_MODULE=str(MODULE),UNIFIED_SERVICE_MODULE=str(service.MODULE))
   payload=canonical({'action':action,'plan':p,'proof':record['proof']});need(len(payload)<=65536)
   ps=p['native_tools']['powershell'];need(service._native_hash(ps['path'])==ps['sha256'])
-  raw,status=service._run([ps['path'],'-NoProfile','-NonInteractive','-EncodedCommand',base64.b64encode(code.encode('utf-16le')).decode('ascii')],env=env,payload=payload,timeout=60)
+  raw,status=service._run(service.powershell_argv(ps['path'],code),env=env,payload=payload,timeout=60)
   need(status==0);value=json.loads(raw);need(type(value) is dict and set(value)=={'service'} and value['service'] in ('ABSENT','MARKED_PENDING','PRESENT_REVIEW_REQUIRED'));return value
 
 

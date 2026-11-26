@@ -167,12 +167,13 @@ class FreshCodeRoot:
 
     def _apply(self,operation):
         root=self._owned()
-        env={k:v for k,v in os.environ.items() if k.upper() in
-             {'SYSTEMROOT','WINDIR','SYSTEMDRIVE','TEMP','TMP','USERPROFILE','LOCALAPPDATA','APPDATA','OS'}}
+        from . import installation_service as native  # local: avoids import cycle
+        # Same controlled child contract as every other native PowerShell call:
+        # WinAPI-derived executable (not %SYSTEMROOT%), fixed PATH, no autoload.
+        env=native._environment()
         env.update(UNIFIED_ACL_OWNED_ROOT=str(root),UNIFIED_ACL_OPERATION=operation)
-        powershell=Path(os.environ['SYSTEMROOT'])/'System32/WindowsPowerShell/v1.0/powershell.exe'
-        encoded=base64.b64encode(_SCRIPT.encode('utf-16le')).decode('ascii')
-        result=subprocess.run([str(powershell),'-NoProfile','-NonInteractive','-EncodedCommand',encoded],
+        powershell=native._system_directory()/'WindowsPowerShell/v1.0/powershell.exe'
+        result=subprocess.run(native.powershell_argv(powershell,_SCRIPT),cwd=native.child_directory(),
             env=env,stdin=subprocess.DEVNULL,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=600)
         if result.returncode!=0 or result.stdout.decode('utf-8',errors='replace').strip()!='OWNED_ACL_VERIFIED':
             detail=result.stderr.decode('utf-8',errors='replace')
