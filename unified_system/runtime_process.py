@@ -1176,7 +1176,12 @@ class ProcessDriver:
             state=self.owned_process_state(handle)
             if state not in ('STILL_ALIVE','EXTINCT'):
                 raise ValueError('owned Windows Job root identity unverified')
-            child._job.terminate_owned_tree(child._handle, timeout=5)
+            # A previous bounded attempt may have terminated this Job
+            # before endpoint/SCM verification returned UNKNOWN. Do not
+            # issue a redundant second termination of an empty Job; all
+            # subsequent OS and release checks must still pass.
+            if child._job.active_process_count()!=0:
+                child._job.terminate_owned_tree(child._handle, timeout=5)
             child.wait(timeout=5)
             if self.owned_process_state(handle) != 'EXTINCT':
                 raise ValueError('owned Windows Job root exit unverified')
