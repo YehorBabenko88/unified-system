@@ -152,15 +152,24 @@ class NativeCRecoveryTests(unittest.TestCase):
                 f"WHERE symbol='{symbol}' AND start_ms={start_ms}"),"0")
             # Revoke shares the SAME fence row and fails on lock timeout;
             # it cannot slip past the in-flight writer's FOR UPDATE lock.
-            with self.assertRaisesRegex(LabAdmissionRejected,
-                                         "LAB_PG_SQL_FAILED"):
-                self.pg.sql(
-                    "SET lock_timeout='300ms'; "
-                    "UPDATE public.lab_writer_fence SET active=false "
-                    f"WHERE resource_id='{resource}' "
-                    "AND generation=1 AND token=100 "
-                    "RETURNING generation",
-                    timeout=10)
+            # PostgreSQL sets lock_timeout per statement. A single
+            # independent owner connection attempts the same row while B's
+            # original writer transaction still holds FOR UPDATE.
+            # psycopg's transaction failure must roll back ONLY this
+            # independent connection, not the original writer transaction.
+            with self.psycopg.connect(
+                    self.pg.dsn("lab_owner"),autocommit=True) as revoker:
+                with revoker.cursor() as cursor:
+                    cursor.execute("SET lock_timeout='300ms'")
+                    with self.assertRaisesRegex(
+                            self.psycopg.errors.LockNotAvailable,
+                            "lock timeout"):
+                        cursor.execute(
+                            "UPDATE public.lab_writer_fence "
+                            "SET active=false "
+                            "WHERE resource_id=%s "
+                            "AND generation=1 AND token=100 "
+                            "RETURNING generation",(resource,))
             self.assertEqual(self.pg.sql(
                 "SELECT generation,token,active "
                 "FROM public.lab_writer_fence"),
