@@ -1141,6 +1141,8 @@ class ProcessDriver:
         scm=tuple(x for x in _windows_service_process_roster() if x[1] in historical)
         if listeners or scm:raise ValueError('TCP or SCM ownership unresolved')
         if not child._job._member_history_complete:
+            # Never transform point-in-time Job/SCM/TCP snapshots into a full
+            # historical extinction receipt. Return UNKNOWN/fail-closed.
             raise ValueError('historical Windows SCM process membership unproven')
         if child._job.active_process_count()!=0:
             raise ValueError('Job membership changed')
