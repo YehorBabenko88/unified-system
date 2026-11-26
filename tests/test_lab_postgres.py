@@ -130,6 +130,18 @@ class LabPostgresLifecycle(unittest.TestCase):
         finally:
             pg._marker.write_text(original_marker)
         self.assertEqual(pg.sql('SELECT count(*) FROM provenance_minutes'), '10')
+        # Writer cannot read data, create tables or temporary objects.
+        with self.assertRaises(LabAdmissionRejected):
+            pg.sql('SELECT count(*) FROM provenance_minutes', role='lab_writer')
+        with self.assertRaises(LabAdmissionRejected):
+            pg.sql('CREATE TEMP TABLE writer_temp(x int)', role='lab_writer')
+        with self.assertRaises(LabAdmissionRejected):
+            pg.sql('SET default_transaction_read_only=off; CREATE TEMP TABLE reader_temp(x int)',
+                   role='lab_reader')
+        # Owner-created future tables must not silently become readable.
+        pg.sql('CREATE TABLE lab_private_owner_only(x int)')
+        with self.assertRaises(LabAdmissionRejected):
+            pg.sql('SELECT * FROM lab_private_owner_only', role='lab_reader')
         # Crash without shutdown checkpoint, then WAL recovery.
         pg.sql(insert(11), role='lab_writer')
         pid = pg.crash()
