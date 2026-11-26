@@ -61,13 +61,13 @@ class LabPgRecoveryLane:
     def poisoned(self):
         with self._lock:return self._poisoned
 
-    async def stop_dedicated_cluster(self, *, timeout=30.0):
+    async def stop_dedicated_cluster(self, *, timeout=180.0):
         """Root must reconcile C-owned WAL/fence before any restart/admit.
 
-        On partial stop / timeout, all later actions remain UNKNOWN. Never
+        The approved deadline covers C pg_ctl -w 60 and its bounded 120s\n        subprocess timeout. On partial stop/timeout all later actions remain\n        UNKNOWN. Never
         treat missing pidfile/port by itself as postmaster or backend proof.
         """
-        _need(type(timeout) in (int,float) and 0<timeout<=30,
+        _need(type(timeout) in (int,float) and 120<=timeout<=240,
               "LAB_PG_RECOVERY_TIMEOUT_INVALID")
         with self._lock:
             _need(not self._closed and not self._poisoned and not self._busy,
