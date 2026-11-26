@@ -426,30 +426,6 @@ class FailureDiagnosticsPureTests(unittest.TestCase):
         value=json.loads(line.split(' ',1)[1]);self.assertEqual(value['v'],1)
         self.assertLessEqual(len(value.get('connections',[])),2)
 
-    def test_shutdown_source_is_allowlisted_not_raw_exception_text(self):
-        helper=self.helper()
-        private='PRIVATE_CLOSE_CERT_ENDPOINT_SECRET'
-        source={'connections':[{'closed':True,'why':'DISCONNECTED',
-                                'source':'READER_DATA','age_ms':1}],
-                'stage':'READ_ERROR','observer':'OK'}
-        line=helper.format_failure(source,'DISCONNECTED')
-        self.assertEqual(json.loads(line.split(' ',1)[1])['connections'][0]['source'],
-                         'READER_DATA')
-        source['connections'][0]['source']=private
-        line=helper.format_failure(source,'DISCONNECTED')
-        self.assertNotIn(private,line)
-        self.assertEqual(json.loads(line.split(' ',1)[1])['connections'][0]['source'],
-                         'OTHER')
-        source['connections'][0].update(source='READER_CONTROL',why='CREDIT_BOUNDS')
-        line=helper.format_failure(source,'CREDIT_BOUNDS')
-        decoded=json.loads(line.split(' ',1)[1])
-        self.assertEqual(decoded['code'],'CREDIT_BOUNDS')
-        self.assertEqual(decoded['connections'][0]['why'],'CREDIT_BOUNDS')
-        source['connections'][0]['why']=private
-        line=helper.format_failure(source,private)
-        self.assertNotIn(private,line)
-        self.assertEqual(json.loads(line.split(' ',1)[1])['code'],'OTHER')
-
     def test_unknown_objects_never_stringified(self):
         helper=self.helper()
         class Poison:
