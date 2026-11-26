@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'unified_system/lan_transport.py'
+      - 'unified_system/grid_writer_fence_model.py'
+      - 'tests/test_grid_writer_fence_model.py'
       - 'tests/test_lan_reconnect_inert.py'
       - 'tests/test_lan_close_inert.py'
       - 'tests/test_lan_identity_inert.py'
@@ -35,3 +37,5 @@ jobs:
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - name: Run inert reconnect regressions (no native admission)
         run: python -B -m unittest discover -s tests -p 'test_lan_*_inert.py' -v
+      - name: Run Grid writer-fence model regressions (no database or runtime grant)
+        run: python -B -m unittest discover -s tests -p test_grid_writer_fence_model.py -v
