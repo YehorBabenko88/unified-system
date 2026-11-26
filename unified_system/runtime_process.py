@@ -508,6 +508,37 @@ class _WindowsNonServiceLabToken:
             label = self._MandatoryLabel.from_buffer(buf)
             if not label.label.sid or not a.EqualSid(label.label.sid, low_sid):
                 raise ValueError('LAB token is not Low Integrity')
+            # The restricted LAB token must not retain any enabled privilege
+            # except SeChangeNotifyPrivilege. Validate the REAL token returned
+            # by Windows rather than trusting CreateRestrictedToken's call.
+            import struct
+            class Luid(ctypes.Structure):
+                _fields_ = [('low', w.DWORD), ('high', w.LONG)]
+            a.LookupPrivilegeValueW.argtypes = [
+                w.LPCWSTR, w.LPCWSTR, ctypes.POINTER(Luid)]
+            a.LookupPrivilegeValueW.restype = w.BOOL
+            allowed = Luid()
+            if not a.LookupPrivilegeValueW(None, 'SeChangeNotifyPrivilege',
+                                           ctypes.byref(allowed)):
+                raise ValueError('LAB allowed privilege identity unavailable')
+            priv_size = w.DWORD(0)
+            a.GetTokenInformation(token, 3, None, 0, ctypes.byref(priv_size))
+            if (ctypes.get_last_error() != 122
+                    or not 4 <= priv_size.value <= 8192):
+                raise ValueError('LAB token privileges unavailable')
+            priv_buf = ctypes.create_string_buffer(priv_size.value)
+            if not a.GetTokenInformation(token, 3, priv_buf, priv_size.value,
+                                         ctypes.byref(priv_size)):
+                raise ValueError('LAB token privileges inaccessible')
+            count = struct.unpack_from('<I', priv_buf.raw, 0)[0]
+            if count > 128 or 4 + count * 12 > priv_size.value:
+                raise ValueError('LAB token privilege roster invalid')
+            for index in range(count):
+                low, high_unsigned, attrs = struct.unpack_from(
+                    '<III', priv_buf.raw, 4 + index * 12)
+                high = ctypes.c_int32(high_unsigned).value
+                if attrs & 0x2 and (low, high) != (allowed.low, allowed.high):
+                    raise ValueError('LAB token retained an enabled privilege')
             # Test the *actual* token against local SCM DACL. This does not
             # register, start, stop or alter any service.
             scm = ctypes.WinDLL('advapi32', use_last_error=True)
@@ -658,7 +689,12 @@ class OwnedWindowsJob:
         if self.verify_member(process_handle) is not True:
             raise ValueError('Windows Job membership unverified')
         self._assigned = True
-        self.observe_member_pids()
+        self._k.GetProcessId.argtypes = [w.HANDLE]
+        self._k.GetProcessId.restype = w.DWORD
+        original_pid = int(self._k.GetProcessId(process_handle))
+        members = self.observe_member_pids()
+        if original_pid <= 1 or original_pid not in members:
+            raise ValueError('original suspended process missing from Job roster')
 
     def assign_suspended_child(self, process_handle, *, created_suspended=False):
         # Public adoption is forbidden even if a caller claims CREATE_SUSPENDED.
