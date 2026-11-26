@@ -255,7 +255,7 @@ class ServiceResourceTests(unittest.TestCase):
   command=command.replace(';if($value -cne',';'+phase('UNICODE_END')+'if($value -cne',1)
   command=command.replace('try{$null=[UnifiedStoppedServiceNative]::Run',phase('CAP_BEGIN')+'try{$null=[UnifiedStoppedServiceNative]::Run',1)
   command=command.replace(';if(-not $limited)',';'+phase('CAP_END')+'if(-not $limited)',1)+';'+phase('DONE')
-  result=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env,timeout=30)
+  result=run_phased(service.powershell_argv(service._native_tools()['powershell']['path'],command),env=env,timeout=30,cwd=service.child_directory())
   self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'));self.assertIn(b'DECLARATIONS_COMPILED',result.stdout);self.assertIn(b'UNICODE_AND_OUTPUT_BOUND_VERIFIED',result.stdout)
 
  def test_static_module_no_start_stop_delete_or_policy_bypass(self):
