@@ -113,7 +113,8 @@ def _state(root, pg, old, phase, *, pid=0, os_identity=(),
              and prior.marker == pg._nonce,
              "LAB_RECOVERY_STATE_MISMATCH")
         _STATES[root] = _OwnedRecovery(
-            pg=pg, root=root, marker=pg._nonce, old=_old_tuple(old),
+            pg=pg, root=root, data_identity=prior.data_identity,
+            marker=pg._nonce, old=_old_tuple(old),
             phase=phase,
             old_postmaster_pid=pid or prior.old_postmaster_pid,
             old_os_incarnation=os_identity or prior.old_os_incarnation,
@@ -526,7 +527,9 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
                 prior = _STATES.get(root)
                 if prior is not None and prior.pg is pg and prior.phase == "IN_PROGRESS":
                     _STATES[root] = _OwnedRecovery(
-                        pg=prior.pg, root=prior.root, marker=prior.marker,
+                        pg=prior.pg, root=prior.root,
+                        data_identity=prior.data_identity,
+                        marker=prior.marker,
                         old=prior.old, phase="COMPLETE_DENIED",
                         old_postmaster_pid=prior.old_postmaster_pid,
                         old_os_incarnation=prior.old_os_incarnation,
