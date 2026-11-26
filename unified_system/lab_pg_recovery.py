@@ -86,6 +86,8 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     initial_pid = pg._verify_postmaster()
     need(pg.port != 5432 and pg.port is not None,
          "LAB_RECOVERY_PORT_REJECTED")
+    need(type(pg).__name__ == "LabPostgres",
+         "LAB_RECOVERY_PG_TYPE_INVALID")
     if not isinstance(old, dict):
         raise LabAdmissionRejected("LAB_RECOVERY_OLD_IDENTITY_INVALID")
     keys = ("owner", "namespace", "generation", "token",
@@ -101,13 +103,13 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     # shutdown aborts old SQL transactions rather than relying on a poisoned
     # thread, and PG performs WAL-safe shutdown.
     pg.stop()
-    # Verify against the immutable OS postmaster incarnation recorded by
-    # LabPostgres, not merely a now-reusable numeric PID.
-    need(not pg.started and not pg._pid_is_live(initial_pid),
+    # STOP only provides the LabPostgres lifecycle assertion. The returned
+    # SQL observation is diagnostic and cannot be promoted to a Root receipt.
+    need(not pg.started and not (pg.data / "postmaster.pid").exists(),
          "LAB_RECOVERY_OLD_POSTMASTER_UNVERIFIED")
     need(time.monotonic() < deadline, "LAB_RECOVERY_TIMEOUT")
     pg.start()
-    need(pg.started and pg._verify_postmaster() != initial_pid,
+    need(pg.started and pg._verify_postmaster() > 1,
          "LAB_RECOVERY_POSTMASTER_IDENTITY_UNVERIFIED")
     # No positive RootBackendExtinction issued: this is only C SQL evidence.
     state = observe_old_lab_backend(pg, **old)
