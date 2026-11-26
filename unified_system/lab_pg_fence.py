@@ -292,6 +292,7 @@ def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
         " AND s.backend_start=f.backend_start"
         " AND s.usename='lab_writer'"
         " AND s.datname=current_database()"
+        " AND s.backend_type='client backend'"
         " THEN 1 ELSE 0 END"
         " FROM public.lab_writer_fence f"
         " LEFT JOIN pg_catalog.pg_stat_activity s ON s.pid=f.backend_pid"
