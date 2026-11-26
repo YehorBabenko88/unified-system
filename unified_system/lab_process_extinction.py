@@ -2,13 +2,12 @@
 
 A ProcessDriver.owned_process_state() is the sole tri-state authority; alive() maps identity errors to False and is NOT
 an extinction witness. A process can have disappeared, reused its PID or
-be inaccessible; only an exact owned retained Popen handle, completion wait,
+be inaccessible; only A's original retained process object, completion wait,
 durable process identity and *separate* endpoint ownership census can later
 qualify RootProcessExtinction. This observer returns UNKNOWN unless all
 necessary local process-handle facts are available. No foreign PID is killed.
 """
 from dataclasses import dataclass
-import os
 import subprocess
 
 from .grid_writer_fence_model import ResourceFenceBlocked, _need
@@ -44,7 +43,7 @@ class RootProcessObservation:
 def observe_owned_process_extinction(driver, handle):
     """Read OS state without treating errors or PID reuse as extinction.
 
-    Root's retained Popen handles give a better result than PID existence.
+    Root's original A-owned retained process handles improve on PID existence.
     The returned EXTINCT is *local process-only*, never full listener/descendant
     proof or a RootProcessExtinction grant. That requires A owner review.
     """
@@ -60,7 +59,13 @@ def observe_owned_process_extinction(driver, handle):
         _need(type(pid) is int and pid>1 and created is not None,
               "LAB_PROCESS_OBSERVATION_RECORD_UNQUALIFIED")
         child=driver.children.get(handle)
-        _need(type(child) is subprocess.Popen and child.pid==pid,
+        # A's protected disposable Windows Job launcher retains the genuine
+        # _OwnedWindowsChild, NOT a subprocess.Popen subclass. Accept only
+        # that exact A-owned class from A's canonical module; never accept an
+        # arbitrary duck-typed lookalike or caller-provided PID.
+        from .runtime_process import _OwnedWindowsChild
+        _need(type(child) in (subprocess.Popen, _OwnedWindowsChild)
+              and child.pid==pid,
               "LAB_PROCESS_OBSERVATION_RETAINED_HANDLE_REQUIRED")
     except Exception:
         raise ResourceFenceBlocked(
