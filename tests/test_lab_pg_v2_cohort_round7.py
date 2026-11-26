@@ -293,6 +293,14 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
         saved=commit_verified_lab_cursor(self.pg,**checkpoint)
         self.assertTrue(saved["committed_record_verified"])
         self.assertFalse(saved["contiguous_source_coverage_attested"])
+        from unified_system.lab_pg_checkpoint import verify_existing_lab_checkpoint
+        exact=verify_existing_lab_checkpoint(self.pg,**query,
+                                              stream_id="bybit:BTCUSDT:1m")
+        self.assertEqual(exact["state"],"EXACT_ALREADY_ACKNOWLEDGED")
+        self.assertFalse(exact["native_admitted"])
+        self.assertEqual(verify_existing_lab_checkpoint(
+            self.pg,**dict(query,content_id="b"*64),
+            stream_id="bybit:BTCUSDT:1m")["state"],"UNRESOLVED")
         self.assertTrue(clear_verified_lab_pending(
             self.pg,identity=self.identity,generation=1,
             backend_pid=self.pid(self.primary),
@@ -455,10 +463,22 @@ class Round7OwnedPg18Integrated(unittest.TestCase):
         self.assertEqual(restored["status"],"MATCH")
         self.assertFalse(restored["native_admitted"])
         commit_verified_lab_cursor(self.pg,**current,**fields(pending))
+        from unified_system.lab_pg_checkpoint import verify_existing_lab_checkpoint
+        exact=verify_existing_lab_checkpoint(
+            self.pg,**current,**pending_fields,stream_id=stream)
+        self.assertEqual(exact["state"],"EXACT_ALREADY_ACKNOWLEDGED")
+        self.assertFalse(exact["execution_authority"])
+        # A lost checkpoint ACK is not a second cursor advance.
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    "LAB_CURSOR_CAS_OR_READBACK_DENIED"):
+            commit_verified_lab_cursor(self.pg,**current,**fields(pending))
         clear_verified_lab_pending(self.pg,**current,stream_id=stream)
         self.assertIsNone(read_lab_pending(self.pg,stream_id=stream))
         self.assertEqual(read_lab_cursor(self.pg,stream_id=stream),
                          pending["start_ms"])
+        self.assertEqual(verify_existing_lab_checkpoint(
+            self.pg,**current,**pending_fields,stream_id=stream
+        )["state"],"UNRESOLVED")
         with self.assertRaises(self.psycopg.Error):
             self.adapter(self.primary,identity=self.identity,
                          generation=1,token=100).write(

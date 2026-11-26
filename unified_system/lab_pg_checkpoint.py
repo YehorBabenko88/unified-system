@@ -279,6 +279,99 @@ def read_lab_cursor(pg, *, stream_id):
         raise LabAdmissionRejected("LAB_CURSOR_STATE_INVALID") from exc
     return _integer(value, "LAB_CURSOR_STATE_INVALID", allow_zero=True)
 
+
+def verify_existing_lab_checkpoint(pg, *, identity, generation, backend_pid,
+                                   stream_id, symbol, start_ms,
+                                   fingerprint, content_id):
+    """Read-only LAB reconciliation after an ambiguous checkpoint response.
+
+    This NEVER executes INSERT/UPDATE, advances a cursor or admits a writer.
+    It proves both current C fence/back-end and the exact existing confirmed
+    record before a B caller may request conditional pending clear.
+    """
+    receipt=_verified_scope(pg,identity,generation,backend_pid)
+    stream_id=_stream(stream_id)
+    symbol,start_ms,fingerprint,content_id=_record(
+        symbol,start_ms,fingerprint,content_id)
+    c=_condition(receipt)
+    result=pg.sql(
+        "WITH active AS ("
+        " SELECT f.resource_id FROM public.lab_writer_fence f"
+        " JOIN pg_catalog.pg_stat_activity a ON a.pid=f.backend_pid"
+        f" WHERE {c} FOR SHARE OF f),"
+        " checkpoint AS ("
+        " SELECT k.stream_id FROM public.lab_stream_checkpoint k"
+        " JOIN public.provenance_minutes p"
+        " ON p.fingerprint=k.fingerprint AND p.content_id=k.content_id"
+        " AND p.symbol=k.symbol AND p.start_ms=k.source_start_ms"
+        " AND p.record->>'dataset_fingerprint'=k.fingerprint"
+        f" WHERE k.stream_id='{stream_id}'"
+        f" AND k.symbol='{symbol}'"
+        f" AND k.cursor_value={start_ms}"
+        f" AND k.source_start_ms={start_ms}"
+        f" AND k.fingerprint='{fingerprint}'"
+        f" AND k.content_id='{content_id}'"
+        " AND k.owner=(SELECT f.owner FROM public.lab_writer_fence f"
+        " WHERE f.resource_id='grid-market-data-primary')"
+        " AND k.namespace=(SELECT f.namespace FROM public.lab_writer_fence f"
+        " WHERE f.resource_id='grid-market-data-primary')"
+        " AND k.generation<=(SELECT f.generation"
+        " FROM public.lab_writer_fence f"
+        " WHERE f.resource_id='grid-market-data-primary')"
+        " AND k.token<=(SELECT f.token FROM public.lab_writer_fence f"
+        " WHERE f.resource_id='grid-market-data-primary')"
+        " AND NOT EXISTS (SELECT 1 FROM public.provenance_minutes p_other"
+        " WHERE p_other.symbol=k.symbol"
+        " AND p_other.start_ms=k.source_start_ms"
+        " AND (p_other.fingerprint<>k.fingerprint"
+        " OR p_other.content_id<>k.content_id))),"
+        " relevant_pending AS ("
+        " SELECT q.stream_id FROM public.lab_stream_pending q"
+        f" WHERE q.stream_id='{stream_id}'"
+        f" AND q.symbol='{symbol}'"
+        f" AND q.start_ms={start_ms}"
+        f" AND q.fingerprint='{fingerprint}'"
+        f" AND q.content_id='{content_id}'"
+        " AND q.owner=(SELECT f.owner FROM public.lab_writer_fence f"
+        " WHERE f.resource_id='grid-market-data-primary')"
+        " AND q.namespace=(SELECT f.namespace FROM public.lab_writer_fence f"
+        " WHERE f.resource_id='grid-market-data-primary')"
+        " AND q.source_sha256=(SELECT f.source_sha256"
+        " FROM public.lab_writer_fence f"
+        " WHERE f.resource_id='grid-market-data-primary')"
+        " AND q.schema_sha256=(SELECT f.schema_sha256"
+        " FROM public.lab_writer_fence f"
+        " WHERE f.resource_id='grid-market-data-primary')"
+        " AND q.generation<=(SELECT f.generation"
+        " FROM public.lab_writer_fence f"
+        " WHERE f.resource_id='grid-market-data-primary')"
+        " AND q.token<=(SELECT f.token FROM public.lab_writer_fence f"
+        " WHERE f.resource_id='grid-market-data-primary'))"
+        " SELECT CASE"
+        " WHEN NOT EXISTS (SELECT 1 FROM active) THEN 'DENIED'"
+        " WHEN EXISTS (SELECT 1 FROM checkpoint)"
+        " AND EXISTS (SELECT 1 FROM relevant_pending)"
+        " THEN 'EXACT_ALREADY_ACKNOWLEDGED'"
+        " ELSE 'UNRESOLVED' END"
+    )
+    need(result!="DENIED","LAB_CURSOR_STALE_OWNER")
+    need(result in ("EXACT_ALREADY_ACKNOWLEDGED","UNRESOLVED"),
+         "LAB_CURSOR_EXISTING_ACK_INVALID")
+    return {
+        "schema":"lab-pg-exact-checkpoint-reconciliation.v1",
+        "scope":"ISOLATED_LAB_ONLY",
+        "state":result,
+        "stream_id":stream_id,
+        "start_ms":start_ms,
+        "fingerprint":fingerprint,
+        "content_id":content_id,
+        "native_admitted":False,
+        "execution_authority":False,
+        "trading_authorized":False,
+        "paper_admitted":False,
+    }
+
+
 def read_lab_checkpoint(pg, *, stream_id):
     """Owner diagnostic: confirmed cursor plus immutable source identity."""
     stream_id=_stream(stream_id)
