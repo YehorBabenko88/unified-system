@@ -149,3 +149,31 @@ class LabWriterRevoker:
             _SCHEMA, "REVOKED_VERIFIED" if valid else "PARTIAL_DENIED",
             **stages)
         return self._last
+
+    async def stop_owned_cluster_after_poison(self, recovery_lane, *,
+                                              cluster_timeout=180.0):
+        """Root-only containment fallback; NOT old-backend extinction proof.
+
+        Explicitly invoked after a failed ordered revoke when the prior C
+        SQL executor has an unknown transaction outcome. This never retries
+        its SQL, starts a new generation or issues a B recovery receipt.
+        """
+        from .lab_pg_recovery_lane import (
+            LabPgRecoveryLane, LabPgRecoveryObservation)
+        _need(self._once and self._last is not None
+              and self._last.result == "PARTIAL_DENIED"
+              and self._last.child_stopped is True
+              and self._executor.poisoned is True,
+              "LAB_PG_CONTAINMENT_NOT_REQUIRED")
+        _need(type(recovery_lane) is LabPgRecoveryLane
+              and recovery_lane._pg is self._pg,
+              "LAB_PG_CONTAINMENT_FOREIGN_CLUSTER")
+        result=await recovery_lane.stop_dedicated_cluster(
+            timeout=cluster_timeout)
+        _need(type(result) is LabPgRecoveryObservation
+              and result.state == "UNKNOWN"
+              and result.old_backend_extinct is False
+              and result.durable_fence_verified is False
+              and result.wal_reconciled is False,
+              "LAB_PG_CONTAINMENT_RESULT_INVALID")
+        return result
