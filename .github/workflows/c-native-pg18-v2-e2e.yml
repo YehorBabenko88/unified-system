@@ -46,9 +46,12 @@ jobs:
               raise SystemExit("E_MODEL_PINNED_BLOB_MISMATCH")
           target=Path("unified_system/grid_writer_fence_model.py")
           if target.exists():
-              raise SystemExit("E_MODEL_DUPLICATE_IMPLEMENTATION_DENIED")
-          target.write_bytes(path.read_bytes())
-          print("E_MODEL_IMPORTED_EXACT_BLOB="+blob)
+              if target.read_bytes()!=path.read_bytes():
+                  raise SystemExit("E_MODEL_CONFLICTING_EXISTING_TYPE")
+              print("E_MODEL_ALREADY_PRESENT_EXACT_BLOB="+blob)
+          else:
+              target.write_bytes(path.read_bytes())
+              print("E_MODEL_IMPORTED_EXACT_BLOB="+blob)
           PY
       - name: Checkout exact B canonical v2 wheel source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
