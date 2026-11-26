@@ -274,6 +274,24 @@ class Round14CohortTests(unittest.TestCase):
         self.assertFalse(evidence["integration"]["runtime_changed"])
         self.assertEqual(evidence["code"], "NO_GO")
         self.assertEqual(evidence["production"], "NO_GO")
+        comparisons = evidence["D_actual_proof"]["four_platform_comparison"]
+        self.assertTrue(comparisons["source_file_map_equality_across_four"])
+        self.assertEqual(comparisons["distinct_wheel_sha_count_by_package"],
+                         {"terminan": 4, "math": 4, "market_data_legacy": 4})
+        self.assertEqual(set(comparisons["archive_sha256"]),
+                         {"ubuntu_py311", "ubuntu_py312", "windows_py311", "windows_py312"})
+        self.assertEqual(comparisons["package_sources"]["market_data_legacy"],
+                         "3850995a6c28ed29b05cef4ba067e587d5033453")
+        self.assertNotEqual(comparisons["package_sources"]["market_data_legacy"],
+                            evidence["B_canonical_runtime"]["source"])
+        for platform, value in comparisons["archive_sha256"].items():
+            with self.subTest(platform=platform):
+                self.assertRegex(value, re.compile(r"^[0-9a-f]{64}$"))
+        for package, hashes in comparisons["wheel_sha256"].items():
+            with self.subTest(package=package):
+                self.assertEqual(len(set(hashes.values())), 4)
+        self.assertFalse(comparisons["native_integrated_runtime_admission"])
+
 
 if __name__ == "__main__":
     unittest.main()
