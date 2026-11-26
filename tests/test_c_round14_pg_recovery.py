@@ -452,37 +452,53 @@ class NativeCRecoveryTests(unittest.TestCase):
             "1|100|f")
 
     def test_concurrent_containment_and_restart_denied(self):
-        from threading import Event,Thread
-        entered,release=Event(),Event()
-        original=self.pg.stop
-        errors=[]
-        results=[]
-        def blocking_stop(*args,**kwargs):
+        from threading import Event, Thread
+        entered, release = Event(), Event()
+        original = self.pg.stop
+        contender_errors = []
+        contender_returns = []
+
+        def blocking_stop(*args, **kwargs):
             entered.set()
             if not release.wait(10):
                 raise RuntimeError("LAB_STOP_WORKER_NOT_RELEASED")
-            return original(*args,**kwargs)
-        def worker():
+            return original(*args, **kwargs)
+
+        def contender():
+            if not entered.wait(5):
+                contender_errors.append(
+                    RuntimeError("LAB_COMPETITOR_NO_OWNER"))
+                release.set()
+                return
             try:
-                results.append(contain_exclusive_lab_cluster(
-                    self.pg,old=self.old,quiesced=True,max_seconds=120))
-            except BaseException as error:
-                errors.append(error)
-        self.pg.stop=blocking_stop
-        thread=Thread(target=worker,daemon=True)
-        thread.start()
+                contender_returns.append(self._recover())
+            except BaseException as exc:
+                contender_errors.append(exc)
+            finally:
+                # Unblock the ACTUAL C owner after challenger returns;
+                # the rejected challenger must not poison original state.
+                release.set()
+
+        competing_thread = Thread(target=contender, daemon=True)
+        self.pg.stop = blocking_stop
+        competing_thread.start()
         try:
-            self.assertTrue(entered.wait(5))
-            with self.assertRaisesRegex(
-                    LabAdmissionRejected,"LAB_RECOVERY_STOPPED_OWNER_MISMATCH"):
-                self._recover()
+            # Original physical C worker stays on the same thread as
+            # setUp/tearDown. Only the untrusted contender runs elsewhere.
+            result = contain_exclusive_lab_cluster(
+                self.pg, old=self.old, quiesced=True, max_seconds=120)
         finally:
             release.set()
-            thread.join(90)
-            self.pg.stop=original
-        self.assertFalse(thread.is_alive())
-        self.assertFalse(errors)
-        self.assertEqual(results[0]["state"],"UNKNOWN")
+            competing_thread.join(timeout=15)
+            self.pg.stop = original
+
+        self.assertFalse(competing_thread.is_alive())
+        self.assertEqual(contender_returns, [])
+        self.assertEqual(len(contender_errors), 1)
+        self.assertIsInstance(contender_errors[0], LabAdmissionRejected)
+        self.assertIn("LAB_RECOVERY_RESOURCE_ALREADY_OWNED",
+                      str(contender_errors[0]))
+        self.assertEqual(result["state"], "UNKNOWN")
         self.assertFalse(self._recover()["native_admitted"])
 
     def test_timed_out_stop_poison_blocks_any_restart(self):
