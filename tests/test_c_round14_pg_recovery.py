@@ -67,14 +67,26 @@ class NativeCRecoveryTests(unittest.TestCase):
             previous_quiescence_verified=True))
 
     def cleanup(self):
-        if self.writer is not None:
-            try:
-                self.writer.close()
-            except Exception:
-                pass
         if self.pg is not None:
-            self.pg.stop()
-        if hasattr(self, "root") and (self.pg is None or not self.pg.started):
+            from unified_system import lab_pg_recovery as c
+            # An unmodified, still-live fixture has no C state yet.
+            # Contain/recover it through the SAME original C owner instead
+            # of bypassing the guarded pg.stop() with raw pg_ctl or SIGKILL.
+            if self.pg.started and self.old is not None:
+                root=c._resource(self.pg)
+                if root not in c._STATES:
+                    try:
+                        self._recover()
+                    except LabAdmissionRejected:
+                        # Even a denied recovery records POISONED with the
+                        # exact original C worker/OS lock for safe teardown.
+                        pass
+            c._dispose_native_pg18_fixture(self.pg)
+        if self.writer is not None:
+            self.writer.close()
+        if hasattr(self, "root"):
+            # Never delete a root until C verified its old kernel process,
+            # original lock and loopback listener are extinct.
             shutil.rmtree(self.root)
 
     def _recover(self, **overrides):
