@@ -512,7 +512,10 @@ class LabPostgres:
             else:
                 # Windows native fast-stop remains pg_ctl-managed, with an
                 # independently verified postmaster identity before the call.
-                subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-m', 'fast', '-w', '-t', '60', 'stop'],
-                               capture_output=True, timeout=120, env=self._env('lab_owner'))
+                subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data),
+                                '-m', 'fast', '-w', '-t',
+                                str(max(1, min(60, int(timeout)-1))), 'stop'],
+                               capture_output=True, timeout=timeout,
+                               env=self._env('lab_owner'))
         need(not (self.data / 'postmaster.pid').exists(), 'LAB_PG_STOP_FAILED')
         self.started = False
