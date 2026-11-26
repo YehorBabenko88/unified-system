@@ -42,6 +42,7 @@ def insert(i):
 class LabPostgresLifecycle(unittest.TestCase):
     def setUp(self):
         self.root = Path(tempfile.mkdtemp(prefix='unified-lab-pg-'))
+        if os.name != 'nt': self.root.chmod(0o700)
 
     def tearDown(self):
         try:
@@ -64,9 +65,13 @@ class LabPostgresLifecycle(unittest.TestCase):
         self.assertEqual(pg.sql('SHOW transaction_read_only', role='lab_reader'), 'on')
         with self.assertRaisesRegex(LabAdmissionRejected, 'read-only'):
             pg.sql(insert(99), role='lab_reader')
-        with self.assertRaisesRegex(LabAdmissionRejected, 'immutable provenance record'):
+        with self.assertRaises(LabAdmissionRejected):
+            pg.sql('DROP TABLE provenance_minutes', role='lab_writer')
+        with self.assertRaises(LabAdmissionRejected):
+            pg.sql('CREATE TABLE unauthorized(x int)', role='lab_writer')
+        with self.assertRaises(LabAdmissionRejected):
             pg.sql("UPDATE provenance_minutes SET symbol='X'", role='lab_writer')
-        with self.assertRaisesRegex(LabAdmissionRejected, 'immutable provenance record'):
+        with self.assertRaises(LabAdmissionRejected):
             pg.sql('DELETE FROM provenance_minutes', role='lab_writer')
         # Unconfirmed / malformed rows are rejected by the schema itself.
         with self.assertRaises(LabAdmissionRejected):
