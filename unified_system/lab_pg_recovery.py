@@ -585,6 +585,8 @@ def _revoke(pg, old, deadline):
         " WHERE resource_id='grid-market-data-primary'"
         f" AND owner='{old['owner']}' AND namespace='{old['namespace']}'"
         f" AND generation={old['generation']} AND token={old['token']}"
+        f" AND backend_pid={old['backend_pid']}"
+        f" AND backend_start='{datetime.fromisoformat(old['backend_start'].replace('Z', '+00:00')).isoformat()}'::timestamptz"
         " AND active=true RETURNING generation"
     )
     try:
