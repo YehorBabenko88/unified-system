@@ -268,6 +268,31 @@ class NativeCRecoveryTests(unittest.TestCase):
         with self.assertRaises(LabAdmissionRejected):
             self._recover()
 
+    def test_c_backend_start_exact_fence_binding_and_revocation(self):
+        from datetime import datetime
+        from unified_system.grid_writer_fence_model import WriterLeaseIdentity
+        from unified_system.lab_pg_fence import revalidate_lab_fence
+        identity=WriterLeaseIdentity(
+            owner="unified-system",namespace="unified/lab",
+            session_id=self.ids[0],token=100,
+            instance_id=self.ids[1],node_incarnation_id=self.ids[2],
+            source_sha256=self.source,schema_sha256=self.schema)
+        receipt=revalidate_lab_fence(
+            self.pg,identity=identity,generation=1,
+            backend_pid=self.old["backend_pid"])
+        self.assertFalse(receipt["native_writer_admitted"])
+        self.assertFalse(receipt["root_consul_admitted"])
+        self.assertEqual(
+            datetime.fromisoformat(receipt["backend_start"]),
+            datetime.fromisoformat(
+                self.old["backend_start"].replace(" ","T")))
+        self.assertEqual(receipt["backend_pid"],self.old["backend_pid"])
+        self._recover()
+        with self.assertRaises(LabAdmissionRejected):
+            revalidate_lab_fence(
+                self.pg,identity=identity,generation=1,
+                backend_pid=self.old["backend_pid"])
+
     def test_native_power_loss_wal_replay_with_immutable_pending_checkpoint(self):
         from unittest.mock import patch
         stream="bybit:BTCUSDT:1m"
