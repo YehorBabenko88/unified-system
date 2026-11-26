@@ -34,6 +34,21 @@ class RootRecoveryContractTests(unittest.TestCase):
                 "unified.root-lab-pg-recovery-observation.v1",
                 "UNKNOWN","14321",isolated_cluster_stopped=True)
 
+    def test_cannot_forge_full_sql_backend_recovery(self):
+        with self.assertRaises(ResourceFenceBlocked):
+            LabPgRecoveryObservation(
+                "unified.root-lab-pg-recovery-observation.v1",
+                "EXTINCT",14321,isolated_cluster_stopped=True,
+                old_backend_extinct=True,durable_fence_verified=True,
+                wal_reconciled=True)
+
+    def test_cannot_forge_tcp_listener_proof(self):
+        with self.assertRaises(ResourceFenceBlocked):
+            RootProcessObservation(
+                "unified.root-process-observation.v1",
+                EXTINCT,"op",4321,["stamp","image"],
+                "FORGED",listener_owner_verified=True)
+
     def test_fabricated_pid_only_stop_is_not_owner(self):
         with self.assertRaises((ResourceFenceBlocked,ImportError,ModuleNotFoundError)):
             LabPgRecoveryLane(SimpleNamespace(
