@@ -190,6 +190,66 @@ class NativePg18V2Tests(unittest.TestCase):
             schema_sha256=self.schema_sha, backend_pid=self.backend_pid(conn),
             previous_quiescence_verified=quiescent)
 
+
+    def _old_backend_start(self):
+        pid = self.backend_pid(self.writer)
+        return self.pg.sql(
+            "SELECT backend_start FROM pg_catalog.pg_stat_activity "
+            f"WHERE pid={pid}")
+
+    def test_old_lab_backend_exact_owner_termination_and_no_implicit_promotion(self):
+        from unified_system.lab_pg_fence import (
+            observe_old_lab_backend, terminate_old_lab_backend)
+        ids = self.identity()
+        self.assertTrue(self.claim(self.writer, 1, 100, ids))
+        pid = self.backend_pid(self.writer)
+        start = self._old_backend_start()
+        kwargs = dict(owner=_OWNER, namespace=_NAMESPACE, generation=1,
+                      token=100, backend_pid=pid, backend_start=start)
+        self.assertEqual(observe_old_lab_backend(self.pg, **kwargs), "STILL_ALIVE")
+        self.assertEqual(observe_old_lab_backend(
+            self.pg, **dict(kwargs, token=101)), "UNKNOWN")
+        self.assertEqual(terminate_old_lab_backend(
+            self.pg, **dict(kwargs, token=101)), "UNKNOWN")
+        self.assertEqual(observe_old_lab_backend(self.pg, **kwargs), "STILL_ALIVE")
+        # Owner-only backend termination MUST NOT imply native admission.
+        self.assertEqual(terminate_old_lab_backend(self.pg, **kwargs), "EXTINCT")
+        self.assertEqual(observe_old_lab_backend(self.pg, **kwargs), "EXTINCT")
+        with self.assertRaisesRegex(LabAdmissionRejected, "LAB_FENCE_CLAIM_DENIED"):
+            self.claim(self.other, 2, 101, self.identity())
+        self.assertTrue(revoke_lab_fence(self.pg, generation=1, token=100))
+        self.assertTrue(self.claim(self.other, 2, 101, self.identity()))
+        # Stale session is unusable, even if its connection object remains.
+        with self.assertRaises(self.psycopg.OperationalError):
+            with self.writer.cursor() as cur:
+                cur.execute("SELECT 1")
+        self.writer.close()
+        self.writer = None
+
+    def test_old_lab_backend_foreign_identity_and_access_errors_fail_closed(self):
+        from unified_system.lab_pg_fence import (
+            observe_old_lab_backend, terminate_old_lab_backend)
+        ids = self.identity()
+        self.claim(self.writer, 1, 100, ids)
+        pid = self.backend_pid(self.writer)
+        start = self._old_backend_start()
+        args = dict(owner=_OWNER, namespace=_NAMESPACE, generation=1,
+                    token=100, backend_pid=pid, backend_start=start)
+        for changed in (dict(owner="foreign-owner"),
+                        dict(namespace="foreign/lab"),
+                        dict(generation=2), dict(token=101),
+                        dict(backend_start="2024-01-01T00:00:00+00:00"),
+                        dict(backend_pid=self.backend_pid(self.other))):
+            with self.subTest(changed=changed):
+                self.assertEqual(terminate_old_lab_backend(
+                    self.pg, **dict(args, **changed)), "UNKNOWN")
+                self.assertEqual(observe_old_lab_backend(
+                    self.pg, **args), "STILL_ALIVE")
+        # A live unrelated lab_writer backend must never be terminated.
+        with self.other.cursor() as cur:
+            cur.execute("SELECT 1")
+            self.assertEqual(cur.fetchone()[0], 1)
+        self.other.rollback()
     def test_two_real_db_backends_fence_stale_writer_and_direct_insert(self):
         import psycopg
         self.assertEqual(fence_identity()["native_admission"], False)
