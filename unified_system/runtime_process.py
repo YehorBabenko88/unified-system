@@ -83,6 +83,60 @@ def _identity(pid):
     except (FileNotFoundError,ProcessLookupError):return None
 
 
+
+def _windows_tcp_listener_owner_pids(port):
+    """Read ALL IPv4/IPv6 Windows TCP LISTEN owners; never an admission grant.
+
+    Return a bounded snapshot of kernel owning PIDs for the exact local TCP
+    port, including wildcard binds. This is read-only: an empty snapshot is
+    not durable proof of a departed child, descendants or a future bind.
+    Any API error, buffer race or unsupported platform is UNKNOWN via error.
+    """
+    if os.name != 'nt' or type(port) is not int or not 1 <= port <= 65535:
+        raise ValueError('kernel TCP ownership unavailable')
+    import struct
+    from ctypes import wintypes as w
+    api = ctypes.WinDLL('iphlpapi', use_last_error=True)
+    api.GetExtendedTcpTable.argtypes = [
+        ctypes.c_void_p, ctypes.POINTER(w.DWORD), w.BOOL,
+        w.ULONG, w.ULONG, w.ULONG]
+    api.GetExtendedTcpTable.restype = w.ULONG
+    owners = set()
+    # TABLE_OWNER_PID_LISTENER = 3, MIB_TCP_STATE_LISTEN = 2.
+    for family, row_size, state_offset, port_offset, pid_offset in (
+            (2, 24, 0, 8, 20), (23, 56, 48, 20, 52)):
+        size = w.DWORD(0)
+        result = api.GetExtendedTcpTable(None, ctypes.byref(size),
+                                         False, family, 3, 0)
+        if result not in (0, 122):  # ERROR_INSUFFICIENT_BUFFER
+            raise ValueError('kernel TCP owner census unavailable')
+        for _ in range(4):
+            if not 4 <= size.value <= 2 * 1024 * 1024:
+                raise ValueError('kernel TCP owner census unbounded')
+            buffer = ctypes.create_string_buffer(size.value)
+            result = api.GetExtendedTcpTable(buffer, ctypes.byref(size),
+                                             False, family, 3, 0)
+            if result == 0:
+                raw = buffer.raw
+                count = struct.unpack_from('<I', raw, 0)[0]
+                if count > 32768 or 4 + count * row_size > len(raw):
+                    raise ValueError('kernel TCP owner census malformed')
+                for index in range(count):
+                    offset = 4 + index * row_size
+                    state = struct.unpack_from('<I', raw, offset + state_offset)[0]
+                    local_port = struct.unpack_from('<I', raw, offset + port_offset)[0]
+                    owning_pid = struct.unpack_from('<I', raw, offset + pid_offset)[0]
+                    if (state == 2 and socket.ntohs(local_port & 65535) == port
+                            and owning_pid > 0):
+                        owners.add(owning_pid)
+                break
+            if result != 122:
+                raise ValueError('kernel TCP owner census failed')
+        else:
+            raise ValueError('kernel TCP owner census raced')
+    return tuple(sorted(owners))
+
+
 PRIVATE_DATA_CAPABILITY_ENV='UNIFIED_MARKET_DATA_READ_CAPABILITY'
 
 def _public_environment(program):
