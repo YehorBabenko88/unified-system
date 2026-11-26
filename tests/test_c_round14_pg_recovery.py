@@ -120,6 +120,75 @@ class NativeCRecoveryTests(unittest.TestCase):
                 MaliciousPg(), old=self.old,
                 quiesced=True, max_seconds=180)
 
+    def test_native_sql_commit_linearizes_before_fence_revoke(self):
+        # Actual PostgreSQL18 row lock, not a fake E operation permit.
+        # A B-owned write that already holds FOR UPDATE either commits
+        # before C owner SQL revoke, or it is rejected by the SQL fence.
+        # Remote Consul lease expiry is NOT covered by this SQL-only test.
+        import json
+        from unified_system.lab_simulation_admission import LabAdmissionRejected
+        resource="grid-market-data-primary"
+        symbol="BTCUSDT"
+        start_ms=900000
+        fingerprint="f"*64
+        content_id="e"*64
+        record=json.dumps({"dataset_fingerprint":fingerprint})
+        query=(
+            "SELECT public.lab_fenced_insert("
+            "%s::text,%s::text,%s::bigint,%s::bigint,"
+            "%s::uuid,%s::uuid,%s::uuid,"
+            "%s::text,%s::text,%s::text,%s::text,%s::text,"
+            "%s::bigint,%s::jsonb)"
+        )
+        args=(self.old["owner"],self.old["namespace"],1,100,
+              *self.ids,self.source,self.schema,
+              fingerprint,content_id,symbol,start_ms,record)
+        with self.writer.transaction():
+            with self.writer.cursor() as cursor:
+                cursor.execute(query,args)
+            # A new owner SQL session must not observe uncommitted rows.
+            self.assertEqual(self.pg.sql(
+                "SELECT count(*) FROM public.provenance_minutes "
+                f"WHERE symbol='{symbol}' AND start_ms={start_ms}"),"0")
+            # Revoke shares the SAME fence row and fails on lock timeout;
+            # it cannot slip past the in-flight writer's FOR UPDATE lock.
+            with self.assertRaisesRegex(LabAdmissionRejected,
+                                         "LAB_PG_SQL_FAILED"):
+                self.pg.sql(
+                    "SET LOCAL lock_timeout='300ms'; "
+                    "UPDATE public.lab_writer_fence SET active=false "
+                    f"WHERE resource_id='{resource}' "
+                    "AND generation=1 AND token=100 "
+                    "RETURNING generation",
+                    timeout=10)
+            self.assertEqual(self.pg.sql(
+                "SELECT generation,token,active "
+                "FROM public.lab_writer_fence"),
+                "1|100|t")
+        # Exiting the original writer transaction is the commit boundary.
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*) FROM public.provenance_minutes "
+            f"WHERE symbol='{symbol}' AND start_ms={start_ms}"),"1")
+        self.assertEqual(self.pg.sql(
+            "UPDATE public.lab_writer_fence SET active=false "
+            f"WHERE resource_id='{resource}' "
+            f"AND owner='{self.old['owner']}' "
+            f"AND namespace='{self.old['namespace']}' "
+            "AND generation=1 AND token=100 "
+            f"AND backend_pid={self.old['backend_pid']} "
+            f"AND backend_start='{self.old['backend_start']}'::timestamptz "
+            "AND active=true RETURNING generation"),"1")
+        self.assertEqual(self.pg.sql(
+            "SELECT generation,token,active "
+            "FROM public.lab_writer_fence"),"1|100|f")
+        with self.assertRaises(self.psycopg.Error):
+            with self.writer.cursor() as cursor:
+                cursor.execute(query,(*args[:-3],
+                                     "d"*64,symbol,start_ms+60000,record))
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*) FROM public.provenance_minutes "
+            f"WHERE symbol='{symbol}'"),"1")
+
     def test_initialization_failure_keeps_kernel_lock_until_safe_abort(self):
         # Real native OS file lock, fault injected BEFORE the initdb child is
         # launched. This is not a simulated WAL-replay or power-loss test.
