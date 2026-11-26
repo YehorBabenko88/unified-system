@@ -66,6 +66,13 @@ class PortableContractTests(unittest.TestCase):
             with self.subTest(exe=exe), self.assertRaises(ValueError):
                 service.powershell_argv(exe, 'x')
 
+    def test_argv_rejects_lookalike_same_basename_outside_system_directory(self):
+        accepted = str(self.system / 'WindowsPowerShell/v1.0/powershell.exe')
+        for root in (self.system.parent, self.system / 'Wbem', self.system / 'untrusted'):
+            with self.subTest(root=str(root)), self.assertRaises(ValueError):
+                service.powershell_argv(str(root / 'powershell.exe'), 'Write-Output 1')
+        self.assertEqual(service.powershell_argv(accepted, 'Write-Output 1')[0], accepted)
+
     def test_run_uses_system_directory_as_working_directory(self):
         seen = {}
 
