@@ -11,6 +11,8 @@ from .lab_simulation_admission import LabAdmissionRejected, need
 
 _SHA64 = re.compile(r"[0-9a-f]{64}\Z")
 _RESOURCE = "grid-market-data-primary"
+_OWNER_PATTERN = re.compile(r"[A-Za-z0-9_.:-]{1,128}\Z")
+_NAMESPACE_PATTERN = re.compile(r"[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*\Z")
 _SIGNATURE = ("bigint,bigint,uuid,uuid,uuid,text,text,"
               "text,text,text,bigint,jsonb")
 
@@ -22,6 +24,14 @@ def _id(value):
         raise LabAdmissionRejected("LAB_FENCE_ID_INVALID") from exc
     need(str(parsed) == value and parsed.version == 4, "LAB_FENCE_ID_INVALID")
     return value
+
+def _scope(owner, namespace):
+    need(type(owner) is str and _OWNER_PATTERN.fullmatch(owner) is not None,
+         "LAB_FENCE_OWNER_INVALID")
+    need(type(namespace) is str and len(namespace) <= 200
+         and _NAMESPACE_PATTERN.fullmatch(namespace) is not None,
+         "LAB_FENCE_NAMESPACE_INVALID")
+    return owner, namespace
 
 def _sha(value):
     need(type(value) is str and _SHA64.fullmatch(value) is not None,
@@ -38,6 +48,8 @@ def install_lab_fence(pg):
     LOCK TABLE public.provenance_minutes IN ACCESS EXCLUSIVE MODE;
     CREATE TABLE public.lab_writer_fence (
       resource_id text PRIMARY KEY CHECK(resource_id='grid-market-data-primary'),
+      owner text NOT NULL,
+      namespace text NOT NULL,
       generation bigint NOT NULL CHECK(generation>0),
       token bigint NOT NULL CHECK(token>0),
       session_id uuid NOT NULL,
@@ -52,7 +64,7 @@ def install_lab_fence(pg):
     REVOKE ALL ON TABLE public.lab_writer_fence FROM PUBLIC, lab_writer, lab_reader;
     REVOKE INSERT ON TABLE public.provenance_minutes FROM lab_writer;
     CREATE FUNCTION public.lab_fenced_insert(
-       p_generation bigint,p_token bigint,p_session uuid,p_instance uuid,
+       p_owner text,p_namespace text,p_generation bigint,p_token bigint,p_session uuid,p_instance uuid,
        p_node uuid,p_source text,p_schema text,p_fingerprint text,
        p_content_id text,p_symbol text,p_start_ms bigint,p_record jsonb)
     RETURNS void LANGUAGE plpgsql SECURITY DEFINER
@@ -69,6 +81,8 @@ def install_lab_fence(pg):
       SELECT * INTO live FROM public.lab_writer_fence
         WHERE resource_id='grid-market-data-primary' FOR UPDATE;
       IF NOT FOUND OR live.active IS NOT TRUE
+         OR live.owner IS DISTINCT FROM p_owner
+         OR live.namespace IS DISTINCT FROM p_namespace
          OR live.generation IS DISTINCT FROM p_generation
          OR live.token IS DISTINCT FROM p_token
          OR live.session_id IS DISTINCT FROM p_session
@@ -86,10 +100,10 @@ def install_lab_fence(pg):
       VALUES(p_fingerprint,p_content_id,p_symbol,p_start_ms,p_record);
     END $fence$;
     REVOKE ALL ON FUNCTION public.lab_fenced_insert(
-       bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)
+       text,text,bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)
        FROM PUBLIC;
     GRANT EXECUTE ON FUNCTION public.lab_fenced_insert(
-       bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)
+       text,text,bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)
        TO lab_writer;
     COMMIT;
     """)
@@ -98,7 +112,8 @@ def install_lab_fence(pg):
          "LAB_FENCE_DIRECT_INSERT_BYPASS")
     return pg
 
-def claim_lab_fence(pg, *, generation, token, session_id, instance_id,
+def claim_lab_fence(pg, *, owner, namespace, generation, token,
+                    session_id, instance_id,
                     node_incarnation_id, source_sha256, schema_sha256,
                     backend_pid, previous_quiescence_verified=False):
     """LAB CAS, not production authority. Backend identity comes from PG itself."""
@@ -111,21 +126,23 @@ def claim_lab_fence(pg, *, generation, token, session_id, instance_id,
          "LAB_FENCE_TOKEN_INVALID")
     need(type(backend_pid) is int and 0 < backend_pid < 2**31,
          "LAB_FENCE_BACKEND_INVALID")
+    owner, namespace = _scope(owner, namespace)
     ids = tuple(map(_id, (session_id, instance_id, node_incarnation_id)))
     sha1, sha2 = _sha(source_sha256), _sha(schema_sha256)
     # A claimed PID must be an existing lab_writer DB connection. A current
     # backend_start is stored by PostgreSQL, not asserted in any client JSON.
     sql = (
         "INSERT INTO public.lab_writer_fence("
-        "resource_id,generation,token,session_id,instance_id,"
+        "resource_id,owner,namespace,generation,token,session_id,instance_id,"
         "node_incarnation_id,source_sha256,schema_sha256,"
         "backend_pid,backend_start,active)"
         " SELECT 'grid-market-data-primary',"
-        f"{generation},{token},'{ids[0]}'::uuid,'{ids[1]}'::uuid,"
+        f"'{owner}','{namespace}',{generation},{token},'{ids[0]}'::uuid,'{ids[1]}'::uuid,"
         f"'{ids[2]}'::uuid,'{sha1}','{sha2}',pid,backend_start,true"
         " FROM pg_catalog.pg_stat_activity"
         f" WHERE pid={backend_pid} AND usename='lab_writer'"
         " ON CONFLICT(resource_id) DO UPDATE SET"
+        " owner=EXCLUDED.owner,namespace=EXCLUDED.namespace,"
         " generation=EXCLUDED.generation,token=EXCLUDED.token,"
         " session_id=EXCLUDED.session_id,instance_id=EXCLUDED.instance_id,"
         " node_incarnation_id=EXCLUDED.node_incarnation_id,"
@@ -134,6 +151,8 @@ def claim_lab_fence(pg, *, generation, token, session_id, instance_id,
         " backend_pid=EXCLUDED.backend_pid,"
         " backend_start=EXCLUDED.backend_start,active=true"
         " WHERE public.lab_writer_fence.active=false"
+        " AND EXCLUDED.owner=public.lab_writer_fence.owner"
+        " AND EXCLUDED.namespace=public.lab_writer_fence.namespace"
         " AND EXCLUDED.token>public.lab_writer_fence.token"
         " AND EXCLUDED.generation>public.lab_writer_fence.generation"
         # A caller-controlled quiescence flag is NOT enough: postgres
@@ -164,6 +183,7 @@ def revoke_lab_fence(pg, *, generation, token):
 def fence_identity():
     """Immutable fixture identity; caller still needs independent Root authority."""
     return {"resource_id": _RESOURCE, "schema": "lab-postgres-writer-fence.v1",
+            "owner_namespace_required": True,
             "scope": "ISOLATED_LAB_ONLY", "execution_authority": False,
             "trading_authorized": False, "native_admission": False}
 
@@ -183,11 +203,11 @@ def fenced_lab_witness(pg):
               has_table_privilege('lab_writer','public.provenance_minutes','INSERT'),
            'writer_exec',
               has_function_privilege('lab_writer',
-                'public.lab_fenced_insert(bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)',
+                'public.lab_fenced_insert(text,text,bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)',
                 'EXECUTE'),
            'reader_exec',
               has_function_privilege('lab_reader',
-                'public.lab_fenced_insert(bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)',
+                'public.lab_fenced_insert(text,text,bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)',
                 'EXECUTE'),
            'fence_writer_select',
               has_table_privilege('lab_writer','public.lab_writer_fence','SELECT'),
@@ -205,7 +225,7 @@ def fenced_lab_witness(pg):
        )
        FROM pg_proc p
        WHERE p.oid=
-         'public.lab_fenced_insert(bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)'::regprocedure
+         'public.lab_fenced_insert(text,text,bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)'::regprocedure
     """)
     try:
         witness = json.loads(result)
