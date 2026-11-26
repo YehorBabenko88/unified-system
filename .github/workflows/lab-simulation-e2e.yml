@@ -142,5 +142,18 @@ jobs:
           LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
           PYTHONDONTWRITEBYTECODE: '1'
         run: |
-          python -B -m unittest -v tests.test_lab_postgres
-          echo LAB_LIFECYCLE_TEST_COMPLETED
+          python -B - <<'PY'
+          import os, unittest
+          from tests import test_lab_postgres
+          suite = unittest.defaultTestLoader.loadTestsFromModule(test_lab_postgres)
+          count = suite.countTestCases()
+          if count < 5:
+              raise SystemExit(f'LAB_PG_TEST_COUNT_TOO_LOW:{count}')
+          for key in ('LAB_POSTGRES_BIN', 'LAB_GRID_SHA', 'LAB_GRID_ROOT', 'LAB_MATH_SHA', 'LAB_MATH_ROOT'):
+              if not os.environ.get(key):
+                  raise SystemExit('LAB_PG_REQUIRED_INPUT_MISSING:' + key)
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.testsRun != count:
+              raise SystemExit(f'LAB_PG_NOT_ACCEPTED: executed={result.testsRun} expected={count} skipped={len(result.skipped)}')
+          print(f'LAB_PG_TESTS_EXECUTED={result.testsRun};SKIPPED=0')
+          PY
