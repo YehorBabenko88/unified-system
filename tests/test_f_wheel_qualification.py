@@ -138,6 +138,38 @@ class QualificationTests(unittest.TestCase):
         self.files[META] = b"Metadata-Version: 2.1\nName: adversary\nVersion: 0.2.0.dev0\n"
         self.make_wheel()
         self.deny()
+    def test_actual_pip_target_install_succeeds_diagnostic_only(self):
+        import subprocess
+        import sys
+        target = self.base / "pip_target"
+        target.mkdir()
+        result = subprocess.run([sys.executable, "-m", "pip", "install",
+                                 "--disable-pip-version-check", "--no-index",
+                                 "--no-deps", "--target", str(target), str(self.wheel)],
+                                capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.install = target
+        report = self.scan()
+        self.assertTrue(report["installed_record_verified"])
+        self.assertGreaterEqual(report["unhashed_install_auxiliary_count"], 1)
+        self.assertFalse(report["all_installed_bytes_authenticated"])
+        self.assertFalse(report["release_authenticated"])
+        self.assertFalse(report["writer_admitted"])
+
+    def test_actual_pip_target_script_tamper_denied(self):
+        import subprocess
+        import sys
+        target = self.base / "pip_target"
+        target.mkdir()
+        result = subprocess.run([sys.executable, "-m", "pip", "install",
+                                 "--disable-pip-version-check", "--no-index",
+                                 "--no-deps", "--target", str(target), str(self.wheel)],
+                                capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.install = target
+        (self.install / "bin" / "market-data").write_bytes(b"tampered")
+        self.deny()
+
     def test_wheel_reproducible_synthetic_fixture(self):
         first = self.wheel.read_bytes()
         self.make_wheel()
