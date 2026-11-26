@@ -586,70 +586,59 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.assertIsInstance(child, _OwnedWindowsChild)
         self.assertTrue(child._job._assigned)
         self.assertGreaterEqual(child._job.active_process_count(), 1)
+        self.assertIn(child.pid, child._job.observe_member_pids())
         self.assertEqual(self.driver.owned_process_state(op), 'STILL_ALIVE')
-        self.driver.stop(op)
-        self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
+        with self.assertRaisesRegex(
+                ValueError, 'historical Windows SCM process membership unproven'):
+            self.driver.stop(op)
+        self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
         self.assertEqual(self.driver.owned_process_state(op), 'EXTINCT')
-        receipt = self.driver.job_extinction_receipt(op)
-        self.assertEqual(receipt.active_members, 0)
-        self.assertEqual(receipt.process_handle, child._handle)
-        self.assertEqual(receipt.job_handle, child._job._handle)
-        self.assertEqual(receipt.instance_token, self.driver._load(op)['token'])
-        self.assertEqual(receipt.release_id, 'disposable-lab')
-        self.assertEqual(receipt.listener_owners, ())
-        self.assertEqual(receipt.scm_owners, ())
-        self.assertIs(
-            self.driver.consume_job_extinction(
-                receipt, operation_id=op, release_id='disposable-lab'), receipt)
-        self.assertIsNone(child._handle)
-        self.assertIsNone(child._job._handle)
-        with self.assertRaises(ValueError):
-            self.driver.consume_job_extinction(
-                receipt, operation_id=op, release_id='disposable-lab')
+        self.assertNotIn(op, self.driver._job_receipts)
+        self.assertIsNotNone(child._handle)
+        self.assertIsNotNone(child._job._handle)
 
     def _cleanup(self):
-        if self.op in self.driver.children:
-            child = self.driver.children[self.op]
-            if child._handle is None:
-                return
-            if (child.poll() is None
-                    or self.op not in self.driver._job_receipts):
-                self.driver.stop(self.op)
-            receipt = self.driver.job_extinction_receipt(self.op)
-            self.driver.consume_job_extinction(
-                receipt, release_id='disposable-lab',
-                operation_id=self.op)
+        child = self.driver.children.get(self.op)
+        if child is None or child._handle is None:
+            return
+        try:
+            self.driver.stop(self.op)
+        except ValueError as exc:
+            if 'historical Windows SCM process membership unproven' not in str(exc):
+                raise
+        finally:
+            # Test fixture owns this fresh private disposable Job and may
+            # close it. This is NOT a recovery/admission receipt.
+            child.close_owned_handles()
 
-    def test_native_receipt_issuer_identity_wrong_release_and_forgery(self):
-        from dataclasses import FrozenInstanceError, replace
+    def test_native_receipt_unavailable_without_historical_scm_proof(self):
         from unified_system.runtime import ModuleSpec
-        from unified_system.runtime_process import WindowsJobExtinctionReceipt
         op = self.driver.start(ModuleSpec('market_data','1.0.0'),
                                'disposable-lab', self.op)
         self.addCleanup(self._cleanup)
         with self.assertRaisesRegex(ValueError, 'evidence unavailable'):
             self.driver.job_extinction_receipt(op)
-        self.driver.stop(op)
-        receipt = self.driver.job_extinction_receipt(op)
-        self.assertIsInstance(receipt, WindowsJobExtinctionReceipt)
-        with self.assertRaises(FrozenInstanceError):
-            receipt.pid = 1
-        with self.assertRaisesRegex(ValueError, 'receipt invalid'):
-            self.driver.consume_job_extinction(
-                receipt, release_id='wrong-release', operation_id=op)
-        with self.assertRaisesRegex(ValueError, 'receipt invalid'):
-            self.driver.consume_job_extinction(
-                receipt, release_id='disposable-lab', operation_id='9'*32)
-        forged = replace(receipt, process_handle=receipt.process_handle + 1)
-        with self.assertRaisesRegex(ValueError, 'receipt invalid'):
-            self.driver.consume_job_extinction(
-                forged, release_id='disposable-lab', operation_id=op)
-        self.assertIs(
-            self.driver.job_extinction_receipt(op), receipt)
-        self.assertIs(
-            self.driver.consume_job_extinction(
-                receipt, release_id='disposable-lab', operation_id=op),
-            receipt)
+        with self.assertRaisesRegex(
+                ValueError, 'historical Windows SCM process membership unproven'):
+            self.driver.stop(op)
+        with self.assertRaisesRegex(ValueError, 'evidence unavailable'):
+            self.driver.job_extinction_receipt(op)
+        self.assertNotIn(op, self.driver._job_receipts)
+
+    def test_native_historical_child_scm_association_denies(self):
+        from unified_system.runtime import ModuleSpec
+        op = self.driver.start(ModuleSpec('market_data','1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        child = self.driver.children[op]
+        historical_pid = child.pid + 100000
+        child._job._historical_member_pids.add(historical_pid)
+        with patch('unified_system.runtime_process._windows_service_process_roster',
+                   return_value=(('historical-child-service', historical_pid),)):
+            with self.assertRaisesRegex(ValueError, 'TCP or SCM ownership unresolved'):
+                self.driver.stop(op)
+        self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
+        self.assertNotIn(op, self.driver._job_receipts)
 
     def test_native_foreign_tcp_listener_denies_job_receipt(self):
         import socket
@@ -668,8 +657,9 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
             # Denial must not publish durable STOPPED or any receipt.
             self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
             self.assertNotIn(op, self.driver._job_receipts)
-        self.driver.stop(op)
-        self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
+        with self.assertRaisesRegex(ValueError, 'historical Windows SCM process membership unproven'):
+            self.driver.stop(op)
+        self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
 
     def test_native_scm_root_ownership_denies_receipt(self):
         from unified_system.runtime import ModuleSpec
@@ -821,9 +811,10 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.assertIsNotNone(identity)
         with RetainedOsProcessWait(pid, identity) as witness:
             self.assertGreaterEqual(child._job.active_process_count(), 2)
-            self.driver.stop(op)
+            with self.assertRaisesRegex(ValueError, 'historical Windows SCM process membership unproven'):
+                self.driver.stop(op)
             self.assertTrue(witness.wait_exited(0))
-        self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
+        self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
 
     def test_refuse_untrusted_job_attach_even_with_true(self):
         from unified_system.runtime_process import OwnedWindowsJob
