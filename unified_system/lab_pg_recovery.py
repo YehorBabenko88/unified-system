@@ -538,6 +538,7 @@ def contain_exclusive_lab_cluster(pg, *, old, quiesced=False,
         root = _resource(pg)
         _begin(pg, root, old, mode="STOP_ONLY")
         _require_held_recovery_lock(pg, root, old)
+        pg._bind_recovery_lifecycle(_STATES[root].lock_fd)
         need(pg.started is True, "LAB_RECOVERY_NOT_STARTED")
         need(observe_old_lab_backend(
             pg, **old, timeout=min(120, _remaining(deadline))) == "STILL_ALIVE",
@@ -591,6 +592,7 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
         root = _resource(pg)
         previous = _begin(pg, root, old, mode="RECOVER")
         _require_held_recovery_lock(pg, root, old)
+        pg._bind_recovery_lifecycle(_STATES[root].lock_fd)
         _remaining(deadline)
         # If E stop-only already completed on this same owner object, do
         # not stop a second time; verify and restart through C only.
