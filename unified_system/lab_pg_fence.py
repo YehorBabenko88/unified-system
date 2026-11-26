@@ -185,7 +185,7 @@ def fence_identity():
             "scope": "ISOLATED_LAB_ONLY", "execution_authority": False,
             "trading_authorized": False, "native_admission": False}
 
-def fenced_lab_witness(pg):
+def fenced_lab_witness(pg, *, timeout=120):
     """Independent owner catalogue check for opt-in fenced LAB, not production."""
     import json
     pg._verify_owned()
@@ -222,7 +222,7 @@ def fenced_lab_witness(pg):
        FROM pg_proc p
        WHERE p.oid=
          'public.lab_fenced_insert(text,text,bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)'::regprocedure
-    """)
+    """, timeout=timeout)
     try:
         witness = json.loads(result)
     except (TypeError, ValueError) as exc:
@@ -326,7 +326,7 @@ def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
 
 
 def observe_old_lab_backend(pg, *, owner, namespace, generation, token,
-                            backend_pid, backend_start):
+                            backend_pid, backend_start, timeout=120):
     """Read-only old-backend observation; not a transferable Root grant.
 
     A missing/mismatched row, inaccessible PostgreSQL, or any ambiguous
@@ -369,7 +369,7 @@ def observe_old_lab_backend(pg, *, owner, namespace, generation, token,
         " WHERE f.resource_id='grid-market-data-primary'"
     )
     try:
-        state = pg.sql(query)
+        state = pg.sql(query, timeout=timeout)
     except Exception:
         return "UNKNOWN"
     return state if state in ("EXTINCT", "STILL_ALIVE") else "UNKNOWN"
