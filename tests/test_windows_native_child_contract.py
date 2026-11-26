@@ -590,12 +590,133 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.driver.stop(op)
         self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
         self.assertEqual(self.driver.owned_process_state(op), 'EXTINCT')
+        receipt = self.driver.job_extinction_receipt(op)
+        self.assertEqual(receipt.active_members, 0)
+        self.assertEqual(receipt.process_handle, child._handle)
+        self.assertEqual(receipt.job_handle, child._job._handle)
+        self.assertEqual(receipt.instance_token, self.driver._load(op)['token'])
+        self.assertEqual(receipt.release_id, 'disposable-lab')
+        self.assertEqual(receipt.listener_owners, ())
+        self.assertEqual(receipt.scm_owners, ())
+        self.assertIs(
+            self.driver.consume_job_extinction(
+                receipt, operation_id=op, release_id='disposable-lab'), receipt)
+        self.assertIsNone(child._handle)
+        self.assertIsNone(child._job._handle)
+        with self.assertRaises(ValueError):
+            self.driver.consume_job_extinction(
+                receipt, operation_id=op, release_id='disposable-lab')
 
     def _cleanup(self):
         if self.op in self.driver.children:
             child = self.driver.children[self.op]
-            if child.poll() is None:
+            if child._handle is None:
+                return
+            if (child.poll() is None
+                    or self.op not in self.driver._job_receipts):
                 self.driver.stop(self.op)
+            receipt = self.driver.job_extinction_receipt(self.op)
+            self.driver.consume_job_extinction(
+                receipt, release_id='disposable-lab',
+                operation_id=self.op)
+
+    def test_native_receipt_issuer_identity_wrong_release_and_forgery(self):
+        from dataclasses import FrozenInstanceError, replace
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import WindowsJobExtinctionReceipt
+        op = self.driver.start(ModuleSpec('market_data','1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        with self.assertRaisesRegex(ValueError, 'evidence unavailable'):
+            self.driver.job_extinction_receipt(op)
+        self.driver.stop(op)
+        receipt = self.driver.job_extinction_receipt(op)
+        self.assertIsInstance(receipt, WindowsJobExtinctionReceipt)
+        with self.assertRaises(FrozenInstanceError):
+            receipt.pid = 1
+        with self.assertRaisesRegex(ValueError, 'receipt invalid'):
+            self.driver.consume_job_extinction(
+                receipt, release_id='wrong-release', operation_id=op)
+        with self.assertRaisesRegex(ValueError, 'receipt invalid'):
+            self.driver.consume_job_extinction(
+                receipt, release_id='disposable-lab', operation_id='9'*32)
+        forged = replace(receipt, process_handle=receipt.process_handle + 1)
+        with self.assertRaisesRegex(ValueError, 'receipt invalid'):
+            self.driver.consume_job_extinction(
+                forged, release_id='disposable-lab', operation_id=op)
+        self.assertIs(
+            self.driver.job_extinction_receipt(op), receipt)
+        self.assertIs(
+            self.driver.consume_job_extinction(
+                receipt, release_id='disposable-lab', operation_id=op),
+            receipt)
+
+    def test_native_foreign_tcp_listener_denies_job_receipt(self):
+        import socket
+        from urllib.parse import urlsplit
+        from unified_system.runtime import ModuleSpec
+        op = self.driver.start(ModuleSpec('market_data','1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        port = urlsplit(self.driver.programs['market_data']['health_url']).port
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
+            server.bind(('127.0.0.1', port))
+            server.listen(1)
+            with self.assertRaisesRegex(
+                    ValueError, 'TCP or SCM ownership unresolved'):
+                self.driver.stop(op)
+            # Denial must not publish durable STOPPED or any receipt.
+            self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
+            self.assertNotIn(op, self.driver._job_receipts)
+        self.driver.stop(op)
+        self.assertEqual(self.driver._load(op)['state'], 'STOPPED')
+
+    def test_native_assignment_failure_never_resumes_child(self):
+        import hashlib
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import OwnedWindowsJob
+        sentinel = self.worker.with_name('execution-sentinel')
+        self.worker.write_text(
+            'import os\\n'
+            'with open(os.environ["JOB_TEST_SENTINEL"], "w") as f:'
+            ' f.write("ran")\\n',
+            encoding='utf-8')
+        program = self.driver.programs['market_data']
+        program['file_pins']['job_worker.py'] = hashlib.sha256(
+            self.worker.read_bytes()).hexdigest()
+        program['env'] = {'JOB_TEST_SENTINEL': str(sentinel)}
+        with patch.object(OwnedWindowsJob, '_assign_created_process',
+                          side_effect=ValueError('forced native assignment denial')):
+            with self.assertRaisesRegex(
+                    ValueError, 'forced native assignment denial'):
+                self.driver.start(ModuleSpec('market_data','1.0.0'),
+                                  'disposable-lab', self.op)
+        self.assertFalse(sentinel.exists())
+        self.assertNotIn(self.op, self.driver.children)
+        self.assertNotIn(self.op, self.driver._job_launch_bindings)
+        self.assertEqual(self.driver._load(self.op)['state'], 'STARTING')
+
+    def test_native_resume_failure_cleans_job_and_child(self):
+        import hashlib
+        from unified_system.runtime import ModuleSpec
+        sentinel = self.worker.with_name('resume-execution-sentinel')
+        self.worker.write_text(
+            'import os\\n'
+            'with open(os.environ["JOB_TEST_SENTINEL"], "w") as f:'
+            ' f.write("ran")\\n',
+            encoding='utf-8')
+        program = self.driver.programs['market_data']
+        program['file_pins']['job_worker.py'] = hashlib.sha256(
+            self.worker.read_bytes()).hexdigest()
+        program['env'] = {'JOB_TEST_SENTINEL': str(sentinel)}
+        with patch('unified_system.runtime_process._resume_original_suspended_thread',
+                   side_effect=ValueError('forced native resume denial')):
+            with self.assertRaisesRegex(ValueError, 'forced native resume denial'):
+                self.driver.start(ModuleSpec('market_data','1.0.0'),
+                                  'disposable-lab', self.op)
+        self.assertFalse(sentinel.exists())
+        self.assertNotIn(self.op, self.driver.children)
+        self.assertEqual(self.driver._load(self.op)['state'], 'STARTING')
 
     def test_external_driver_cannot_stop_original_job_without_handle(self):
         from unified_system.runtime import ModuleSpec
