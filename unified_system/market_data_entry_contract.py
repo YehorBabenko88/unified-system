@@ -54,6 +54,11 @@ def entry_for_manifest(manifest):
     if repository in (None, LEGACY_REPOSITORY):
         # Missing repository is permitted only in existing inert unit mocks:
         # a real release manifest requires an explicit exact repository field.
+        # Never relabel pinned Grid-v2 source/SDK members as legacy Strattester.
+        if (source.get("commit") == APPROVED_GRID_COMMIT
+                or source.get("version") == V2_SOURCE_VERSION
+                or any(path in files for path in V2_FILES)):
+            raise MarketDataEntryRejected("GRID_V2_LEGACY_ALIAS_REJECTED")
         return LEGACY_ENTRY
     if repository != GRID_REPOSITORY:
         raise MarketDataEntryRejected("MARKET_ENTRY_SOURCE_REJECTED")
