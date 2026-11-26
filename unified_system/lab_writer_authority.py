@@ -14,6 +14,7 @@ import secrets
 from .grid_writer_fence_model import (
     ResourceFenceBlocked, WriterLeaseIdentity, _need,
 )
+from .lab_owner_executor import LabOwnerExecutor
 
 _SCHEMA = "unified.lab-root-writer-authority.v1"
 _SCOPE = "ISOLATED_LAB_ONLY"
@@ -41,11 +42,11 @@ class LabWriterAuthority:
     __slots__ = (
         "_authority", "_lease", "_source", "_identity", "_generation",
         "_pg", "_c", "_quiescence", "_backend_pid", "_postmaster",
-        "_process", "_epoch", "_revoked",
+        "_process", "_epoch", "_revoked", "_executor",
     )
 
     def __init__(self, *, authority, lease, source, identity, generation,
-                 pg, c_module, quiescence, backend_pid, process):
+                 pg, c_module, quiescence, backend_pid, process, executor=None):
         from .consul_authority import ConsulLease, ConsulSessionAuthority
         from .service_source_admission import StartupSourceAdmission
         _need(type(authority) is ConsulSessionAuthority
@@ -70,6 +71,8 @@ class LabWriterAuthority:
         _need(c_module is not None
               and callable(getattr(c_module, "revalidate_lab_fence", None)),
               "LAB_ROOT_CANONICAL_SQL_REQUIRED")
+        _need(type(executor) is LabOwnerExecutor,
+              "LAB_ROOT_SERIAL_EXECUTOR_REQUIRED")
         _need(quiescence is not None
               and callable(getattr(quiescence, "require_current", None))
               and callable(getattr(quiescence, "confirmed_quiescent", None)),
@@ -85,6 +88,7 @@ class LabWriterAuthority:
         self._generation, self._pg, self._c = generation, pg, c_module
         self._quiescence, self._backend_pid = quiescence, backend_pid
         self._process = process
+        self._executor = executor
         self._epoch = secrets.token_hex(32)
         self._revoked = False
         try:
@@ -124,19 +128,24 @@ class LabWriterAuthority:
                   "LAB_ROOT_SOURCE_REVOKED")
             _need(await self._authority.validate(self._lease) is True,
                   "LAB_ROOT_CONSUL_LOST")
-            _need(self._quiescence.require_current() is True
-                  and self._quiescence.confirmed_quiescent() is True,
-                  "LAB_ROOT_OLD_PROCESS_UNVERIFIED")
-            _need(self._process.require_current() is True
-                  and self._process.confirmed_single_child() is True,
-                  "LAB_ROOT_CHILD_NOT_UNIQUE")
-            _need(self._pg.started is True
-                  and self._pg._verify_owned() is None
-                  and self._pg._verify_postmaster() == self._postmaster,
-                  "LAB_ROOT_POSTMASTER_CHANGED")
-            receipt = self._c.revalidate_lab_fence(
-                self._pg, identity=self._identity,
-                generation=self._generation, backend_pid=self._backend_pid)
+            def owner_revalidation():
+                _need(self._quiescence.require_current() is True
+                      and self._quiescence.confirmed_quiescent() is True,
+                      "LAB_ROOT_OLD_PROCESS_UNVERIFIED")
+                _need(self._process.require_current() is True
+                      and self._process.confirmed_single_child() is True,
+                      "LAB_ROOT_CHILD_NOT_UNIQUE")
+                _need(self._pg.started is True
+                      and self._pg._verify_owned() is None
+                      and self._pg._verify_postmaster() == self._postmaster,
+                      "LAB_ROOT_POSTMASTER_CHANGED")
+                return self._c.revalidate_lab_fence(
+                    self._pg, identity=self._identity,
+                    generation=self._generation, backend_pid=self._backend_pid)
+            # C calls synchronous PostgreSQL. A Root-owned single-worker lane
+            # preserves one-at-a-time custody and keeps asyncio heartbeat live.
+            # Timeout/cancellation poisons the executor; no COMMIT assumption.
+            receipt = await self._executor.call(owner_revalidation, timeout=10.0)
             # The C owner ABI is intentionally strict; a synthetic positive
             # receipt does not elevate this LAB-only object to native authority.
             _need(type(receipt) is dict
@@ -154,8 +163,6 @@ class LabWriterAuthority:
                   and receipt.get("trading_authorized") is False,
                   "LAB_ROOT_PG_RECEIPT_INVALID")
             _need(self._source.require_current() is True
-                  and self._quiescence.require_current() is True
-                  and self._process.require_current() is True
                   and await self._authority.validate(self._lease) is True,
                   "LAB_ROOT_AUTHORITY_CHANGED")
             _need(not self._revoked, "LAB_ROOT_AUTHORITY_REVOKED")
