@@ -115,17 +115,15 @@ class RootGridV2InertTests(unittest.TestCase):
         for repository in ("YehorBabenko88/strattester", "untrusted/market_data", ""):
             changed = copy.deepcopy(self.manifest)
             changed["sources"]["market_data"]["repository"] = repository
-            if repository == "YehorBabenko88/strattester":
-                self.assertEqual(entry_for_manifest(changed), LEGACY_ENTRY)
-            else:
-                with self.assertRaises(MarketDataEntryRejected):
-                    entry_for_manifest(changed)
-                with self.assertRaises(ActivationBlocked):
-                    service_module_runtime._entry("market_data", changed)
+            # Even an otherwise accepted historical repository cannot
+            # alias the exact modern Grid SHA/SDK files as a v1 source.
+            with self.subTest(repository=repository), self.assertRaises(MarketDataEntryRejected):
+                entry_for_manifest(changed)
+            with self.assertRaises(ActivationBlocked):
+                service_module_runtime._entry("market_data", changed)
             raw = lab_release.canonical(changed)
-            if repository != "YehorBabenko88/strattester":
-                with self.assertRaises(ValueError):
-                    lab_release.parse_manifest(raw,hashlib.sha256(raw).hexdigest())
+            with self.assertRaises(ValueError):
+                lab_release.parse_manifest(raw,hashlib.sha256(raw).hexdigest())
         # Retain all otherwise valid pinned paths: rejection must be due to
         # the *selected module*, not an absent executable in a smaller fixture.
         legacy = copy.deepcopy(self.manifest)
