@@ -228,6 +228,9 @@ class LabWriterAuthority:
               and protected.require_current() is True
               and self._source.require_current() is True,
               "LAB_OPERATION_ISSUANCE_REVOKED")
+        # A caller may choose any 64-character digest; until Root validates
+        # it against the installed wheel, denying is mandatory. This code
+        # intentionally does not manufacture acceptance from source pins.
         # No trusted installed-wheel attestor is exposed by this Root/E
         # interface yet. A caller-controlled 64-hex digest is NOT evidence
         # that the exact approved B package is installed. Do not mint a live
