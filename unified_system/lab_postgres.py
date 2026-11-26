@@ -69,6 +69,11 @@ class LabPostgres:
             marker.write(self._nonce)
         if os.name != 'nt':
             self._marker.chmod(0o600)
+        marker_info = self._marker.lstat()
+        need(stat.S_ISREG(marker_info.st_mode) and marker_info.st_nlink == 1,
+             'LAB_PG_MARKER_UNSAFE')
+        self._marker_identity = (marker_info.st_dev, marker_info.st_ino)
+        self._data_identity = None
         self.data = self.root / 'pgdata'
         self.socket_dir = self.root / 'pgsock'
         self.log = self.root / 'postgres.log'
@@ -133,15 +138,25 @@ class LabPostgres:
                  and not (getattr(info, 'st_file_attributes', 0) & 0x400)
                  and (info.st_dev, info.st_ino) == self._root_identity,
                  'LAB_PG_ROOT_CHANGED')
-            need(not self._marker.is_symlink() and self._marker.read_text(encoding='ascii') == self._nonce,
+            marker_info = self._marker.lstat()
+            need(stat.S_ISREG(marker_info.st_mode)
+                 and marker_info.st_nlink == 1
+                 and not self._marker.is_symlink()
+                 and not (getattr(marker_info, 'st_file_attributes', 0) & 0x400)
+                 and (marker_info.st_dev, marker_info.st_ino) == self._marker_identity
+                 and self._marker.read_text(encoding='ascii') == self._nonce,
                  'LAB_PG_OWNERSHIP_LOST')
             if os.name != 'nt':
                 need(info.st_uid == os.getuid() and not (info.st_mode & 0o077), 'LAB_PG_ROOT_UNSAFE')
             if self.data.exists():
                 data_info = self.data.lstat()
                 need(stat.S_ISDIR(data_info.st_mode) and not self.data.is_symlink()
-                     and not (getattr(data_info, 'st_file_attributes', 0) & 0x400),
+                     and not (getattr(data_info, 'st_file_attributes', 0) & 0x400)
+                     and (self._data_identity is None or
+                          (data_info.st_dev, data_info.st_ino) == self._data_identity),
                      'LAB_PG_DATA_FOREIGN')
+            elif self._data_identity is not None:
+                raise LabAdmissionRejected('LAB_PG_DATA_DISAPPEARED')
                 if os.name != 'nt':
                     need(data_info.st_uid == os.getuid(), 'LAB_PG_DATA_FOREIGN')
         except (OSError, ValueError) as error:
@@ -311,6 +326,10 @@ class LabPostgres:
         (self.data / 'pg_hba.conf').write_text(
             'host all all 127.0.0.1/32 scram-sha-256\n'
             + ('' if os.name == 'nt' else 'local all all scram-sha-256\n'))
+        data_stat = self.data.lstat()
+        need(stat.S_ISDIR(data_stat.st_mode) and not self.data.is_symlink(),
+             'LAB_PG_DATA_FOREIGN')
+        self._data_identity = (data_stat.st_dev, data_stat.st_ino)
         self.port = _free_port()
         need(self.port != 5432, 'LAB_PG_PORT_REJECTED')
         return self
