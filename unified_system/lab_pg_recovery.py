@@ -91,6 +91,9 @@ def recover_exclusive_lab_cluster(pg, *, old, streams=(), quiesced=False,
     need(set(old) == set(keys), "LAB_RECOVERY_OLD_IDENTITY_INVALID")
     old = _old_record(pg, **old)
     deadline = time.monotonic() + max_seconds
+    # Verify the pre-stop active backend has not changed incarnation.
+    need(observe_old_lab_backend(pg, **old) == "STILL_ALIVE",
+         "LAB_RECOVERY_OLD_BACKEND_NOT_CURRENT")
     # The close request is targeted at the exact disposable postmaster,
     # reusing LabPostgres' verified PID/file/OS identity path. Normal fast
     # shutdown aborts old SQL transactions rather than relying on a poisoned
