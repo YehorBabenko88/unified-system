@@ -149,7 +149,7 @@ class LabPostgres:
                 btime_line = next(line for line in Path('/proc/stat').read_text().splitlines()
                                   if line.startswith('btime '))
                 started_at = int(btime_line.split()[1]) + start_ticks / os.sysconf('SC_CLK_TCK')
-                args = (proc / 'cmdline').read_bytes().split(b'\\x00')
+                args = (proc / 'cmdline').read_bytes().split(bytes([0]))
                 need(any(args[i] == b'-D' and i + 1 < len(args) and
                          Path(os.fsdecode(args[i + 1])).resolve() == self.data.resolve()
                          for i in range(len(args))), 'LAB_PG_PID_FOREIGN')
