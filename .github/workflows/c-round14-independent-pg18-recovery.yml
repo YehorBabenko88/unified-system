@@ -12,6 +12,7 @@ jobs:
     timeout-minutes: 30
     env:
       LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
+      LAB_C_PG18_NATIVE_TEST: '1'
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
       - name: Checkout exact PR HEAD
@@ -23,31 +24,31 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: YehorBabenko88/unified-system
-          ref: 5bcaed7d916d72837064da9ab938e28c35695624
+          ref: 743329b1161e8967335d5c6d6e1ea8bd669251ee
           path: upstream/a-retained-os
           persist-credentials: false
       - name: Verify A source Git blob before test-only overlay
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git -C upstream/a-retained-os rev-parse HEAD)" = "5bcaed7d916d72837064da9ab938e28c35695624"
-          test "$(git hash-object upstream/a-retained-os/unified_system/runtime_process.py)" = "3c948515932584ae72fd3acaa0d5c21f877a50bf"
+          test "$(git -C upstream/a-retained-os rev-parse HEAD)" = "743329b1161e8967335d5c6d6e1ea8bd669251ee"
+          test "$(git hash-object upstream/a-retained-os/unified_system/runtime_process.py)" = "06e9389d4d53b62ffe72c81d0a12f4eda5b63b50"
           # Test checkout only: A owns this source. C never commits an
           # alternative process observer or copies A into the PR branch.
           cp upstream/a-retained-os/unified_system/runtime_process.py unified_system/runtime_process.py
-          test "$(git hash-object unified_system/runtime_process.py)" = "3c948515932584ae72fd3acaa0d5c21f877a50bf"
+          test "$(git hash-object unified_system/runtime_process.py)" = "06e9389d4d53b62ffe72c81d0a12f4eda5b63b50"
       - name: Checkout E-owned exact fenced identity model for C SQL binding
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: YehorBabenko88/unified-system
-          ref: d231a0ad657b7e12f89ddc9cde2ef6b5b028a125
+          ref: 1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18
           path: upstream/e-identity
           persist-credentials: false
       - name: Verify E model source blob in test-only workspace
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git -C upstream/e-identity rev-parse HEAD)" = "d231a0ad657b7e12f89ddc9cde2ef6b5b028a125"
+          test "$(git -C upstream/e-identity rev-parse HEAD)" = "1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18"
           test "$(git hash-object upstream/e-identity/unified_system/grid_writer_fence_model.py)" = "71c74a2c0d8c1c0120412124ef1d12d53b691581"
           cp upstream/e-identity/unified_system/grid_writer_fence_model.py unified_system/grid_writer_fence_model.py
           test "$(git hash-object unified_system/grid_writer_fence_model.py)" = "71c74a2c0d8c1c0120412124ef1d12d53b691581"
