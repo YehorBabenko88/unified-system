@@ -88,6 +88,7 @@ class NativePg18V2Tests(unittest.TestCase):
         ):
             raise AssertionError("NATIVE_PG18_REQUIRED_NONROOT_LINUX")
         self.grid_root, self.d_root, self.math_root = require_sources()
+        from tests.test_lab_postgres import canonical_schema
         import psycopg
         self.psycopg = psycopg
         self.root = Path(tempfile.mkdtemp(prefix="c-native-v2-pg-"))
@@ -99,9 +100,12 @@ class NativePg18V2Tests(unittest.TestCase):
         self.server_thread = None
         self.old_client = None
         self.old_market_dsn = os.environ.get("MARKET_DATA_DSN")
+        self.paths_inserted = False
+        self.addCleanup(self._cleanup)
         # B must be imported from the *installed one-distribution v2 wheel*.
         # Grid source checkout is used only to verify canonical migration 47.
         sys.path[:0] = [self.math_root, self.d_root]
+        self.paths_inserted = True
         import importlib.metadata
         import market_data
         if importlib.metadata.version("market-data") != "0.2.0.dev0":
@@ -109,7 +113,6 @@ class NativePg18V2Tests(unittest.TestCase):
         if Path(market_data.__file__).resolve().is_relative_to(
                 Path(self.grid_root).resolve()):
             raise AssertionError("NATIVE_V2_SOURCE_TREE_SHADOWED_WHEEL")
-        from tests.test_lab_postgres import canonical_schema
         self.pg = LabPostgres(bin_dir, self.root, min_major=18).initialize().start()
         self.pg.provision(canonical_schema())
         self.writer = psycopg.connect(self.pg.dsn("lab_writer"))
@@ -117,7 +120,7 @@ class NativePg18V2Tests(unittest.TestCase):
         install_lab_fence(self.pg)
         self.assertFalse(fenced_lab_witness(self.pg)["execution_authority"])
 
-    def tearDown(self):
+    def _cleanup(self):
         try:
             if self.old_client is not None:
                 from terminan import data
@@ -138,7 +141,7 @@ class NativePg18V2Tests(unittest.TestCase):
             if hasattr(self, "root"):
                 shutil.rmtree(self.root)
         finally:
-            if hasattr(self, "grid_root"):
+            if self.paths_inserted:
                 del sys.path[:2]
 
     def identity(self):
