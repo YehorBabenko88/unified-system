@@ -177,7 +177,10 @@ def powershell_argv(executable,code):
  """The only way native children run PowerShell: absolute executable,
  no profile/logo/interaction, encoded command with the trusted prelude."""
  executable=str(executable)
- need(Path(executable).is_absolute() and Path(executable).name.casefold()=='powershell.exe' and type(code) is str)
+ need(Path(executable).is_absolute() and type(code) is str)
+ # Refuse any caller-supplied host outside the OS-reported System32 PowerShell 5.1 path.
+ expected=_system_directory()/'WindowsPowerShell/v1.0/powershell.exe'
+ need(os.path.normcase(os.path.normpath(executable))==os.path.normcase(os.path.normpath(str(expected))))
  encoded=base64.b64encode((POWERSHELL_PRELUDE+code).encode('utf-16le')).decode('ascii')
  return [executable,'-NoLogo','-NoProfile','-NonInteractive','-EncodedCommand',encoded]
 
