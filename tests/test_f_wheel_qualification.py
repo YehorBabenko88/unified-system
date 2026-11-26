@@ -52,9 +52,9 @@ class QualificationTests(unittest.TestCase):
             elif path.is_dir(): path.rmdir()
         with zipfile.ZipFile(self.wheel, "w") as z:
             for name, data in self.files.items():
-                z.writestr(name, data)
+                z.writestr(zipfile.ZipInfo(name, date_time=(2020, 1, 1, 0, 0, 0)), data)
             for name, data in extra_members:
-                z.writestr(name, data)
+                z.writestr(zipfile.ZipInfo(name, date_time=(2020, 1, 1, 0, 0, 0)), data)
         for name, data in self.files.items():
             target = self.install / name
             target.parent.mkdir(parents=True, exist_ok=True)
