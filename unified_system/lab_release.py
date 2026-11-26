@@ -13,7 +13,7 @@ import re
 import stat
 
 from .module_catalog import MODULE_IDS
-from .market_data_entry_contract import GRID_REPOSITORY, V2_ENTRY, entry_for_manifest
+from .market_data_entry_contract import GRID_REPOSITORY, LEGACY_ENTRY, V2_ENTRY, entry_for_manifest
 from .runtime_process import _safe_path
 
 LIMIT=32*1024*1024
@@ -122,6 +122,9 @@ def _parse_v1_manifest(raw,expected_sha256):
             need(entry_for_manifest(m)==V2_ENTRY)
         else:
             need(s['repository']==REPOSITORIES[name])
+            if name=='market_data':
+                # A legacy repository name must not alias v2 Grid code or files.
+                need(entry_for_manifest(m)==LEGACY_ENTRY)
         need(s['root']=='sources/'+name)
         digest(s['commit'],40);digest(s['tree'],40)
         # Root ModuleSpec and capsule share the original strict SemVer grammar.
