@@ -448,13 +448,27 @@ class OwnedWindowsJob:
         self._created_prelaunch = True
         self._assigned = False
 
+    def _assign_created_process(self, process_handle):
+        """Private: only the trusted suspended launcher supplies this handle.
+
+        Never accept a PID or a caller-provided created_suspended boolean.
+        The launcher owns both original PROCESS_INFORMATION handles and
+        must terminate its new child if assignment fails.
+        """
+        if self._handle is None or self._assigned:
+            raise ValueError('Windows Job assignment unavailable')
+        from ctypes import wintypes as w
+        self._k.AssignProcessToJobObject.argtypes = [w.HANDLE, w.HANDLE]
+        self._k.AssignProcessToJobObject.restype = w.BOOL
+        if not self._k.AssignProcessToJobObject(self._handle, process_handle):
+            raise ValueError('Windows Job suspended assignment denied')
+        if self.verify_member(process_handle) is not True:
+            raise ValueError('Windows Job membership unverified')
+        self._assigned = True
+
     def assign_suspended_child(self, process_handle, *, created_suspended=False):
-        # Intentionally DENIED until a single trusted Windows CreateProcessW
-        # launcher can return both exact process/thread handles BEFORE any
-        # user-mode instruction runs. A caller-provided boolean, arbitrary
-        # HANDLE or a sampled PID cannot authenticate suspended creation.
-        # Never attach existing/foreign process to KILL_ON_JOB_CLOSE.
-        raise ValueError('Windows Job atomic suspended launcher unavailable')
+        # Public adoption is forbidden even if a caller claims CREATE_SUSPENDED.
+        raise ValueError('Windows Job public assignment denied')
 
     def verify_member(self, process_handle):
         if self._handle is None:
