@@ -302,19 +302,21 @@ def native_writer_admission(*_args, **_kwargs):
     raise ResourceFenceBlocked("NATIVE_DB_FENCE_NOT_ADMITTED")
 
 
-# E Round12: exact B continuous/adapter cohort, distinct from the historical
-# B3265 one-shot writer. No implicit upgrade, no native launch grant. F must
-# explicitly review and pin the FULL source/release/wheel in its sole PR.
-GRID_RUNTIME_LAB_SHA = "29a7ac17aea548f4e40081623523173dd2afa191"
+# E Round19: one exact B9e0 writer+collector+adapter+async-factory cohort.
+# These are Git source blob identity pins only. The Root must independently
+# authenticate source release, built wheel, installation, imports, entrypoint
+# and original SQL worker; issue_operation_permit() remains DENIED meanwhile.
+# Historical B3265 adapter pin above is intentionally left unchanged.
+GRID_RUNTIME_LAB_SHA = "9e0d57c4c0f2d01bc381ada090b62d23566b32aa"
 _GRID_RUNTIME_BLOBS = {
     "grid/canonical_lab_fenced_writer.py":
-        "8b93466a79fa234468a3cdc44106bd5e153e81c4",
+        "247d7fab2738e1892a05979e407f637f9df62784",
     "grid/canonical_lab_continuous_collector.py":
-        "eb93d2d14be40c19ecc18c226272c1ddd894ba3c",
+        "873e83839bee9ceb1cca710a5291ba2cf5f7f038",
     "grid/c_lab_journal_adapter.py":
         "ab93c6d421c3d3f0232060f6ded7ac01bf8eeda0",
     "grid/c_async_fenced_writer.py":
-        "98ed95029785413eb8fbc5687af39ff6bd0bf2cf",
+        "35bf202bb1674238d53b74f962af966d2a699fa2",
 }
 
 
