@@ -1,3 +1,13 @@
+# ROUND 18 current package-bound qualification
+
+Current source pins: A 7d849df3765c84fd0542aa51537e418fc6d50e15; B 6391e5e25495be05a092a484e4ec6ae752fc084e; C 099c27a0ae6a20b8f2cca6e589381b1a39af86d1; D d2695eb4a33a6b18a9191a6351bd1075ea4492fe; E 5ecc6fbf852b94b36d1b6c585b4c130db33f2b1b. Integration #166 remains frozen at 9349d7f3ed93ef82d120976816b968e0b716b067.
+
+B pyproject blob 782c75d5699ae4a1d828a8d8dcd33be726a30938 explicitly packages market_data and market_data_v2 only. Canonical writer grid/canonical_lab_fenced_writer.py blob 82af4c4688c8e027dee3ae64113c23c436931abf is excluded. Proposed B-owned path: migrate the four canonical modules together into one existing market_data package, update imports and factory, remove old active copies only after equivalence tests. Do not package entire legacy grid tree. B/E must approve module names and protected activation before change.
+
+F offline tools/f_wheel_qualification.py checks pinned wheel bytes, archive RECORD and installed member bytes. It is NOT an authenticated release receipt, installed RECORD validation, import-origin or entrypoint proof. No permit issuance. E authority blob b3687271b42206c2ebae951f8ef5cad1264065db still raises LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED. Require externally trusted signed release manifest, clean pinned checkout, locked build dependencies, wheel/sdist digests, isolated install, installed RECORD and import origin, protected entrypoint and immutable activation; bind permit to exact record and SQL identity. A suspended Job launch and C advisory interprocess lock are source progress, not authenticated extinction or durable Root ownership. Native PG18/Windows tests remain unverified. CODE NO_GO / PRODUCTION NO_GO.
+
+## Historical Round17 snapshot (not current authority)
+
 # F ROUND 17 — minimal executable native cohort admission gate
 
 This file is the **current** F gate as of 2026-11-26; exact GitHub non-atomic snapshot. It supersedes the historic ROUND 16 pins in its earlier revisions. Sole integration Draft PR #166 is **frozen** at `9349d7f3ed93ef82d120976816b968e0b716b067`. Existing PR #165 contains F-only qualification; NO mixed runtime imported.
