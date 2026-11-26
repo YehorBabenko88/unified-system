@@ -597,6 +597,30 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
             if child.poll() is None:
                 self.driver.stop(self.op)
 
+    def test_external_driver_cannot_stop_original_job_without_handle(self):
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import ProcessDriver
+        op = self.driver.start(ModuleSpec('market_data','1.0.0'),
+                               'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        external = ProcessDriver(
+            self.driver.root, self.driver.programs,
+            authorize=lambda *_: False)
+        with self.assertRaisesRegex(ValueError, 'original handle required'):
+            external.stop(op)
+        self.assertEqual(external._load(op)['state'], 'RUNNING')
+        self.assertIsNone(self.driver.children[op].poll())
+        self.assertGreaterEqual(
+            self.driver.children[op]._job.active_process_count(), 1)
+
+    def test_invalid_lab_release_denied_without_start_record(self):
+        from unified_system.runtime import ModuleSpec
+        with self.assertRaisesRegex(ValueError, 'requires disposable LAB'):
+            self.driver.start(ModuleSpec('market_data','1.0.0'),
+                              'not-disposable-lab', self.op)
+        self.assertFalse(self.driver._file(self.op).exists())
+        self.assertNotIn(self.op, self.driver.children)
+
     def test_refuse_untrusted_job_attach_even_with_true(self):
         from unified_system.runtime_process import OwnedWindowsJob
         with OwnedWindowsJob() as job:
