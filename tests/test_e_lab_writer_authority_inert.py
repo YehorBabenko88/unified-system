@@ -80,6 +80,20 @@ class LabAuthorityInvariants(unittest.TestCase):
             asyncio.run(obj.require_write_current())
         self.assertTrue(obj._revoked)
 
+    def test_external_uncertainty_latches_transfer_blocked(self):
+        obj = object.__new__(LabWriterAuthority)
+        obj._revoked = False
+        obj._transfer_blocked = False
+        obj.block_transfer()
+        self.assertTrue(obj._revoked)
+        self.assertTrue(obj.transfer_blocked)
+        obj.revoke()
+        self.assertTrue(obj.transfer_blocked)
+        with self.assertRaisesRegex(ResourceFenceBlocked,
+                                    "LAB_ROOT_AUTHORITY_REVOKED"):
+            import asyncio
+            asyncio.run(obj.check())
+
     def test_revocation_is_irreversible(self):
         obj = object.__new__(LabWriterAuthority)
         obj._revoked = False
