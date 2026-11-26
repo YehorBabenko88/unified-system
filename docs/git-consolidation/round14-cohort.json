@@ -22,7 +22,7 @@
       "id": "A",
       "repo": "YehorBabenko88/unified-system",
       "pr": 162,
-      "head_sha": "c51986a46c7efb6847ea080ce4cb03c1b2495c22",
+      "head_sha": "8a16a7878f15e43c0f75579babb8a978cbe4efbd",
       "role": "native process lifetime",
       "native_status": "NOT_VERIFIED"
     },
@@ -30,7 +30,7 @@
       "id": "B",
       "repo": "YehorBabenko88/bybit-cluster-grid",
       "pr": 300,
-      "head_sha": "17855501b97bda2a44a6710a08dfc0a7f2a31374",
+      "head_sha": "2881f25830ecf9eecffcc149e70ff0b56d1a8330",
       "role": "canonical Bybit market-data writer and collector",
       "native_status": "NOT_VERIFIED"
     },
@@ -1074,5 +1074,124 @@
       },
       "release": "CODE_NO_GO_PRODUCTION_NO_GO"
     }
+  },
+  "round20": {
+    "schema": "unified.f.round20-evidence-first.v1",
+    "date": "2026-11-26",
+    "initial_heads": {
+      "A": "8a16a7878f15e43c0f75579babb8a978cbe4efbd",
+      "B": "2881f25830ecf9eecffcc149e70ff0b56d1a8330",
+      "C": "200aca95bb2d29873b36cc345863e4fe8982aadb",
+      "D": "9147d49ccdd74cd0739237e1298840a1be617723",
+      "E": "bdaae0913cdb37a1e1738c6948d48a12b3b547e5",
+      "F_base": "76c8ddb15e084fe4c148601015eb9a115bfa67d0"
+    },
+    "first_page_ci": {
+      "A": {
+        "queued": 18,
+        "pending": 1
+      },
+      "B": {
+        "queued": 15
+      },
+      "C": {
+        "queued": 19,
+        "pending": 2
+      },
+      "D": {
+        "success": 2
+      },
+      "E": {
+        "queued": 19,
+        "pending": 1
+      },
+      "F": {
+        "queued": 17,
+        "pending": 1
+      },
+      "integration": {
+        "queued": 23,
+        "pending": 2
+      }
+    },
+    "actual_B_b9e0_workflow": {
+      "run_id": 45896381017,
+      "head": "2881f25830ecf9eecffcc149e70ff0b56d1a8330",
+      "status": "QUEUED",
+      "jobs": [
+        140171193140,
+        140171193506,
+        140171193555,
+        140171193713
+      ],
+      "artifacts": 0,
+      "built_actual_market_data_b9e0": "NOT_VERIFIED",
+      "qualifier_executed": "NOT_VERIFIED"
+    },
+    "D_actual_proof": {
+      "repo": "YehorBabenko88/Terminan",
+      "workflow_run_id": 45895777132,
+      "head": "9147d49ccdd74cd0739237e1298840a1be617723",
+      "jobs_success": 10,
+      "second_run_id": 45895777122,
+      "second_jobs_success": 4,
+      "ubuntu_312_job_id": 140169178672,
+      "win_312_job_id": 140169178599,
+      "ubuntu_312_archive": {
+        "artifact_id": 15154065823,
+        "name": "cohort-wheel-proofs-ubuntu-latest-3.12-9147d49ccdd74cd0739237e1298840a1be617723",
+        "archive_sha256": "6bb62bc1f6fadcc4d32d43b7acbd48d9b7ad7fec2bcc10c00c8eb974384b7e5f",
+        "archive_bytes": 7315,
+        "downloaded_and_sha256_verified": true,
+        "members": [
+          {
+            "name": "math-proof.json",
+            "source_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+            "wheel_sha256": "993c5bd41a0283c777c51b1779be434c7447dcc0c53818fd3980437576f7ed5a",
+            "source_files": 3
+          },
+          {
+            "name": "terminan-proof.json",
+            "source_sha": "9147d49ccdd74cd0739237e1298840a1be617723",
+            "wheel_sha256": "0ee58a5ba4614fb5251a3348bc4f020aa2b5b6d504890fd40168dbfc132fc782",
+            "source_files": 84
+          },
+          {
+            "name": "market-data-proof.json",
+            "source_sha": "3850995a6c28ed29b05cef4ba067e587d5033453",
+            "wheel_sha256": "671239b27a65c6990c17575454f06b622e2f5561d52a32082ea29004821ed5c9",
+            "source_files": 49
+          }
+        ],
+        "evidence_scope": "ONLY D COHORT. market-data source 3850995a is NOT B9e0 and is NOT B protected LAB wheel."
+      },
+      "ubuntu_python_312_logs": {
+        "tests": "919 passed, 607 subtests passed",
+        "sdist": "ARCHIVED_HISTORICAL_PYTHON_EXCLUSION=PASS wheel_members=89 sdist_members=226",
+        "installed": "INSTALLED_TERMINAN=PASS"
+      }
+    },
+    "B_canonical_runtime": {
+      "source": "9e0d57c4c0f2d01bc381ada090b62d23566b32aa",
+      "five_source_paths": "docs/git-consolidation/round18-b-wheel-source-pins.json",
+      "wheel_sha256": null,
+      "sdist_sha256": null,
+      "installed_record": null,
+      "import_origin": false
+    },
+    "protected_windows_package_identity": "DENIED_UNVERIFIED_NATIVE_WINDOWS",
+    "release_authenticated": false,
+    "issuance": "DENIED_LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED",
+    "git_full_history_security": "NOT_VERIFIED",
+    "dependency_lock": "NOT_VERIFIED",
+    "actual_full_native_E2E": "NOT_VERIFIED",
+    "integration": {
+      "pr": 166,
+      "head": "9349d7f3ed93ef82d120976816b968e0b716b067",
+      "frozen": true,
+      "runtime_changed": false
+    },
+    "code": "NO_GO",
+    "production": "NO_GO"
   }
 }
