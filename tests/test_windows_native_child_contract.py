@@ -675,7 +675,8 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
                 self.driver.stop(op)
         self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
         self.assertNotIn(op, self.driver._job_receipts)
-        self.driver.stop(op)
+        with self.assertRaisesRegex(ValueError, 'historical Windows SCM process membership unproven'):
+            self.driver.stop(op)
 
     def test_native_tampered_executable_digest_denies_receipt(self):
         from unified_system.runtime import ModuleSpec
@@ -689,7 +690,8 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
             self.driver.stop(op)
         self.assertEqual(self.driver._load(op)['state'], 'RUNNING')
         self.driver._job_launch_bindings[op] = original
-        self.driver.stop(op)
+        with self.assertRaisesRegex(ValueError, 'historical Windows SCM process membership unproven'):
+            self.driver.stop(op)
 
     def test_native_createprocess_failure_no_published_child(self):
         import os
