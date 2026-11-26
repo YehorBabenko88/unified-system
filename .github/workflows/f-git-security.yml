@@ -5,8 +5,11 @@ on:
     paths:
       - 'tools/git_consolidation_snapshot.py'
       - 'tools/git_history_secret_triage.py'
+      - 'tools/git_duplicate_ast_inventory.py'
       - 'tests/test_git_consolidation_snapshot.py'
       - 'tests/test_git_history_secret_triage.py'
+      - 'tests/test_git_duplicate_ast_inventory.py'
+      - 'tests/test_git_round3_manifest.py'
       - 'docs/git-consolidation/**'
       - '.github/workflows/f-git-security.yml'
   workflow_dispatch:
