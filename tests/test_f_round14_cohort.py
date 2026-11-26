@@ -80,12 +80,12 @@ class Round14CohortTests(unittest.TestCase):
 
     def test_round15_exact_pins_and_frozen_runtime_sha256(self):
         expected_heads = {
-            "A": "324d6bfd85624e21213180dc66a9c67d4ac790ce",
-            "B": "8594cc8812225dee6c4f292a7692486bb443ca06",
+            "A": "5bcaed7d916d72837064da9ab938e28c35695624",
+            "B": "20656417e61d26a294809cf649c37a37906b6dcf",
             "B_CUSTODY": "39a6cf4d8c039ca99bbfc00ca7cc2359bef5c60c",
-            "C": "3046f9dbfe9b587370ba0bffbfb716b59a4f56ca",
-            "D": "254c6888e1b6665bdf83ff42794e2389a53c8ace",
-            "E": "5490cf118eccb27e59905a89d4c5dac2c8b3fcbc",
+            "C": "3bbd846dff646164903aeec2e2ef5cca7de1b9b0",
+            "D": "4fd05211f10aa69108b598b0849abc842ec91899",
+            "E": "d231a0ad657b7e12f89ddc9cde2ef6b5b028a125",
             "META": "902db7e28571e851de09d127a9ebad6f120efecd",
         }
         rows = {row["id"]: row for row in self.data["components"]}
@@ -111,7 +111,7 @@ class Round14CohortTests(unittest.TestCase):
         self.assertEqual(r["ci_first_page"]["D"], {"success": 1, "queued": 1})
 
 
-    def test_round16_current_source_without_false_native_release(self):
+    def test_round16_snapshot_without_false_native_release(self):
         r = self.data["round16"]
         self.assertEqual(r["schema"], "unified.f.round16-executable-native-cohort.v1")
         self.assertEqual(r["release_status"], "NO_GO")
@@ -143,6 +143,49 @@ class Round14CohortTests(unittest.TestCase):
                          "wheel", "sdist", "Git", "NO_GO"):
             with self.subTest(required=required):
                 self.assertIn(required, document)
+
+
+    def test_round17_source_provenance_current_heads(self):
+        r = self.data["round17"]
+        self.assertEqual(r["schema"], "unified.f.round17-source-cohort.v1")
+        self.assertIs(r["integration"]["runtime_changed"], False)
+        self.assertEqual(r["integration"]["head_sha"], "9349d7f3ed93ef82d120976816b968e0b716b067")
+        current = {row["id"]: row.get("head_sha") for row in self.data["components"]}
+        for owner, pin in r["exact_heads"].items():
+            with self.subTest(owner=owner):
+                self.assertEqual(current[owner], pin)
+        self.assertEqual(len(r["source_blobs"]), 7)
+        for row in r["source_blobs"]:
+            with self.subTest(path=row["path"]):
+                self.assertRegex(row["blob"], SHA40)
+                self.assertRegex(row["head"], SHA40)
+        self.assertEqual(r["workflow_first_page"]["D"], {"success": 2})
+
+    def test_round17_native_blockers_not_promoted(self):
+        r = self.data["round17"]
+        flags = r["source_capabilities"]
+        self.assertEqual(flags["A_create_suspended"], "NOT_IMPLEMENTED")
+        self.assertEqual(flags["A_complete_extinction"], "ALWAYS_DENIED")
+        self.assertEqual(flags["C_cross_process_lock"], "NOT_IMPLEMENTED")
+        self.assertEqual(flags["E_pg_dispatch"], "UNCONDITIONAL_DENY_LAB_ROOT_BOUND_EXTINCTION_NOT_IMPLEMENTED")
+        self.assertEqual(flags["B_protected_writer_abi"], "NOT_IMPLEMENTED")
+        self.assertEqual(r["release_evidence"]["native_pg18"], "NOT_VERIFIED")
+        self.assertEqual(r["release_evidence"]["full_e2e"], "NOT_VERIFIED")
+        self.assertEqual(len(r["blocking_gates"]), 7)
+        self.assertEqual(self.data["release"]["code"], "NO_GO")
+        self.assertEqual(self.data["release"]["production"], "NO_GO")
+
+    def test_round17_gate_document_contains_current_pins(self):
+        doc = (ROOT / "round16-native-cohort-gates.md").read_text(encoding="utf-8")
+        for pin in (self.data["round17"]["exact_heads"]["A"],
+                    self.data["round17"]["exact_heads"]["B"],
+                    self.data["round17"]["exact_heads"]["C"],
+                    self.data["round17"]["exact_heads"]["D"],
+                    self.data["round17"]["exact_heads"]["E"]):
+            with self.subTest(pin=pin):
+                self.assertIn(pin, doc)
+        self.assertIn("LAB_ROOT_BOUND_EXTINCTION_NOT_IMPLEMENTED", doc)
+        self.assertIn("CODE NO_GO / PRODUCTION NO_GO", doc)
 
 if __name__ == "__main__":
     unittest.main()
