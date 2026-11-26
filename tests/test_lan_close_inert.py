@@ -78,5 +78,27 @@ class CloseAttributionTests(unittest.TestCase):
         self.assertEqual(fake.close_source, "OTHER")
 
 
+    def test_failure_line_allows_known_codes_but_rejects_private_text(self):
+        import json
+        from tests.lan_failure_diagnostics import format_failure
+        private = "PRIVATE_CLOSE_CERT_ENDPOINT_SECRET"
+        record = {"connections": [{"closed": True, "why": "CREDIT_BOUNDS",
+                                   "source": "READER_DATA", "age_ms": 1}],
+                  "stage": "READ_ERROR", "observer": "OK"}
+        line = format_failure(record, "CREDIT_BOUNDS")
+        result = json.loads(line.split(" ", 1)[1])
+        self.assertEqual(result["code"], "CREDIT_BOUNDS")
+        self.assertEqual(result["connections"][0]["why"], "CREDIT_BOUNDS")
+        self.assertEqual(result["connections"][0]["source"], "READER_DATA")
+        record["connections"][0]["source"] = private
+        record["connections"][0]["why"] = private
+        line = format_failure(record, private)
+        self.assertNotIn(private, line)
+        result = json.loads(line.split(" ", 1)[1])
+        self.assertEqual(result["code"], "OTHER")
+        self.assertEqual(result["connections"][0]["source"], "OTHER")
+        self.assertEqual(result["connections"][0]["why"], "OTHER")
+
+
 if __name__ == "__main__":
     unittest.main()
