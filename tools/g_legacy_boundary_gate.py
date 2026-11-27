@@ -8,7 +8,6 @@ legacy capability remains present, NOT that it has been safely retired.
 from __future__ import annotations
 
 import ast
-import re
 from dataclasses import dataclass
 from typing import Mapping
 
@@ -43,10 +42,14 @@ def _imports(tree: ast.AST, name: str, symbol: str) -> bool:
 
 
 def _calls(tree: ast.AST, function: str) -> bool:
-    return any(isinstance(node, ast.Call)
-               and isinstance(node.func, ast.Name)
-               and node.func.id == function
-               for node in ast.walk(tree))
+    return any(
+        isinstance(node, ast.Call)
+        and (
+            isinstance(node.func, ast.Name) and node.func.id == function
+            or isinstance(node.func, ast.Attribute) and node.func.attr == function
+        )
+        for node in ast.walk(tree)
+    )
 
 
 def _has_async_def(tree: ast.AST, name: str) -> bool:
