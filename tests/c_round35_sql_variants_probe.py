@@ -33,8 +33,18 @@ class _NativeRawSql:
         return getattr(self.original_pg, name)
 
     def sql(self, statement, **kwargs):
-        if "relevant_pending AS (" in statement:
-            self.queries.append(statement)
+        # IMPORTANT: original revalidate_lab_fence() must use the existing
+        # independently connected C owner. It cannot use the test transaction:
+        # otherwise the uncommitted active=false is already visible during
+        # preflight, and the snapshot-race test never reaches the original
+        # source query whose own fence witness we are qualifying.
+        if "relevant_pending AS (" not in statement:
+            return self.original_pg.sql(statement, **kwargs)
+        self.queries.append(statement)
+        # ONLY the full, original verify_existing_lab_checkpoint SQL is run
+        # on the injected connection. This sees transaction-local competing
+        # provenance / inactive fence while the independent owner preflight
+        # sees the last COMMITTED PostgreSQL state.
         with self.connection.cursor() as cursor:
             cursor.execute(statement)
             if cursor.description is None:
