@@ -1,5 +1,9 @@
 name: J R35 minimal CI scheduler probe
 on:
+  push:
+    branches: ['gpt/j-round26-integration-20261127']
+    paths:
+      - '.github/workflows/j-round35-minimal-scheduler.yml'
   pull_request:
     paths:
       - '.github/workflows/j-round35-minimal-scheduler.yml'
