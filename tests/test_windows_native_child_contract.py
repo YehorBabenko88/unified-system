@@ -863,6 +863,93 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
             status, 'restricted child did not survive isolated DETACHED_PROCESS '
                     'console-topology experiment')
 
+
+    def _start_detached_diagnostic_child(self):
+        """Test-only variant; same original restricted token, Job, and handles."""
+        import ctypes
+        from ctypes import wintypes as w
+        from unified_system.runtime import ModuleSpec
+        from unified_system.runtime_process import _WindowsNonServiceLabToken
+
+        def detached_create_suspended(token, kernel, argv, command,
+                                      env_buffer, cwd, startup, info):
+            a = token._a
+            a.CreateProcessAsUserW.argtypes = [
+                w.HANDLE, w.LPCWSTR, w.LPWSTR, ctypes.c_void_p,
+                ctypes.c_void_p, w.BOOL, w.DWORD, ctypes.c_void_p,
+                w.LPCWSTR, ctypes.c_void_p, ctypes.c_void_p]
+            a.CreateProcessAsUserW.restype = w.BOOL
+            return bool(a.CreateProcessAsUserW(
+                token._handle, str(argv[0]), command, None, None, False,
+                0x00000004 | 0x00000400 | 0x00000008,
+                ctypes.cast(env_buffer, ctypes.c_void_p), str(cwd),
+                ctypes.byref(startup), ctypes.byref(info)))
+
+        with patch.object(_WindowsNonServiceLabToken, 'create_suspended',
+                          detached_create_suspended):
+            op = self.driver.start(ModuleSpec('market_data', '1.0.0'),
+                                   'disposable-lab', self.op)
+        self.addCleanup(self._cleanup)
+        return op, self.driver.children[op]
+
+    def test_native_detached_worker_executes_and_single_use_receipt(self):
+        """Confirm Python code ran, then consume exact original Job once."""
+        import hashlib
+        import time
+
+        sentinel = self.worker.with_name('detached-child-executed')
+        self.worker.write_text(
+            'import pathlib, time\n'
+            'pathlib.Path(%r).write_text("executed", encoding="utf-8")\n'
+            'time.sleep(30)\n' % str(sentinel), encoding='utf-8')
+        self.driver.programs['market_data']['file_pins']['job_worker.py'] = (
+            hashlib.sha256(self.worker.read_bytes()).hexdigest())
+        op, child = self._start_detached_diagnostic_child()
+        deadline = time.monotonic() + 5
+        while time.monotonic() < deadline and not sentinel.exists():
+            if child.poll() is not None:
+                break
+            time.sleep(.05)
+        self.assertTrue(sentinel.exists(), 'restricted child never ran pinned code')
+        self.assertEqual(sentinel.read_text(encoding='utf-8'), 'executed')
+        self.assertIsNone(child.poll())
+        self.assertEqual(self.driver.owned_job_stop_state(op), 'STILL_ALIVE')
+        self.assertIn(child.pid, child._job.observe_member_pids())
+        self.driver.stop(op)
+        receipt = self.driver.job_extinction_receipt(op)
+        self.assertEqual(receipt.active_members, 0)
+        self.assertEqual(receipt.process_handle, child._handle)
+        self.assertEqual(receipt.job_handle, child._job._handle)
+        self.assertIs(self.driver.consume_job_extinction(
+            receipt, release_id='disposable-lab', operation_id=op), receipt)
+        with self.assertRaises(ValueError):
+            self.driver.consume_job_extinction(
+                receipt, release_id='disposable-lab', operation_id=op)
+
+    def test_native_detached_worker_proves_actual_scm_create_denial(self):
+        """Never create service: test restricted child OpenSCManagerW CREATE."""
+        import hashlib
+        self.worker.write_text(
+            'import ctypes, sys\n'
+            'from ctypes import wintypes as w\n'
+            'a=ctypes.WinDLL("advapi32",use_last_error=True)\n'
+            'a.OpenSCManagerW.argtypes=[w.LPCWSTR,w.LPCWSTR,w.DWORD]\n'
+            'a.OpenSCManagerW.restype=w.HANDLE\n'
+            'h=a.OpenSCManagerW(None,None,2)\n'
+            'if h:\n'
+            ' a.CloseServiceHandle.argtypes=[w.HANDLE]\n'
+            ' a.CloseServiceHandle(h)\n'
+            ' sys.exit(74)\n'
+            'sys.exit(73 if ctypes.get_last_error()==5 else 75)\n',
+            encoding='utf-8')
+        self.driver.programs['market_data']['file_pins']['job_worker.py'] = (
+            hashlib.sha256(self.worker.read_bytes()).hexdigest())
+        op, child = self._start_detached_diagnostic_child()
+        self.assertEqual(child.wait(timeout=8), 73,
+                         'LOW-integrity child did not prove SCM CREATE denial')
+        self.driver.stop(op)
+        self.assertEqual(self.driver.job_extinction_receipt(op).active_members, 0)
+
     def test_native_restricted_child_cannot_obtain_scm_create_right(self):
         import hashlib
         from unified_system.runtime import ModuleSpec
