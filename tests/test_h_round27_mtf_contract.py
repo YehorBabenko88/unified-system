@@ -130,9 +130,9 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
     def test_round29_original_math_and_historical_boundaries(self):
         spec = _load_contract()
         self.assertEqual(spec["pins"], {
-            "Grid": "b55b03fdbaa6749d6b41bafb238ce98dfebd85e0",
+            "Grid": "36883fbf3d02e84822638aa87d0f307972852dbc",
             "Math": "9e6acbd9e12a91189f57234828e31640983af553",
-            "Terminan": "78da418ac31acad0f750b98e3b89ea511cefad51",
+            "Terminan": "f4ffbe2913dee0a9987f8b9ad68f2b7df5ad360f",
         })
         history = spec["historical_asof"]
         self.assertEqual(history["status"], "PARTIAL")
@@ -140,10 +140,10 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
         self.assertEqual(history["historical_source_trust"],
                          "NOT_INDEPENDENTLY_ATTESTED")
         self.assertEqual(history["consumer"].split(";")[0],
-                         "Terminan PR130 LIVE only")
+                         "Terminan PR132 historical read-only backend IMPLEMENTED")
         self.assertEqual(spec["rejection"]["historical_asof"],
                          "SOURCE_ONLY_CANDIDATE_UNATTESTED")
-        self.assertIn("strictly REFUSES uncheckable cancellation", spec["numeric_policy"])
+        self.assertIn("preserves exact Decimal strings", spec["numeric_policy"])
 
     def test_float_presentation_cancellation_is_not_source_delta(self):
         from decimal import Decimal
@@ -157,19 +157,26 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
 
 
 
-    def test_round30_unapproved_pair_cannot_be_admitted(self):
-        gate = _load_contract()["round30_gate"]
-        self.assertEqual(gate["status"], "BLOCKED_INCOMPATIBLE_OWNER_PAIR")
-        self.assertEqual(gate["producer_candidate"], "b55b03fdbaa6749d6b41bafb238ce98dfebd85e0")
-        self.assertEqual(gate["consumer_candidate"], "c40740b8ac8104efff9bf9ca9e3e3b6db37a4ddd")
-        self.assertEqual(gate["canonical_math"], "9e6acbd9e12a91189f57234828e31640983af553")
-        self.assertIsNone(gate["paired_approved_sha"])
-        for field in ("lossless_decimal_verified", "historical_consumer_verified",
-                      "source_e2e_verified", "trading_authority_allowed"):
+    def test_round31_pair_is_source_matched_not_installed_release(self):
+        gate = _load_contract()["round31_gate"]
+        self.assertEqual(gate["status"], "SOURCE_PAIR_MATCHED_NOT_RELEASE")
+        self.assertEqual(gate["grid_producer_sha"], "36883fbf3d02e84822638aa87d0f307972852dbc")
+        self.assertEqual(gate["terminan_consumer_sha"], "f4ffbe2913dee0a9987f8b9ad68f2b7df5ad360f")
+        self.assertEqual(gate["canonical_math_sha"], "9e6acbd9e12a91189f57234828e31640983af553")
+        self.assertEqual(gate["api_version"], {"major": 2, "minor": 1})
+        self.assertEqual(gate["source_schema_keys"], {"top": 29, "row": 15})
+        self.assertEqual(set(gate["decimal_fields"]), {
+            "buy_volume_decimal", "sell_volume_decimal",
+            "volume_decimal", "delta_decimal"})
+        self.assertEqual(gate["source_precision"],
+                         "STORED_1M_JSON_NUMBERS_NOT_PROVIDER_RAW")
+        for field in ("historical_ui_implemented", "original_cross_repo_runtime_pass",
+                      "native_e2e_pass", "deduplicated_68_lines_equivalence_pass",
+                      "production_release_admitted", "trading_authority_allowed"):
             self.assertIs(gate[field], False)
-        self.assertEqual(gate["versioned_schema"], "PENDING_OWNER_AGREEMENT")
-        self.assertEqual(set(gate["required_exact_values"]),
-                         {"directional_buy", "directional_sell", "total_volume", "signed_delta"})
+        self.assertTrue(gate["historical_source_only"])
+        self.assertTrue(gate["live_5m_15m_ui_implemented"])
+        self.assertTrue(gate["historical_backend_implemented"])
 
     def test_round30_exact_volume_loss_is_a_real_blocker(self):
         from decimal import Decimal
@@ -184,6 +191,33 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
         self.assertEqual(float(buy), float(sell))
         self.assertNotEqual(Decimal(str(float(buy))) + Decimal(str(float(sell))),
                             exact_total)
+
+
+    def test_round31_lossless_stored_source_decimal_receipt(self):
+        from decimal import Decimal
+        buy = Decimal("10000000000000004.01")
+        sell = Decimal("10000000000000004")
+        total = Decimal("20000000000000008.01")
+        delta = Decimal("0.01")
+        # This only checks the independent H oracle; production invokes Math.
+        self.assertEqual(buy + sell, total)
+        self.assertEqual(buy - sell, delta)
+        for value in (buy, sell, total, delta):
+            rendered = format(value, "f")
+            self.assertNotIn("E", rendered.upper())
+            self.assertEqual(Decimal(rendered), value)
+        self.assertNotEqual(Decimal(str(float(buy))) + Decimal(str(float(sell))), total)
+
+    def test_round31_historical_ui_and_native_are_not_claimed(self):
+        spec = _load_contract()
+        gate = spec["round31_gate"]
+        self.assertEqual(gate["historical_schema"],
+                         "market_data.historical-as-of-mtf-envelope.v2")
+        self.assertEqual(gate["live_schema"],
+                         "market_data.qualified-mtf-envelope.v2")
+        self.assertIn("NOT_IMPLEMENTED", spec["historical_asof"]["consumer"])
+        self.assertIs(gate["historical_ui_implemented"], False)
+        self.assertIs(gate["native_e2e_pass"], False)
 
 
 if __name__ == "__main__":
