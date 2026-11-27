@@ -21,11 +21,16 @@ def _id(value, *, consul_session=False):
         parsed = uuid.UUID(value)
     except (ValueError, AttributeError) as exc:
         raise LabAdmissionRejected("LAB_FENCE_ID_INVALID") from exc
-    # Consul 2.1 emits canonical RFC4122 UUID5 session IDs. This is identity
-    # syntax only; exact SQL binding and independent lease checks still apply.
-    versions = (4, 5) if consul_session else (4,)
-    need(str(parsed) == value and parsed.variant == uuid.RFC_4122
-         and parsed.version in versions, "LAB_FENCE_ID_INVALID")
+    # A Consul session identifier is an opaque server-issued UUID-shaped
+    # value, not an application UUID4/5 identity. Do not infer lease
+    # authority from its version or variant. Keep exact canonical bytes for
+    # PostgreSQL uuid binding, and prove the actual lease independently.
+    # Instance and node incarnation identities remain strict RFC4122 UUID4.
+    if consul_session:
+        need(str(parsed) == value, "LAB_FENCE_ID_INVALID")
+    else:
+        need(str(parsed) == value and parsed.variant == uuid.RFC_4122
+             and parsed.version == 4, "LAB_FENCE_ID_INVALID")
     return value
 
 def _scope(owner, namespace):
