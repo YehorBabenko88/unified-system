@@ -29,7 +29,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         from f_wheel_qualification import _win_backend
         with tempfile.TemporaryDirectory(prefix="f-shadow-refusal-") as hostile:
             Path(hostile, "f_windows_handle.py").write_text(
-                "raise AssertionError('AMBIENT_SHADOW_EXECUTED')\\n")
+                "raise AssertionError('AMBIENT_SHADOW_EXECUTED')\n")
             _win_backend.cache_clear()
             try:
                 with patch.object(sys, "path", [hostile] + list(sys.path)):
