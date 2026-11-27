@@ -102,9 +102,34 @@ class MetaMigrationOwnerTests(unittest.TestCase):
         for name, sha in p["current_candidates"].items():
             self.assertRegex(sha, HEX40)
         self.assertEqual(p["current_candidates"]["Grid_epoch"],
-                         "eee29d8fae7c52d5b489a86a5a9ec08718265f18")
+                         "dfbfb657002275b7dd87cdcbb675014b7b3bf788")
         self.assertEqual(p["current_candidates"]["Terminan_D"],
-                         "fe4316d7c1580b9799903b57d8471034b5281996")
+                         "d71b29b194b40f32a2de8a4cfd0100041489fd94")
+
+
+    def test_first_real_meta_wall_candidate_retained_until_owner_acceptance(self):
+        migration = self.plan["first_concrete_migration"]
+        self.assertEqual(migration["family_id"], "meta.stage6.07")
+        self.assertEqual(migration["candidate_owner"], "Math")
+        self.assertEqual(migration["candidate_head"],
+                         "0c3a97aa3f76908c464298c345108bd355af4854")
+        self.assertEqual(migration["original_blob"],
+                         "faae6e3539c8b33e9d933fce4fd2a92b518c4ac5")
+        self.assertEqual(migration["candidate_blob"],
+                         "0e22810943294a8cf8163660b08b44a4cc54f9ed")
+        self.assertEqual(migration["local_execution_scope"],
+                         "EXACT_META_AND_MATH_WALL_CLASS_BYTES_WITH_CONTROLLED_WALL_NOTIONAL_STUB")
+        self.assertEqual(migration["local_result"],
+                         "8_PASS_0_FAIL_0_ERROR_0_SKIP")
+        self.assertEqual(migration["github_original_e2e"], "NOT_RUN")
+        self.assertEqual(migration["canonical_math_full_sdk_test"], "NOT_RUN")
+        self.assertEqual(migration["original_consumer_cutover"], "NOT_PROVEN")
+        self.assertFalse(migration["source_retirement_allowed"])
+        row = next(x for x in self.plan["features"]
+                   if x["id"] == migration["family_id"])
+        self.assertEqual(row["first_subfeature_candidate"],
+                         migration["candidate_file"])
+        self.assertFalse(row["source_removal_allowed"])
 
 
 if __name__ == "__main__":
