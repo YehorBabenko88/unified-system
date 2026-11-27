@@ -196,7 +196,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         if not p.is_file():
             self.skipTest("I owner V2 source not supplied")
         raw = p.read_bytes()
-        blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\\0" + raw).hexdigest()
+        blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + bytes([0]) + raw).hexdigest()
         expected = "9ddaebbb8c0d24e19e595654f316e8646d0d675e"
         if not owner_file and blob != expected:
             self.skipTest("F checkout contains pre-I-V2 installer; owner source not supplied")
