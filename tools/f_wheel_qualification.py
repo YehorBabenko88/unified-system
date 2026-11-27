@@ -107,8 +107,9 @@ def _installed_bytes(root_fd: int, parts: tuple[str, ...]) -> bytes:
         file_fd = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=fd)
         try:
             original = os.fstat(file_fd)
-            if not stat.S_ISREG(original.st_mode) or original.st_size > _MAX_ARCHIVE_BYTES:
-                raise ValueError("installed member is not a bounded regular file")
+            if (not stat.S_ISREG(original.st_mode) or original.st_nlink != 1
+                    or original.st_size > _MAX_ARCHIVE_BYTES):
+                raise ValueError("installed member is not a bounded single-link regular file")
             chunks = []
             remaining = _MAX_ARCHIVE_BYTES + 1
             while remaining:
@@ -181,8 +182,9 @@ def _wheel_bytes_snapshot(wheel) -> bytes:
         raise ValueError("wheel inaccessible or symlink") from exc
     try:
         first = os.fstat(fd)
-        if not stat.S_ISREG(first.st_mode) or first.st_size > _MAX_ARCHIVE_BYTES + 1024 * 1024:
-            raise ValueError("wheel is not a bounded regular file")
+        if (not stat.S_ISREG(first.st_mode) or first.st_nlink != 1
+                or first.st_size > _MAX_ARCHIVE_BYTES + 1024 * 1024):
+            raise ValueError("wheel is not a bounded single-link regular file")
         chunks = []
         remaining = _MAX_ARCHIVE_BYTES + 1024 * 1024 + 1
         while remaining:
