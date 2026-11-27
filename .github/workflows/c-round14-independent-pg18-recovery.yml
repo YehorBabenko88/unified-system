@@ -13,6 +13,8 @@ jobs:
     env:
       LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
       LAB_C_PG18_NATIVE_TEST: '1'
+      LAB_GRID_ROOT: upstream/grid-migration47
+      LAB_GRID_SHA: eee29d8fae7c52d5b489a86a5a9ec08718265f18
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
       - name: Checkout exact PR HEAD
@@ -20,6 +22,30 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Checkout exact Grid original migration 47 for real PG18 DDL
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: eee29d8fae7c52d5b489a86a5a9ec08718265f18
+          path: upstream/grid-migration47
+          persist-credentials: false
+      - name: Fail closed unless original Grid migration 47 is byte-pinned
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C "$LAB_GRID_ROOT" rev-parse HEAD)" = "$LAB_GRID_SHA"
+          test "$(git hash-object "$LAB_GRID_ROOT/grid/migrations.py")" = "51be4e432109d640c5c09f576d0e0c71f60ba49c"
+          test "$(git hash-object "$LAB_GRID_ROOT/grid/telegram_ingress_migration.py")" = "d6ae4764f954be0d29edf97de58646187f5cbcd9"
+          test "$(git hash-object "$LAB_GRID_ROOT/grid/__init__.py")" = "3dc1f76bc69e3f559bee6253b24fc93acee9e1f9"
+          python - <<'PY'
+          import os,sys
+          sys.path.insert(0,os.environ['LAB_GRID_ROOT'])
+          from grid.migrations import MIGRATIONS
+          selected=[(name,sqls) for ver,name,sqls in MIGRATIONS if ver==47]
+          assert len(selected)==1 and selected[0][0]=='source_owned_immutable_minutes'
+          assert len(selected[0][1])==4
+          print('C_NATIVE_CANONICAL_GRID_MIGRATION47_PINNED')
+          PY
       - name: Checkout exact A-owned OS evidence source for isolated native cohort
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
