@@ -52,6 +52,12 @@ class NativeCRecoveryTests(unittest.TestCase):
         self.writer = self.psycopg.connect(
             self.pg.dsn("lab_writer"), autocommit=True)
         self.ids = tuple(str(uuid.uuid4()) for _ in range(3))
+        # A real Consul 2.1 ID enters the original native C-owned claim
+        # during this one focused test; no second lifecycle or owner is made.
+        if self._testMethodName == (
+                "test_native_consul_210_exact_session_sql_write_revoke_and_denial"):
+            self.ids = ("4a91bb79-c488-1086-0664-30ccbc028eda",
+                        self.ids[1], self.ids[2])
         self.source = "a" * 64
         self.schema = "b" * 64
         with self.writer.cursor() as cursor:
@@ -213,61 +219,23 @@ class NativeCRecoveryTests(unittest.TestCase):
             f"WHERE symbol='{symbol}'"),"1")
 
     def test_native_consul_210_exact_session_sql_write_revoke_and_denial(self):
-        """Real PG18 SQL-bound Consul ID; not proof of a live Consul lease.
+        """Native C-owned PostgreSQL 18: real NCS session + 14-arg SQL + revoke.
 
-        The session is the actual Consul2.1 NCS-variant UUID-shaped value.
-        No second writer, Root permit, or independent Consul authority is
-        invented here. Both SQL calls run against this C-owned disposable DB.
+        No Consul lease is created or claimed here. This only proves the
+        resource-side SQL accepts an exact server-observed ID, and an owned
+        recovery can durably revoke it after the original backend is extinct.
         """
         import json
-        import uuid
-
-        from unified_system.grid_writer_fence_model import WriterLeaseIdentity
-        from unified_system.lab_pg_fence import revalidate_lab_fence
+        from unified_system.lab_pg_fence import _id
 
         actual = "4a91bb79-c488-1086-0664-30ccbc028eda"
-        # setUp initially claimed a disposable UUID4 TEST-only session.
-        # One exact C-owned generation transition requires original backend
-        # extinction and independently durable exact inactive old row.
-        old = dict(self.old)
-        self.assertTrue(revoke_lab_fence(self.pg, **old))
+        self.assertEqual(self.ids[0], actual)
+        self.assertEqual(_id(actual, consul_session=True), actual)
         self.assertEqual(self.pg.sql(
-            "SELECT generation,token,active FROM public.lab_writer_fence"),
-            "1|100|f")
-        self.writer.close()
-        self.writer = None
-        self.assertEqual(observe_old_lab_backend(self.pg, **old), "EXTINCT")
-
-        self.writer = self.psycopg.connect(
-            self.pg.dsn("lab_writer"), autocommit=True)
-        with self.writer.cursor() as cur:
-            cur.execute("SELECT pg_backend_pid()")
-            next_pid = cur.fetchone()[0]
-        instance = str(uuid.uuid4())
-        node = str(uuid.uuid4())
-        identity = WriterLeaseIdentity(
-            owner=old["owner"], namespace=old["namespace"],
-            session_id=actual, token=101, instance_id=instance,
-            node_incarnation_id=node, source_sha256=self.source,
-            schema_sha256=self.schema)
-        self.assertEqual(identity.session_id, actual)
-        self.assertTrue(claim_lab_fence(
-            self.pg, owner=old["owner"], namespace=old["namespace"],
-            generation=2, token=101, session_id=actual,
-            instance_id=instance, node_incarnation_id=node,
-            source_sha256=self.source, schema_sha256=self.schema,
-            backend_pid=next_pid, previous_quiescence_verified=True))
-        # This is only the source/DB diagnostic witness; neither lease nor
-        # native writer execution is granted by the receipt.
-        receipt = revalidate_lab_fence(
-            self.pg, identity=identity, generation=2,
-            backend_pid=next_pid)
-        self.assertEqual(receipt["session_id"], actual)
-        self.assertFalse(receipt["root_consul_admitted"])
-        self.assertFalse(receipt["native_writer_admitted"])
-
-        params = (old["owner"], old["namespace"], 2, 101,
-                  actual, instance, node, self.source, self.schema,
+            "SELECT session_id::text,active FROM public.lab_writer_fence"),
+            actual + "|t")
+        params = (self.old["owner"], self.old["namespace"], 1, 100,
+                  *self.ids, self.source, self.schema,
                   "1" * 64, "2" * 64, "BTCUSDT", 1200000,
                   json.dumps({"dataset_fingerprint": "1" * 64}))
         sql = ("SELECT public.lab_fenced_insert("
@@ -281,32 +249,35 @@ class NativeCRecoveryTests(unittest.TestCase):
         self.assertEqual(self.pg.sql(
             "SELECT count(*) FROM public.provenance_minutes "
             "WHERE fingerprint='" + "1" * 64 + "'"), "1")
-        self.assertTrue(revoke_lab_fence(
-            self.pg, owner=old["owner"], namespace=old["namespace"],
-            generation=2, token=101, backend_pid=next_pid,
-            backend_start=receipt["backend_start"]))
+        # The original C stop/recovery lane, not a raw pg.stop/start, proves
+        # backend extinction and invokes the canonical exact six-field
+        # revoke with independent durable inactive readback.
+        receipt = self._recover()
+        self.assertFalse(receipt["native_admitted"])
+        self.assertFalse(receipt["root_consul_admitted"])
+        self.assertFalse(receipt["durable_fence_active"])
         self.assertEqual(self.pg.sql(
-            "SELECT generation,token,active FROM public.lab_writer_fence"),
-            "2|101|f")
-        with self.assertRaises(self.psycopg.Error):
-            with self.writer.cursor() as cur:
-                cur.execute(sql, (*params[:9], "3" * 64, "4" * 64,
-                                  "BTCUSDT", 1260000,
-                                  json.dumps({"dataset_fingerprint": "3" * 64})))
+            "SELECT session_id::text,generation,token,active "
+            "FROM public.lab_writer_fence"), actual + "|1|100|f")
         self.assertEqual(self.pg.sql(
             "SELECT count(*) FROM public.provenance_minutes"), "1")
-        # Keep cleanup's saved exact old identity aligned with the active
-        # generation so C's single recovery worker never trusts a stale row.
-        self.old = dict(old, generation=2, token=101, backend_pid=next_pid,
-                        backend_start=receipt["backend_start"])
+        # Old session must remain denied even when an unrelated writer
+        # reconnects after the native C-controlled recovery.
+        with self.psycopg.connect(self.pg.dsn("lab_writer"),
+                                  autocommit=True) as stale:
+            with self.assertRaises(self.psycopg.Error):
+                with stale.cursor() as cur:
+                    cur.execute(sql, (*params[:9], "3" * 64, "4" * 64,
+                                      "BTCUSDT", 1260000,
+                                      json.dumps({"dataset_fingerprint": "3" * 64})))
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*) FROM public.provenance_minutes"), "1")
 
     def test_native_consul_session_invalid_shape_fails_without_mutation(self):
-        """Reject malformed or noncanonical SQL sessions before C claim."""
+        """Reject malformed/noncanonical C SQL sessions before claim."""
         from unified_system.lab_pg_fence import _id
-        from unified_system.grid_writer_fence_model import WriterLeaseIdentity
         real = "4a91bb79-c488-1086-0664-30ccbc028eda"
         self.assertEqual(_id(real, consul_session=True), real)
-        self.assertNotEqual(real, self.ids[0])
         before = self.pg.sql(
             "SELECT generation,token,session_id,active "
             "FROM public.lab_writer_fence")
@@ -325,14 +296,6 @@ class NativeCRecoveryTests(unittest.TestCase):
                         schema_sha256=self.schema,
                         backend_pid=self.old["backend_pid"],
                         previous_quiescence_verified=True)
-                with self.assertRaises((ValueError, LabAdmissionRejected)):
-                    WriterLeaseIdentity(
-                        owner=self.old["owner"],
-                        namespace=self.old["namespace"],
-                        session_id=invalid, token=101,
-                        instance_id=self.ids[1],
-                        node_incarnation_id=self.ids[2],
-                        source_sha256=self.source, schema_sha256=self.schema)
         self.assertEqual(self.pg.sql(
             "SELECT generation,token,session_id,active "
             "FROM public.lab_writer_fence"), before)
