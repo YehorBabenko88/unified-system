@@ -14,6 +14,7 @@ from ctypes import wintypes
 import ntpath
 import os
 import re
+import unicodedata
 
 _MAX_FILES = 10000
 _MAX_BYTES = 256 * 1024 * 1024
@@ -81,6 +82,9 @@ def _api():
     dll.ReadFile.restype = wintypes.BOOL
     dll.CloseHandle.argtypes = [wintypes.HANDLE]
     dll.CloseHandle.restype = wintypes.BOOL
+    dll.GetFinalPathNameByHandleW.argtypes = [
+        wintypes.HANDLE, wintypes.LPWSTR, wintypes.DWORD, wintypes.DWORD]
+    dll.GetFinalPathNameByHandleW.restype = wintypes.DWORD
     return dll
 
 
@@ -94,6 +98,8 @@ def _segments(path):
     if "/" in raw or raw.endswith((".", " ")) or "\x00" in raw:
         raise ValueError("non-canonical Windows path")
     parts = raw.split("\\")
+    if len(parts) == 2 and parts[1] == "":
+        return parts[0] + "\\", []
     if not parts[0].endswith(":") or len(parts) < 2:
         raise ValueError("invalid Windows drive path")
     drive = parts[0] + "\\"
@@ -109,7 +115,8 @@ def _segments(path):
 def _part(part):
     if type(part) is not str or not part or part in (".", ".."):
         raise ValueError("invalid Windows path component")
-    if (any(c in part for c in "\\/:*?\"<>|\x00")
+    if (unicodedata.normalize("NFC", part) != part
+            or any(c in part for c in "\\/:*?\"<>|\x00")
             or part.endswith((" ", "."))
             or _RESERVED.fullmatch(part)):
         raise ValueError("unsafe Windows path component")
@@ -140,6 +147,20 @@ def _info(dll, handle, *, directory):
             int(basic.ftLastWriteTime.high) << 32 | int(basic.ftLastWriteTime.low))
 
 
+def _final_path_matches(dll, handle, expected):
+    buf = ctypes.create_unicode_buffer(32768)
+    size = dll.GetFinalPathNameByHandleW(handle, buf, len(buf), 0)
+    if not size or size >= len(buf):
+        raise ValueError("Windows final handle path unavailable")
+    actual = buf.value
+    if not actual.startswith("\\\\?\\"):
+        raise ValueError("Windows non-DOS handle path refused")
+    actual = actual[4:]
+    if (not re.match(r"^[A-Za-z]:\\", actual)
+            or ntpath.normcase(actual) != ntpath.normcase(expected)):
+        raise ValueError("Windows path alias or reparse resolution refused")
+
+
 def _open(dll, path, *, directory):
     access = _FILE_READ_ATTRIBUTES | (_FILE_LIST_DIRECTORY if directory else _FILE_READ_DATA)
     flags = _FILE_FLAG_OPEN_REPARSE_POINT | (_FILE_FLAG_BACKUP_SEMANTICS if directory else 0)
@@ -149,6 +170,7 @@ def _open(dll, path, *, directory):
         raise ValueError("Windows owned readonly handle unavailable")
     try:
         identity = _info(dll, handle, directory=directory)
+        _final_path_matches(dll, handle, path)
     except BaseException:
         dll.CloseHandle(handle)
         raise
