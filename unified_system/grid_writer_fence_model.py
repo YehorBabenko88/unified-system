@@ -46,6 +46,22 @@ def _consul_session_id(value):
             re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", value) is not None)
 
 
+def _sql_consul_session_id(value):
+    """Exact canonical UUID-shaped session supported by C's PG uuid ABI.
+
+    Unlike instance/node UUID4, this allows the observed Consul NCS variant.
+    A merely well-formed session string is never a lease or SQL authority.
+    Broad transport-only session identifiers must fail at the SQL boundary.
+    """
+    if not _consul_session_id(value):
+        return False
+    try:
+        parsed = uuid.UUID(value)
+    except (ValueError, TypeError, AttributeError):
+        return False
+    return str(parsed) == value
+
+
 def _digest(value):
     return type(value) is str and _HEX.fullmatch(value) is not None
 
@@ -66,7 +82,7 @@ class WriterLeaseIdentity:
         _need(type(self.owner) is str and _OWNER.fullmatch(self.owner) is not None)
         _need(type(self.namespace) is str and len(self.namespace) <= 200
               and _NAMESPACE.fullmatch(self.namespace) is not None)
-        _need(_consul_session_id(self.session_id) and _uuid4(self.instance_id)
+        _need(_sql_consul_session_id(self.session_id) and _uuid4(self.instance_id)
               and _uuid4(self.node_incarnation_id))
         _need(type(self.token) is int and 0 < self.token <= _MAX)
         _need(_digest(self.source_sha256) and _digest(self.schema_sha256))
