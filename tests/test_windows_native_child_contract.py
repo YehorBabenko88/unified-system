@@ -109,7 +109,7 @@ class PortableContractTests(unittest.TestCase):
         self.assertTrue(token.create_suspended(
             None, [str(self.system / 'python.exe')],
             ctypes.create_unicode_buffer('python.exe'),
-            ctypes.create_unicode_buffer('X=Y\\0\\0'),
+            ctypes.create_unicode_buffer('X=Y' + chr(0) * 2),
             str(self.system), scalar, scalar))
         self.assertEqual(len(captured), 1)
         args = captured[0]
