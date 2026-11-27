@@ -103,15 +103,23 @@ class TLSIsolationTests(unittest.TestCase):
         return client,server,c,s
 
     def test_real_mtls_payload_credit_classes_and_actual_byte_accounting(self):
-        client,server,c,s=self.pair()
-        for cls,size in (('control',100),('live',65536),('bulk',10000),('live',65536)):
-            payload=bytes([size%251])*size
-            c.send(payload,cls,deadline=time.monotonic()+3)
-            received=s.receive(deadline=time.monotonic()+3)
-            self.assertEqual((received.peer_id,received.traffic_class,received.payload),('PC1',cls,payload))
-        self.assertGreater(client.budget.counters()['tx'],141000)
-        self.assertGreaterEqual(server.budget.counters()['rx'],141000)
-        self.assertLessEqual(client.memory.used,8388608)
+        # Test-only, failure-only bounded diagnostics: no payload, cert or
+        # endpoint values are serialized. The original operations run once.
+        import unified_system.lan_transport as lan
+        from unified_system import network_budget as budget
+        from tests.lan_failure_diagnostics import FailureDiagnostics
+        with FailureDiagnostics().observe(lan,budget) as diagnostics:
+            client,server,c,s=self.pair()
+            diagnostics.register_connection(c);diagnostics.register_connection(s)
+            with diagnostics.failure_boundary():
+                for cls,size in (('control',100),('live',65536),('bulk',10000),('live',65536)):
+                    payload=bytes([size%251])*size
+                    c.send(payload,cls,deadline=time.monotonic()+3)
+                    received=s.receive(deadline=time.monotonic()+3)
+                    self.assertEqual((received.peer_id,received.traffic_class,received.payload),('PC1',cls,payload))
+                self.assertGreater(client.budget.counters()['tx'],141000)
+                self.assertGreaterEqual(server.budget.counters()['rx'],141000)
+                self.assertLessEqual(client.memory.used,8388608)
 
     def test_fingerprint_and_wrong_uri_cert_rejected(self):
         with self.assertRaises(TransportError):

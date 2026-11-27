@@ -13,7 +13,7 @@ from unittest.mock import patch
 
 PREFIX='LAN_FAIL_DIAG_V1 '
 LIMIT=1960
-_CODES=frozenset(('NONE','OTHER','ASSERTION','BUSY','UNAVAILABLE','DIAGNOSTIC_UNAVAILABLE','DEADLINE','DISCONNECTED','DELIVERY_UNKNOWN','CANCELLED','POLICY_REVOKED','BUDGET_STORE_UNAVAILABLE','BUDGET_CLOCK_UNCERTAIN','OVERLOADED','CLOSED','AUTH_REJECTED','PROTOCOL_REJECTED'))
+_CODES=frozenset(('NONE','OTHER','ASSERTION','BUSY','UNAVAILABLE','DIAGNOSTIC_UNAVAILABLE','DEADLINE','DISCONNECTED','DELIVERY_UNKNOWN','CANCELLED','POLICY_REVOKED','BUDGET_STORE_UNAVAILABLE','BUDGET_CLOCK_UNCERTAIN','OVERLOADED','CLOSED','AUTH_REJECTED','PROTOCOL_REJECTED','CREDIT_BOUNDS','FRAME_BOUNDS','CLASS_NOT_ADMITTED','SESSION_BINDING_REJECTED','STREAM_CLASS_CHANGED','PEER_NOT_ADMITTED','MUX_NOT_NEGOTIATED'))
 _KINDS=frozenset(('NONE','OTHER','HELLO','OPEN','CREDIT','APP','PING','PONG','MUX_FRAGMENT'))
 _PHASES=frozenset(('NONE','OTHER','SEND','ASSERT','WAIT','TX_BODY','TX_COMMIT','TX_DONE','TX_ERROR','TX_ERROR_EXIT','READ_1','READ_5','READ_OTHER','READ_DONE','READ_ERROR'))
 
@@ -40,7 +40,7 @@ def format_failure(state,code='OTHER'):
             if type(row) in (list,tuple) and len(row)==4:streams.append([_int(row[0],16),_bool(row[1]),_int(row[2],2**63-1),_int(row[3],2**63-1)])
         for row in _items(item.get('jobs'),2):
             if type(row) in (list,tuple) and len(row)==5:jobs.append([_enum(row[0],_KINDS),_enum(row[1],frozenset(('control','live','bulk'))),_bool(row[2]),_enum(row[3],_CODES),_int(row[4],9999999,-9999999)])
-        body['connections'].append(dict(slot=_int(item.get('slot'),2),closed=_bool(item.get('closed')),why=_enum(item.get('why'),_CODES),age_ms=_int(item.get('age_ms')),q=_int(item.get('q'),64),qb=_int(item.get('qb'),1048576),streams=streams,jobs=jobs,alive=[_bool(x) for x in _items(item.get('alive'),5)]))
+        body['connections'].append(dict(slot=_int(item.get('slot'),2),closed=_bool(item.get('closed')),why=_enum(item.get('why'),_CODES),source=_enum(item.get('source'),frozenset(('NONE','READER_CONTROL','READER_DATA','SENDER','HEARTBEAT','OTHER'))),age_ms=_int(item.get('age_ms')),q=_int(item.get('q'),64),qb=_int(item.get('qb'),1048576),streams=streams,jobs=jobs,alive=[_bool(x) for x in _items(item.get('alive'),5)]))
     for item in _items(state.get('stores'),2):
         item=_dict(item);body['stores'].append(dict(phase=_enum(item.get('phase'),_PHASES),waiters=_int(item.get('waiters'),16),held=_bool(item.get('held')),entry_ms=_int(item.get('entry_ms')),hold_ms=_int(item.get('hold_ms')),max_ms=_int(item.get('max_ms')),n=_int(item.get('n')),budget_waiters=_int(item.get('budget_waiters'),16),budget_ms=_int(item.get('budget_ms'))))
     for item in _items(state.get('io'),4):
@@ -87,7 +87,7 @@ class FailureDiagnostics:
             try:
                 streams=[[k,v['opened'],v['grant'],v['sent']] for k,v in itertools.islice(connection.tx_streams.items(),2)]
                 jobs=[[j['kind'],j['cls'],j['started'],_enum(j['error'],_CODES),int((j['deadline']-time.monotonic())*1000)] for j in itertools.islice(connection.outgoing,2)]
-                return dict(slot=slot,closed=connection.closed,why=_enum(connection.error,_CODES),age_ms=int((time.monotonic()-connection.last_rx)*1000),q=len(connection.outgoing),qb=connection.queued_bytes,streams=streams,jobs=jobs,alive=[t.is_alive() for t in itertools.islice(connection.threads,5)])
+                return dict(slot=slot,closed=connection.closed,why=_enum(connection.error,_CODES),source=_enum(getattr(connection,'close_source','NONE'),frozenset(('NONE','READER_CONTROL','READER_DATA','SENDER','HEARTBEAT','OTHER'))),age_ms=int((time.monotonic()-connection.last_rx)*1000),q=len(connection.outgoing),qb=connection.queued_bytes,streams=streams,jobs=jobs,alive=[t.is_alive() for t in itertools.islice(connection.threads,5)])
             finally:connection.cv.release()
         except BaseException:return dict(unavailable=True)
 

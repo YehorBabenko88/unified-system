@@ -1,0 +1,159 @@
+name: J Round35 disposable PG18 Consul and Windows CI preflight
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/j-round35-disposable-native.yml'
+      - 'tests/test_j_round35_disposable_native.py'
+      - 'integration/round35/owner_pins.v1.json'
+permissions:
+  contents: read
+
+jobs:
+  scheduling-probe:
+    if: github.repository == 'YehorBabenko88/unified-system' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'gpt/j-round26-integration-20261127'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Materialized GitHub job evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUNNER_ENVIRONMENT" = "github-hosted"
+          test "$GITHUB_EVENT_NAME" = "pull_request"
+          printf 'J_R35_JOB_MATERIALIZED run=%s attempt=%s job=%s\n' "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "$GITHUB_JOB"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Immutable source HEAD and offline synthetic contract
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          python -B -m unittest -v tests.test_j_round35_disposable_native.StaticContract
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install immutable unit dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --only-binary=:all: --require-hashes -r docs/ci/requirements-unittest.lock
+      - name: Execute original imported E strict Consul response tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B -m unittest -v tests.test_e_round25_consul_opaque_session
+          echo "E_SOURCE_TEST_ONLY_NO_NATIVE_CONSUL_OR_WRITER_AUTHORITY"
+
+  native-pg18-consul:
+    needs: scheduling-probe
+    if: github.repository == 'YehorBabenko88/unified-system' && github.event.pull_request.head.ref == 'gpt/j-round26-integration-20261127'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    env:
+      J_R35_DISPOSABLE_ONLY: '1'
+      J_R35_CONSUL_ADDR: http://127.0.0.1:18500
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Enforce hosted disposable runner and exact J branch
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$RUNNER_ENVIRONMENT" = github-hosted
+          test "$GITHUB_REPOSITORY" = YehorBabenko88/unified-system
+          test "$GITHUB_HEAD_REF" = gpt/j-round26-integration-20261127
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          command -v docker
+          docker version
+      - name: Start private synthetic PostgreSQL18 and ACL-default-deny Consul
+        shell: bash
+        run: |
+          set -euo pipefail
+          PG_CONTAINER="j-r35-pg-${GITHUB_RUN_ID}"
+          CONSUL_CONTAINER="j-r35-consul-${GITHUB_RUN_ID}"
+          docker pull postgres:18
+          CONSUL_IMAGE="hashicorp/consul@sha256:a7153362a90c3e6b09aaa38b9fb7c58fed092e2f9e933341b8d485d7675100ba"
+          docker pull --platform linux/amd64 "$CONSUL_IMAGE"
+          printf 'CONSUL_VERSION_PROBE='; docker run --rm --platform linux/amd64 "$CONSUL_IMAGE" version | head -n 1
+          docker run --rm --platform linux/amd64 "$CONSUL_IMAGE" version | head -n 1 | grep -Fx 'Consul v2.1.0'
+          echo "PG_IMAGE_ID=$(docker image inspect postgres:18 --format '{{.Id}}')"
+          echo "CONSUL_IMAGE_ID=$(docker image inspect "$CONSUL_IMAGE" --format '{{.Id}}')"
+          PG_PASSWORD="$(openssl rand -hex 32)"
+          test "${PG_PASSWORD}" != ""
+          docker run --detach --name "$PG_CONTAINER" --network bridge \
+            --publish 127.0.0.1:55438:5432 \
+            -e POSTGRES_USER=jlab -e POSTGRES_DB=j_round35_disposable \
+            -e POSTGRES_PASSWORD="$PG_PASSWORD" \
+            postgres:18
+          unset PG_PASSWORD
+          docker run --detach --name "$CONSUL_CONTAINER" --network bridge \
+            --publish 127.0.0.1:18500:8500 \
+            -e 'CONSUL_LOCAL_CONFIG={"datacenter":"j-r35","server":true,"bootstrap_expect":1,"acl":{"enabled":true,"default_policy":"deny","enable_token_persistence":false}}' \
+            --platform linux/amd64 "$CONSUL_IMAGE" agent -server -bootstrap-expect=1 \
+            -client=0.0.0.0 -bind=0.0.0.0 -node=j-r35 -data-dir=/consul/data
+          echo "J_R35_PG_CONTAINER=$PG_CONTAINER" >> "$GITHUB_ENV"
+          for i in $(seq 1 45); do
+            if docker exec "$PG_CONTAINER" pg_isready -U jlab -d j_round35_disposable >/dev/null 2>&1; then break; fi
+            sleep 2
+          done
+          docker exec "$PG_CONTAINER" pg_isready -U jlab -d j_round35_disposable
+          for i in $(seq 1 45); do
+            if curl -fsS --max-time 2 http://127.0.0.1:18500/v1/status/leader | grep -Eq '^"[^"]+:[0-9]+"$'; then break; fi
+            sleep 2
+          done
+          curl -fsS --max-time 3 http://127.0.0.1:18500/v1/status/leader | grep -Eq '^"[^"]+:[0-9]+"$'
+      - name: Run original SQL candidates on actual disposable PG18 and ACL Consul
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          python -B -m unittest -v \
+            tests.test_j_round35_disposable_native.StaticContract \
+            tests.test_j_round35_disposable_native.NativeDisposable
+      - name: Native scope result
+        shell: bash
+        if: always()
+        run: |
+          printf 'J R35: synthetic runner only; no production, no user PG, no real trades, no release authority.\n'
+
+  windows-no-delete-preflight:
+    needs: scheduling-probe
+    if: github.repository == 'YehorBabenko88/unified-system' && github.event.pull_request.head.ref == 'gpt/j-round26-integration-20261127'
+    runs-on: windows-2022
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install hash-pinned exact Windows native test dependencies
+        shell: pwsh
+        run: |
+          python -m pip install --only-binary=:all: --require-hashes -r docs/ci/requirements-unittest.lock
+          if ($LASTEXITCODE -ne 0) { throw 'PINNED_TEST_DEPENDENCY_FAILED' }
+      - name: Original integrated A native process and installer tests on hosted Windows only
+        shell: pwsh
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+          PYTHONPATH: tests
+        run: |
+          if ($env:RUNNER_ENVIRONMENT -ne 'github-hosted') { throw 'NOT_HOSTED_RUNNER' }
+          if ((git rev-parse HEAD) -ne $env:EXPECTED_HEAD) { throw 'WINDOWS_SHA_MISMATCH' }
+          python -B -m unittest -v tests.test_j_round35_disposable_native.StaticContract
+          if ($LASTEXITCODE -ne 0) { throw 'J_STATIC_CONTRACT_FAILED' }
+          python -B -m unittest -v tests.test_windows_native_child_contract tests.test_installation_native_diagnostic tests.test_installation_service tests.test_lab_capsule_acl tests.test_installation_uninstall tests.test_service_actuator tests.test_service_activation
+          if ($LASTEXITCODE -ne 0) { throw 'A_INTEGRATED_NATIVE_OR_INSTALLER_TEST_FAILED' }

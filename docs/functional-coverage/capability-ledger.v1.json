@@ -1,0 +1,316 @@
+{
+  "schema": "unified.functional-capability-ledger.v1",
+  "owner": "H",
+  "snapshot_date": "2026-11-27",
+  "release": "CODE_NO_GO_PRODUCTION_NO_GO",
+  "evidence_policy": "SOURCE_PRESENT is not runtime readiness, historical completeness, provider availability, CI success or physical acceptance; tests remain NOT_RUN until independently executed on the exact pin.",
+  "pins": {
+    "Grid": "52d81298a3acbf1ff49ae9d84eb1d803333da922",
+    "Math": "9e6acbd9e12a91189f57234828e31640983af553",
+    "Terminan": "380c9af8a4da5feb5d7adf26dd8e1d54316409cc",
+    "Strattester": "3850995a6c28ed29b05cef4ba067e587d5033453",
+    "MetaAnalyse": "b1a4d6a41054f0040a88dc80b585380fb6b4f323"
+  },
+  "status_vocabulary": [
+    "SOURCE_PRESENT",
+    "CANDIDATE_MIGRATED",
+    "PARTIAL_CONSUMER",
+    "NOT_INDEPENDENTLY_VERIFIED",
+    "UNKNOWN_SOURCE",
+    "NOT_IMPLEMENTED"
+  ],
+  "capabilities": [
+    {
+      "id": "instrument_registry",
+      "origin": "Grid",
+      "implementation": "market_data/bybit.py::fetch_linear_instruments_page",
+      "owner": "Grid",
+      "contract": "market_data.history_api::instrument_state",
+      "status": "SOURCE_PRESENT",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "registry pagination, eligibility and all-symbol E2E"
+    },
+    {
+      "id": "historical_ohlcv_1m",
+      "origin": "Strattester",
+      "implementation": "market_data/history_api.py; market_data/history_export_v12.py",
+      "owner": "Grid",
+      "contract": "market_data_v2.read_api::qualified_snapshot /internal/v2/candles/qualified; market_data.qualified-read-envelope.v1",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "actual coverage proof, provenance, 1m read continuity"
+    },
+    {
+      "id": "timeframes_multi",
+      "origin": "Grid",
+      "implementation": "grid/history_snapshot.py; market_data/history_export_v12.py",
+      "owner": "Grid+Math",
+      "contract": "1m read envelope only evidenced; Math untouched_timeframe_levels",
+      "status": "PARTIAL_CONSUMER",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "enumerate and independently validate each supported interval, higher timeframe source and aggregation"
+    },
+    {
+      "id": "historical_trades",
+      "origin": "Strattester+MetaAnalyse",
+      "implementation": "market_data/public_trades.py; src/meta_analyse/trade_archive.py",
+      "owner": "Grid",
+      "contract": "market_data.public_trades.Trade; archive DTO requires qualification",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "historical archive end-to-end complete trade coverage"
+    },
+    {
+      "id": "live_trades",
+      "origin": "Grid",
+      "implementation": "market_data/collector.py; market_data/bybit.py",
+      "owner": "Grid",
+      "contract": "market_data.data_capabilities.live_trades",
+      "status": "SOURCE_PRESENT",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "wire-to-durable continuity and restart/fault proof"
+    },
+    {
+      "id": "volumes",
+      "origin": "Grid+Strattester",
+      "implementation": "market_data/history_export_v12.py; market_data/footprint_state.py",
+      "owner": "Grid+Math",
+      "contract": "turnover/volume history v1.2; Math exact_sum",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "base/quote volume units and coverage attestation"
+    },
+    {
+      "id": "delta",
+      "origin": "Strattester",
+      "implementation": "market_data/footprint_state.py::FootprintBuilder",
+      "owner": "Math+Grid",
+      "contract": "market_math.executed_volume_delta",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "trade-side classification and archive differential golden tests"
+    },
+    {
+      "id": "footprint",
+      "origin": "Strattester+MetaAnalyse",
+      "implementation": "market_data/footprint_state.py; src/meta_analyse/footprint_engine.py",
+      "owner": "Grid+Math",
+      "contract": "FootprintBuilder / market_math.footprint_cell_update",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "full historical bins and missing trade detection"
+    },
+    {
+      "id": "poc",
+      "origin": "Strattester",
+      "implementation": "market_data/footprint_state.py",
+      "owner": "Math",
+      "contract": "market_math.volume_profile_poc",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "historical complete source and tied-bin parity"
+    },
+    {
+      "id": "open_interest",
+      "origin": "Grid",
+      "implementation": "market_data/data_capabilities.py::CAPS",
+      "owner": "Grid",
+      "contract": "capability open_interest",
+      "status": "NOT_INDEPENDENTLY_VERIFIED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "provider retention and historical range/API/DTO proof"
+    },
+    {
+      "id": "funding",
+      "origin": "Grid+MetaAnalyse",
+      "implementation": "market_data/data_capabilities.py; src/meta_analyse/history.py",
+      "owner": "Grid+Math",
+      "contract": "capability funding_rate; market_math.paper_quote_funding_valid",
+      "status": "PARTIAL_CONSUMER",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "funding schedules, historical gaps, source timestamps and unit proof"
+    },
+    {
+      "id": "orderbook_live",
+      "origin": "Grid+MetaAnalyse",
+      "implementation": "market_data/orderbook_stream.py; src/meta_analyse/orderbook_stream.py",
+      "owner": "Grid",
+      "contract": "capability live_orderbook; book DTO pending qualification",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "sequence/checksum/level gap/reconnect proof"
+    },
+    {
+      "id": "orderbook_history",
+      "origin": "MetaAnalyse",
+      "implementation": "src/meta_analyse/orderbook.py; src/meta_analyse/orderbook_stream.py",
+      "owner": "Grid",
+      "contract": "capability orderbook_history",
+      "status": "NOT_INDEPENDENTLY_VERIFIED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "do not imply historical L2 source was available"
+    },
+    {
+      "id": "volatility",
+      "origin": "Strattester+MetaAnalyse",
+      "implementation": "terminan/volatility.py; python/market_compute_api.py::rank_volatile_symbols",
+      "owner": "Math+Terminan",
+      "contract": "market_math.rank_volatile_symbols; Terminan filter consumer",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "universe selection and fresh source proof"
+    },
+    {
+      "id": "market_cap",
+      "origin": "unknown",
+      "implementation": "NO_SOURCE_VERIFIED",
+      "owner": "Grid",
+      "contract": "NOT_SPECIFIED",
+      "status": "UNKNOWN_SOURCE",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "no exchange market-cap claims without verified independent provider and identity/units"
+    },
+    {
+      "id": "instrument_filters",
+      "origin": "Grid+MetaAnalyse",
+      "implementation": "market_data/bybit.py; python/market_compute_api.py::rank_volatile_symbols",
+      "owner": "Grid+Math+Terminan",
+      "contract": "registry / ranking / UI filter",
+      "status": "PARTIAL_CONSUMER",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "filter UI, liquidity/open_interest/turnover claims and full universe"
+    },
+    {
+      "id": "historical_archives",
+      "origin": "MetaAnalyse+Strattester",
+      "implementation": "src/meta_analyse/archive_resumable_download.py; market_data/archive_resumable_download.py",
+      "owner": "Grid",
+      "contract": "archive ingestion contracts",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "bounded downloads/resume/ETag/integrity/pinning/E2E"
+    },
+    {
+      "id": "download_progress",
+      "origin": "MetaAnalyse",
+      "implementation": "src/meta_analyse/history_progress.py; market_data/archive_partial_state.py",
+      "owner": "Grid+Terminan",
+      "contract": "progress DTO requires independent evidence",
+      "status": "NOT_INDEPENDENTLY_VERIFIED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "task counters, bytes, resume states and UI integration"
+    },
+    {
+      "id": "history_completeness",
+      "origin": "Strattester",
+      "implementation": "market_data/history_range_audit.py::assess_declared_history_range",
+      "owner": "Grid",
+      "contract": "market_data.declared-history-range.v1, boundaries only",
+      "status": "PARTIAL_CONSUMER",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "never COMPLETE from min/max; interior gaps and external source completeness unproven"
+    },
+    {
+      "id": "gap_detection",
+      "origin": "Strattester",
+      "implementation": "market_data/history_range_audit.py; market_data/history_snapshot.py",
+      "owner": "Grid",
+      "contract": "coverage expected/observed/missing fields",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "missing windows, unsupported/delist periods, replay and source attestation"
+    },
+    {
+      "id": "provenance",
+      "origin": "Strattester",
+      "implementation": "market_data_v2/qualified_read_contract.py::qualify_records",
+      "owner": "Grid+Unified",
+      "contract": "market_data.qualified-read-envelope.v1",
+      "status": "PARTIAL_CONSUMER",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "SOURCE_AUTHENTICITY NOT_ATTESTED cannot become READY"
+    },
+    {
+      "id": "mathematics",
+      "origin": "Math",
+      "implementation": "python/market_compute_api.py",
+      "owner": "Math",
+      "contract": "market_compute_api; math.market.orderflow.stream.v1",
+      "status": "SOURCE_PRESENT",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "differential numeric/parity, overflow, streaming memory test"
+    },
+    {
+      "id": "strategies",
+      "origin": "Strattester",
+      "implementation": "terminan/strategy_catalog.py; tests/test_strattester_transfer_custody.py",
+      "owner": "Terminan",
+      "contract": "sole research registry",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "eight legacy strategy roles per D, full behaviors and E2E"
+    },
+    {
+      "id": "backtesting",
+      "origin": "Strattester",
+      "implementation": "terminan/research_replay.py; terminan/research_evaluation.py",
+      "owner": "Terminan+Math",
+      "contract": "experiment/replay contracts",
+      "status": "PARTIAL_CONSUMER",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "real qualified historical slice, deterministic replay"
+    },
+    {
+      "id": "paper_simulation",
+      "origin": "MetaAnalyse+Strattester",
+      "implementation": "terminan/paper.py; terminan/paper_journal.py",
+      "owner": "Terminan+Math",
+      "contract": "paper accounting + canonical mathematical kernels",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "source-gated paper admission, crash recovery and reconciliation"
+    },
+    {
+      "id": "analytics",
+      "origin": "MetaAnalyse+Strattester",
+      "implementation": "terminan/analytics/; python/market_compute_api.py",
+      "owner": "Math+Terminan",
+      "contract": "math computations + presentation DTO",
+      "status": "CANDIDATE_MIGRATED",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "unique analytics function-by-function coverage"
+    },
+    {
+      "id": "charts_ui",
+      "origin": "Terminan+MetaAnalyse",
+      "implementation": "terminan/qualified_partial.py; terminan/analytics/orderflow_view.py",
+      "owner": "Terminan",
+      "contract": "strict immutable PARTIAL display",
+      "status": "PARTIAL_CONSUMER",
+      "tests": "NOT_RUN_EXACT_PIN",
+      "missing": "functional browser UI and not-READY source badges"
+    }
+  ],
+  "cross_owner_acceptance": {
+    "required_path": [
+      "Grid read-only provider ingress and immutable storage",
+      "Grid qualification envelope",
+      "Math pure bounded computation",
+      "Terminan display/replay/paper only when independently authorized"
+    ],
+    "prohibitions": [
+      "no second Bybit client",
+      "no second canonical raw writer",
+      "no second numerical SDK",
+      "no treating PARTIAL as READY",
+      "no historical source fabrication",
+      "no trade or production authorization"
+    ],
+    "handoffs": [
+      "B: source-backed API/DTO and status/funding/OI/archive contracts",
+      "D: immutable read mapping, Math numeric parity and UI/strategy acceptance",
+      "G: no retirement without equivalence, consumers, tests and rollback evidence",
+      "J: source-qualified vertical slice only; no launch grant"
+    ]
+  }
+}

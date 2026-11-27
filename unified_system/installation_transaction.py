@@ -8,10 +8,12 @@ consensus. Source Git consistency and resource capacity are NOT_EVALUATED.
 Service creation, ACLs, migrations, enrollment and activation are absent.
 """
 import copy
+import hashlib
 import os
 from pathlib import Path
 import sqlite3
 import stat
+import tempfile
 from contextlib import closing
 from . import lab_release
 from .contracts import canonical,seal
@@ -89,6 +91,80 @@ def source_plan(*,capsule_root,install_root,state_root,installation_id,node_id,o
   service_boundary='BLOCKED_NSSM_CLOSURE_SCOPED_ACL_GIT_IDENTITY_PENDING'))
 
 
+
+def _exclusive_namespace_proven():
+ """Native, immutable single-writer namespace proof is NOT implemented.
+
+ An ordinary tempfile prefix, private POSIX permission bits or caller boolean
+ cannot exclude another process running with the same credentials. In
+ particular POSIX fstat/stat followed by unlinkat is still vulnerable to
+ an adversarial LAST-COMPONENT name swap. Keep destructive paths inaccessible
+ until F/A provide OS-held exclusive namespace attestation. No CLI permit.
+ A unit test may patch this private guard solely to exercise failure handling
+ inside its own disposable fixture; that does not qualify production effects.
+ """
+ return False
+
+
+def _anchored_deletion_supported():
+ """No Windows/path-only removal until the native handle owner is qualified."""
+ return (os.name=='posix' and hasattr(os,'O_DIRECTORY') and hasattr(os,'O_NOFOLLOW')
+         and os.unlink in os.supports_dir_fd and os.rmdir in os.supports_dir_fd
+         and os.open in os.supports_dir_fd and os.stat in os.supports_dir_fd)
+
+
+def _owned_dir_handle(path,fingerprint):
+ flags=os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW|getattr(os,'O_CLOEXEC',0)
+ fd=os.open(path,flags)
+ try:
+  info=os.fstat(fd)
+  need(stat.S_ISDIR(info.st_mode) and {'device':info.st_dev,'inode':info.st_ino}==fingerprint)
+  return fd
+ except BaseException:
+  os.close(fd);raise
+
+
+def _unlink_owned_member(path,pin,parent_fingerprint):
+ """Bind the deletion to the verified directory handle, never a late path.
+
+ This remains an inert disposable test primitive, not a hostile-race-proof
+ production delete-by-file-ID capability.
+ """
+ parent_fd=_owned_dir_handle(path.parent,parent_fingerprint)
+ try:
+  member_fd=os.open(path.name,os.O_RDONLY|os.O_NOFOLLOW|getattr(os,'O_CLOEXEC',0),dir_fd=parent_fd)
+  try:
+   before=os.fstat(member_fd)
+   need(stat.S_ISREG(before.st_mode) and before.st_nlink==1 and before.st_size==pin['bytes'])
+   digest=hashlib.sha256();count=0
+   while True:
+    data=os.read(member_fd,1024*1024)
+    if not data:break
+    count+=len(data);need(count<=pin['bytes']);digest.update(data)
+   after=os.fstat(member_fd)
+   path_stat=os.stat(path.name,dir_fd=parent_fd,follow_symlinks=False)
+   key=lambda x:(x.st_dev,x.st_ino,x.st_size,x.st_mtime_ns,x.st_nlink)
+   need(key(before)==key(after)==key(path_stat) and before.st_ctime_ns==after.st_ctime_ns
+        and count==pin['bytes'] and digest.hexdigest()==pin['sha256'])
+  finally:os.close(member_fd)
+  os.unlink(path.name,dir_fd=parent_fd)
+ finally:os.close(parent_fd)
+
+
+def _remove_owned_directory(path,identity,parent_fingerprint):
+ parent_fd=_owned_dir_handle(path.parent,parent_fingerprint)
+ try:
+  child_fd=os.open(path.name,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW|getattr(os,'O_CLOEXEC',0),dir_fd=parent_fd)
+  try:
+   info=os.fstat(child_fd)
+   found=os.stat(path.name,dir_fd=parent_fd,follow_symlinks=False)
+   need(stat.S_ISDIR(info.st_mode) and {'device':info.st_dev,'inode':info.st_ino}==identity
+        and (found.st_dev,found.st_ino)==(info.st_dev,info.st_ino))
+  finally:os.close(child_fd)
+  os.rmdir(path.name,dir_fd=parent_fd)
+ finally:os.close(parent_fd)
+
+
 class InstallationTransaction:
  def __init__(self,plan):
   self.plan=validate_plan(plan);self.plan_hash=seal(self.plan)
@@ -128,12 +204,17 @@ class InstallationTransaction:
     need(status=='RESERVED' and fingerprint==owned);status='STAGE_INTENT'
    elif kind=='STAGED_INACTIVE':
     need(status=='STAGE_INTENT' and fingerprint==stamp(self.release));release_owned=fingerprint;status='STAGED_INACTIVE'
+   elif kind=='DISPOSE_INTENT':
+    need(status=='STAGED_INACTIVE' and fingerprint==release_owned);status=kind
+   elif kind=='DISPOSED_INACTIVE':
+    need(status=='DISPOSE_INTENT' and fingerprint==release_owned);status=kind
    elif kind=='ROLLED_BACK_RETAINED':
     need(status in ('PREPARED','RESERVED','STAGE_INTENT','STAGED_INACTIVE') and fingerprint==owned);status=kind
    else:need(False)
   if owned is None:need(not self.install.exists())
   else:need(stamp(self.install)==owned)
   if release_owned is not None:need(stamp(self.release)==release_owned)
+  if status=='DISPOSED_INACTIVE':need(not any(self.release.iterdir()))
   return records,status,owned
  def _append(self,records,kind,fingerprint):
   need(len(records)<MAX_RECORDS)
@@ -146,9 +227,9 @@ class InstallationTransaction:
    plan_sha256=self.plan_hash,transaction_receipt_sha256=seal(records[-1]),sequence=records[-1]['sequence'],status=status,
    activation='BLOCKED',installed='NOT_PROVEN',readiness='NOT_PROVEN',source_proof='NOT_EVALUATED',
    capacity_gate='NOT_EVALUATED',capsule_source_provenance=self.plan['capsule_source_provenance'],execution_authority=False,physical_acceptance='NOT_RUN',
-   public_progress_projection='NOT_CONNECTED',rollback='NO_ACTIVATION_RESOURCES_RETAINED')
+   public_progress_projection='NOT_CONNECTED',rollback=('DISPOSAL_UNCERTAIN_REVIEW_REQUIRED' if status=='DISPOSE_INTENT' else 'NO_ACTIVATION_CODE_DISPOSED' if status=='DISPOSED_INACTIVE' else 'NO_ACTIVATION_RESOURCES_RETAINED'))
  def stage(self):
-  records,status,owned=self._read();need(status!='ROLLED_BACK_RETAINED')
+  records,status,owned=self._read();need(status not in ('ROLLED_BACK_RETAINED','DISPOSE_INTENT','DISPOSED_INACTIVE'))
   if status=='STAGED_INACTIVE':return self.snapshot()
   admit(self.plan)
   if status=='PREPARED':
@@ -175,5 +256,67 @@ class InstallationTransaction:
   This receipt is not proof that a running service was stopped or uninstalled.
   """
   records,status,owned=self._read()
+  need(status not in ('DISPOSE_INTENT','DISPOSED_INACTIVE'))
   if status!='ROLLED_BACK_RETAINED':self._append(records,'ROLLED_BACK_RETAINED',owned)
+  return self.snapshot()
+
+ def dispose_inactive(self,*,approved_disposable=False,fail_after_members=None):
+  """Dispose only a fully-verified inactive capsule in a fresh temp fixture.
+
+  The original durable journal first records DISPOSE_INTENT, then each closed
+  source member is reverified immediately before unlink. Unknown/interrupted
+  outcomes block all further disposal and retain ownership evidence. This
+  is NOT native APP_ONLY Windows-service removal or trusted release cleanup.
+  The sandbox name/parent test is a guard, not host ACL attestation.
+  """
+  need(approved_disposable is True)
+  need(fail_after_members is None or (type(fail_after_members) is int and fail_after_members>=0))
+  # Path-only Windows unlink has an admitted TOCTOU weakness. A POSIX
+  # descriptor-relative disposable fixture is safer, but is never ROOT/SCM GO.
+  need(_anchored_deletion_supported())
+  # Caller approval is not an ownership/security capability. No irreversible
+  # unlink even in a writable temporary directory until independent OS-bound
+  # exclusivity of the leaf namespace is demonstrated.
+  need(_exclusive_namespace_proven())
+  workspace=self.install.parent
+  need(self.state.parent==workspace and workspace.name.startswith('unified-agent-i-'))
+  need(workspace.parent.resolve()==Path(tempfile.gettempdir()).resolve())
+  records,status,_=self._read()
+  if status=='DISPOSED_INACTIVE':return self.snapshot()
+  need(status=='STAGED_INACTIVE')
+  report=admit(self.plan,self.release);manifest=report['manifest']
+  files=manifest['files'];dirs=manifest['directories']
+  need(len(files)+len(dirs)<=4096)
+  parent_stamps={'.':stamp(self.release)}
+  for rel in dirs:parent_stamps[rel]=stamp(self.release/rel)
+  # Verify the manifest itself as a closed extra member. No foreign files or
+  # directories are allowed: admit() compared exact inventories.
+  manifest_path=lab_release.regular(self.release/'lab-release.json')
+  need(lab_release.hash_file(manifest_path)['sha256']==self.plan['manifest_sha256'])
+  self._append(records,'DISPOSE_INTENT',stamp(self.release))
+  records,status,_=self._read();need(status=='DISPOSE_INTENT')
+  removed=0
+  if fail_after_members==0:raise OSError('DISPOSABLE_INJECTED_INTERRUPTION')
+  for rel in sorted(files):
+   item=self.release/rel
+   parent=Path(rel).parent.as_posix()
+   need(stamp(item.parent)==parent_stamps[parent])
+   _unlink_owned_member(item,files[rel],parent_stamps[parent])
+   removed+=1
+   if fail_after_members==removed:raise OSError('DISPOSABLE_INJECTED_INTERRUPTION')
+  need(stamp(manifest_path.parent)==parent_stamps['.'])
+  need(lab_release.hash_file(manifest_path)['sha256']==self.plan['manifest_sha256'])
+  _unlink_owned_member(manifest_path,{'sha256':self.plan['manifest_sha256'],
+                                     'bytes':manifest_path.stat().st_size},parent_stamps['.'])
+  removed+=1
+  if fail_after_members==removed:raise OSError('DISPOSABLE_INJECTED_INTERRUPTION')
+  for rel in sorted(dirs,key=lambda x:(len(Path(x).parts),x),reverse=True):
+   target=self.release/rel
+   need(stamp(target)==parent_stamps[rel])
+   need(stamp(target.parent)==parent_stamps[Path(rel).parent.as_posix()])
+   _remove_owned_directory(target,parent_stamps[rel],parent_stamps[Path(rel).parent.as_posix()])
+   removed+=1
+   if fail_after_members==removed:raise OSError('DISPOSABLE_INJECTED_INTERRUPTION')
+  need(stamp(self.release)==parent_stamps['.'] and not any(self.release.iterdir()))
+  self._append(records,'DISPOSED_INACTIVE',stamp(self.release))
   return self.snapshot()

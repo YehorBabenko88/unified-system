@@ -19,6 +19,10 @@ class FakeRemoval:
 
 class UninstallTests(unittest.TestCase):
  def setUp(self):
+  # All destructive effects below belong only to this owned TemporaryDirectory.
+  # The private production gate remains DENIED; no user-facing approval exists.
+  self._fixture_guard=patch('unified_system.installation_uninstall._exclusive_code_removal_proven',return_value=True)
+  self._fixture_guard.start();self.addCleanup(self._fixture_guard.stop)
   service_fixtures.ServiceResourceTests.setUp(self);self.service_plan=service_fixtures.ServiceResourceTests.plan(self)
   self.resource=ServiceResource.create(self.service_plan,self.backend,self.guard)
   self.removal=FakeRemoval(self.backend);self.uninstall=Uninstaller(self.resource,self.removal)
@@ -31,6 +35,139 @@ class UninstallTests(unittest.TestCase):
   self.assertIsNone(self.backend.service);self.assertFalse(Path(self.service_plan['code']).exists())
   self.assertEqual((self.state/'user-data').read_bytes(),b'PRESERVE_DATA');self.assertEqual((self.state/'config').read_bytes(),b'PRESERVE_CONFIG');self.assertEqual(self.ownership.read_bytes(),self.ownership_before)
   self.assertEqual(self.uninstall.run(guard=self.guard)['status'],'APP_ONLY_REMOVED')
+ @unittest.skipUnless(os.name=='nt','Win32 original HANDLE disposable only; never real SCM')
+ def test_win_native_handle_removes_only_original_private_fixture_file(self):
+  from unified_system.installation_uninstall import image,identity,_win_handle_dispose_member
+  with tempfile.TemporaryDirectory(prefix='unified-i-win32-fixture-') as base:
+   path=Path(base)/'owned.bin';path.write_bytes(b'PRIVATE_DISPOSABLE_BYTES')
+   proof=image(path)
+   from unified_system.installation_service import _native_file_identity
+   _win_handle_dispose_member(path,proof,'FILE',identity(path.parent),
+                              _native_file_identity(path),_native_file_identity(path.parent))
+   self.assertFalse(path.exists())
+   self.assertFalse(path.is_symlink())
+
+ @unittest.skipUnless(os.name=='nt','Win32 original HANDLE same-byte inode swap negative')
+ def test_win_native_handle_rejects_same_bytes_different_inode_without_delete(self):
+  from unified_system.installation_uninstall import image,identity,_win_handle_dispose_member
+  with tempfile.TemporaryDirectory(prefix='unified-i-win32-fixture-') as base:
+   root=Path(base);path=root/'owned.bin';payload=b'IDENTICAL-BYTES'
+   path.write_bytes(payload);old=image(path)
+   path.rename(root/'original-retained.bin')
+   path.write_bytes(payload)
+   with self.assertRaises(ValueError):
+    from unified_system.installation_service import _native_file_identity
+    _win_handle_dispose_member(path,old,'FILE',identity(path.parent),
+                               _native_file_identity(path),_native_file_identity(path.parent))
+   self.assertEqual(path.read_bytes(),payload)
+   self.assertEqual((root/'original-retained.bin').read_bytes(),payload)
+
+ @unittest.skipUnless(os.name=='nt','Win32 original HANDLE empty directory disposition')
+ def test_win_native_handle_removes_only_original_empty_disposable_directory(self):
+  from unified_system.installation_uninstall import identity,_win_handle_dispose_member
+  with tempfile.TemporaryDirectory(prefix='unified-i-win32-fixture-') as base:
+   path=Path(base)/'empty';path.mkdir();pin=identity(path)
+   from unified_system.installation_service import _native_file_identity
+   _win_handle_dispose_member(path,pin,'DIRECTORY',identity(path.parent),
+                              _native_file_identity(path),_native_file_identity(path.parent))
+   self.assertFalse(path.exists())
+
+ @unittest.skipUnless(os.name=='nt','Win32 original HANDLE refuses nonempty directory')
+ def test_win_native_handle_rejects_directory_with_foreign_member(self):
+  from unified_system.installation_uninstall import identity,_win_handle_dispose_member
+  with tempfile.TemporaryDirectory(prefix='unified-i-win32-fixture-') as base:
+   path=Path(base)/'nonempty';path.mkdir();foreign=path/'foreign.bin'
+   foreign.write_bytes(b'MUST_PRESERVE');pin=identity(path)
+   from unified_system.installation_service import _native_file_identity
+   with self.assertRaises(ValueError):
+    _win_handle_dispose_member(path,pin,'DIRECTORY',identity(path.parent),
+                               _native_file_identity(path),_native_file_identity(path.parent))
+   self.assertEqual(foreign.read_bytes(),b'MUST_PRESERVE')
+
+ @unittest.skipUnless(os.name=='nt','Windows parent FileId retained handle negative')
+ def test_win_native_parent_identity_mismatch_preserves_all_files(self):
+  from unified_system.installation_uninstall import image,identity,_win_handle_dispose_member
+  with tempfile.TemporaryDirectory(prefix='unified-i-win32-parent-') as base:
+   root=Path(base);owned=root/'owned';foreign=root/'foreign'
+   owned.mkdir();foreign.mkdir()
+   path=owned/'do-not-delete.bin';path.write_bytes(b'FOREIGN_SURVIVES')
+   pin=image(path);wrong_parent=identity(foreign)
+   self.assertNotEqual(identity(owned),wrong_parent)
+   with self.assertRaisesRegex(ValueError,'APP_ONLY_UNINSTALL_REJECTED'):
+    from unified_system.installation_service import _native_file_identity
+    _win_handle_dispose_member(path,pin,'FILE',wrong_parent,
+                               _native_file_identity(path),_native_file_identity(foreign))
+   self.assertEqual(path.read_bytes(),b'FOREIGN_SURVIVES')
+
+ @unittest.skipUnless(os.name=='nt','Windows native retained HANDLE refuses hardlinks')
+ def test_win_native_hardlinked_owned_file_preserves_both_names(self):
+  from unified_system.installation_uninstall import image,identity,_win_handle_dispose_member
+  with tempfile.TemporaryDirectory(prefix='unified-i-win32-hardlink-') as base:
+   root=Path(base);path=root/'owned';other=root/'foreign'
+   path.write_bytes(b'HARDLINK_RETENTION')
+   os.link(path,other)
+   # image() refuses link-count >1 before any delete reaches native path.
+   with self.assertRaises(ValueError):
+    image(path)
+   self.assertEqual(path.read_bytes(),b'HARDLINK_RETENTION')
+   self.assertEqual(other.read_bytes(),b'HARDLINK_RETENTION')
+
+ @unittest.skipUnless(os.name=='nt','original native FileId receipt binding requires Windows')
+ def test_win_native_diff_install_time_fileid_denied_without_delete(self):
+  from unified_system.installation_uninstall import image,identity,_win_handle_dispose_member
+  from unified_system.installation_service import _native_file_identity
+  with tempfile.TemporaryDirectory(prefix='unified-i-native-fileid-') as base:
+   root=Path(base);target=root/'target';target.write_bytes(b'PRESERVE')
+   original=image(target);real=_native_file_identity(target)
+   forged=dict(real,file_id_128='f'*32 if real['file_id_128']!='f'*32 else 'e'*32)
+   with self.assertRaisesRegex(ValueError,'APP_ONLY_UNINSTALL_REJECTED'):
+    _win_handle_dispose_member(target,original,'FILE',identity(root),
+                               forged,_native_file_identity(root))
+   self.assertEqual(target.read_bytes(),b'PRESERVE')
+
+ @unittest.skipUnless(os.name=='nt','original native Volume receipt binding requires Windows')
+ def test_win_native_diff_install_time_volume_denied_without_delete(self):
+  from unified_system.installation_uninstall import image,identity,_win_handle_dispose_member
+  from unified_system.installation_service import _native_file_identity
+  with tempfile.TemporaryDirectory(prefix='unified-i-native-volume-') as base:
+   root=Path(base);target=root/'target';target.write_bytes(b'PRESERVE')
+   original=image(target);real=_native_file_identity(target)
+   forged=dict(real,volume_serial=real['volume_serial']+1)
+   with self.assertRaisesRegex(ValueError,'APP_ONLY_UNINSTALL_REJECTED'):
+    _win_handle_dispose_member(target,original,'FILE',identity(root),
+                               forged,_native_file_identity(root))
+   self.assertEqual(target.read_bytes(),b'PRESERVE')
+
+ def test_native_handle_primitive_direct_call_without_os_proof_is_denied(self):
+  from unified_system.installation_uninstall import _win_handle_dispose_member,image,identity
+  with tempfile.TemporaryDirectory(prefix='unified-i-no-native-permit-') as base:
+   path=Path(base)/'not-deletable';path.write_bytes(b'PRESERVE')
+   original=image(path)
+   with patch('unified_system.installation_uninstall._exclusive_code_removal_proven',return_value=False):
+    with self.assertRaisesRegex(ValueError,'APP_ONLY_UNINSTALL_REJECTED'):
+     _win_handle_dispose_member(path,original,'FILE',identity(path.parent),None,None)
+   self.assertEqual(path.read_bytes(),b'PRESERVE')
+
+ def test_non_windows_handle_disposer_denied_without_effect(self):
+  if os.name=='nt':self.skipTest('POSIX native boundary refusal only')
+  from unified_system.installation_uninstall import _win_handle_dispose_member,identity
+  with tempfile.TemporaryDirectory(prefix='unified-i-posix-fixture-') as base:
+   path=Path(base)/'protected';path.write_bytes(b'KEEP')
+   with self.assertRaises(ValueError):
+    _win_handle_dispose_member(path,{'device':1,'inode':1},'FILE',identity(path.parent),None,None)
+   self.assertEqual(path.read_bytes(),b'KEEP')
+
+ def test_default_owned_app_only_denied_before_audit_or_service_effect(self):
+  code=Path(self.service_plan['code']);member=code/'runtime.json'
+  raw=member.read_bytes();service_before=copy.deepcopy(self.backend.service)
+  with patch('unified_system.installation_uninstall._exclusive_code_removal_proven',return_value=False):
+   with self.assertRaisesRegex(ValueError,'APP_ONLY_UNINSTALL_REJECTED'):
+    self.uninstall.run(guard=self.guard)
+  self.assertEqual(member.read_bytes(),raw)
+  self.assertEqual(self.backend.service,service_before)
+  self.assertFalse(self.uninstall.audit.path.exists())
+  self.assertEqual(self.removal.calls,[])
+
  def test_default_denial_and_unclassified_modes_have_no_effect(self):
   for mode in ('REMOVE_CONFIG','FULL'):
    with self.assertRaisesRegex(ValueError,'BLOCKED'):self.uninstall.run(mode=mode,guard=self.guard)
@@ -77,9 +214,15 @@ class UninstallTests(unittest.TestCase):
   record=self.resource.recorded();plan=self.uninstall._plan(record,self.uninstall._members()[1]);calls=[]
   def capture(argv,**kw):
    calls.append((argv,kw));return ('{\"service\":\"ABSENT\"}',0)
-  with patch('unified_system.installation_service.current_computer_name',return_value='TEST-PC'),patch('unified_system.installation_service._native_tools',return_value=self.backend.native_tools()),patch('unified_system.installation_service._native_hash',return_value='b'*64),patch('unified_system.installation_service._run',capture):
+  with patch('unified_system.installation_service.current_computer_name',return_value='TEST-PC'),patch('unified_system.installation_service._native_tools',return_value=self.backend.native_tools()),patch('unified_system.installation_service._native_hash',return_value='b'*64),patch('unified_system.installation_service._system_directory',return_value=service_fixtures.FAKE_SYSTEM32),patch('unified_system.installation_service._run',capture):
    self.assertEqual(WindowsRemovalBoundary().call('REMOVE_SERVICE',plan,record,self.guard),{'service':'ABSENT'})
   argv,kw=calls[0];self.assertEqual(argv[-2],'-EncodedCommand');self.assertIn('Invoke-UnifiedOwnedServiceRemoval',base64.b64decode(argv[-1]).decode('utf-16le'));self.assertEqual(json.loads(kw['payload'])['plan'],record['plan']);self.assertEqual(json.loads(kw['payload'])['action'],'REMOVE_SERVICE')
+ @unittest.skipUnless(os.name=='nt','inert Windows PowerShell executable path qualification')
+ def test_native_encoded_command_fixture_still_denies_non_system32_executable(self):
+  from unified_system import installation_service as service
+  with patch.object(service,'_system_directory',return_value=service_fixtures.FAKE_SYSTEM32):
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service.powershell_argv(str(service_fixtures.FAKE_SYSTEM32/'powershell.exe'),'Write-Output INERT')
  @unittest.skipUnless(os.name=='nt','Windows native boundary control instrumentation')
  def test_seventy_member_controller_admits_sources_once_and_observes_without_powershell(self):
   import shutil
@@ -103,7 +246,7 @@ class UninstallTests(unittest.TestCase):
    rows=original_read(journal)
    if journal.path.name=='uninstall.sqlite':chain_rows.append(len(rows))
    return rows
-  with patch.object(Journal,'read',counted),patch.object(service,'current_computer_name',return_value='TEST-PC'),patch.object(service,'_native_tools',return_value=backend.native_tools()),patch.object(service,'_native_hash',return_value='b'*64),patch.object(service,'_run',capture),patch.object(lab_release,'verify_capsule',wraps=original) as verified:
+  with patch.object(Journal,'read',counted),patch.object(service,'current_computer_name',return_value='TEST-PC'),patch.object(service,'_native_tools',return_value=backend.native_tools()),patch.object(service,'_native_hash',return_value='b'*64),patch.object(service,'_system_directory',return_value=service_fixtures.FAKE_SYSTEM32),patch.object(service,'_run',capture),patch.object(lab_release,'verify_capsule',wraps=original) as verified:
    self.assertEqual(Uninstaller(resource,boundary).run(guard=self.guard)['status'],'APP_ONLY_REMOVED')
    self.assertLessEqual(verified.call_count,8,'full closure admission must be O(1) per operation')
   self.assertEqual(len(spawns),1,'only actual DELETE uses PowerShell');self.assertGreaterEqual(len(observations),70);self.assertLessEqual(len(chain_rows),5,'full audit verification must be O(1) per operation');self.assertLessEqual(sum(chain_rows),2*len(observations)+10,'audit rows processed must be linear')

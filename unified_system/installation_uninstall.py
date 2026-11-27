@@ -81,8 +81,188 @@ class WindowsRemovalBoundary:
   env=service._environment();env.update(UNIFIED_REMOVAL_MODULE=str(MODULE),UNIFIED_SERVICE_MODULE=str(service.MODULE))
   payload=canonical({'action':action,'plan':p,'proof':record['proof']});need(len(payload)<=65536)
   ps=p['native_tools']['powershell'];need(service._native_hash(ps['path'])==ps['sha256'])
-  raw,status=service._run([ps['path'],'-NoProfile','-NonInteractive','-EncodedCommand',base64.b64encode(code.encode('utf-16le')).decode('ascii')],env=env,payload=payload,timeout=60)
+  raw,status=service._run(service.powershell_argv(ps['path'],code),env=env,payload=payload,timeout=60)
   need(status==0);value=json.loads(raw);need(type(value) is dict and set(value)=={'service'} and value['service'] in ('ABSENT','MARKED_PENDING','PRESENT_REVIEW_REQUIRED'));return value
+
+
+
+def _exclusive_code_removal_proven():
+ """No production-capable leaf-identity-safe file disposal exists yet.
+
+ The original APP_ONLY remover checks an owned file by path then calls
+ Path.unlink/rmdir with a second path lookup. Its last-component name
+ can change concurrently, even if service removal and journal are honest.
+ A caller guard, disposable directory, signed manifest or stopped SCM
+ receipt does not provide OS-held exclusive namespace. Return False for
+ all boundaries and platforms until independently reviewed native
+ F/A file-handle or exclusive namespace proof replaces the path deletion.
+ Controlled test fixtures patch this private predicate and must not
+ create a production authorization path.
+ """
+ return False
+
+
+
+def _win_handle_dispose_member(path, owned, kind, parent_identity, native_leaf, native_parent):
+ """Candidate OS-object-bound removal; default APP_ONLY guard still DENIES.
+
+ No late Path.unlink/rmdir, no legacy fallback, no real-PC permission.
+ F/A native Windows hostile-writer qualification is still required.
+ """
+ # Direct callers cannot bypass the disabled APP_ONLY production entrypoint.
+ need(_exclusive_code_removal_proven())
+ need(os.name=='nt' and kind in ('FILE','DIRECTORY') and type(owned) is dict)
+ fingerprint(parent_identity)
+ # Original install-time V2 native provenance, not a read-after-the-fact ID.
+ def native_proof(value):
+  need(type(value) is dict and set(value)=={'volume_serial','file_id_128'})
+  need(type(value['volume_serial']) is int and value['volume_serial']>0)
+  need(type(value['file_id_128']) is str and len(value['file_id_128'])==32)
+  need(all(ch in '0123456789abcdef' for ch in value['file_id_128']))
+  need(int(value['file_id_128'],16)>0)
+  return (value['volume_serial'],bytes.fromhex(value['file_id_128']))
+ leaf_pin=native_proof(native_leaf);parent_pin=native_proof(native_parent)
+ import ctypes
+ from ctypes import wintypes as w
+ import msvcrt
+ path=_safe(path)
+ need(identity(path.parent)==parent_identity)
+ initial=path.lstat()
+ need((stat.S_ISREG(initial.st_mode) if kind=='FILE' else stat.S_ISDIR(initial.st_mode))
+      and initial.st_dev>0 and initial.st_ino>0)
+ if kind=='FILE':
+  need(set(owned)=={'device','inode','bytes','mtime_ns','sha256'} and
+       type(owned['bytes']) is int and type(owned['sha256']) is str)
+ else:fingerprint(owned)
+ need((initial.st_dev,initial.st_ino)==(owned['device'],owned['inode']))
+ k=ctypes.WinDLL('kernel32',use_last_error=True)
+ k.CreateFileW.argtypes=(w.LPCWSTR,w.DWORD,w.DWORD,w.LPVOID,w.DWORD,w.DWORD,w.HANDLE)
+ k.CreateFileW.restype=w.HANDLE
+ k.GetFinalPathNameByHandleW.argtypes=(w.HANDLE,w.LPWSTR,w.DWORD,w.DWORD)
+ k.GetFinalPathNameByHandleW.restype=w.DWORD
+ k.GetFileInformationByHandleEx.argtypes=(w.HANDLE,ctypes.c_int,w.LPVOID,w.DWORD)
+ k.GetFileInformationByHandleEx.restype=w.BOOL
+ k.SetFileInformationByHandle.argtypes=(w.HANDLE,ctypes.c_int,w.LPVOID,w.DWORD)
+ k.SetFileInformationByHandle.restype=w.BOOL
+ k.CloseHandle.argtypes=(w.HANDLE,)
+ k.CloseHandle.restype=w.BOOL
+ def _file_id(h):
+  # FILE_ID_INFO (class 18) retains full volume serial and 128-bit FileId;
+  # CRT st_ino is NOT itself this OS identity proof.
+  class FILE_ID_INFO(ctypes.Structure):
+   _fields_=[('volume_serial',ctypes.c_ulonglong),('file_id',ctypes.c_ubyte*16)]
+  info=FILE_ID_INFO()
+  need(k.GetFileInformationByHandleEx(h,18,ctypes.byref(info),ctypes.sizeof(info)))
+  need(info.volume_serial!=0 and any(info.file_id))
+  return (int(info.volume_serial),bytes(info.file_id))
+ def _empty_by_handle(h):
+  # FILE_ID_BOTH_DIR_INFO 10/11: use the SAME opened directory HANDLE,
+  # never Path.iterdir(), which is a second pathname lookup.
+  class DIR_ENTRY(ctypes.Structure):
+   _fields_=[('next_offset',w.DWORD),('index',w.DWORD),
+    ('created',ctypes.c_longlong),('accessed',ctypes.c_longlong),
+    ('written',ctypes.c_longlong),('changed',ctypes.c_longlong),
+    ('size',ctypes.c_longlong),('allocated',ctypes.c_longlong),
+    ('attributes',w.DWORD),('name_length',w.DWORD),('ea_size',w.DWORD),
+    ('short_name_length',ctypes.c_ubyte),('short_name',ctypes.c_wchar*12),
+    ('file_id',ctypes.c_longlong),('name',ctypes.c_wchar*1)]
+  first=True
+  for _ in range(16):
+   data=ctypes.create_string_buffer(65536)
+   ctypes.set_last_error(0)
+   ok=k.GetFileInformationByHandleEx(h,11 if first else 10,data,len(data))
+   first=False
+   if not ok:
+    need(ctypes.get_last_error()==18)  # ERROR_NO_MORE_FILES ONLY
+    return
+   offset=0
+   for _ in range(2048):
+    need(offset+ctypes.sizeof(DIR_ENTRY)<=len(data))
+    entry=DIR_ENTRY.from_buffer(data,offset)
+    need(0<entry.name_length<=len(data)-offset-DIR_ENTRY.name.offset
+         and entry.name_length%2==0)
+    name=ctypes.wstring_at(ctypes.addressof(data)+offset+
+                           DIR_ENTRY.name.offset,entry.name_length//2)
+    need(name in ('.','..'))  # any other entry: owned dir NOT empty
+    if entry.next_offset==0:break
+    need(entry.next_offset>0 and entry.next_offset%4==0)
+    offset+=entry.next_offset
+   else:need(False)
+  need(False)  # more than 16 buffers: refuse, never assume emptiness
+ # Pin the parent directory OS object BEFORE opening the leaf. A hostile
+ # rename of a retained directory requires DELETE sharing, which is denied.
+ # This is still a candidate: full ownership at creation is NOT attested.
+ parent=path.parent
+ parent_h=k.CreateFileW(str(parent),0x00000081,0x00000001,None,3,
+                        0x00200000|0x02000000,None)
+ need(parent_h not in (None,0,ctypes.c_void_p(-1).value))
+ try:
+  class TAG(ctypes.Structure):
+   _fields_=[('attributes',w.DWORD),('reparse_tag',w.DWORD)]
+  parent_tag=TAG()
+  need(k.GetFileInformationByHandleEx(parent_h,9,ctypes.byref(parent_tag),
+                                      ctypes.sizeof(parent_tag)))
+  need(bool(parent_tag.attributes&0x10) and not parent_tag.attributes&0x400)
+  parent_id=_file_id(parent_h)
+  need(parent_id==parent_pin and identity(parent)==parent_identity)
+  # GENERIC_READ|DELETE, share READ only; incompatible foreign writers or
+  # open DELETE handles cause a safe failure, no pathname fallback.
+  flags=0x00200000|(0x02000000 if kind=='DIRECTORY' else 0)
+  handle=k.CreateFileW(str(path),0x80000000|0x00010000,0x00000001,
+                       None,3,flags,None)
+  need(handle not in (None,0,ctypes.c_void_p(-1).value))
+  responsible=True
+  try:
+   tag=TAG()
+   need(k.GetFileInformationByHandleEx(handle,9,ctypes.byref(tag),
+                                       ctypes.sizeof(tag)))
+   need(not tag.attributes&0x400 and bool(tag.attributes&0x10)==(kind=='DIRECTORY'))
+   opened_id=_file_id(handle)
+   need(opened_id==leaf_pin)
+   # GetFinalPathNameByHandleW returns a local DOS \\?\C:\... form.
+   # UNC, alias, device or changed parent paths are DENIED.
+   final=ctypes.create_unicode_buffer(32768)
+   n=k.GetFinalPathNameByHandleW(handle,final,len(final),0)
+   need(0<n<len(final) and final.value.startswith('\\\\?\\')
+        and final.value[4:].casefold()==str(path).casefold())
+   if kind=='FILE':
+    fd=msvcrt.open_osfhandle(int(handle),os.O_RDONLY|getattr(os,'O_BINARY',0))
+    responsible=False
+    try:
+     before=os.fstat(fd)
+     fields=lambda s:(s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_nlink)
+     need(before.st_dev==owned['device'] and before.st_ino==owned['inode'])
+     need(stat.S_ISREG(before.st_mode) and before.st_nlink==1 and
+          before.st_size==owned['bytes'] and before.st_mtime_ns==owned['mtime_ns'])
+     digest=hashlib.sha256();size=0
+     while True:
+      chunk=os.read(fd,1024*1024)
+      if not chunk:break
+      size+=len(chunk);need(size<=owned['bytes']);digest.update(chunk)
+     need(size==owned['bytes'] and digest.hexdigest()==owned['sha256'])
+     need(fields(os.fstat(fd))==fields(before))
+     need(_file_id(handle)==opened_id and _file_id(parent_h)==parent_id)
+     need(identity(parent)==parent_identity)
+     # FileDispositionInfoEx=21, DELETE|POSIX_SEMANTICS. No downgrade.
+     disposition=w.DWORD(3)
+     need(k.SetFileInformationByHandle(handle,21,ctypes.byref(disposition),
+                                       ctypes.sizeof(disposition)))
+    finally:os.close(fd)  # CRT owns original HANDLE exactly once
+   else:
+    # A directory HANDLE is NOT a CRT file descriptor; don't call
+    # msvcrt.open_osfhandle or os.fstat on it.
+    _empty_by_handle(handle)
+    need(_file_id(handle)==opened_id and _file_id(parent_h)==parent_id)
+    need(identity(parent)==parent_identity)
+    disposition=w.DWORD(3)
+    need(k.SetFileInformationByHandle(handle,21,ctypes.byref(disposition),
+                                      ctypes.sizeof(disposition)))
+  finally:
+   if responsible:k.CloseHandle(handle)
+ finally:k.CloseHandle(parent_h)
+
+ # A new foreign leaf or pending deletion is NOT evidence of success.
+ need(not path.exists() and not path.is_symlink())
 
 
 class Uninstaller:
@@ -92,6 +272,26 @@ class Uninstaller:
  def _record(self):return self.resource.recorded()
  def _members(self):
   r=self._record();p=r['plan'];m=lab_release.verify_capsule(p['capsule_root'],p['manifest_sha256'])['manifest']
+  # A V1 or partial V2 service receipt is never native-file qualified.
+  # Preview may inspect legacy receipts; physical deletion remains DENIED.
+  native=r.get('native_file_identity')
+  if isinstance(self.boundary,WindowsRemovalBoundary):
+   service.need(native is not None)
+   service._check_native_installation_receipt(native,p)
+   # Full original Win32 install-time identity of preserved parents and the
+   # ownership journal must still be true BEFORE any SCM/removal admission.
+   root=Path(p['root']);entries=native['entries']
+   for key,target in (
+       ('root',root),
+       ('ownership',root/'ownership'),
+       ('state',root/'state'),
+       ('ownership:service.sqlite',root/'ownership'/'service.sqlite')):
+    need(service._native_file_identity(target)==entries[key])
+   # Once all code has been disposed, crash recovery is driven exclusively
+   # by prior durable member INTENT + original V2 sealed proofs, not by
+   # promoting a new code-directory identity.
+   if Path(p['code']).exists():
+    need(service._native_file_identity(p['code'])==entries['code'])
   files={k:dict(v) for k,v in m['files'].items()};raw=(Path(p['capsule_root'])/'lab-release.json').read_bytes();files['lab-release.json']={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}
   dirs=set(m['directories'])|{'.'};need(len(files)+len(dirs)<=MAX_MEMBERS)
   return r,files,dirs
@@ -198,7 +398,11 @@ class Uninstaller:
  def _result(self,status,plan):return dict(schema=SCHEMA,status=status,mode='APP_ONLY',plan_sha256=plan['plan_sha256'],state='PRESERVED_NO_CONTENT_ASSERTION',ownership='PRESERVED',absence_evidence='OBSERVATION_NOT_ACTOR_ATTRIBUTION',execution_authority=False,physical_acceptance='NOT_RUN',public_progress_projection='NOT_CONNECTED',remove_config='BLOCKED_UNCLASSIFIED',full='BLOCKED_CLASSIFICATION_AND_SEPARATE_APPROVAL_REQUIRED')
  def _run(self,mode='APP_ONLY',guard=None):
   if mode in ('REMOVE_CONFIG','FULL'):raise ValueError('UNINSTALL_MODE_BLOCKED_UNCLASSIFIED_CONFIG_DATABASE_BACKUPS_AND_SEPARATE_FULL_APPROVAL')
-  need(mode=='APP_ONLY');record,files,dirs=self._members();plan=self._plan(record,files);self._roots(plan,record)
+  need(mode=='APP_ONLY')
+  # Default fail-closed BEFORE any audit, SCM action or file unlink.
+  # APP_ONLY physical removal is not approved by a test-double boundary.
+  need(_exclusive_code_removal_proven())
+  record,files,dirs=self._members();plan=self._plan(record,files);self._roots(plan,record)
   self._permit('WRITE_RECEIPT',plan,guard)
   if hasattr(self.boundary,'admit'):self.boundary.admit(copy.deepcopy(plan),copy.deepcopy(record),guard)
   if not self.audit.path.exists():
@@ -242,7 +446,19 @@ class Uninstaller:
     with self._critical():
      need(self._observe(record,plan,guard)=='ABSENT');self._roots(plan,record)
      need(identity(path.parent)==data['parent_identity'] and (image(path) if kind=='FILE' else identity(path))==data['identity'])
-     if kind=='FILE':path.unlink()
+     if os.name=='nt' and isinstance(self.boundary,WindowsRemovalBoundary):
+      proof=record['native_file_identity'];service._check_native_installation_receipt(proof,record['plan'])
+      native=proof['entries']
+      if relative=='.':
+       leaf_key='code';parent_key='root'
+      else:
+       leaf_key=('file:' if kind=='FILE' else 'directory:')+relative
+       ancestor=Path(relative).parent.as_posix()
+       parent_key='code' if ancestor=='.' else 'directory:'+ancestor
+      need(leaf_key in native and parent_key in native)
+      _win_handle_dispose_member(path,data['identity'],kind,data['parent_identity'],
+                                 native[leaf_key],native[parent_key])
+     elif kind=='FILE':path.unlink()  # disposable FakeRemoval fixture only
      else:need(not any(path.iterdir()));path.rmdir()
    self._append(plan,'COMPLETE','OBSERVED_OWNED_ABSENCE_STATE_RETAINED',guard);self._verify_final()
    return self._result('APP_ONLY_REMOVED',plan)

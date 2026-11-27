@@ -1,0 +1,113 @@
+{
+  "schema": "unified.git-duplicate-source-count-audit.v1",
+  "date": "2026-11-26",
+  "source": {
+    "url": "https://github.com/YehorBabenko88/unified-system/issues/111#issuecomment-7161674950",
+    "method_claimed": "identical function AST, normalized body length >=400 bytes",
+    "candidate_pins": {
+      "unified_system": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
+      "grid": "c9ffdaa2af52c4d55871a48655a77a0c669da80f",
+      "math": "9e6acbd9e12a91189f57234828e31640983af553",
+      "Terminan": "353d16b2126609579018fafe3f76047b465bb289",
+      "strattester": "3850995a6c28ed29b05cef4ba067e587d5033453",
+      "meta_analyse": "b1a4d6a41054f0040a88dc80b585380fb6b4f323"
+    }
+  },
+  "claimed_total": 178,
+  "category_claims": [
+    {
+      "pair": "Terminan|meta_analyse",
+      "claimed": 55
+    },
+    {
+      "pair": "bybit-cluster-grid|strattester",
+      "claimed": 52
+    },
+    {
+      "pair": "bybit-cluster-grid|unified-system",
+      "claimed": 32
+    },
+    {
+      "pair": "bybit-cluster-grid|math",
+      "claimed": 19
+    },
+    {
+      "pair": "meta_analyse|strattester",
+      "claimed": 16
+    }
+  ],
+  "category_claimed_sum": 174,
+  "unattributed_difference": 4,
+  "grid_unified_detail": {
+    "claimed": 32,
+    "listed_family_sum": 31,
+    "unattributed_within_pair": 1,
+    "families": [
+      {
+        "id": "GU-F01",
+        "from": "grid/coordination.py",
+        "to": "unified_system/consul_authority.py",
+        "published_count": 10
+      },
+      {
+        "id": "GU-F02",
+        "from": "grid/coordination_commands.py",
+        "to": "unified_system/consul_command_store.py",
+        "published_count": 13
+      },
+      {
+        "id": "GU-F03",
+        "from": "grid/authority_runtime_v1.py",
+        "to": "unified_system/authority_codec.py",
+        "published_count": 3
+      },
+      {
+        "id": "GU-F04",
+        "from": "grid/authority_assignment_v1.py",
+        "to": "unified_system/research_authority.py",
+        "published_count": 3
+      },
+      {
+        "id": "GU-F05",
+        "from": "grid/ml_windows_job.py",
+        "to": "unified_system/windows_job.py",
+        "published_count": 2
+      }
+    ],
+    "limitation": "GU-Fxx IDs identify file families only, NOT each function duplicate or an independently computed AST hash. Original function-level hashes and 1 missing Grid-Unified group were not attached to issue report; no safe retirement without new pinned source scan."
+  },
+  "disposition": "INVESTIGATION_REQUIRED",
+  "acceptance_rule": "Stable function-level IDs require explicit repo+path+qualname+normalized AST digest on exact source SHA; verify live consumers and no unique behavior before removal.",
+  "no_deletion_authorized": true,
+  "round4_review": {
+    "observed": "2026-11-26",
+    "method": "Source report arithmetic and pinned AST instrument inspection, no full historical rerun",
+    "status": "UNRESOLVED_NO_FABRICATED_GROUPS",
+    "arithmetic": {
+      "category_total": 178,
+      "category_rows_sum": 174,
+      "unattributed_category_groups": 4,
+      "grid_unified_claimed": 32,
+      "grid_unified_five_families_sum": 31,
+      "grid_unified_unattributed": 1
+    },
+    "stable_family_ids": [
+      "GU-F01",
+      "GU-F02",
+      "GU-F03",
+      "GU-F04",
+      "GU-F05"
+    ],
+    "function_id_rule": "GU- + first 20 hex of normalized AST body sha256; emitted only by successfully completed pinned Git source job, not supplied by family claims",
+    "pinned_ast_job": {
+      "run_id": 45858738583,
+      "source_grid_sha": "c9ffdaa2af52c4d55871a48655a77a0c669da80f",
+      "source_unified_sha": "f05f9a73581b1c15c4cc78da2801c9f2f5dd08d0",
+      "artifact_name": "f-grid-root-ast-inventory",
+      "state": "QUEUED_AT_REVIEW",
+      "absence_of_result": "No function-level IDs asserted"
+    },
+    "interpretation": "The missing four category entries and missing one Grid-Unified detailed group may be presentation/reporting omissions or source-method differences; not assignable without exact AST report and original scope.",
+    "deletion_authorized": false
+  }
+}

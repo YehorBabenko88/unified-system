@@ -1,0 +1,384 @@
+{
+  "schema": "unified-system.j.round35.disposable.v1",
+  "scope": "SYNTHETIC_ISOLATED_CI_ONLY_NO_RELEASE_AUTHORITY",
+  "source_j_head": "9933836d33d7131629ca7759f0237d4da65ae0ca",
+  "frozen_pr166_sha": "9349d7f3ed93ef82d120976816b968e0b716b067",
+  "release": "CODE_NO_GO_PRODUCTION_NO_GO",
+  "authorize_release": false,
+  "authorize_physical_delete": false,
+  "authorize_live_trading": false,
+  "authorize_user_database": false,
+  "authorize_main_merge": false,
+  "authorize_disable_acl": false,
+  "sources": {
+    "A": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 162,
+      "sha": "89b78cc4075a2fcb845b3494cceda20dec0cc64c",
+      "status": "OBSERVED_HEAD_IMMUTABLE_NOT_NATIVE_ACCEPTED"
+    },
+    "B": {
+      "repo": "YehorBabenko88/bybit-cluster-grid",
+      "pr": 311,
+      "sha": "1b66fb19ccedfcb67134dcc0cf6ffa30705a3852",
+      "status": "OBSERVED_HEAD_IMMUTABLE_NOT_NATIVE_ACCEPTED"
+    },
+    "C": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 170,
+      "sha": "d2d832735132a218dcab6647a6964db2d059baa3",
+      "previous_source_blob": "076980d9556bf3a685091f16129ef321cb1372be",
+      "status": "OBSERVED_HEAD_IMMUTABLE_NOT_NATIVE_ACCEPTED"
+    },
+    "D": {
+      "repo": "YehorBabenko88/Terminan",
+      "pr": 136,
+      "sha": "fe4316d7c1580b9799903b57d8471034b5281996",
+      "previous_tested_sha": "a28ad9454fa71287ef368d898dfd788ec3481f7d",
+      "status": "OBSERVED_HEAD_IMMUTABLE_NOT_NATIVE_ACCEPTED"
+    },
+    "E": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 171,
+      "sha": "2b9b8cbf3648dc8ff67048f38e19c5b01853be3b",
+      "status": "OBSERVED_HEAD_IMMUTABLE_NOT_NATIVE_ACCEPTED"
+    },
+    "F": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 180,
+      "sha": "503ef65ceb121be5c24b95f1200e9d4455abbb22",
+      "status": "OBSERVED_HEAD_IMMUTABLE_NOT_NATIVE_ACCEPTED"
+    },
+    "G": {
+      "repo": "YehorBabenko88/Strattester",
+      "pr": 123,
+      "sha": "5ff4f10d068bbed08db816e6e4ffdeb2b81ac338",
+      "previous_fixture_sha": "9cfa91eaa9dce4553625c3d61dc34607dbe7aca2",
+      "status": "OBSERVED_HEAD_IMMUTABLE_NOT_NATIVE_ACCEPTED"
+    },
+    "H": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 181,
+      "sha": "26082f902d8987662a20cdf0f5c808463ff1cbd2",
+      "status": "OBSERVED_HEAD_IMMUTABLE_NOT_NATIVE_ACCEPTED"
+    },
+    "I": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 182,
+      "sha": "e0ccabec65a5647d9f0e4fc3cf7b80ea10abe65a",
+      "previous_owner_sha": "89f6bf9d0c012007b34ba3b3ce3b06b3343762af",
+      "status": "OBSERVED_HEAD_IMMUTABLE_NOT_NATIVE_ACCEPTED"
+    },
+    "Math": {
+      "repo": "YehorBabenko88/math",
+      "sha": "9e6acbd9e12a91189f57234828e31640983af553",
+      "status": "SOLE_CANONICAL_NO_DUPLICATE"
+    }
+  },
+  "original_checkpoint_candidates": [
+    {
+      "blob": "cad4ccf970470eb86a487c484cee9be15ea9614d",
+      "status": "STATIC_UNBALANCED_NATIVE_NOT_YET_RUN"
+    },
+    {
+      "blob": "076980d9556bf3a685091f16129ef321cb1372be",
+      "status": "STATIC_BALANCED_NATIVE_NOT_YET_RUN"
+    }
+  ],
+  "native_gates": {
+    "postgresql_18": "NOT_RUN",
+    "consul_acl_ttl": "NOT_RUN",
+    "windows_installer": "NOT_RUN",
+    "ui_e2e": "NOT_RUN",
+    "ci_scheduler": "PREVIOUS_J_TWO_JOBS_QUEUED_NO_STEPS; LATER_AUTOMATIC_RUNS_ZERO_JOBS; NO_NATIVE_TEST_EXECUTION",
+    "consul_compatibility": "CONSUL_2_1_0_UBI_AMD64_MANIFEST_DIGEST_PINNED_IN_WORKFLOW_NOT_YET_PULLED_OR_EXECUTED"
+  },
+  "integration_policy": {
+    "owner_blob_import": "REVIEWED_EXACT_ONLY",
+    "draft_branch_merge": "DENIED",
+    "recorded_roster_delist": "DENIED",
+    "legacy_retirement": "DENIED"
+  },
+  "observation_epoch": "round35-master-7223403929",
+  "previous_source_shas": {
+    "A": "c14bb55ece3b580600a6f6e528d1faa0b4790ea8",
+    "B": "8719dfb0a865fa3b4cce09050c8f15e36f2dfe16",
+    "C": "c015e39257faff78548cff42acc50fa0b915650f",
+    "D": "d091fd98fd48d11d27ff64c7e0485ada04e25548",
+    "E": "856480fa64e125144409570fdea50ed9d7220401",
+    "F": "bfa0817afc1e08946a8f0059dd8a6fcd885e3830",
+    "G": "ae6a47434dec459584105c5f877f749bc7676b16",
+    "H": "e23c3785c0ed8ec68d4a9993941d4c04dc5fdddc",
+    "I": "da42b3e7d047f65f0ef78a18f1b8c2bf2d38f52f"
+  },
+  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity. E exact 2 owner blobs imported only as candidate, no transfer of native acceptance. New cycle source snapshots and isolated local capacity tests are not fleet/package acceptance. D four original hosted jobs independently inspected at tested HEAD; no current moving-SHA equivalence. C exact original owner native workflow selectively added because missing J branch; no C full owner ancestry merged. R35 MASTER 7223403929: A actual Win2022 3.11/3.12 regression gates J native; H Math168 pin-only; duplicate J estimator deleted after actual count mismatch; I single canonical source, real manifest missing. New A native 5fa7b3b original Win2022 3 jobs 558 tested/552PASS/6SKIP but narrower autoload negative means no J/F release promotion.",
+  "qualified_source_pins": {
+    "A": {
+      "tested_head": "89b78cc4075a2fcb845b3494cceda20dec0cc64c",
+      "reviewed_owner_head": "3ff47bba6c6eef74e4a14c3bbc938097681c23ec",
+      "code_semantics": "SAME_PRODUCTION_LOGIC_COMMENT_ONLY_NEWER_HEAD",
+      "ci": "HISTORICAL_WIN2022_89b78cc_558_PASS_6_SKIP_SUPERSEDED_FOR_CURRENT_CANDIDATE_BY_REGRESSION_AT_3ff47bb",
+      "runtime_process_blob": "bd9bb626f41f2daf5fc7ceb3f8cb8a89acd2e3e9",
+      "test_blob": "47ea8c0a101fbf752e68fec5a4d292a9ae31a63f",
+      "integration": "SELECTIVE_IMPORTED_SOURCE_PARITY_ONLY",
+      "regression_quarantine": {
+        "tested_head": "3ff47bba6c6eef74e4a14c3bbc938097681c23ec",
+        "original_run": "https://github.com/YehorBabenko88/unified-system/actions/runs/46028331374",
+        "win2022_py311": {
+          "passed": 185,
+          "error": 1,
+          "skipped": 2
+        },
+        "win2022_py312": {
+          "passed": 184,
+          "error": 2,
+          "skipped": 2
+        },
+        "win2022_py313": {
+          "passed": 186,
+          "error": 0,
+          "skipped": 2
+        },
+        "source_of_errors": "OWNED_SERVICE_REJECTED_IN_BOUNDED_POWERSHELL_15S_CHILD",
+        "production_runtime_blob_unchanged": "bd9bb626f41f2daf5fc7ceb3f8cb8a89acd2e3e9",
+        "latest_A_candidate_head": "5fa7b3bfb1af26cbd5843ac3c1f8fb31960176e4",
+        "latest_A_test_blob": "ae6b497d545ec36257eb848ec36897ada0ef3077",
+        "candidate_test_narrowed_imported_command_check": "NOT_NATIVE_OR_SECURITY_QUALIFIED",
+        "J_integrated_A_promotion": "DENIED_UNTIL_A_REGRESSION_CLOSED_AND_F_REVIEW",
+        "new_owner_source_candidates_fixed": "NEW_SHA_HAS_3_GREEN_WIN2022_BUT_NEGATIVE_AUTLOAD_COVERAGE_NARROWED"
+      },
+      "new_candidate_evidence": {
+        "tested_head": "5fa7b3bfb1af26cbd5843ac3c1f8fb31960176e4",
+        "run": "https://github.com/YehorBabenko88/unified-system/actions/runs/46035064521",
+        "native_windows2022": {
+          "python311": {
+            "job_id": 140628264466,
+            "tests": 188,
+            "passed": 186,
+            "skipped": 2,
+            "fail": 0,
+            "error": 0
+          },
+          "python312": {
+            "job_id": 140628263960,
+            "tests": 188,
+            "passed": 186,
+            "skipped": 2,
+            "fail": 0,
+            "error": 0
+          },
+          "python313": {
+            "job_id": 140628264264,
+            "tests": 188,
+            "passed": 186,
+            "skipped": 2,
+            "fail": 0,
+            "error": 0
+          }
+        },
+        "raw_original_logs_verified": true,
+        "new_negative_test_scope": "Get-Command_ListImported_replaces_direct_Get-NetIPAddress_invocation_for_cold_module_autoload_negative",
+        "security_equivalence": "NOT_ATTESTED_F_REVIEW_REQUIRED",
+        "windows2025": "QUEUED_NOT_RUN",
+        "J_integrated_A_test_blob": "47ea8c0a101fbf752e68fec5a4d292a9ae31a63f",
+        "latest_owner_A_test_blob": "ae6b497d545ec36257eb848ec36897ada0ef3077",
+        "promotion_to_J": "DENIED_PENDING_F_INDEPENDENT_NEGATIVE_COVERAGE_REVIEW_AND_INTEGRATED_J_NATIVE"
+      }
+    },
+    "G": {
+      "tested_head": "5ff4f10d068bbed08db816e6e4ffdeb2b81ac338",
+      "prior_tested_head": "ae6a47434dec459584105c5f877f749bc7676b16",
+      "original_run": "https://github.com/YehorBabenko88/Strattester/actions/runs/46026544488",
+      "original_run_head_verified": true,
+      "original_jobs": 4,
+      "linux311": {
+        "pass": 573,
+        "skip": 1
+      },
+      "linux313": {
+        "pass": 573,
+        "skip": 1
+      },
+      "windows311": {
+        "pass": 574,
+        "skip": 0
+      },
+      "windows313": {
+        "pass": 574,
+        "skip": 0
+      },
+      "total_pass": 2294,
+      "total_fail": 0,
+      "total_error": 0,
+      "total_skip": 2,
+      "meaning": "G_ORIGINAL_FIXTURE_PRESERVATION_ONLY_NOT_GRID_MIGRATION_PARITY",
+      "integration": "EXTERNAL_STRATTESTER_PIN_ONLY_NO_G006_G012_RETIREMENT"
+    },
+    "D": {
+      "tested_head": "fe4316d7c1580b9799903b57d8471034b5281996",
+      "original_run": "https://github.com/YehorBabenko88/Terminan/actions/runs/46026544862",
+      "status": "EXTERNAL_ORIGINAL_D129_G012_DELTA_TEST_ONLY_NO_FULL_CANONICAL_MIGRATION",
+      "jobs": 4,
+      "per_job_case_count": 21,
+      "total_pass": 84,
+      "total_fail": 0,
+      "total_error": 0,
+      "total_skip": 0,
+      "per_cell": "18_MANAGED_ROUNDTRIP_PLUS_3_ORIGINAL_DIFFERENTIAL",
+      "current_owner_moving_head_not_inherited": true,
+      "legacy_retirement": false
+    }
+  },
+  "latest_owner_observations": {
+    "A": {
+      "sha": "5fa7b3bfb1af26cbd5843ac3c1f8fb31960176e4",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
+    },
+    "B": {
+      "sha": "be0f9d783912c2bef625d04fbacd22b97396f8c0",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
+    },
+    "C": {
+      "sha": "a21f86caa096f480b3e0821438e6c4c5371a6099",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
+    },
+    "D": {
+      "sha": "8e5196840848d0991706cbbd4d782c58e3e7f719",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
+    },
+    "E": {
+      "sha": "5a7b64ac2e537e8971309feabdd5b756d21e062d",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
+    },
+    "F": {
+      "sha": "120e0d0f81756761d7c9a787d1cfce66bc95f8d6",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
+    },
+    "G": {
+      "sha": "fa9e0ff2235b35466a03c78781a80d42dbe1c4af",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
+    },
+    "H": {
+      "sha": "ff34defd5fad8e3a2ab32ee59bd3faa8cf9edc4e",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
+    },
+    "I": {
+      "sha": "92c63fa0a62175544bea847c692eb8249a65fca9",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
+    }
+  },
+  "snapshot_cycle": "ROUND35_MASTER_7223403929",
+  "reviewed_candidate_imports": {
+    "E": {
+      "owner_sha": "5a7b64ac2e537e8971309feabdd5b756d21e062d",
+      "source_blob": "41276cc968333405482684da786fd736fdf463d2",
+      "test_blob": "83d2e569937872313bd4e33fcd48f32e1fff7402",
+      "status": "EXACT_BLOB_IMPORTED_NATIVE_NOT_RUN_F_INDEPENDENT_ACCEPTANCE_PENDING",
+      "scope": "CONSUL_HTTP_STRICT_JSON_AND_WRITE_CONTROL_FRESH_MODIFY_INDEX"
+    },
+    "C": {
+      "owner_sha": "07e681bc2e4ebc8e82e22f43d3f6a89498bb7dc6",
+      "source_checkpoint_blob": "076980d9556bf3a685091f16129ef321cb1372be",
+      "native_test_blob": "14d424b60e244620dc8fb64cd4c6a191bfe048cd",
+      "native_probe_blob": "b9cb483158957c17cd374cc4f7b9e2a06bdc9456",
+      "status": "C_NATIVE_29_METHOD_TEST_SOURCE_PARITY_NO_PG18_EXECUTION",
+      "source_ownership": "C_OWNED_FOUR_PG_MODULES_ALREADY_IDENTICAL_J_NO_REDUNDANT_COPY",
+      "original_native_workflow_blob": "6f11793072a8bbb6c5b423753cad21b4d591caed",
+      "original_workflow_ref": ".github/workflows/c-round14-independent-pg18-recovery.yml",
+      "original_native_29_qualification": "NOT_RUN_ON_INTEGRATED_J_HEAD",
+      "source_cohort_scope": "C_ORIGINAL_RECOVERY_ONLY_NOT_REAL_E_TTL_MID_COMMIT"
+    }
+  },
+  "disposable_image_pins": {
+    "consul": {
+      "target_version": "2.1.0",
+      "variant": "UBI",
+      "platform": "linux/amd64",
+      "registry_ref": "hashicorp/consul@sha256:a7153362a90c3e6b09aaa38b9fb7c58fed092e2f9e933341b8d485d7675100ba",
+      "digest_kind": "DOCKER_HUB_LINUX_AMD64_MANIFEST",
+      "downloaded_at_hosted_runner": false,
+      "native_version_verified": false,
+      "container_security_review": "PENDING"
+    },
+    "postgres": {
+      "target_major": 18,
+      "tag": "postgres:18",
+      "digest_pin": "UNSET_NATIVE_IMAGE_ID_CAPTURE_REQUIRED",
+      "native_version_verified": false
+    }
+  },
+  "actual_assembled_release_capacity": {
+    "release_manifest_sha256": "NOT_AVAILABLE",
+    "real_release_file_count": null,
+    "real_release_directory_count": null,
+    "native_identity_count": null,
+    "actual_canonical_receipt_bytes": null,
+    "installable": false,
+    "source_tree_not_release": {
+      "git_head": "974fe792a05399786b6b67d68d0f09bc937d92f4",
+      "git_blob_count": 2326,
+      "has_assembled_lab_release_json": false
+    },
+    "safety_limits": {
+      "max_handles": 512,
+      "estimated_roster_bytes": 56000,
+      "canonical_receipt_bytes": 60000
+    },
+    "owner_I_import": "DENIED_UNTIL_REAL_MANIFEST_AND_F_REVIEW"
+  },
+  "meta_migration_candidate": {
+    "owner": "H",
+    "math_pr": 168,
+    "math_head": "0c3a97aa3f76908c464298c345108bd355af4854",
+    "math_base": "9e6acbd9e12a91189f57234828e31640983af553",
+    "math_wall_tracker_blob": "0e22810943294a8cf8163660b08b44a4cc54f9ed",
+    "original_differential_test_blob": "3c7deedd97b7533a5a1f6ad198e8d7c54a9acc67",
+    "packaging_blob": "fb944447361b17cd2011732d843bc2f9f78be0bd",
+    "original_meta_wall_blob": "faae6e3539c8b33e9d933fce4fd2a92b518c4ac5",
+    "scope": "OBSERVATIONAL_FIRST_FAMILY_ONLY_NO_BROKER_TRADES_OR_PERSISTENCE",
+    "local_scoped_tests": "8_PASS_BUT_NUMERIC_MATH_STUB_NO_FULL_SDK",
+    "original_committed_math_tests": "NOT_RUN",
+    "consumer_cutover_authorized": false,
+    "legacy_removal_authorized": false,
+    "J_integration": "PIN_ONLY_NO_SOURCE_COPY_NO_MERGE"
+  },
+  "central_capacity_contract": {
+    "owner": "I",
+    "owner_head": "92c63fa0a62175544bea847c692eb8249a65fca9",
+    "canonical_service_blob": "725f2eac5e5b1e7c5e8b43e6a26f6c1433e7251c",
+    "original_functions": [
+      "_native_roster_paths",
+      "_native_receipt_roster_budget",
+      "_bounded_native_receipt"
+    ],
+    "max_handles": 512,
+    "max_estimate_bytes": 56000,
+    "max_actual_journal_bytes": 60000,
+    "duplicate_J_estimator": "RETIRED_FROM_PR_AND_CI",
+    "observed_prior_source_counterexample": {
+      "files": [
+        "a/b/c.py",
+        "a/d.py"
+      ],
+      "directories": [
+        "a",
+        "a/b"
+      ],
+      "ancestors": 4,
+      "old_J_count": 16,
+      "owner_I_canonical_roles": 14
+    },
+    "real_assembled_manifest_sha256": null,
+    "real_receipt_bytes": null,
+    "release_approved": false,
+    "independent_F_windows_review": "PENDING_NATIVE_WINDOWS"
+  },
+  "historical_retired_local_estimator": {
+    "original_source_blob": "90bbabde163b40dc303e4a7d826253d3673fa5a9",
+    "original_test_blob": "09ba3285f6ed6f3b37833bb3251cb55725de0ac6",
+    "prior_local_seven_pass": "INVALID_FOR_CANONICAL_ROSTER_ALIGNMENT",
+    "demonstrated_duplicate_parent_regression": true,
+    "active_in_J_branch": false,
+    "operator_acceptance": false
+  }
+}

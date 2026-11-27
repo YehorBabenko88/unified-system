@@ -1,0 +1,323 @@
+"""Synthetic offline negative tests only; never native installed Grid acceptance."""
+import base64
+import csv
+import hashlib
+import io
+import pathlib
+import tempfile
+import unittest
+import zipfile
+from f_wheel_qualification import qualify_wheel
+
+DIST = "market_data-0.2.0.dev0.dist-info"
+MOD = "market_data/__init__.py"
+META = f"{DIST}/METADATA"
+WHEEL = f"{DIST}/WHEEL"
+ENTRY = f"{DIST}/entry_points.txt"
+RECORD = f"{DIST}/RECORD"
+SRC = b"ident = 'synthetic_fixture'\n"
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+def rec_hash(data):
+    return "sha256=" + base64.urlsafe_b64encode(hashlib.sha256(data).digest()).decode().rstrip("=")
+
+class QualificationTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.base = pathlib.Path(self.tmp.name)
+        self.install = self.base / "install"
+        self.install.mkdir()
+        self.wheel = self.base / "market_data-0.2.0.dev0-py3-none-any.whl"
+        self.files = {
+            MOD: SRC,
+            META: b"Metadata-Version: 2.1\nName: market-data\nVersion: 0.2.0.dev0\n",
+            WHEEL: b"Wheel-Version: 1.0\nGenerator: F synthetic\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
+            ENTRY: b"[console_scripts]\nmarket-data = market_data.cli:main\n",
+        }
+        self.make_wheel()
+
+    def make_wheel(self, *, record_override=None, extra_members=()):
+        rows = io.StringIO(newline="")
+        writer = csv.writer(rows)
+        for name, data in self.files.items():
+            if name != RECORD:
+                writer.writerow((name, rec_hash(data), len(data)))
+        writer.writerow((RECORD, "", ""))
+        self.files[RECORD] = rows.getvalue().encode() if record_override is None else record_override
+        for path in sorted(self.install.rglob("*"), reverse=True):
+            if path.is_file() or path.is_symlink(): path.unlink()
+            elif path.is_dir(): path.rmdir()
+        with zipfile.ZipFile(self.wheel, "w") as z:
+            for name, data in self.files.items():
+                z.writestr(zipfile.ZipInfo(name, date_time=(2020, 1, 1, 0, 0, 0)), data)
+            for name, data in extra_members:
+                z.writestr(zipfile.ZipInfo(name, date_time=(2020, 1, 1, 0, 0, 0)), data)
+        for name, data in self.files.items():
+            target = self.install / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+
+    def scan(self, **overrides):
+        args = dict(expected_sha256=digest(self.wheel.read_bytes()), source_files={MOD: digest(SRC)},
+                    expected_distribution="market-data", expected_version="0.2.0.dev0",
+                    expected_entrypoints={"market-data": "market_data.cli:main"})
+        args.update(overrides)
+        return qualify_wheel(self.wheel, self.install, **args)
+
+    def deny(self, **overrides):
+        with self.assertRaises(ValueError): self.scan(**overrides)
+
+    def test_fixture_verified_bytes_but_never_grants_authority(self):
+        result = self.scan()
+        self.assertTrue(result["installed_record_verified"])
+        self.assertFalse(result["all_installed_bytes_authenticated"])
+        self.assertTrue(result["entrypoint_metadata_match"])
+        for k in ("release_authenticated", "root_admitted", "writer_admitted", "import_origin_verified", "runtime_entrypoint_verified"):
+            self.assertFalse(result[k])
+
+    def test_pinned_wheel_hash_mismatch(self): self.deny(expected_sha256="0"*64)
+    def test_missing_source_runtime_module(self): self.deny(source_files={"market_data/absent.py": digest(SRC)})
+    def test_changed_source_hash(self): self.deny(source_files={MOD: "a"*64})
+    def test_source_hash_malformed(self): self.deny(source_files={MOD: "g"*64})
+    def test_missing_source_pin(self): self.deny(source_files={})
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX wheel hardlink only")
+    def test_wheel_hardlink_alias_denied_even_with_pinned_digest(self):
+        """The hashed archive must not have a second writable file name."""
+        import os
+        alias = self.base / "wheel-hardlink-alias.whl"
+        os.link(self.wheel, alias)
+        self.assertEqual(self.wheel.stat().st_nlink, 2)
+        self.deny()
+        self.assertEqual(alias.read_bytes(), self.wheel.read_bytes())
+
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX wheel pathname custody only")
+    def test_wheel_same_bytes_leaf_swap_after_final_fstat_denied(self):
+        """A retained old archive FD cannot authenticate a new live pathname."""
+        import os
+        from unittest.mock import patch
+        import f_wheel_qualification as owner
+        detached = self.base / "detached-original-wheel.whl"
+        original_inode = self.wheel.stat().st_ino
+        original_bytes = self.wheel.read_bytes()
+        real_fstat = os.fstat
+        observed = []
+        def replace_after_final(fd):
+            info = real_fstat(fd)
+            if info.st_ino == original_inode:
+                observed.append(info.st_ino)
+                if len(observed) == 2:
+                    self.wheel.rename(detached)
+                    self.wheel.write_bytes(original_bytes)
+            return info
+        with patch.object(owner.os, "fstat", side_effect=replace_after_final):
+            self.deny()
+        self.assertEqual(len(observed), 2)
+        self.assertEqual(detached.read_bytes(), original_bytes)
+        self.assertEqual(self.wheel.read_bytes(), original_bytes)
+        self.assertNotEqual(self.wheel.stat().st_ino, original_inode)
+
+    def test_installed_module_tamper(self):
+        (self.install / MOD).write_bytes(b"tampered")
+        self.deny()
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX retained inode check only")
+    def test_same_bytes_leaf_swap_after_final_fstat_denied(self):
+        """Identical bytes at a replacement pathname cannot inherit old inode custody."""
+        import os
+        from unittest.mock import patch
+        import f_wheel_qualification as owner
+        member = self.install / MOD
+        detached = self.base / "detached-original.py"
+        original_inode = member.stat().st_ino
+        real_fstat = os.fstat
+        seen = []
+        def swap_after_final(fd):
+            info = real_fstat(fd)
+            if info.st_ino == original_inode:
+                seen.append(info.st_ino)
+                if len(seen) == 2:
+                    member.rename(detached)
+                    member.write_bytes(SRC)
+            return info
+        with patch.object(owner.os, "fstat", side_effect=swap_after_final):
+            self.deny()
+        self.assertEqual(len(seen), 2)
+        self.assertEqual(detached.read_bytes(), SRC)
+        self.assertEqual(member.read_bytes(), SRC)
+        self.assertNotEqual(member.stat().st_ino, original_inode)
+
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX hardlink identity only")
+    def test_installed_hardlink_alias_denied_even_when_bytes_match(self):
+        """One externally writable inode must not authenticate as one owned installed path."""
+        import os
+        member = self.install / MOD
+        alias = self.base / "foreign-hardlink-alias.py"
+        os.link(member, alias)
+        self.assertEqual(member.stat().st_nlink, 2)
+        self.deny()
+        self.assertEqual(alias.read_bytes(), SRC)
+        self.assertEqual(member.read_bytes(), SRC)
+
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX installed closure hardlink only")
+    def test_closure_rejects_unrecorded_hardlinked_archive_member(self):
+        """A new inode alias in the installed tree must fail closure even before RECORD."""
+        import os
+        foreign = self.base / "other-file"
+        foreign.write_bytes(b"outside controlled install")
+        alias = self.install / "foreign-link.txt"
+        os.link(foreign, alias)
+        self.assertEqual(alias.stat().st_nlink, 2)
+        self.deny()
+        self.assertEqual(foreign.read_bytes(), b"outside controlled install")
+
+    def test_missing_installed_record(self):
+        (self.install / RECORD).unlink()
+        self.deny()
+    def test_installed_record_tamper(self):
+        (self.install / RECORD).write_bytes(b"tampered")
+        self.deny()
+    def test_installed_symlink(self):
+        target = self.base / "outside"; target.write_bytes(SRC)
+        (self.install / MOD).unlink()
+        try: (self.install / MOD).symlink_to(target)
+        except (OSError, NotImplementedError): self.skipTest("symlinks unavailable")
+        self.deny()
+    def test_record_hash_corrupt(self):
+        text = self.files[RECORD].decode().replace("sha256=", "sha256=BAD", 1)
+        self.make_wheel(record_override=text.encode())
+        self.deny()
+    def test_record_self_hash_forbidden(self):
+        text = self.files[RECORD].decode().replace(f"{RECORD},,", f"{RECORD},sha256=x,0")
+        self.make_wheel(record_override=text.encode())
+        self.deny()
+    def test_record_duplicate_row(self):
+        text = self.files[RECORD].decode()
+        text += text.splitlines(keepends=True)[0]
+        self.make_wheel(record_override=text.encode())
+        self.deny()
+    def test_wheel_unrecorded_archive_member(self):
+        self.make_wheel(extra_members=[("market_data/unlisted.py", b"x")])
+        self.deny()
+    def test_archive_duplicate_zip_name(self):
+        self.make_wheel(extra_members=[(MOD, SRC)])
+        self.deny()
+    def test_archive_case_collision(self):
+        self.make_wheel(extra_members=[("MARKET_DATA/__init__.py", SRC)])
+        self.deny()
+    def test_archive_path_traversal(self):
+        self.make_wheel(extra_members=[("../../evil.py", SRC)])
+        self.deny()
+    def test_archive_windows_drive(self):
+        self.make_wheel(extra_members=[("C:/evil.py", SRC)])
+        self.deny()
+    def test_archive_reserved_windows_name(self):
+        self.make_wheel(extra_members=[("CON", SRC)])
+        self.deny()
+    def test_distribution_mismatch(self):
+        self.deny(expected_distribution="other-data")
+    def test_version_mismatch(self):
+        self.deny(expected_version="9.0")
+    def test_entrypoint_mismatch(self):
+        self.deny(expected_entrypoints={"market-data": "other.module:main"})
+    def test_metadata_replaced(self):
+        self.files[META] = b"Metadata-Version: 2.1\nName: adversary\nVersion: 0.2.0.dev0\n"
+        self.make_wheel()
+        self.deny()
+    def test_actual_pip_target_install_succeeds_diagnostic_only(self):
+        import subprocess
+        import sys
+        target = self.base / "pip_target"
+        target.mkdir()
+        result = subprocess.run([sys.executable, "-m", "pip", "install",
+                                 "--disable-pip-version-check", "--no-index",
+                                 "--no-deps", "--no-compile", "--target", str(target), str(self.wheel)],
+                                capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.install = target
+        report = self.scan()
+        self.assertTrue(report["installed_record_verified"])
+        self.assertEqual(report["unhashed_install_auxiliary_count"], 0)
+        self.assertFalse(report["all_installed_bytes_authenticated"])
+        self.assertFalse(report["release_authenticated"])
+        self.assertFalse(report["writer_admitted"])
+
+    def test_actual_pip_target_script_tamper_denied(self):
+        import subprocess
+        import sys
+        target = self.base / "pip_target"
+        target.mkdir()
+        result = subprocess.run([sys.executable, "-m", "pip", "install",
+                                 "--disable-pip-version-check", "--no-index",
+                                 "--no-deps", "--no-compile", "--target", str(target), str(self.wheel)],
+                                capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.install = target
+        (self.install / "bin" / "market-data").write_bytes(b"tampered")
+        self.deny()
+
+    def test_unverified_pyc_denied_even_if_locally_present(self):
+        pyc = self.install / "market_data" / "__pycache__" / "__init__.cpython-313.pyc"
+        pyc.parent.mkdir(parents=True)
+        pyc.write_bytes(b"unknown")
+        self.deny()
+
+    def test_import_shadow_pth_denied(self):
+        (self.install / "evil.pth").write_text("import os\n")
+        self.deny()
+
+    def test_recorded_extra_python_module_denied(self):
+        rel = "market_data/attacker.py"
+        data = b"import os\n"
+        dest = self.install / rel
+        dest.write_bytes(data)
+        record = self.install / RECORD
+        with record.open("a", encoding="utf-8") as stream:
+            stream.write(f"{rel},{rec_hash(data)},{len(data)}\n")
+        self.deny()
+
+    def test_installed_root_symlink_denied(self):
+        link = self.base / "linkroot"
+        try:
+            link.symlink_to(self.install, target_is_directory=True)
+        except (OSError, NotImplementedError):
+            self.skipTest("symlink unsupported")
+        self.install = link
+        self.deny()
+
+    def test_installed_unrecorded_regular_file_denied(self):
+        (self.install / "market_data" / "unknown.py").write_bytes(b"a = 1\n")
+        self.deny()
+
+    def test_wheel_zip_parser_only_receives_verified_bytes_snapshot(self):
+        from unittest.mock import patch
+        original = zipfile.ZipFile
+        seen = []
+        def verify_buffer(first, *args, **kwargs):
+            seen.append(isinstance(first, io.BytesIO))
+            return original(first, *args, **kwargs)
+        with patch("f_wheel_qualification.zipfile.ZipFile", side_effect=verify_buffer):
+            report = self.scan()
+        self.assertTrue(report["wheel_bytes_match"])
+        self.assertEqual(seen, [True])
+
+    def test_wheel_symlink_refused(self):
+        alias = self.base / "wheel_link.whl"
+        try:
+            alias.symlink_to(self.wheel)
+        except (OSError, NotImplementedError):
+            self.skipTest("symlink unsupported")
+        self.wheel = alias
+        self.deny()
+
+    def test_shadowing_sitecustomize_denied(self):
+        (self.install / "sitecustomize.py").write_bytes(b"print('injected')\n")
+        self.deny()
+
+    def test_wheel_reproducible_synthetic_fixture(self):
+        first = self.wheel.read_bytes()
+        self.make_wheel()
+        self.assertEqual(first, self.wheel.read_bytes())
+
+if __name__ == "__main__": unittest.main()

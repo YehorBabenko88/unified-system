@@ -1,0 +1,38 @@
+{
+  "schema": "unified-system.j.round34.checkpoint-sql-reconstruction.v1",
+  "scope": "DISPOSABLE_LAB_ONLY_DO_NOT_EXECUTE_ON_USER_DATABASE",
+  "source_function": "verify_existing_lab_checkpoint",
+  "synthetic_values": {
+    "condition": "f.resource_id = 'lab'",
+    "stream_id": "bybit:BTCUSDT:1m",
+    "symbol": "BTCUSDT",
+    "start_ms": 300000,
+    "fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "content_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "native_postgresql18": "NOT_RUN_NO_LOCAL_SERVER_OR_PSQL",
+  "candidates": [
+    {
+      "label": "cad4",
+      "git_blob_sha": "cad4ccf970470eb86a487c484cee9be15ea9614d",
+      "source_fragment_count": 42,
+      "generated_sql": "WITH active AS ( SELECT f.* FROM public.lab_writer_fence f JOIN pg_catalog.pg_stat_activity a ON a.pid=f.backend_pid WHERE f.resource_id = 'lab' FOR SHARE OF f), checkpoint AS ( SELECT k.stream_id FROM public.lab_stream_checkpoint k JOIN public.provenance_minutes p ON p.fingerprint=k.fingerprint AND p.content_id=k.content_id AND p.symbol=k.symbol AND p.start_ms=k.source_start_ms AND p.record->>'dataset_fingerprint'=k.fingerprint WHERE k.stream_id='bybit:BTCUSDT:1m' AND k.symbol='BTCUSDT' AND k.cursor_value=300000 AND k.source_start_ms=300000 AND k.fingerprint='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' AND k.content_id='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' AND EXISTS (SELECT 1 FROM active f WHERE k.owner=f.owner AND k.namespace=f.namespace AND k.generation<=f.generation AND k.token<=f.token) AND NOT EXISTS (SELECT 1 FROM public.provenance_minutes p_other WHERE p_other.symbol=k.symbol AND p_other.start_ms=k.source_start_ms AND (p_other.fingerprint<>k.fingerprint OR p_other.content_id<>k.content_id))), relevant_pending AS ( SELECT q.stream_id FROM public.lab_stream_pending q WHERE q.stream_id='bybit:BTCUSDT:1m' AND q.symbol='BTCUSDT' AND q.start_ms=300000 AND q.fingerprint='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' AND q.content_id='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' AND EXISTS (SELECT 1 FROM active f WHERE q.owner=f.owner AND q.namespace=f.namespace AND q.source_sha256=f.source_sha256 AND q.schema_sha256=f.schema_sha256 AND q.generation<=f.generation AND q.token<=f.token) SELECT CASE WHEN NOT EXISTS (SELECT 1 FROM active) THEN 'DENIED' WHEN EXISTS (SELECT 1 FROM checkpoint) AND EXISTS (SELECT 1 FROM relevant_pending) THEN 'EXACT_ALREADY_ACKNOWLEDGED' ELSE 'UNRESOLVED' END",
+      "lexical_parenthesis_balance": 1,
+      "min_nesting_level": 0,
+      "static_result": "UNBALANCED_SQL_PARENTHESES",
+      "actual_pg18_parse": "NOT_RUN",
+      "actual_pg18_execute": "NOT_RUN"
+    },
+    {
+      "label": "076",
+      "git_blob_sha": "076980d9556bf3a685091f16129ef321cb1372be",
+      "source_fragment_count": 42,
+      "generated_sql": "WITH active AS ( SELECT f.* FROM public.lab_writer_fence f JOIN pg_catalog.pg_stat_activity a ON a.pid=f.backend_pid WHERE f.resource_id = 'lab' FOR SHARE OF f), checkpoint AS ( SELECT k.stream_id FROM public.lab_stream_checkpoint k JOIN public.provenance_minutes p ON p.fingerprint=k.fingerprint AND p.content_id=k.content_id AND p.symbol=k.symbol AND p.start_ms=k.source_start_ms AND p.record->>'dataset_fingerprint'=k.fingerprint WHERE k.stream_id='bybit:BTCUSDT:1m' AND k.symbol='BTCUSDT' AND k.cursor_value=300000 AND k.source_start_ms=300000 AND k.fingerprint='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' AND k.content_id='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' AND EXISTS (SELECT 1 FROM active f WHERE k.owner=f.owner AND k.namespace=f.namespace AND k.generation<=f.generation AND k.token<=f.token) AND NOT EXISTS (SELECT 1 FROM public.provenance_minutes p_other WHERE p_other.symbol=k.symbol AND p_other.start_ms=k.source_start_ms AND (p_other.fingerprint<>k.fingerprint OR p_other.content_id<>k.content_id))), relevant_pending AS ( SELECT q.stream_id FROM public.lab_stream_pending q WHERE q.stream_id='bybit:BTCUSDT:1m' AND q.symbol='BTCUSDT' AND q.start_ms=300000 AND q.fingerprint='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' AND q.content_id='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb' AND EXISTS (SELECT 1 FROM active f WHERE q.owner=f.owner AND q.namespace=f.namespace AND q.source_sha256=f.source_sha256 AND q.schema_sha256=f.schema_sha256 AND q.generation<=f.generation AND q.token<=f.token)) SELECT CASE WHEN NOT EXISTS (SELECT 1 FROM active) THEN 'DENIED' WHEN EXISTS (SELECT 1 FROM checkpoint) AND EXISTS (SELECT 1 FROM relevant_pending) THEN 'EXACT_ALREADY_ACKNOWLEDGED' ELSE 'UNRESOLVED' END",
+      "lexical_parenthesis_balance": 0,
+      "min_nesting_level": 0,
+      "static_result": "BALANCED_SQL_PARENTHESES_ONLY",
+      "actual_pg18_parse": "NOT_RUN",
+      "actual_pg18_execute": "NOT_RUN"
+    }
+  ]
+}

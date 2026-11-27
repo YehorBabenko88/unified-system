@@ -17,6 +17,7 @@ from urllib.parse import urlsplit
 
 from . import lab_release
 from .module_catalog import MODULE_IDS
+from .market_data_entry_contract import MarketDataEntryRejected,V2_ENTRY,entry_for_manifest
 from .runtime_cli import validate_config as base_config,read_config,make_runtime,run_runtime
 from .runtime_process import _safe_path
 
@@ -39,6 +40,23 @@ LAB_HOSTNAMES={'LS5':'LS5','PC1':'Easy','PC2':'Leitstelle1','PC3':'LS03e','PC4':
 
 def need(ok):
     if not ok:raise ValueError('LAB_RUNTIME_REJECTED')
+
+
+def require_v2_terminan_dependency(manifest, specs):
+    """No managed chart child may survive a source loss outside supervisor DAG."""
+    try:
+        entry=entry_for_manifest(manifest)
+    except MarketDataEntryRejected:
+        need(False)
+    if entry != V2_ENTRY:return True
+    need(type(specs) is list and all(type(s) is dict for s in specs))
+    listed={s.get('module_id'):s for s in specs}
+    need(len(listed)==len(specs))
+    if 'terminan' in listed:
+        need('market_data' in listed
+             and type(listed['terminan'].get('dependencies')) in (tuple,list)
+             and 'market_data' in listed['terminan']['dependencies'])
+    return True
 
 
 def child_environment(input=None):
@@ -78,8 +96,13 @@ def launch_profile(name,p,root,m,state,node_id,*,offline_context=None):
         need(index+1<len(argv));value=_safe_path(argv[index+1]).resolve();need(root in value.parents)
         (roots if argv[index]=='--source-root' else dependencies).append(value);index+=2
     need(roots==[source] and len(dependencies)==len(set(dependencies)) and len(dependencies)<=16)
-    modules={'market_data':'market_data.cli','terminan':'terminan.server'}
-    need(argv[index:index+3]==['--module',modules[name],'--'])
+    # The same exact-v2 selector is used by the protected dispatcher.
+    # No implicit Grid source migration or unpinned generic module loader.
+    try:
+        entry=entry_for_manifest(m) if name=='market_data' else 'terminan.server'
+    except MarketDataEntryRejected:
+        need(False)
+    need(argv[index:index+3]==['--module',entry,'--'])
     tail=argv[index+3:]
     if name=='market_data':
         need(tail==['serve'])
@@ -113,6 +136,7 @@ def validate_config(c,m,root,*,hostname=None,offline_context=None):
         try:name=p.relative_to(root).as_posix()
         except ValueError:raise ValueError('LAB_RUNTIME_REJECTED') from None
         need(name in m['files'] and m['files'][name]['sha256']==sha)
+    require_v2_terminan_dependency(m,c['specs'])
     for spec in c['specs']:
         source=m['sources'][spec['module_id']]
         need(spec['version']==source['version'] and set(spec['dependencies'])==set(source['dependencies']))
