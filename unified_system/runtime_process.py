@@ -1334,7 +1334,13 @@ class ProcessDriver:
                          'COMSPEC', 'TEMP', 'TMP')
             env = {key: env[key] for key in inherited if key in env}
             env.update(public)
-            env.update(PYTHONPYCACHEPREFIX=cache, PYTHONDONTWRITEBYTECODE='1',
+            # The LOW-integrity token is intentionally unable to write the
+            # original medium-integrity owner cache. Never direct CPython's
+            # import cache into that private root: Python 3.12+ may attempt
+            # to inspect it while resolving file-backed scripts or modules.
+            # Bytecode output stays explicitly disabled; do not grant the
+            # child file rights or create an alternate writable cache.
+            env.update(PYTHONDONTWRITEBYTECODE='1',
                        UNIFIED_PRIVATE_CACHE_ROOT=cache,
                        UNIFIED_MODULE_ID=spec.module_id,
                        UNIFIED_MODULE_VERSION=spec.version,
