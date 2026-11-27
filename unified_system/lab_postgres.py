@@ -418,7 +418,8 @@ class LabPostgres:
         # Pipes make communicate() wait for the long-lived server to close
         # them, even after pg_ctl exits successfully. Keep startup diagnostics
         # in an owned file instead; the original timeout/identity gates remain.
-        with (self.root / 'pg_ctl-start.log').open('ab') as startup_log:
+        startup_path = self.root / ('pg_ctl-start-' + secrets.token_hex(16) + '.log')
+        with startup_path.open('xb') as startup_log:
             result = subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-l', str(self.log),
                                      '-o', self._options(), '-w', '-t', str(max(1, min(120, int(timeout)-1))), 'start'],
                                     stdout=startup_log, stderr=subprocess.STDOUT,
