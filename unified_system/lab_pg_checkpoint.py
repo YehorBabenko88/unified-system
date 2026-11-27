@@ -331,7 +331,7 @@ def verify_existing_lab_checkpoint(pg, *, identity, generation, backend_pid,
         " WHERE q.owner=f.owner AND q.namespace=f.namespace"
         " AND q.source_sha256=f.source_sha256"
         " AND q.schema_sha256=f.schema_sha256"
-        " AND q.generation<=f.generation AND q.token<=f.token))"
+        " AND q.generation<=f.generation AND q.token<=f.token)"
         " SELECT CASE"
         " WHEN NOT EXISTS (SELECT 1 FROM active) THEN 'DENIED'"
         " WHEN EXISTS (SELECT 1 FROM checkpoint)"
