@@ -123,6 +123,13 @@ def _installed_bytes(root_fd: int, parts: tuple[str, ...]) -> bytes:
             fields = lambda x: (x.st_dev, x.st_ino, x.st_size, x.st_mtime_ns, x.st_ctime_ns)
             if fields(original) != fields(final):
                 raise ValueError("installed member modified during inspection")
+            # An attacker may swap a leaf name after final fstat while this
+            # original, readable inode is retained. Recheck the live name
+            # against the original inode before recording the bytes. This is
+            # a bounded diagnostic check, not atomic hostile-writer custody.
+            live = os.stat(parts[-1], dir_fd=fd, follow_symlinks=False)
+            if not stat.S_ISREG(live.st_mode) or fields(live) != fields(original):
+                raise ValueError("installed pathname no longer identifies original member")
             return b''.join(chunks)
         finally:
             os.close(file_fd)
