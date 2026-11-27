@@ -235,7 +235,9 @@ def _bounded_native_receipt(receipt):
 def _native_receipt_roster_budget(paths):
  """Deny oversized V2 receipts BEFORE any native HANDLE or SCM action."""
  need(type(paths) is dict and 'root' in paths and 0<len(paths)<=512)
- need(all(type(k) is str and 0<len(k)<=300 for k in paths))
+ # Bound the encoded bytes, not Python Unicode code points. A multibyte
+ # path must never bypass the per-identity budget admitted by this gate.
+ need(all(type(k) is str and 0<len(k.encode('utf-8'))<=300 for k in paths))
  # Conservative preflight; the exact 60K canonical row limit still applies.
  need(sum(112+len(k.encode('utf-8')) for k in paths)<=56000)
  return paths
