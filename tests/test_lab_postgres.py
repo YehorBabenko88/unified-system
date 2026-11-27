@@ -1,7 +1,9 @@
 """C2: temporary PostgreSQL lifecycle, roles, duplicates, crash recovery, cleanup.
 
 Runs when LAB_POSTGRES_BIN names a PostgreSQL bin directory and the process is
-not root. Product minimum is 18; LAB_POSTGRES_MIN_MAJOR may lower it for local
+not root. C-owned fixture disposal requires LAB_C_PG18_NATIVE_TEST=1 and the
+canonical A retained observer in the integrated cohort. Product minimum is 18;
+LAB_POSTGRES_MIN_MAJOR may lower it for local
 development only (CI uses PostgreSQL 18).
 """
 import os
@@ -14,6 +16,7 @@ import subprocess
 import socket
 import tempfile
 import unittest
+import uuid
 from unittest import mock
 from pathlib import Path
 
@@ -77,21 +80,67 @@ def insert(i):
 @unittest.skipUnless(BIN and not ROOT_USER, 'needs LAB_POSTGRES_BIN and a non-root user')
 class LabPostgresLifecycle(unittest.TestCase):
     def setUp(self):
-        self.root = Path(tempfile.mkdtemp(prefix='unified-lab-pg-'))
+        self.assertEqual(os.environ.get('LAB_C_PG18_NATIVE_TEST'), '1',
+                         'C-owned fixture disposal requires LAB_C_PG18_NATIVE_TEST=1')
+        self.root = Path(tempfile.mkdtemp(prefix='c-round14-recovery-lifecycle-'))
         if os.name != 'nt': self.root.chmod(0o700)
+        self.writer = None
+        self.old = None
+        self.preserve_root = False
 
     def tearDown(self):
         pg = getattr(self, 'pg', None)
         if pg is not None:
-            try:
-                pg.stop()
-            except BaseException:
-                # The test must fail rather than delete an unverified cluster.
-                raise
+            if self.preserve_root:
+                # Failed initial start is UNKNOWN in the original C owner.
+                # Its lock/data remain quarantined, never silently deleted.
+                print('LAB_PG_FIXTURE_QUARANTINED ' + str(self.root), flush=True)
+                return
+            from unified_system import lab_pg_recovery as c
+            if pg.started and self.old is None:
+                self.claim_cleanup_fence()
+            if pg.started and self.old is not None:
+                if c._resource(pg) not in c._STATES:
+                    c.contain_exclusive_lab_cluster(pg, old=self.old, quiesced=True)
+            # If this raises, preserve the entire root and report the error.
+            # No raw pg_ctl, PID-only kill, or deletion in a finally block.
+            c._dispose_native_pg18_fixture(pg)
+        if self.writer is not None:
+            self.writer.close()
         shutil.rmtree(self.root)
 
+    def provisioned_pg(self):
+        # Retain the original owner even if initialization/start/provision fails.
+        self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN)
+        pg.initialize().start().provision(canonical_schema())
+        return pg
+
+    def claim_cleanup_fence(self):
+        # Install the canonical recovery fence only AFTER the legacy role/
+        # custody assertions. Its production installer intentionally revokes
+        # raw writer INSERT; restoring that grant would weaken the fence.
+        pg = self.pg
+        from unified_system.lab_pg_fence import install_lab_fence, claim_lab_fence
+        from unified_system.lab_pg_checkpoint import install_lab_checkpoint
+        import psycopg
+        install_lab_fence(pg)
+        install_lab_checkpoint(pg)
+        self.writer = psycopg.connect(pg.dsn('lab_writer'), autocommit=True)
+        pid = self.writer.info.backend_pid
+        ids = tuple(str(uuid.uuid4()) for _ in range(3))
+        claim_lab_fence(pg, owner='unified-system', namespace='unified/lab',
+                       generation=1, token=100, session_id=ids[0],
+                       instance_id=ids[1], node_incarnation_id=ids[2],
+                       source_sha256='a' * 64, schema_sha256='b' * 64,
+                       backend_pid=pid, previous_quiescence_verified=True)
+        self.old = dict(owner='unified-system', namespace='unified/lab',
+                        generation=1, token=100, backend_pid=pid,
+                        backend_start=pg.sql('SELECT backend_start FROM pg_stat_activity '
+                                             f'WHERE pid={pid}'))
+        return pg
+
     def test_full_lifecycle(self):
-        self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize().start().provision(canonical_schema())
+        pg = self.provisioned_pg()
         self.assertGreaterEqual(pg.major, MIN)
         self.assertEqual(pg.sql('SHOW listen_addresses'), '127.0.0.1')
         self.assertNotEqual(pg.port, 5432)
@@ -120,14 +169,18 @@ class LabPostgresLifecycle(unittest.TestCase):
         with mock.patch.object(pg, '_os_process_identity',
                                side_effect=LabAdmissionRejected('LAB_PG_PID_FOREIGN')):
             with self.assertRaisesRegex(LabAdmissionRejected, 'PID_FOREIGN'):
+                pg._verify_postmaster()
+            with self.assertRaisesRegex(LabAdmissionRejected, 'C_OWNED_LIFECYCLE_REQUIRED'):
                 pg.crash()
-            with self.assertRaisesRegex(LabAdmissionRejected, 'PID_FOREIGN'):
+            with self.assertRaisesRegex(LabAdmissionRejected, 'C_OWNED_LIFECYCLE_REQUIRED'):
                 pg.stop()
         self.assertEqual(pg.sql('SELECT count(*) FROM provenance_minutes'), '10')
         # A replaced ownership marker must not grant shutdown authority.
         original_marker = pg._marker.read_text()
         pg._marker.write_text('replaced')
         try:
+            with self.assertRaisesRegex(LabAdmissionRejected, 'OWNERSHIP_LOST'):
+                pg._verify_owned()
             with self.assertRaisesRegex(LabAdmissionRejected, 'OWNERSHIP_LOST'):
                 pg.stop()
         finally:
@@ -168,9 +221,18 @@ class LabPostgresLifecycle(unittest.TestCase):
         self.assertEqual(pg.provenance_storage_witness()['immutable_trigger_count'], 1)
         # Crash without shutdown checkpoint, then WAL recovery.
         pg.sql(insert(11), role='lab_writer')
-        pid = pg.crash()
+        self.claim_cleanup_fence()
+        from unified_system.lab_pg_recovery import (
+            contain_exclusive_lab_cluster, recover_exclusive_lab_cluster)
+        pid = pg.postmaster_pid()
+        with mock.patch.dict(os.environ, {'LAB_C_PG18_PROCESS_CRASH_TEST': '1'}):
+            contained = contain_exclusive_lab_cluster(
+                pg, old=self.old, quiesced=True, fault='PROCESS_CRASH_TEST')
+        self.assertFalse(contained['native_admitted'])
         self.assertFalse(pg.started)
-        pg.start()
+        recovered = recover_exclusive_lab_cluster(pg, old=self.old, quiesced=True)
+        self.assertFalse(recovered['native_admitted'])
+        self.assertEqual(recovered['wal_recovery'], 'LAB_PROCESS_CRASH_WAL_REPLAY_LOG_VERIFIED')
         self.assertNotEqual(pg.postmaster_pid(), pid)
         self.assertEqual(pg.sql('SELECT count(*), count(DISTINCT fingerprint) FROM provenance_minutes'), '11|11')
         report = pg.integrity(['provenance_minutes'])
@@ -208,8 +270,7 @@ class LabPostgresLifecycle(unittest.TestCase):
             self.assertFalse(record['coverage']['exchange_completeness_attested'])
             self.assertEqual(digest({k: v for k, v in record.items()
                                      if k != 'dataset_fingerprint'}), record['dataset_fingerprint'])
-            self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize().start()
-            pg.provision(canonical_schema())
+            pg = self.provisioned_pg()
             witness = pg.provenance_storage_witness()
             self.assertEqual(witness['storage_immutability'],
                              'ROLE_AND_TRIGGER_GUARDED_LAB_ONLY')
@@ -291,8 +352,7 @@ class LabPostgresLifecycle(unittest.TestCase):
             record = minute_record(row, int(time.time() * 1000), 'lab-fixture')
             self.assertEqual(record['producer'], 'market_data')
             self.assertFalse(record['execution_authority'])
-            self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize().start()
-            pg.provision(canonical_schema())
+            pg = self.provisioned_pg()
             fingerprint = record['dataset_fingerprint']
             content_id = digest(row)
             blob = canonical(record).decode('ascii').replace("'", "''")
@@ -313,7 +373,8 @@ class LabPostgresLifecycle(unittest.TestCase):
             del sys.path[:2]
 
     def test_occupied_port_and_reserved_5432_fail_closed(self):
-        self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN).initialize()
+        self.pg = pg = LabPostgres(BIN, self.root, min_major=MIN)
+        pg.initialize()
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as blocker:
             blocker.bind(('127.0.0.1', pg.port))
             blocker.listen(1)
@@ -321,9 +382,27 @@ class LabPostgresLifecycle(unittest.TestCase):
                 pg.start()
             self.assertFalse(pg.started)
             self.assertEqual(blocker.getsockname()[1], pg.port)
-        pg.port = 5432
-        with self.assertRaisesRegex(LabAdmissionRejected, 'LAB_PG_PORT_REJECTED'):
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                   'LAB_PG_INITIAL_START_ALREADY_ATTEMPTED_OR_UNKNOWN'):
             pg.start()
+        from unified_system.lab_pg_recovery import _dispose_native_pg18_fixture
+        with self.assertRaisesRegex(LabAdmissionRejected, 'LAB_NATIVE_PG_BOOTSTRAP_ABORT_UNKNOWN'):
+            _dispose_native_pg18_fixture(pg)
+        self.preserve_root = True
+        # Reserved-port refusal must be checked on a distinct, never-started
+        # original C owner, before the initial-start ambiguity latch.
+        reserved_root = Path(tempfile.mkdtemp(prefix='c-round14-recovery-reserved-'))
+        reserved = LabPostgres(BIN, reserved_root, min_major=MIN).initialize()
+        original_port = reserved.port
+        try:
+            reserved.port = 5432
+            with self.assertRaisesRegex(LabAdmissionRejected, 'LAB_PG_PORT_REJECTED'):
+                reserved.start()
+        finally:
+            # Never probe/connect to5432, including the fixture disposal check.
+            reserved.port = original_port
+            _dispose_native_pg18_fixture(reserved)
+            shutil.rmtree(reserved_root)
 
     @unittest.skipIf(os.name == 'nt', 'symlink creation requires privilege on Windows')
     def test_symlink_root_rejected(self):
