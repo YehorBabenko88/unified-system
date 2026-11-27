@@ -74,6 +74,27 @@ class WindowsPathSyntaxTests(unittest.TestCase):
                     _final_path_matches(RecordedKernel32(alien), None, expected)
 
 
+    def test_final_handle_path_drive_root_only_exception(self):
+        """The native Win32 root C: spelling is not an arbitrary path alias."""
+        from f_windows_handle import _final_path_matches
+
+        class Kernel:
+            def __init__(self, name):
+                self.name = name
+            def GetFinalPathNameByHandleW(self, handle, buffer, capacity, flags):
+                buffer.value = self.name
+                return len(self.name)
+
+        _final_path_matches(Kernel('\\\\\\\\?\\\\C:'), None, 'C:\\\\')
+        _final_path_matches(Kernel('\\\\\\\\?\\\\C:\\\\'), None, 'C:\\\\')
+        for alien in ('\\\\\\\\?\\\\D:', '\\\\\\\\?\\\\C:other',
+                      '\\\\\\\\?\\\\C:\\\\other', '\\\\\\\\?\\\\UNC\\\\server\\\\share',
+                      'C:', '\\\\\\\\?\\\\C:\\\\..'):
+            with self.subTest(alien=alien):
+                with self.assertRaises(ValueError):
+                    _final_path_matches(Kernel(alien), None, 'C:\\\\')
+
+
     def test_root_ancestor_component_substitution_denied(self):
         """Original Win32 traversal must compare retained and reopened ancestor IDs."""
         from unittest.mock import patch
