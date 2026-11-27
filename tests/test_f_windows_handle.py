@@ -16,7 +16,7 @@ from f_windows_handle import _segments, WindowsInstalledRoot, wheel_snapshot
 def _pinned_i_owner_bytes(path):
     """Read tracked Git blob, never CRLF-transformed checkout bytes, if available."""
     repository = path.parent.parent
-    if (repository / ".git").exists():
+    if os.environ.get("F_I_V2_OWNER_SOURCE") and (repository / ".git").exists():
         pinned = "e5d775fccb2425aee9b43617012f4ad6cf3153f4"
         actual = subprocess.check_output(
             ["git", "-C", str(repository), "rev-parse", "HEAD"], text=True).strip()
