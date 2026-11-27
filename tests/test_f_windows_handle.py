@@ -219,7 +219,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
             self.skipTest("I owner source not supplied")
         raw = p.read_bytes()
         blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + bytes([0]) + raw).hexdigest()
-        expected = "e3ddab2981729906c9f53f0bc8888bf3e14bc432"
+        expected = "972ceba8f937502fb9677f577a93a89615635f4e"
         if not owner_file and blob != expected:
             self.skipTest("F inherited checkout lacks exact I custody source")
         self.assertEqual(blob, expected, "I source drift: require independent re-review")
@@ -244,6 +244,9 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         # OPEN_REPARSE_POINT alone cannot acquire a directory HANDLE.
         self.assertIn("0x02000000", opening,
                       "I_CUSTODY_DIRECTORY_HANDLE_REQUIRES_BACKUP_SEMANTICS")
+        self.assertIn("is_file=key.startswith('file:') or key=='ownership:service.sqlite'", opening)
+        self.assertIn("flags=0x00200000 if is_file else 0x00200000|0x02000000", opening)
+        self.assertIn("h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,flags,None)", opening)
         self.assertIn("0x1|0x2,None", opening)
         self.assertNotIn("0x1|0x2|0x4", opening)
         self.assertIn("self._read()==self.snapshot", checking)
