@@ -113,6 +113,19 @@ def _capture_native_roster(paths):
           for value in first.values()))
  return first
 
+def _native_roster_is_file(key):
+ """No filesystem probing to choose native flags during hostile path races."""
+ need(type(key) is str)
+ if key=='ownership:service.sqlite':return True
+ if key.startswith('file:') and len(key)>5:return True
+ if key in ('root','code','ownership','state'):return False
+ if key.startswith(('ancestor:','directory:','parent:')) and ':' in key and key.split(':',1)[1]:return False
+ need(False)
+
+def _native_roster_open_flags(key):
+ """Open reparse point itself; directories additionally require backup semantics."""
+ return 0x00200000 if _native_roster_is_file(key) else 0x00200000|0x02000000
+
 class _NativeReceiptCustody:
  """Retain Windows no-delete-sharing handles through verify, SEAL, REGISTER.
 
@@ -141,8 +154,7 @@ class _NativeReceiptCustody:
     # Directory handles REQUIRE FILE_FLAG_BACKUP_SEMANTICS (0x02000000).
     # Reparse processing is disabled for both files and directories; never
     # share DELETE. Preserve SQLite journal WRITE sharing through append.
-    is_file=key.startswith('file:') or key=='ownership:service.sqlite'
-    flags=0x00200000 if is_file else 0x00200000|0x02000000
+    flags=_native_roster_open_flags(key)
     h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,flags,None)
     need(h not in (None,0,ctypes.c_void_p(-1).value))
     self.handles[key]=h
@@ -173,8 +185,7 @@ class _NativeReceiptCustody:
    need(standard.number_of_links>=1 and not standard.delete_pending)
    need(bool(tag.attributes&0x10)==bool(standard.directory))
    need(bool(standard.directory) or standard.number_of_links==1)
-   if key.startswith('file:') or key=='ownership:service.sqlite':need(not standard.directory)
-   else:need(bool(standard.directory))
+   need(bool(standard.directory)!=_native_roster_is_file(key))
    result[key]={'volume_serial':int(info.volume),'file_id_128':bytes(info.identifier).hex()}
   need(all(v['volume_serial']==result['root']['volume_serial'] for v in result.values()))
   return result
