@@ -1163,6 +1163,35 @@ class OpaqueSessionTests(unittest.TestCase):
                 self.assertEqual(state["writes"], 1)
         asyncio.run(exercise())
 
+    def test_consul_control_404_after_close_is_not_valid_absence(self):
+        # During a consistent GET, shutdown may precede a 404 reply. An
+        # already-closed Root authority must refuse even the missing record.
+        async def exercise():
+            entered = asyncio.Event()
+            released = asyncio.Event()
+            async def handler(req):
+                self.assertEqual(req.method, "GET")
+                self.assertEqual(req.url.path, "/v1/kv/isolated/round25/state/probe")
+                self.assertIn("consistent", req.url.params)
+                entered.set()
+                await released.wait()
+                return httpx.Response(404)
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                pending = asyncio.create_task(authority.read_control("probe"))
+                await asyncio.wait_for(entered.wait(), 1)
+                await authority.close()
+                released.set()
+                with self.assertRaises(CoordinationUnavailable):
+                    await asyncio.wait_for(pending, 1)
+                self.assertFalse(await authority.validate(
+                    ConsulLease("owner", OBSERVED, 41)))
+        asyncio.run(exercise())
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
