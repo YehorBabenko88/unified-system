@@ -1254,6 +1254,8 @@ class OpaqueSessionTests(unittest.TestCase):
                 if req.url.path == "/v1/session/destroy/" + OBSERVED:
                     state["destroy"] += 1
                     return httpx.Response(200, json=True)
+                if req.url.path == "/v1/session/renew/" + OBSERVED:
+                    return httpx.Response(200, json=[{"ID": OBSERVED}])
                 if req.url.path == "/v1/txn":
                     state["txn"] += 1
                     raise AssertionError("stale/ambiguous writer reached txn")
