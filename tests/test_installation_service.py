@@ -224,6 +224,53 @@ class ServiceResourceTests(unittest.TestCase):
    self.assertEqual(service._native_roster_open_flags(name)&0x00000004,0)
    self.assertEqual(service._native_roster_open_flags(name)&0x04000000,0)
 
+ def test_r35_custody_real_enter_fake_kernel_directory_flags_and_close(self):
+  from unified_system import installation_service as service
+  import ctypes
+  from unittest.mock import Mock
+  # Exercise original __enter__/__exit__, fake kernel and original role flags.
+  # No Windows native call, service install, filesystem deletion or SCM.
+  paths={'root':self.root,'ancestor:0':self.root.parent,
+         'file:lab-release.json':self.source/'lab-release.json'}
+  kernel=Mock();kernel.CreateFileW.side_effect=[101,102,103]
+  kernel.CloseHandle.return_value=True
+  custody=object.__new__(service._NativeReceiptCustody)
+  custody.paths=paths;custody.handles={};custody.kernel=None;custody.closed=False
+  identity={'volume_serial':5,'file_id_128':'a'*32}
+  with patch.object(ctypes,'WinDLL',return_value=kernel,create=True):
+   with patch.object(service,'_safe',side_effect=lambda path:path):
+    with patch.object(custody,'_read',return_value=dict.fromkeys(paths,identity)):
+     with patch.object(custody,'verify',return_value=dict.fromkeys(paths,identity)):
+      with custody as entered:
+       self.assertIs(entered,custody)
+       self.assertEqual(len(custody.handles),3)
+       opened=kernel.CreateFileW.call_args_list
+       self.assertEqual([call.args[5] for call in opened],
+                        [0x02200000,0x02200000,0x00200000])
+       self.assertTrue(all(call.args[2]==0x1|0x2 for call in opened))
+       self.assertEqual(kernel.CloseHandle.call_count,0)
+  self.assertEqual([call.args[0] for call in kernel.CloseHandle.call_args_list],
+                   [103,102,101])
+  self.assertEqual(custody.handles,{})
+  self.assertTrue(custody.closed)
+
+ def test_r35_custody_fake_kernel_partial_open_failure_releases_handles(self):
+  from unified_system import installation_service as service
+  import ctypes
+  from unittest.mock import Mock
+  paths={'root':self.root,'ancestor:0':self.root.parent}
+  kernel=Mock();kernel.CreateFileW.side_effect=[101,ctypes.c_void_p(-1).value]
+  kernel.CloseHandle.return_value=True
+  custody=object.__new__(service._NativeReceiptCustody)
+  custody.paths=paths;custody.handles={};custody.kernel=None;custody.closed=False
+  with patch.object(ctypes,'WinDLL',return_value=kernel,create=True):
+   with patch.object(service,'_safe',side_effect=lambda path:path):
+    with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+     custody.__enter__()
+  self.assertEqual([call.args[0] for call in kernel.CloseHandle.call_args_list],[101])
+  self.assertEqual(custody.handles,{})
+  self.assertTrue(custody.closed)
+
  def test_r35_roster_capacity_checked_before_root_creation(self):
   from unified_system import installation_service as service
   import inspect
