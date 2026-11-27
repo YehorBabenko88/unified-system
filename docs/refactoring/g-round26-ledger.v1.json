@@ -37,7 +37,8 @@
     },
     "meta_analyse": {
       "main": "2317c79d78654d8006d99b914532a089554677da",
-      "working_ref": "UNRESOLVED; main README-only"
+      "working_ref": "b1a4d6a41054f0040a88dc80b585380fb6b4f323 (codex/stage10-e-meta historical code; READ ONLY, not using Codex)",
+      "alternate_migration_ref": "c25fd2c5873a4e8f96636a241fad27414cc8b64d (consolidate/issue79-single-history-reader-20261119)"
     }
   },
   "working_tree_file_counts": {
@@ -46,7 +47,9 @@
     "math/D": 1017,
     "Terminan/D": 357,
     "strattester/main": 289,
-    "meta_analyse/main": 1
+    "meta_analyse/main": 1,
+    "meta_analyse/historical-stage10": 791,
+    "meta_analyse/issue79-consolidation": 789
   },
   "owners": {
     "Unified System": "orchestration, admission, service/PG lifecycle",
@@ -183,12 +186,13 @@
       "id": "G-007",
       "status": "BLOCKED",
       "repo": "meta_analyse",
-      "path": "<working implementation not pinned>",
+      "path": "src/meta_analyse/core.py",
       "owner": "Terminan/Math by symbol",
       "consumers": [
-        "UNKNOWN"
+        "tests/test_core.py",
+        "remaining consumers unverified"
       ],
-      "replacement": "NOT VERIFIED",
+      "replacement": "Terminan paper/strategy only after full differential H+D proof; Math unique scientific algorithms must be retained",
       "tests": "NOT_RUN",
       "rollback": "no deletion until full working ref inventory"
     },
@@ -217,6 +221,34 @@
       "replacement": null,
       "tests": "presence PASS; execution NOT_RUN",
       "rollback": "never delete original historical fixture"
+    },
+    {
+      "id": "G-010",
+      "status": "BLOCKED",
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/orderflow_archive_reader.py",
+      "owner": "Grid/Terminan boundary",
+      "consumers": [
+        "tests/test_orderflow_large_history.py",
+        "others not enumerated"
+      ],
+      "replacement": "Grid canonical history reader + Terminan visualization only after feature equivalence",
+      "tests": "NOT_RUN; historical stage10 and issue79 branches present; no deletion",
+      "rollback": "retain source and historical tests"
+    },
+    {
+      "id": "G-011",
+      "status": "BLOCKED",
+      "repo": "meta_analyse",
+      "path": "src/meta_analyse/offline_paper_delivery.py",
+      "owner": "Terminan",
+      "consumers": [
+        "tests/test_offline_paper_delivery.py",
+        "others not enumerated"
+      ],
+      "replacement": "Terminan read-only paper delivery subject to D/H acceptance",
+      "tests": "NOT_RUN; unique file present in stage10 source",
+      "rollback": "retain original until proven migrated"
     }
   ],
   "deletion_gate": {
