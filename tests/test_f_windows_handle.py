@@ -219,7 +219,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
             self.skipTest("I owner source not supplied")
         raw = p.read_bytes()
         blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + bytes([0]) + raw).hexdigest()
-        expected = "972ceba8f937502fb9677f577a93a89615635f4e"
+        expected = "725f2eac5e5b1e7c5e8b43e6a26f6c1433e7251c"
         if not owner_file and blob != expected:
             self.skipTest("F inherited checkout lacks exact I custody source")
         self.assertEqual(blob, expected, "I source drift: require independent re-review")
@@ -244,9 +244,21 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         # OPEN_REPARSE_POINT alone cannot acquire a directory HANDLE.
         self.assertIn("0x02000000", opening,
                       "I_CUSTODY_DIRECTORY_HANDLE_REQUIRES_BACKUP_SEMANTICS")
-        self.assertIn("is_file=key.startswith('file:') or key=='ownership:service.sqlite'", opening)
-        self.assertIn("flags=0x00200000 if is_file else 0x00200000|0x02000000", opening)
+        self.assertIn("flags=_native_roster_open_flags(key)", opening)
         self.assertIn("h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,flags,None)", opening)
+        kind = next((n for n in tree.body if isinstance(n, ast.FunctionDef)
+                     and n.name == "_native_roster_is_file"), None)
+        selector = next((n for n in tree.body if isinstance(n, ast.FunctionDef)
+                         and n.name == "_native_roster_open_flags"), None)
+        self.assertIsNotNone(kind)
+        self.assertIsNotNone(selector)
+        kind_source = ast.get_source_segment(source, kind)
+        flags_source = ast.get_source_segment(source, selector)
+        self.assertIn("key=='ownership:service.sqlite'", kind_source)
+        self.assertIn("key.startswith('file:')", kind_source)
+        self.assertIn("('root','code','ownership','state')", kind_source)
+        self.assertIn("key.startswith(('ancestor:','directory:','parent:'))", kind_source)
+        self.assertIn("0x00200000 if _native_roster_is_file(key) else 0x00200000|0x02000000", flags_source)
         self.assertIn("0x1|0x2,None", opening)
         self.assertNotIn("0x1|0x2|0x4", opening)
         self.assertIn("self._read()==self.snapshot", checking)
