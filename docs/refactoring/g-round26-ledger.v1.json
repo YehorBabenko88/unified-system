@@ -178,17 +178,20 @@
     },
     {
       "id": "G-006",
-      "status": "MIGRATE",
+      "status": "PARTIAL_CONSUMER_CUTOVER_DRAFT_REMAINDER_BLOCKED",
       "repo": "strattester",
       "path": "strattester/marketdata/bybit_client.py",
       "owner": "Grid",
       "consumers": [
-        "tests/marketdata/test_bybit_client.py",
-        "additional UNKNOWN"
+        "strattester/marketdata/download_smoke.py old implicit BybitClient consumer: cut over to injected source / unique temporary SQLite in isolated Strattester Draft PR #123; CLI fail-closed pending Root/Grid read capability",
+        "strattester/marketdata/sync_engine.py::_sync_rows (klines/mark/index/premium/OI/funding/long-short) blob 8e9cae734f54ebdcbda25659b8f68c9690e13e5e",
+        "strattester/marketdata/universe_sync.py::sync fetch_linear_symbols blob 579cee4dcd336d7741645c6915e7423860347e57",
+        "tests/marketdata/test_bybit_client.py blob 015c109f672686352d949c36aa04cefec2184e2e",
+        "other dynamic/CI/installer consumers not fully enumerated"
       ],
-      "replacement": "Grid versioned read/ingestion API pending B/H approval",
-      "tests": "NOT_RUN; deletion BLOCKED",
-      "rollback": "preserve historical tests and fixture"
+      "replacement": "FIRST PRACTICAL consumer source migration: Strattester Draft PR123 HEAD 8cf29408edfea6d59388a042604fcec352a0dd0e removes auto BybitClient and fixed-name DB unlink from download_smoke only. B/Root/J must supply provenance-qualified Grid reader injection for CLI; ALL OTHER original SyncEngine/Universe/BybitClient unique datasets retained pending parity and consent",
+      "tests": "Exact GitHub original main smoke blob 4876bafaef666ce22e3b82df464681fb8b8ad622 reproduced deletion of existing named user sentinel after sqlite3.DatabaseError in disposable fixture. Fixed source blob 13a21d3a357385dd3621f255ee09aa642f9b80e0 and new tests blob d16db22eaeb0a54e09627432d5aca98a2452d1a6 byte-exact local; 10 pytest PASS 0 FAIL 0 ERROR 0 SKIP with minimal sqlite3-backed harness; full original SQLiteMarketStore/Root Grid read CI NOT_RUN",
+      "rollback": "PR123 Draft unmerged; baseline main and old BybitClient intact for unique dataset consumers; never use fixed user DB path; require B/H/J authorized managed source before enabling CLI"
     },
     {
       "id": "G-007",
@@ -260,16 +263,16 @@
     },
     {
       "id": "G-012",
-      "status": "MIGRATED_SOURCE_ONLY_PARITY_BLOCKED",
+      "status": "MIGRATED_SOURCE_API21_CANDIDATE_PARITY_NOT_ACCEPTED",
       "repo": "Terminan",
       "path": "terminan/qualified_partial.py::qualified_timeframe_rows",
       "owner": "D",
       "consumers": [
         "previous D #129 terminan/data.py::qualified_market_data_timeframe_chart; switched to B qualified-rollup in D #130"
       ],
-      "replacement": "B Grid #305 qualified_rollup producer + D #130 terminan/qualified_rollup.py consumer",
-      "tests": "D #130 -68 duplicate source lines CONFIRMED; B #305 DTO source_declared_quality field missing D #130 _TOP; D recomputes delta from rounded binary64 operands; byte-pinned G negative guard 6 PASS local; original cross-repo runtime NOT_RUN; functional parity BLOCKED",
-      "rollback": "keep D #129 parent branch and original Math intact; revert D #130 scoped deletion if accepted positive/negative parity fails; no legacy Grid strategy/Meta retirement authorized"
+      "replacement": "Latest complementary owner Drafts: Grid B309 HEAD b2e3f9a77384080ecbb834b32d51d8816ed1aa2a (only CI integration changed; same executable canonical Grid B308 source 4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f); Terminan D134 HEAD 3608e41b90b2dbf7a80d7daa86582a2440e11330 (CI pinned B308 + tests, same D133 historical UI and D132 strict numeric consumer); Math 9e6acbd9. No native/installed final parity.",
+      "tests": "B309/D134 original CI now owner-wired for exact B308/D133 + canonical Math original, but B309 first-page 15 QUEUED, D134 2 PENDING; 0 completed CI outcomes established. H original DOM fake/contract reported PASS, full protected hardware/PG18/Consul/Windows/installed packages NOT_RUN. G012 retirement still not approved.",
+      "rollback": "D #129 previous independent aggregation must remain recoverable; do not delete legacy Grid strategy or Meta code; preserve full original 1m and research"
     }
   ],
   "deletion_gate": {
@@ -291,7 +294,9 @@
     "windows": "NOT_RUN",
     "linux": "NOT_RUN",
     "real_host": "NOT_RUN",
-    "G_round29_source_contract": "PASS 6 local exact GitHub code tests (synthetic fixtures), source cross-owner DTO FAIL; native E2E NOT_RUN"
+    "G_round29_source_contract": "PASS 6 local exact GitHub code tests (synthetic fixtures), source cross-owner DTO FAIL; native E2E NOT_RUN",
+    "G_R31_versioned_api21_source": "PASS 12 original G synthetic unittest exact GitHub SHA, initial 2 fixture failures fixed; original B307/D132 runtime NOT_RUN",
+    "G_R32_smoke_migration": "Original changed smoke source byte-exact to GitHub and exact existing smoke tests 2 + new tests 8 = 10 PASS under local SQLite backed harness (not full original store); original vulnerability reproduced on byte-exact old source disposable data only; full integration NOT_RUN"
   },
   "restrictions": [
     "no main merge",
@@ -360,5 +365,122 @@
     ],
     "release_authorized": false,
     "production_authorized": false
+  },
+  "round30_execution": {
+    "g_clean_pr": 183,
+    "g_clean_head_before_this_commit": "da5ce4869d31e4ccc3a0728fef0a85b524c54151",
+    "superseded_broad_pr": 177,
+    "superseded_closed": true,
+    "g_only_changed_paths": 5,
+    "byte_identity_all_five": "PASS",
+    "grid_head": "b55b03fdbaa6749d6b41bafb238ce98dfebd85e0",
+    "terminan_head": "c40740b8ac8104efff9bf9ca9e3e3b6db37a4ddd",
+    "canonical_math_head": "9e6acbd9e12a91189f57234828e31640983af553",
+    "tests": {
+      "exact_current_git_source_unittest_pass": 8,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "initial_pre_fix_fail": 1,
+      "compile": "PASS",
+      "b_d_original_e2e": "NOT_RUN",
+      "native_windows_pg_consul": "NOT_RUN"
+    },
+    "g012_approved": false,
+    "g006_approved": false,
+    "legacy_keep": [
+      "strattester/marketdata/bybit_client.py",
+      "strattester/marketdata/sync_engine.py",
+      "strattester/marketdata/universe_sync.py",
+      "strattester/marketdata/l2_recorder.py"
+    ],
+    "owner_dependency": "B canonical alternate APIs and H differential consumer parity before source removal",
+    "release_authorized": false,
+    "production_authorized": false
+  },
+  "round31_execution": {
+    "clean_pr": 183,
+    "base_sha": "498b0c11d7d0fad6fc4219c0e81814f27076c8ab",
+    "grid_sha": "36883fbf3d02e84822638aa87d0f307972852dbc",
+    "terminan_sha": "f4ffbe2913dee0a9987f8b9ad68f2b7df5ad360f",
+    "math_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+    "grid_blob": "2f27598a2fd0f7a561e350996894cabcabd40050",
+    "terminan_blob": "77c6855c52030d5d9b0e839e0c9245b947db41b5",
+    "versioned_api": "2.1",
+    "precision_contract": "CANONICAL_MATH_EXACT_STORED_1M",
+    "test_scope": "byte-identical original G checker and tests only; synthetic v2 fixtures not original B/D runtime",
+    "original_tests": {
+      "pass": 12,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "initial_fixture_fail": 2
+    },
+    "proof_of_native_B_D_parity": "NOT_RUN",
+    "win_pg_consul_installer": "NOT_RUN",
+    "g012_retirement": false,
+    "g006_retirement": false,
+    "actual_deleted_legacy_files": 0,
+    "release_authorized": false,
+    "production_authorized": false
+  },
+  "round32_execution": {
+    "g_root_draft_pr": 183,
+    "g_root_previous_sha": "6dc7e1a186385080bbbd3950c8c6280cc82ed67b",
+    "grid_pr": 308,
+    "grid_sha": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+    "terminan_pr": 133,
+    "terminan_sha": "bcdf3287a47e60f6c50022adce7651bcb51e587f",
+    "math_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+    "source_pair_status": "B308/D133 candidate not installed/native certified; D workflow still pinned B307",
+    "independent_migration": {
+      "repository": "YehorBabenko88/strattester",
+      "draft_pr": 123,
+      "head": "8cf29408edfea6d59388a042604fcec352a0dd0e",
+      "old_smoke_git_blob": "4876bafaef666ce22e3b82df464681fb8b8ad622",
+      "new_smoke_git_blob": "13a21d3a357385dd3621f255ee09aa642f9b80e0",
+      "new_test_git_blob": "d16db22eaeb0a54e09627432d5aca98a2452d1a6",
+      "changed_paths": [
+        "strattester/marketdata/download_smoke.py",
+        "tests/marketdata/test_download_smoke_g32.py"
+      ],
+      "original_data_loss_repro": "PASS: exact original Git blob deleted disposable pre-existing marker file after SQLite error; NO user file touched",
+      "fixed_test": {
+        "pass": 10,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "log_sha256": "455baf9ce4a936386e5cf814ca5dfe965b88b26a323dad97d4bfdd8cf56b8829"
+      },
+      "test_limit": "partial repo; minimal sqlite3-backed test harness; full original sqlite_store CI NOT_RUN",
+      "managed_grid_capability": "NOT_INSTALLED; missing Root/B owner-admitted provider",
+      "g006_complete": false,
+      "g012_retirement_approved": false,
+      "user_data_deleted": false
+    },
+    "release_authorized": false,
+    "production_authorized": false,
+    "current_followup": {
+      "grid_test_draft": 309,
+      "grid_test_head": "b2e3f9a77384080ecbb834b32d51d8816ed1aa2a",
+      "terminan_integration_draft": 134,
+      "terminan_integration_head": "3608e41b90b2dbf7a80d7daa86582a2440e11330",
+      "grid_math_producer_unchanged": true,
+      "terminan_math_consumer_unchanged": true,
+      "grid_ci_first_page": {
+        "queued": 15,
+        "completed": 0
+      },
+      "terminan_ci_first_page": {
+        "pending": 2,
+        "completed": 0
+      },
+      "strattester_ci_first_page": {
+        "queued": 1,
+        "completed": 0
+      },
+      "additional_file_repro_log_sha256": "971e261d1dc4ab5defbb8a26ade9004839e96ab89f974664cccfb7cf2fb26d7b",
+      "full_release": "NO_GO"
+    }
   }
 }
