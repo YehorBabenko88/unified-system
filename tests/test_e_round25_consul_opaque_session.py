@@ -37,7 +37,8 @@ class OpaqueSessionTests(unittest.TestCase):
                          next_owner)
         with self.assertRaises(ResourceFenceBlocked):
             claim_model(stopped, self.identity(token=40), legacy_quiescent=True)
-        self.assertNotEqual(self.identity(OBSERVED), self.identity(OBSERVED.upper()))
+        self.assertNotEqual(first.session_id, OBSERVED.upper())
+        self.assertEqual(self.identity(OBSERVED.upper()).session_id, OBSERVED.upper())
 
     def test_uuid4_instance_node_stay_strict(self):
         original = self.identity()
