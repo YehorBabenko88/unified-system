@@ -4,6 +4,7 @@ Synthetic disposable data only. Test results on non-Windows are SKIP/NOT_RUN
 for Win32 mechanisms. All positive checks are forensic; never Root/Writer GO.
 """
 import os
+import sys
 from pathlib import Path
 import subprocess
 import tempfile
@@ -22,6 +23,21 @@ class WindowsPathSyntaxTests(unittest.TestCase):
             with self.subTest(path=path):
                 with self.assertRaises(ValueError):
                     _segments(path)
+
+    def test_import_shadow_forgery_cannot_replace_exact_sibling_backend(self):
+        from unittest.mock import patch
+        from f_wheel_qualification import _win_backend
+        with tempfile.TemporaryDirectory(prefix="f-shadow-refusal-") as hostile:
+            Path(hostile, "f_windows_handle.py").write_text(
+                "raise AssertionError('AMBIENT_SHADOW_EXECUTED')\\n")
+            _win_backend.cache_clear()
+            try:
+                with patch.object(sys, "path", [hostile] + list(sys.path)):
+                    module = _win_backend()
+                    self.assertTrue(hasattr(module, "WindowsInstalledRoot"))
+                    self.assertTrue(hasattr(module, "wheel_snapshot"))
+            finally:
+                _win_backend.cache_clear()
 
     def test_canonical_drive_path_has_bounded_parts(self):
         drive, parts = _segments(r"C:\isolated\wheel.whl")
