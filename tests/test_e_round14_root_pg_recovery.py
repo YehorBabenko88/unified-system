@@ -147,7 +147,7 @@ class ExactRevokeOrderSyntheticTests(unittest.IsolatedAsyncioTestCase):
     """Ordering-only synthetic seam; NEVER native C/PG18/Job evidence."""
 
     async def _exercise(self, *, valid_receipt=True, stop_raises=False,
-                        exact_abi=True):
+                        exact_abi=True, revoke_result=True):
         events=[]
         alive={"value":True}
         locked={"value":False}
@@ -191,7 +191,7 @@ class ExactRevokeOrderSyntheticTests(unittest.IsolatedAsyncioTestCase):
                               backend_start),
                              ("root", "isolated", 9, 17, 4042,
                               "2026-11-26T21:00:00+00:00"))
-            return True
+            return revoke_result
         exact_revoke.__module__="unified_system.lab_pg_fence"
         def legacy_revoke(pg, *, generation, token):
             events.append("LEGACY_SQL_CALLED")
@@ -253,6 +253,7 @@ class ExactRevokeOrderSyntheticTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(locked["value"])
         self.assertIn("A_STOP_ATTEMPT",events)
         self.assertNotIn("C_EXACT_REVOKE",events)
+        self.assertEqual(events.count("LIVE_C_READ"),1)
         self.assertFalse(outcome.sql_fence_revoked)
         self.assertEqual(outcome.result,"PARTIAL_DENIED")
 
@@ -269,6 +270,16 @@ class ExactRevokeOrderSyntheticTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(locked["value"])
         self.assertIn("C_EXACT_REVOKE",events)
         self.assertFalse(outcome.child_stopped)
+        self.assertEqual(outcome.result,"PARTIAL_DENIED")
+
+    async def test_unconfirmed_revoke_never_dispatches_post_revoke_read(self):
+        events,locked,outcome=await self._exercise(revoke_result=False)
+        self.assertTrue(locked["value"])
+        self.assertIn("C_EXACT_REVOKE",events)
+        self.assertEqual(events.count("LIVE_C_READ"),1)
+        self.assertFalse(outcome.sql_fence_revoked)
+        self.assertFalse(outcome.old_backend_rejected)
+        self.assertFalse(outcome.consul_released)
         self.assertEqual(outcome.result,"PARTIAL_DENIED")
 
 
