@@ -1,7 +1,7 @@
 {
   "schema": "unified-system.j.round35.disposable.v1",
   "scope": "SYNTHETIC_ISOLATED_CI_ONLY_NO_RELEASE_AUTHORITY",
-  "source_j_head": "653efebdc269c003fd506163ea9080dc2e4b27dc",
+  "source_j_head": "9933836d33d7131629ca7759f0237d4da65ae0ca",
   "frozen_pr166_sha": "9349d7f3ed93ef82d120976816b968e0b716b067",
   "release": "CODE_NO_GO_PRODUCTION_NO_GO",
   "authorize_release": false,
@@ -90,8 +90,8 @@
     "consul_acl_ttl": "NOT_RUN",
     "windows_installer": "NOT_RUN",
     "ui_e2e": "NOT_RUN",
-    "ci_scheduler": "J_PREJOB_0_JOBS_BUT_F_WORKFLOW_LATER_MATERIALIZED_JOBS_CAUSE_UNPROVEN",
-    "consul_compatibility": "J_SYNTHETIC_1_20_9_VS_E_PLANNED_2_1_VERSION_MISMATCH; NO_EQUIVALENCE_CLAIM; E_SOURCE_IMPORT_ONLY"
+    "ci_scheduler": "PREVIOUS_J_TWO_JOBS_QUEUED_NO_STEPS; LATER_AUTOMATIC_RUNS_ZERO_JOBS; NO_NATIVE_TEST_EXECUTION",
+    "consul_compatibility": "CONSUL_2_1_0_UBI_AMD64_MANIFEST_DIGEST_PINNED_IN_WORKFLOW_NOT_YET_PULLED_OR_EXECUTED"
   },
   "integration_policy": {
     "owner_blob_import": "REVIEWED_EXACT_ONLY",
@@ -111,7 +111,7 @@
     "H": "e23c3785c0ed8ec68d4a9993941d4c04dc5fdddc",
     "I": "da42b3e7d047f65f0ef78a18f1b8c2bf2d38f52f"
   },
-  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity. E exact 2 owner blobs imported only as candidate, no transfer of native acceptance.",
+  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity. E exact 2 owner blobs imported only as candidate, no transfer of native acceptance. New cycle source snapshots and isolated local capacity tests are not fleet/package acceptance.",
   "qualified_source_pins": {
     "A": {
       "tested_head": "89b78cc4075a2fcb845b3494cceda20dec0cc64c",
@@ -150,14 +150,6 @@
       "total_skip": 2,
       "meaning": "G_ORIGINAL_FIXTURE_PRESERVATION_ONLY_NOT_GRID_MIGRATION_PARITY",
       "integration": "EXTERNAL_STRATTESTER_PIN_ONLY_NO_G006_G012_RETIREMENT"
-    },
-    "E": {
-      "owner_sha": "1aef1d8b5138d7aa132c404d1d66f92cf958b017",
-      "production_blob": "6d4e82b08cc6583f3ba479275fdb537aa20d584d",
-      "test_blob": "16dadf8149bc6e2d0fde2c4bedee1547177b268a",
-      "integration": "SELECTIVE_IMPORTED_SOURCE_PARITY_ONLY",
-      "original_runtime": "NOT_RUN",
-      "scope": "STRICT_HTTP_JSON_DUPLICATE_AND_NONFINITE_REJECTION_INCLUDING_TXN_QUARANTINE_NO_LEASE_GRANT"
     }
   },
   "latest_owner_observations": {
@@ -197,5 +189,70 @@
       "sha": "fbce3d80d425e5a02c87b58b691531161634b25a",
       "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
     }
+  },
+  "snapshot_cycle": "ROUND35_MASTER_7222746388",
+  "reviewed_candidate_imports": {
+    "E": {
+      "owner_sha": "5a7b64ac2e537e8971309feabdd5b756d21e062d",
+      "source_blob": "41276cc968333405482684da786fd736fdf463d2",
+      "test_blob": "83d2e569937872313bd4e33fcd48f32e1fff7402",
+      "status": "EXACT_BLOB_IMPORTED_NATIVE_NOT_RUN_F_INDEPENDENT_ACCEPTANCE_PENDING",
+      "scope": "CONSUL_HTTP_STRICT_JSON_AND_WRITE_CONTROL_FRESH_MODIFY_INDEX"
+    },
+    "C": {
+      "owner_sha": "07e681bc2e4ebc8e82e22f43d3f6a89498bb7dc6",
+      "source_checkpoint_blob": "076980d9556bf3a685091f16129ef321cb1372be",
+      "native_test_blob": "14d424b60e244620dc8fb64cd4c6a191bfe048cd",
+      "native_probe_blob": "b9cb483158957c17cd374cc4f7b9e2a06bdc9456",
+      "status": "C_NATIVE_29_METHOD_TEST_SOURCE_PARITY_NO_PG18_EXECUTION",
+      "source_ownership": "C_OWNED_FOUR_PG_MODULES_ALREADY_IDENTICAL_J_NO_REDUNDANT_COPY"
+    }
+  },
+  "disposable_image_pins": {
+    "consul": {
+      "target_version": "2.1.0",
+      "variant": "UBI",
+      "platform": "linux/amd64",
+      "registry_ref": "hashicorp/consul@sha256:a7153362a90c3e6b09aaa38b9fb7c58fed092e2f9e933341b8d485d7675100ba",
+      "digest_kind": "DOCKER_HUB_LINUX_AMD64_MANIFEST",
+      "downloaded_at_hosted_runner": false,
+      "native_version_verified": false,
+      "container_security_review": "PENDING"
+    },
+    "postgres": {
+      "target_major": 18,
+      "tag": "postgres:18",
+      "digest_pin": "UNSET_NATIVE_IMAGE_ID_CAPTURE_REQUIRED",
+      "native_version_verified": false
+    }
+  },
+  "actual_assembled_release_capacity": {
+    "release_manifest_sha256": "NOT_AVAILABLE",
+    "real_release_file_count": null,
+    "real_release_directory_count": null,
+    "native_identity_count": null,
+    "actual_canonical_receipt_bytes": null,
+    "installable": false,
+    "source_tree_not_release": {
+      "git_head": "974fe792a05399786b6b67d68d0f09bc937d92f4",
+      "git_blob_count": 2326,
+      "has_assembled_lab_release_json": false
+    },
+    "safety_limits": {
+      "max_handles": 512,
+      "estimated_roster_bytes": 56000,
+      "canonical_receipt_bytes": 60000
+    },
+    "owner_I_import": "DENIED_UNTIL_REAL_MANIFEST_AND_F_REVIEW"
+  },
+  "original_local_test_execution": {
+    "source_blob": "90bbabde163b40dc303e4a7d826253d3673fa5a9",
+    "test_blob": "09ba3285f6ed6f3b37833bb3251cb55725de0ac6",
+    "host": "ISOLATED_LINUX_PYTHON_3_13_5",
+    "pass": 7,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "limitation": "LAB_RELEASE_RELPATH_REAL_EXCERPT_AND_PARSE_MANIFEST_FAIL_CLOSED_STUB_NOT_FULL_ORIGINAL_REPOSITORY_DEPENDENCY"
   }
 }
