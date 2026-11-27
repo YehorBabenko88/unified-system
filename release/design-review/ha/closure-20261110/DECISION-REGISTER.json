@@ -1,0 +1,37 @@
+{
+  "schema": "unified.ha.design-decision-register.v1",
+  "date": "2026-11-10",
+  "scope": "DESIGN_REQUESTS_NOT_RUNTIME_API_OR_EXECUTION_RELEASE",
+  "preserved_ack": "Root R1/R3 scoped direction only; exact prior receipt in ../HA-ROOT-R1-R3-DESIGN-ACK-20261109.json",
+  "decisions": [
+    {"id":"D2-BASE","owners":["Root","operator"],"status":"OPEN","required_answer":"Exact immutable implementation HEAD/tree and cross-repository/module assembly, ownership and source closure; none currently approved."},
+    {"id":"D2-LINEAGE","owners":["Root","A2"],"status":"PROPOSED_OPEN","required_answer":"Approve fresh never-issued logical realm and quota policy genesis; specify lineage proof, retained commissioning receipt schema/locator and checked native creation protocol. Absence scan alone insufficient; no reset/migration."},
+    {"id":"D2-WRITER","owners":["Root","A1","A2","A5","A4"],"status":"OPEN","required_answer":"Name every privileged writer, exact adopting version and credentials/lifecycle; how legacy writers are fenced. Prove same-job/ledger protocol before queued release, with explicit administrative trust boundary."},
+    {"id":"D2-RIGHTS","owners":["Root","existing broker owner","A2","A1"],"status":"PROPOSED_OPEN","required_answer":"Approve versioned logical rights and fixed capture in existing broker; exact policy/source/ACL/method ABI and current peer/session/request joins. No implicit remap of existing rights."},
+    {"id":"D4-SCHEMAS","owners":["Root","A2","broker owner","A5","A6"],"status":"OPEN","required_answer":"Exact closed schema/hash and codec set for logical policy/ledger/job/original/common/domain/phase receipt/observation, native fact versus current authorization and old-consumer rejection."},
+    {"id":"D4-CUSTODY","owners":["Root","A2"],"status":"OPEN","required_answer":"Existing Journal adapter allocation and JOB-sized byte/row/file/durability budgets; serialized mutation/reconciliation and pending-RPC lifecycle; explicit local-only uncommitted recovery limits."},
+    {"id":"D4-NATIVE","owners":["Root","A2","A1"],"status":"OPEN","required_answer":"Chosen native binary/source version; whole operation plan and expanded-byte measurement; operation-specific session/transaction results grammar and source/ACL qualification release."},
+    {"id":"D4-TIME","owners":["Root","operator","policy owner"],"status":"BLOCKING_DECISION","required_answer":"Require strict UTC-at-Raft-commit and keep mutations disabled pending enforceable protocol, OR separately approve explicit logical-only native-order/session/index plus local eligibility semantics without strict commit UTC. No security change selected by this packet."},
+    {"id":"D5-INTERLOCK","owners":["Root","A2","A5","A4"],"status":"OPEN","required_answer":"Exact all-writer adoption evidence, native same-job+ledger CAS queue/cancel/future admission, once-only release/terminal replay/current-rights and no-quorum behavior; then separately authorize real proof tests."},
+    {"id":"D5-ACTIVE","owners":["Root","A2","A5","A4"],"status":"DESIGN_REQUIREMENTS_AGREED_EXACT_ABI_OPEN","required_answer":"Joint exact actual release/publication/containment/consume interfaces and records, same serialization, separate execution/storage obligations and atomic pending-to-retained protection transfer. Actual qualified APIs NONE; remain disabled."}
+  ],
+  "requested_ack_format": ["Package and artifact SHA256", "Decision IDs accepted/rejected", "Exact source and API scope", "Remaining blockers", "Explicit statement no implementation/native write/state activation grant"],
+  "actual_positive_apis": {
+    "logical_queue_cancel_reconcile": "NONE",
+    "logical_rights_capture": "NONE",
+    "qualified_resource_capsule": "NONE",
+    "native_scheduler_reservation": "NONE",
+    "one_use_consume_start": "NONE",
+    "native_publication_current_scientific_read": "NONE",
+    "active_release": "NONE"
+  },
+  "next_items_now": ["Review actual source inventory and owner artifacts", "Resolve listed design decisions", "Design exact schemas and bounded transaction plans without implementation or native execution"],
+  "next_implementation_after_approval_only": ["Closed logical codecs and semantic joins", "Fixed versioned rights capture extension in existing broker", "JOB custody adapter with local durability limits", "Bounded one-shot logical queue/cancel/reconcile in existing authority"],
+  "positive_physical_transition": "DISABLED",
+  "tests_run": 0,
+  "native_rpc_calls": 0,
+  "job_calls": 0,
+  "browser_calls": 0,
+  "physical_calls": 0,
+  "go_no_go": "DESIGN_PENDING_NO_GO"
+}

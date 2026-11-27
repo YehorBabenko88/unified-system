@@ -1,0 +1,69 @@
+{
+  "source_head": "8dc717ab85681d71711783df3ff11bfa8d9a2d87",
+  "source_tree": "992e3f64b270553670597ba05a97bdfffdaa2f4d",
+  "direct_tests": 21,
+  "skips": 0,
+  "primary_files": {
+    "unified": 1555,
+    "strattester": 800,
+    "meta_analyse": 782
+  },
+  "all_primary_raw_before_after_equal": true,
+  "schema_checks": 16,
+  "schema_environment": "SEPARATE_EXISTING_OWNER_JSONSCHEMA_4.26.0_NOT_DIRECT21",
+  "historical_red_scope": "WORKING_TREE_NOT_ORIGINAL_PRIMARY_SOURCE_PINNED",
+  "levels": [
+    "low8@0",
+    "low9@60000",
+    "high12@120000",
+    "low10@120000"
+  ],
+  "no_scheduler_or_authenticated_or_physical_pass": true,
+  "files": [
+    {
+      "path": "actual-meta-result.json",
+      "bytes": 2070,
+      "sha256": "f4997d7d26211676cd8664e53d7999f8b71f203510f3b9a275b439c403e03940"
+    },
+    {
+      "path": "direct-result.json",
+      "bytes": 5909,
+      "sha256": "653ecbd6964c27352698378ceb13877095fd5509f1fab1f7023cbd88216c02a7"
+    },
+    {
+      "path": "fixed-output-RED.log",
+      "bytes": 1003,
+      "sha256": "0058a0ee41d81be7d4f429f8827ee47c321797cd540851e94866f7dc6cd4b0d8"
+    },
+    {
+      "path": "local-journal.json",
+      "bytes": 9479,
+      "sha256": "741a852b77ed0be051710d9adc31b3469af240f8ee9eb1c0e4643ed178013a4b"
+    },
+    {
+      "path": "prepared-request.json",
+      "bytes": 971,
+      "sha256": "4cf1df7beb92853123db57742ceb0bc788d2ad129288b8f1777de7f55a1bb232"
+    },
+    {
+      "path": "qualification.json",
+      "bytes": 824616,
+      "sha256": "8d82a32ce51a2663f604ebd0fbcdd4a527aa390f9a1e5e7d4fd08673721a9945"
+    },
+    {
+      "path": "qualified-8dc717a.log",
+      "bytes": 3154,
+      "sha256": "b1d8c58b56b5cd8daa9892cdf0352412ffd9a5a3e797b8c01bf70084f5198e53"
+    },
+    {
+      "path": "schema-GREEN.log",
+      "bytes": 2121,
+      "sha256": "7fe23eb854c2ca4f739a9071aa6cf582b4d18c2190670c117651e35f019ccae2"
+    },
+    {
+      "path": "schema-RED.log",
+      "bytes": 2456,
+      "sha256": "11ff216fd2f03437ea54c2dc581971d9d0aaf831da7112197431b9e2b4224d81"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+# A8 fresh PR32 record-fault and identity transaction review
+
+Requirement ID: CONTROL_MUX_TRUSTED_RECORD_CONSISTENCY_AND_IDENTITY_INDEX_FENCING.
+Repository: unified-system; Draft PR32 https://github.com/YehorBabenko88/unified-system/pull/32.
+Exact HEAD08d6f01d94feb44a17338be8ef3f8871995c284a; tree18db861452f82978806a3f4d81a70b033ce53b02. Grid58cfe0f51bc05bb0ee2ed09368a9b64679358c63.
+Environment: independently cloned raw-pinned source, Python3.12.10 pinned-dependency environment, owned loopback3Consul1.22.2/BoltDB processes, private synthetic storage and identities. No office probes/faults/install/security/provider operations.
+
+Expected/actual:18unit+42real HTTP/Grid/Consul+8source negatives PASS,0skip;667Unified/672Grid raw inputs unchanged before/after, all owned processes stopped. AST inventory comparison independently verifies42unique=28retained+14new (6record-corruption+8identity-revocation windows). No prior5fd ACK/counts transferred. Original logs/receipts: invocation.*, source-bound.json, real-consul.*, source-guard-controls.*. Automatically executed GET24models remain MODEL_MATCH_ONLY_NOT_ENDPOINT_OR_AUTHORITY.
+
+Primary Git verification, not owner assertion: exactly4allocated test/doc paths changed. Five product modules and five GET review2/schema/vector/model/plan files are byte-identical to5fd, with primary Git blob OIDs and SHA256 in primary-pin-review.json. Owner evidence bf47e5e8f0ed3fb74ee90fcaea461c248f6c8aa0e4f2bdb938040109239d7bca correlated only, not substituted for our execution.
+
+Six actual trusted-record faults: missing response, hash mismatch, receipt request-link mismatch, PENDING with terminal evidence, nonempty204, fully rehashed wrong close target. Each returns UNAVAILABLE, preserves parent connection/debt bytes, and restores original202body when fixture restores records. Restoring raw bytes uses native writes and advances ModifyIndices; no assertion that original indices remain unchanged.
+
+Eight actual races: principal/session/enrollment/policy revoked after native check-index capture, immediately before PREPARE or FINAL. Native changed index is greater than captured index; original transaction rejects. PREPARE leaves no original index; FINAL leaves original bounded PENDING/hold, exact preimage/body/digest/key/byte accounting, no receipt and no parent release. Actual index pairs and attempted txn hashes retained in real-consul.json.
+
+Additional fresh A8 stand repeats42original cases with stronger in-memory fixture assertions; these are NOT42additional unique tests. It confirms all8 rejection exceptions have actual Grid CoordinationLost cause, which pinned Grid maps exclusively from HTTP409. This is HTTP409 inferred from actual Grid cause, not a separately captured raw HTTP response. Full attempted synthetic transaction operations are retained and independently rehashed against evidence, alongside native check/changed indices. PREPARE command also absent; FINAL response also absent; pending ledger <=14entries/131072bytes. Product/tracked test files unchanged; both raw source sets verified and all owned processes stopped. Evidence native-rejection-supplement.json, native-supplement-source-verification.json and logs; reproduction review_mux8_native_rejection.py.
+
+CI42350749074(PR)/42350745758(push), attempt1/exact08d: independently read queued/null, NOT_PASS at retained snapshot. No artifact/mandatory Windows matrix acceptance. GET unwired, synthetic native provider, READY/ACK204/LIVE/containment/release/reuse remain closed/unqualified. Consistency checks on trusted Consul records do not protect against a malicious authority writer rewriting all trusted state.
+
+Status: PASS_ISOLATED_TEST_EXTENSION_ONLY. Severity: no new defect found in this bounded extension; existing native-authentication/integrated-runtime/security and acceptance P1 gaps remain. Required correction: actual qualified native provider/final composition and independent current CI/artifacts; producer/barrier/containment before broader endpoint claims. Overall NO-GO,6P1/3P2 unchanged. PHYSICAL_ACCEPTANCE and TAILSCALE_REMOVAL_ACCEPTANCE BLOCKED. No real orders or unapproved host/network changes.

@@ -1,0 +1,24 @@
+{
+  "schema": "unified.native-research.ownership.v1",
+  "ROOT": [
+    "release/integration/native-research-v1/**",
+    "integration composition: NOT IMPLEMENTED"
+  ],
+  "A2": [
+    "unified_system/gateway_research_identity.py",
+    "tests/gateway_research_identity/**",
+    "docs/intelligence/research-identity/**",
+    ".github/workflows/gateway-research-identity.yml"
+  ],
+  "A4": [
+    "unified_system/storage/replica_evidence.py",
+    "unified_system/storage/result_publication.py",
+    "unified_system/storage/publication_records.py",
+    "unified_system/storage/publication_recovery.py",
+    "tests/storage/native_publication/**",
+    "docs/storage/native-publication/**",
+    ".github/workflows/storage-native-publication.yml"
+  ],
+  "shared_changes": "REQUIRE_EXPLICIT_OWNER_ACK_NO_SILENT_COMPATIBILITY_CHANGE",
+  "other_owners": "A5 worker/A7 projection/A6 client remain separate NOT_IMPORTED"
+}

@@ -1,0 +1,416 @@
+{
+  "schema": "unified.api-registry.v1",
+  "revision": 1,
+  "authority": "INTEGRATION_OWNER",
+  "existing_contracts_preserved": true,
+  "change_policy": "Breaking changes require a new major version and explicit producer AND consumer ACK at pinned commits. Silence is not approval.",
+  "contracts": [
+    {
+      "id": "unified.command.v1",
+      "state": "SOURCE_IMPLEMENTED_COMPONENT_TESTED_NOT_RUNTIME_ADMITTED",
+      "owners": [
+        "A2",
+        "A6"
+      ],
+      "fields": [
+        "schema",
+        "command_id",
+        "actor_id",
+        "idempotency_key",
+        "generation",
+        "aggregate_type",
+        "aggregate_id",
+        "expected_revision",
+        "action",
+        "payload"
+      ],
+      "closed": true,
+      "limits": {
+        "utf8_bytes": 32768,
+        "json_depth": 8,
+        "integer_max": 9007199254740991
+      },
+      "rules": [
+        "canonical UUID command_id/generation",
+        "server-derived HUMAN actor must equal assertion",
+        "duplicate/nonfinite/unknown fields rejected",
+        "only SetResearchControl, aggregate_type research",
+        "payload exactly mode LAB_SIMULATION and state PAUSED or RUNNING",
+        "positive grant revision and current capability research.control",
+        "unknown actions remain UNSUPPORTED; this registry does not add job actions"
+      ],
+      "implementations": [
+        "unified-system#17",
+        "bybit-cluster-grid#257"
+      ]
+    },
+    {
+      "id": "unified.command-receipt.v1",
+      "state": "SOURCE_IMPLEMENTED_COMPONENT_TESTED_NOT_RUNTIME_ADMITTED",
+      "owners": [
+        "A2",
+        "A6"
+      ],
+      "committed_fields": [
+        "schema",
+        "command_id",
+        "generation",
+        "commit_status",
+        "effect_status",
+        "actor_id",
+        "grant_revision",
+        "idempotency_key",
+        "digest",
+        "action",
+        "aggregate_id",
+        "revision",
+        "leader_lock_index",
+        "consensus_modify_index"
+      ],
+      "unknown_fields": [
+        "schema",
+        "command_id",
+        "generation",
+        "commit_status",
+        "effect_status"
+      ],
+      "rules": [
+        "COMMITTED effect_status PENDING_UNWIRED is not execution success",
+        "UNKNOWN has no invented actor or owner",
+        "immutable command identity and actor-scoped idempotency",
+        "complete canonical command digest bound to receipt",
+        "actual KV ModifyIndex is not Raft term, PG epoch or domain revision"
+      ]
+    },
+    {
+      "id": "grid.network-budget-anchor.v1",
+      "state": "SOURCE_IMPLEMENTED_HOSTED_QUALIFICATION_TO_RECHECK",
+      "owners": [
+        "A1",
+        "A2"
+      ],
+      "fields": [
+        "schema",
+        "installation_id",
+        "meter_id",
+        "store_generation_sha256",
+        "revision",
+        "offset",
+        "journal_sha256"
+      ],
+      "closed": true,
+      "rules": [
+        "canonical record <=4096 bytes",
+        "consistent reads never treat unavailable as missing",
+        "same Consul txn checks session/leader index/expected anchor CAS",
+        "monotonic revision and offset; fixed scope/generation",
+        "local fsync then quorum anchor then fresh guard/TTL before receipt",
+        "full budget state stays local, not in the small consensus record"
+      ],
+      "implementations": [
+        "bybit-cluster-grid#261",
+        "bybit-cluster-grid#260"
+      ],
+      "runtime": "NOT_WIRED"
+    },
+    {
+      "id": "unified.lan-probe-inventory.v1",
+      "state": "SOURCE_IMPLEMENTED_OFFLINE_TESTED_NATIVE_ADMISSION_NOT_WIRED",
+      "owners": [
+        "A1"
+      ],
+      "fields": [
+        "schema",
+        "installation_id",
+        "empty_config",
+        "nodes"
+      ],
+      "node_fields": [
+        "node",
+        "address",
+        "port",
+        "username",
+        "host_key",
+        "known_hosts",
+        "identity_file",
+        "identity_public_fingerprint"
+      ],
+      "rules": [
+        "exact five workers; LS5 is controller; ADMINIT excluded",
+        "host keys distinct; no TOFU; no IP-only trust",
+        "owner-admitted private inventory and live source/endpoint/key bindings",
+        "private key fingerprint assertion alone is not proof of private-key binding",
+        "sticky uncertain helper outcome blocks retry; never reset networking"
+      ],
+      "implementations": [
+        "unified-system#16"
+      ]
+    },
+    {
+      "id": "historical-handoff.schema_version.1",
+      "state": "EXISTING_SOURCE_CONTRACT_PRESERVED",
+      "owners": [
+        "A7",
+        "A6"
+      ],
+      "fields": [
+        "schema_version",
+        "producer",
+        "run_id",
+        "dataset_fingerprint",
+        "status",
+        "capabilities",
+        "payload",
+        "sha256"
+      ],
+      "rules": [
+        "producer strattester; status SEALED; capabilities historical_research only",
+        "canonical SHA256 and immutable dataset binding",
+        "existing VERIFIED_SYNTHETIC result never relabeled physical/live"
+      ],
+      "implementation": "unified_system/contracts.py"
+    },
+    {
+      "id": "unified.lan-peer-registry.v1",
+      "state": "PROPOSED_REQUIRES_ENDPOINT_ACK",
+      "owners": [
+        "A1",
+        "A2",
+        "A4",
+        "A6"
+      ],
+      "fields": [
+        "schema",
+        "cluster_id",
+        "generation",
+        "revision",
+        "previous_registry_sha256",
+        "policy_digest",
+        "trust_bundle_digest",
+        "nodes",
+        "signer_key_id",
+        "signature"
+      ],
+      "rules": [
+        "stable enrolled node identity, key/certificate binding and generation independent of IP",
+        "owner-provisioned real trust anchor outside request and repository; no invented production key/pin",
+        "address changes require authenticated signed revision and current quorum policy",
+        "no automatic Tailscale fallback for consensus/storage/commands",
+        "no DNS/DHCP/route/firewall/adapter/router mutations"
+      ],
+      "runtime": "BLOCKED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "unified.cluster-configuration.v1",
+      "state": "PROPOSED_REQUIRES_ALL_ENDPOINT_ACK",
+      "owners": [
+        "ROOT",
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7"
+      ],
+      "fields": [
+        "schema",
+        "cluster_id",
+        "generation",
+        "revision",
+        "integration_manifest_sha256",
+        "contract_versions",
+        "peer_registry_sha256",
+        "node_roles",
+        "resource_policy_refs",
+        "schedule_policy_refs"
+      ],
+      "rules": [
+        "logical coordination schema, not permission to widen existing protected activation schemas",
+        "same revision/content hash quorum-confirmed",
+        "LAB_SIMULATION only; production credentials/orders forbidden",
+        "LS5 preferred, PC4/PC3 coordinators; no forced failback",
+        "HA duties independent of worker schedule and UI lifetime"
+      ],
+      "runtime": "BLOCKED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "unified.instrument-dataset.v1",
+      "state": "PROPOSED_REQUIRES_ENDPOINT_ACK",
+      "owners": [
+        "A3",
+        "A4",
+        "A7",
+        "A6"
+      ],
+      "fields": [
+        "schema",
+        "dataset_id",
+        "instrument",
+        "data_kind",
+        "schema_version",
+        "partitions",
+        "checkpoint",
+        "gaps",
+        "provenance_refs",
+        "pins",
+        "revision"
+      ],
+      "rules": [
+        "instrument exchange/market/symbol/version fixed",
+        "immutable raw separate from normalized partitions",
+        "content hashes, source sequence/timestamps and atomic committed checkpoint",
+        "gap recoverability is source-specific; never invent exchange sequence or completeness",
+        "replicas count only independently verified physical copies",
+        "metadata consensus separate from bulk dataset replication",
+        "last verified copy/pinned dependencies protected; quarantine then separately authorized verified delete"
+      ],
+      "runtime": "BLOCKED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "unified.market-observation.v1",
+      "state": "PROPOSED_ADAPTER_TO_EXISTING_INGESTION",
+      "owners": [
+        "A3",
+        "A4",
+        "A7"
+      ],
+      "fields": [
+        "schema",
+        "instrument",
+        "data_kind",
+        "source_connection_id",
+        "source_sequence",
+        "event_time_ms",
+        "ingest_time_ms",
+        "raw_sha256",
+        "schema_version",
+        "writer_fence",
+        "checkpoint_ref",
+        "quality_state"
+      ],
+      "rules": [
+        "use existing Grid ingestion/WAL rather than parallel pipeline",
+        "missing source sequence remains unknown, not synthesized",
+        "Bybit public market endpoints only; no order/private credential API",
+        "reconnect/resubscribe and backfill respect global/local budget and rate limits",
+        "UNKNOWN/DEGRADED/RECOVERING/GAP_DETECTED/UNRECOVERABLE/VERIFIED require evidence"
+      ],
+      "runtime": "BLOCKED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "unified.research-job.v1",
+      "state": "PROPOSED_REQUIRES_ENDPOINT_ACK",
+      "owners": [
+        "A5",
+        "A2",
+        "A3",
+        "A4",
+        "A7",
+        "A6"
+      ],
+      "fields": [
+        "schema",
+        "job_id",
+        "command_id",
+        "actor_id",
+        "mode",
+        "instrument_refs",
+        "dataset_refs",
+        "algorithm_pin",
+        "module_pins",
+        "resource_request",
+        "checkpoint_ref",
+        "revision",
+        "status",
+        "lease_fence",
+        "result_refs",
+        "provenance_refs"
+      ],
+      "resource_units": {
+        "cpu": "millicores",
+        "ram": "bytes",
+        "disk": "bytes",
+        "network": "bytes_per_second"
+      },
+      "rules": [
+        "existing global authority, not a second SQLite/job scheduler",
+        "resource reservation before placement; data locality and capacity evidence",
+        "at-least-once execution with idempotent committed effects unless stronger proof exists",
+        "schedule timezone IANA; explicit overnight and DST policy",
+        "DRAINING/STANDBY/MAINTENANCE worker state never powers off Windows or suspends coordinator duties",
+        "UI close/logoff does not cancel committed jobs; durable current grant governs effects",
+        "new mutating actions need separately agreed command major/capability contract"
+      ],
+      "runtime": "BLOCKED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "unified.cluster-snapshot-events.v1",
+      "state": "PROPOSED_REQUIRES_ENDPOINT_ACK",
+      "owners": [
+        "A2",
+        "A5",
+        "A6",
+        "A3",
+        "A4"
+      ],
+      "fields": [
+        "schema",
+        "cluster_generation",
+        "state_revision",
+        "event_sequence",
+        "leader",
+        "quorum",
+        "nodes",
+        "jobs",
+        "instruments",
+        "datasets",
+        "errors",
+        "provenance_refs"
+      ],
+      "rules": [
+        "snapshot then contiguous authenticated events; gaps require resnapshot",
+        "LIVE/STALE/RECONNECTING/OFFLINE/NO_QUORUM reflect actual observations",
+        "source timestamp separate from local monotonic freshness clock",
+        "all windows consume backend state; browser opening cannot elect leader or own jobs",
+        "operator subject is enrolled local-SAM issuer SID + authenticated user SID + generation; equal usernames do not federate",
+        "real Windows auth, TLS/channel binding, current grants and fresh critical reauth remain qualification gates"
+      ],
+      "runtime": "BLOCKED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "unified.exchange-budget.v1",
+      "state": "PROPOSED_REQUIRES_ENDPOINT_ACK",
+      "owners": [
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "operations": [
+        "acquire",
+        "report",
+        "cancel"
+      ],
+      "fields": [
+        "request_id",
+        "egress_scope",
+        "exchange",
+        "transport_class",
+        "endpoint_class",
+        "deadline",
+        "provider_policy_revision"
+      ],
+      "rules": [
+        "provider-policy owner derives endpoint request cost; caller cannot self-promote or invent quota",
+        "shared NAT/IP request quotas are distinct from LAN/application byte buckets",
+        "egress mapping must be externally admitted; unknown scope denies new requests",
+        "mutable shared grants/cooldowns use existing Consul authority only",
+        "persist debit before attempt; uncertain attempt/cancel/expiry does not refund spent quota",
+        "429/403/Retry-After/available provider headers follow pinned official policy; never shorten active cooldown",
+        "authority loss denies new bulk/API permits except explicitly preallocated conservative capacity",
+        "local IPC enforcement is not a second distributed authority"
+      ],
+      "runtime": "BLOCKED_NOT_IMPLEMENTED"
+    }
+  ]
+}

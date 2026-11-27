@@ -1,0 +1,37 @@
+{
+  "schema": "agent1.control-mux-review3-scoped-review.v1",
+  "corrigendum_sha256_raw": "d9d3529c3ab756d8cb617dda38b27e3c942d461f46761fcd56f6e256568948d8",
+  "review2_sha256_raw": "456a133b91385f6d5fa0e86d201d5eb72040d1dc2d824d96ee321d1450ba9042",
+  "decision": "FRESH_SCOPED_TRANSPORT_DESIGN_ACK_THREE_ENUMERATED_CORRECTIONS_ONLY",
+  "prior_ack_transferred": false,
+  "findings": [
+    {
+      "topic": "outer_cursor_sequence_bootstrap",
+      "decision": "ACK_DESIGN",
+      "reason": "OPENED atomically binds distinct integrity-protected outer cursor at sequence0; first frame1, all outer kinds contiguous, last exact duplicate inert, conflicting/gapped/older frames connection failure. Subscription/snapshot activity never resets outer position. Lost stream-start stays UNKNOWN; no second socket or slot reuse without containment."
+    },
+    {
+      "topic": "DELETE_identity_binding",
+      "decision": "ACK_DESIGN",
+      "reason": "Full immutable digest binds method/operation/canonical target path and IDs, expected epochs, actor/session/request and empty-body digest. Ledger lookup excludes target, so cross-target same-key reuse conflicts. Reauthenticated receipt reads confer no cursor revival or altered retry. New close is explicit new command, not rekey of UNKNOWN."
+    },
+    {
+      "topic": "connection_wide_outer_failure",
+      "decision": "ACK_DESIGN",
+      "reason": "Unattributable outer framing/identity/sequence failure clears LIVE for every subscription on that connection, invalidates delivery epoch and retains slot debt until containment. Only completely authenticated attributable inner failures may isolate one subscription; no partial apply."
+    }
+  ],
+  "new_important_or_critical_design_findings_in_scoped_topics": 0,
+  "open_conditions": [
+    "Exact closed request/result/error/frame/payload schemas and canonical-byte rules with pinned hashes",
+    "Implement atomic cursor/command/stream-attempt/slot/epoch ownership in qualified authority; negative vectors are still specifications, not executed evidence",
+    "Qualified human/service delegation, CSRF, native admission and independent old-delivery containment",
+    "Actual global byte/queue/encoder admission, source-domain caps and two-producer8physical9logical measured evidence",
+    "No automatic carriage through Agent1 64KiB LAN frames; larger mux frames need separately agreed bounded transport profile"
+  ],
+  "runtime_admission": false,
+  "final_abi_admission": false,
+  "product_code_changed": false,
+  "physical_or_provider_actions": "NONE",
+  "tests": "READ_ONLY_DESIGN_REVIEW_NO_EXECUTABLE_CLAIM"
+}

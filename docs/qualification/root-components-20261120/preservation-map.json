@@ -1,0 +1,51 @@
+{
+  "schema": "unified.root-components.preservation.v1",
+  "base": "f69334874c3d5a40c9fabed0a65925260ae3efa1",
+  "workflows": {
+    "final-integration.yml": {
+      "retained_ids": 161,
+      "retained_prior_ids": 145,
+      "hosted": [
+        "real TLS/OpenSSL",
+        "PowerShell source AST",
+        "process crash and concurrency",
+        "source before/after exact bytes"
+      ],
+      "new": [
+        "no expectedFailures/unexpectedSuccesses",
+        "batched source Git objects",
+        "outside-source evidence"
+      ]
+    },
+    "combined-infrastructure.yml": {
+      "retained_ids": 2,
+      "physical_fleet_nodes": 6,
+      "retained_compile_roots": [
+        "unified_system",
+        "tests"
+      ]
+    },
+    "five-module-infra.yml": {
+      "replacement": "four-owner-infra.yml",
+      "retained_ids": 15,
+      "retained_compile_roots": [
+        "unified_system"
+      ]
+    },
+    "supervisor-local-integration.yml": {
+      "retained_ids": 132,
+      "retained_python": "3.12.10",
+      "hosted": [
+        "actual process crash tests",
+        "fresh stdlib isolated interpreter",
+        "exact source before/after",
+        "unchanged PR path inputs"
+      ],
+      "new": [
+        "no expectedFailures/unexpectedSuccesses"
+      ]
+    }
+  },
+  "runtime_native_qualification": "NOT_CLAIMED",
+  "release_status": "NO_GO"
+}

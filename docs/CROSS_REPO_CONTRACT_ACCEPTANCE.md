@@ -1,0 +1,4 @@
+# Cross-repo v1 contract acceptance
+Pinned source candidates: Strattester PR42 ef1c53861998188bdd03b9f037dc45573b3c2acb, Grid PR248 4ad202996ac06116e336b66851beb6e97beffa26, Terminan PR22 81793290113a457ee8c038600639c3b8cbe78020, unified-system PR2 adaa1c850b7e10b9e79b178ab3511ccf66743de4. These are source pins, not runtime identity.
+
+The compatibility validator checks only shape, producer string, version and non-authorizing state. It intentionally rejects a qualified Grid/Strattester health response because current producers lack attested provenance. It is not a cross-repo executable test and does not authenticate a network peer. The Terminan consumer currently hardcodes supervisor UNAVAILABLE; adding a source-owned WSGI callable does not make it reachable over HTTP. Integration remains BLOCKED. No physical G0/G1, installer, DB writes or trading.

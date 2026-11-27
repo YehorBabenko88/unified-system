@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-c",
+    "import sys,unittest,json;sys.path[:0]=['.','C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-5-resource-aware-distributed/work/schema-tools'];d=json.load(open('release/component-test-inventory.json'));s=unittest.TestSuite(unittest.defaultTestLoader.loadTestsFromName(n)for n in d['modules']);r=unittest.TextTestRunner(verbosity=2).run(s);print('COUNTS',r.testsRun,len(r.failures),len(r.errors),len(r.skipped));raise SystemExit(not r.wasSuccessful() or bool(r.skipped))"
+  ],
+  "exit_code": 0,
+  "scope": "75_PARTIAL_COMPONENTS_WORKING_TREE_NOT_YET_SOURCE_BOUND_HEAD",
+  "inventory_sha256": "1efbf6c7467c37cb9e76c8200e81fcd93b738c5b0a5f65ca8cb3e69f50155f78",
+  "stdout_sha256": "490234999006061e935ef22302910f23fe02923ba4ddb464cce8406f92be6019",
+  "stderr_sha256": "3e11475d1286aa50ce9bbdb42a64596e428e993640f47bcbb36c32353572faa2"
+}

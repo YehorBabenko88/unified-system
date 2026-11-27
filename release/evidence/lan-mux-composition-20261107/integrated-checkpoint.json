@@ -1,0 +1,24 @@
+{
+  "schema": "unified.lan-source-composition.v1",
+  "component_head": "9680babc85ca605f8450936f5410728898d5b71e",
+  "integration_source_head": "89932fec1821d956b9dfd0ab0011d732c5b96369",
+  "integration_tree": "093b01c68b4131172169da359787af9de5bd886c",
+  "result": "ISOLATED_COMPONENT_INTEGRATION_PASS",
+  "tests": 50,
+  "skips": 0,
+  "raw_files_verified_pre_post": 1302,
+  "native_runtime_admission": false,
+  "provider_sends": false,
+  "physical_changes": false,
+  "first_failure": "Original acf4 candidate failed HASH cause under concurrent reader/receiver; preserved merged-tests.log",
+  "fix": "First terminal cause retained before releasing channel lock; deterministic event-gated mTLS regression.",
+  "runner_failure": "External Root test driver lacked __main__ guard; Windows spawn recursively ran suite. Failed driver/log preserved; corrected driver ran own fresh clone. This is NOT attributed to product.",
+  "hosted": "New dedicated Windows/Ubuntu workflow prepared; no PASS yet",
+  "remaining": [
+    "Independent exact integrated-source review",
+    "Native identity/key/IPC",
+    "Actual committed stream admission and containment",
+    "Local app self-node identity and accounting",
+    "Windows hosted and physical gates"
+  ]
+}

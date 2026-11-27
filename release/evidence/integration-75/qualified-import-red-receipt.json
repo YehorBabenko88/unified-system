@@ -1,0 +1,16 @@
+{
+  "command": [
+    "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-c",
+    "import sys,unittest,json;sys.path[:0]=['.','C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-5-resource-aware-distributed/work/schema-tools'];d=json.load(open('release/component-test-inventory.json'));s=unittest.TestSuite(unittest.defaultTestLoader.loadTestsFromName(n)for n in d['modules']);r=unittest.TextTestRunner(verbosity=2).run(s);print('COUNTS',r.testsRun,len(r.failures),len(r.errors),len(r.skipped));raise SystemExit(not r.wasSuccessful())"
+  ],
+  "exit_code": 1,
+  "source_head": "341e5c81de56eba8080e7a16a97e53a6acdfbfe7",
+  "inventory_sha256": "1efbf6c7467c37cb9e76c8200e81fcd93b738c5b0a5f65ca8cb3e69f50155f78",
+  "scope": "NEW_QUALIFIED_TEST_MODULE_IMPORT_CONTEXT_NO_PRODUCT_EFFECT",
+  "stdout_sha256": "86c196a5f9f112d1fa7ae3a620df44df5a3e64d0ea015dcd33e85dab99dfb05f",
+  "stderr_sha256": "ee0378a9dd443a9d94e497efa3c573b029942f93ff1d91509f8e4915dfa98d4e"
+}

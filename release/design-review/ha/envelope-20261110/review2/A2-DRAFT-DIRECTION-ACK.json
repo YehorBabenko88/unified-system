@@ -1,0 +1,49 @@
+{
+  "schema":"unified.ha.scoped-envelope-design-review.v1",
+  "date":"2026-11-10",
+  "input":{
+    "directory":"C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-1-direct-lan-transport/outputs/HA-ENVELOPE-PROPOSAL-REVIEW2-20261110",
+    "addendum_sha256":"ead5786f0ddd0e540c31fe32c35f7b1bfeb2f8d36cc0cf63e9f5495e7e2a1a46",
+    "measurements_sha256":"cbdefcc18a7ab4954a5450da44d47f57140e678b11d25e98a3ad0788a78925b1",
+    "draft_not_yet_sealed":true,
+    "both_documents_read_in_full":true,
+    "both_raw_hashes_matched":true
+  },
+  "disposition":"SCOPED_STATIC_DESIGN_CORRECTION_RESPONSE_ACK_NOT_NUMERIC_CAPTURE_ABI_OR_RUNTIME_ACK",
+  "static_checks":{
+    "A2_review3_queue_cancel_plan_file_hashes_match":true,
+    "all_per_key_fingerprints_match_exact_selector_sets":true,
+    "queue15_cancel19_unique_keys":true,
+    "nineteen_full_possible_KV_with_candidate_header_bytes":334848,
+    "plus_candidate_two_sessions_and_outer_scalar_bytes":405504,
+    "reserved_KV_plus_candidate_sessions_outer_bytes":431104,
+    "directional_exchange_projection_sum_bytes":54626,
+    "arithmetic_only_not_allocated_actual_capture":true
+  },
+  "accepted_direction":[
+    "Nineteen TOTAL slots include absent entries and all19 full-possible values after commit/replay/conflict for current exact selector family. Missing/partial/denied read is UNKNOWN, not ABSENT.",
+    "Separate candidate Session-info, HTTP-header, outer metadata/context and transient object/network buffers rather than hiding them in KV row allowance. Opaque context is never serialized.",
+    "Actual full reconcile/conflict selector closure and session/capture grammar remain NONE_PENDING. Required twentieth key/third session or other fact must not be omitted to fit.",
+    "Large HA request AND response below protected control/management and admitted live, from existing residual bulk. Shared accounting and actual per-frame aggregate debit once; no independent combined authoritative bucket or control promotion.",
+    "Protected HIGH live/SSH/heartbeat headroom, maximum nonpreemptible time, admitted executor service, TLS/TCP/SSH overhead and A3 exact ACK remain required and unavailable. Refuse before data/native when prerequisites absent.",
+    "All numeric caps, kinds, profile, roles and deadlines remain proposals. Strict expiry unimplemented/logical mutations disabled; actual source assembly and capture API absent."
+  ],
+  "qualification_limits":[
+    "Two Session-info calls are distinct observations, not automatically the same coherent KV snapshot or strict UTC/currentness proof. Actual native mutation still checks current session/index/generation/policy predicates in its authority order; exact session/check bridge must be frozen and qualified separately.",
+    "Nineteen rows are NOT a final maximum for every actual reconcile/conflict/retained history path. Complete fixed selectors/source inventory and private issuer ABI must be reviewed before bound adoption.",
+    "360448KV and458752combined caps cover only proposed raw/key/metadata space arithmetic. Native HTTP1.5MiB/parser/base64 buffers, actual Python heap/copies and Journal/SQLite/WAL/durability remain separately unproved.",
+    "A2 does not grant A3 priority/latency ACK or Root management/credential lifecycle approval. A class fraction or one32KiB frame is not a starvation/latency guarantee.",
+    "This ACK attaches only to the two draft file hashes. Final sealed successor and changed bytes require exact verification; predecessor2c1a remains unchanged."
+  ],
+  "numeric_policy_freeze":false,
+  "actual_capture_API_ack":false,
+  "implementation":false,
+  "native_writes":false,
+  "operator_ha_approval":false,
+  "runtime_tests":0,
+  "application_imports":0,
+  "native_job_browser_physical_calls":0,
+  "strict_time_gate":"CLOSED_LOGICAL_MUTATIONS_DISABLED",
+  "implementation_base":"NONE_APPROVED",
+  "go_no_go":"DESIGN_PENDING_NO_GO"
+}

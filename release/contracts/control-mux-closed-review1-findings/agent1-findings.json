@@ -1,0 +1,66 @@
+{
+  "schema": "agent1.control-mux-closed-review1-review.v1",
+  "decision": "CHANGES_REQUESTED_NO_EXACT_PACKAGE_ACK",
+  "raw_pins": {
+    "MANIFEST.json": "ce7a510ab16033d7d108a06700ef0002f313bed6133a2599e273388ba296578a",
+    "control-mux-closed.schema.json": "36d09e982b65d6125e5e5cd3ca7c381cbe57409a039d069835f34e621bae651b",
+    "PROTOCOL.md": "42babababb51e478644c9c92267b4b19378e32032c419394b4cdaf7054715dd5",
+    "hash-preimages.json": "7baad6ff7fe295aa752dbace6b97b39db23fced64c1f1d6863ae3ea8efab103d"
+  },
+  "manifest_all_file_sizes_hashes": "VERIFIED",
+  "preimage_ascii_raw_hashes": "VERIFIED",
+  "independent_synthetic_execution": {
+    "python": "Windows3.12",
+    "jsonschema": "4.23.0 installed only workspace scratch",
+    "owner40cases": "INDEPENDENTLY_REEXECUTED_MATCH_MODEL_ONLY",
+    "extra_negative_probes": [
+      {
+        "case": "OPEN_as_204",
+        "actual": "HISTORICAL_MODEL_MATCH_NOT_PERMISSION",
+        "expected": "UNAVAILABLE_CONFLICT"
+      },
+      {
+        "case": "UNKNOWN_as_completed201",
+        "actual": "HISTORICAL_MODEL_MATCH_NOT_PERMISSION",
+        "expected": "UNAVAILABLE_CONFLICT"
+      },
+      {
+        "case": "error_as_completed201",
+        "actual": "HISTORICAL_MODEL_MATCH_NOT_PERMISSION",
+        "expected": "UNAVAILABLE_CONFLICT"
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "A1-CLOSED-R1-01",
+      "priority": "P1_IMPORTANT",
+      "path": "validate_bundle.py:model_lookup",
+      "issue": "Terminal receipt lookup does not bind original operation/method to admitted HTTP status and result schema/tag. Hash-consistent but semantically incompatible tuples are accepted as HISTORICAL_MODEL_MATCH_NOT_PERMISSION.",
+      "reproductions": [
+        "OPEN_CONNECTION POST + COMPLETED +204 empty body accepted",
+        "OPEN_CONNECTION + COMPLETED +201 command_unknown UNKNOWN accepted",
+        "OPEN_CONNECTION + COMPLETED +201 error_v3 accepted"
+      ],
+      "impact": "Contradicts protocol201OPENED and UNKNOWN-unresolved-only rules. Hash/link equality cannot establish a definitive valid original outcome; future consumers must not adopt these model successes as qualified receipt reconciliation. No real runtime exploitation claimed.",
+      "required_change": "Pin explicit operation/state/status/result-definition matrix and enforce it before model match. Reject UNKNOWN as a terminal receipt, wrong result/status/operation pairs and malformed conflicting outcomes. Add negative vectors including OPEN204, UNKNOWN201, ERROR201, wrong result operation and DELETE201; retain valid definitive409 error and empty204 ACK/closed cases."
+    }
+  ],
+  "scoped_positive_findings": [
+    "Distinct initial outer cursor0/first frame1 and per-kind subscription-null isolation remain compatible with corrigendumd9d352",
+    "Global immutable requestUUID index across owners/actors/profiles and generation-independent namespace prevents ambiguous per-owner lookup by design",
+    "Canonical command/key preimages cover cross-target DELETE identity and avoid target-scoped lookup",
+    "Prose ambiguity preserves UNKNOWN/debt; no first/latest mapping selection",
+    "Structural schema is not auth; route/header/domain/native/containment semantic gates remain explicit"
+  ],
+  "open_dependencies": [
+    "Exact semantic route/header/parser and frame/canonical bounds enforcement",
+    "Domain schema ACKs and root verifier",
+    "Actual authority native proof and atomic ownership/slot/byte/encoder ledger",
+    "Independent containment and measured8physical9logical transport/load",
+    "Mux133128-byte SSE cannot implicitly use Agent164KiB LAN frame"
+  ],
+  "product_shared_consumers_changed": false,
+  "runtime_provider_physical": "NO_GO",
+  "full_lan_suite": "NOT_RERUN"
+}

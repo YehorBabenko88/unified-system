@@ -1,0 +1,2143 @@
+{
+  "schema": "unified.current-ci-delta.v1",
+  "scope": "Six selected development heads after444snapshot; not all-six-admitted-release",
+  "observations": [
+    {
+      "repository": "unified-system",
+      "pr": 27,
+      "head": "15dd9e8340cc332204ebbe6c13744f797ceca2f4",
+      "observed_utc": "2026-11-06T19:07:36.852773+00:00",
+      "command": [
+        "gh",
+        "api",
+        "--paginate",
+        "--slurp",
+        "repos/YehorBabenko88/unified-system/commits/15dd9e8340cc332204ebbe6c13744f797ceca2f4/check-runs?per_page=100"
+      ],
+      "exit_code": 0,
+      "raw_sha256": "68e1225b376ed88a1b60fad29ef9f3ad5b7704bcb51830e52d06a52ccee1c974",
+      "evidence_file": "release/evidence/current-ci-delta/unified-system-15dd9e8340cc332204ebbe6c13744f797ceca2f4.json",
+      "checks": [
+        {
+          "id": 128093609283,
+          "name": "wrong-producer",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367979/job/128093609283"
+        },
+        {
+          "id": 128093609215,
+          "name": "windows-security (powershell)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367775/job/128093609215"
+        },
+        {
+          "id": 128093609130,
+          "name": "source-integration (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367647/job/128093609130"
+        },
+        {
+          "id": 128093608972,
+          "name": "actual-http",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276368050/job/128093608972"
+        },
+        {
+          "id": 128093608970,
+          "name": "source-integration (ubuntu-24.04, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367647/job/128093608970"
+        },
+        {
+          "id": 128093608740,
+          "name": "source-integration (ubuntu-24.04, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367647/job/128093608740"
+        },
+        {
+          "id": 128093608734,
+          "name": "windows-security (pwsh)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367775/job/128093608734"
+        },
+        {
+          "id": 128093608607,
+          "name": "source-integration (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367647/job/128093608607"
+        },
+        {
+          "id": 128093608319,
+          "name": "fleet (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367643/job/128093608319"
+        },
+        {
+          "id": 128093608271,
+          "name": "status-consumer",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367714/job/128093608271"
+        },
+        {
+          "id": 128093608229,
+          "name": "fleet (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367643/job/128093608229"
+        },
+        {
+          "id": 128093608187,
+          "name": "loopback (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367523/job/128093608187"
+        },
+        {
+          "id": 128093608173,
+          "name": "fleet (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367643/job/128093608173"
+        },
+        {
+          "id": 128093607985,
+          "name": "handoff-negative",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367665/job/128093607985"
+        },
+        {
+          "id": 128093607969,
+          "name": "stopped-service (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367565/job/128093607969"
+        },
+        {
+          "id": 128093607967,
+          "name": "loopback (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367523/job/128093607967"
+        },
+        {
+          "id": 128093607930,
+          "name": "loopback (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367523/job/128093607930"
+        },
+        {
+          "id": 128093607829,
+          "name": "policy (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367584/job/128093607829"
+        },
+        {
+          "id": 128093607801,
+          "name": "policy (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367584/job/128093607801"
+        },
+        {
+          "id": 128093607737,
+          "name": "paper-causal (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367557/job/128093607737"
+        },
+        {
+          "id": 128093607607,
+          "name": "policy (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367584/job/128093607607"
+        },
+        {
+          "id": 128093607600,
+          "name": "fleet (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367643/job/128093607600"
+        },
+        {
+          "id": 128093607574,
+          "name": "operator-grid-contracts",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367513/job/128093607574"
+        },
+        {
+          "id": 128093607522,
+          "name": "boundary (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367459/job/128093607522"
+        },
+        {
+          "id": 128093607451,
+          "name": "combined (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367484/job/128093607451"
+        },
+        {
+          "id": 128093607401,
+          "name": "stopped-service (windows-2022)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367565/job/128093607401"
+        },
+        {
+          "id": 128093607391,
+          "name": "loopback (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367523/job/128093607391"
+        },
+        {
+          "id": 128093607369,
+          "name": "paper-causal (ubuntu-24.04)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367557/job/128093607369"
+        },
+        {
+          "id": 128093607302,
+          "name": "policy (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367584/job/128093607302"
+        },
+        {
+          "id": 128093607212,
+          "name": "combined (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367484/job/128093607212"
+        },
+        {
+          "id": 128093607188,
+          "name": "boundary (windows-latest, 3.12)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367459/job/128093607188"
+        },
+        {
+          "id": 128093607151,
+          "name": "combined (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367484/job/128093607151"
+        },
+        {
+          "id": 128093607149,
+          "name": "test (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367431/job/128093607149"
+        },
+        {
+          "id": 128093607144,
+          "name": "boundary (ubuntu-24.04, 3.12)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367459/job/128093607144"
+        },
+        {
+          "id": 128093607115,
+          "name": "test (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367431/job/128093607115"
+        },
+        {
+          "id": 128093607070,
+          "name": "combined (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367484/job/128093607070"
+        },
+        {
+          "id": 128093607060,
+          "name": "source-contract",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367508/job/128093607060"
+        },
+        {
+          "id": 128093606997,
+          "name": "test (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367431/job/128093606997"
+        },
+        {
+          "id": 128093606981,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367472/job/128093606981"
+        },
+        {
+          "id": 128093606742,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367280/job/128093606742"
+        },
+        {
+          "id": 128093606731,
+          "name": "boundary (ubuntu-24.04, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367459/job/128093606731"
+        },
+        {
+          "id": 128093606681,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367472/job/128093606681"
+        },
+        {
+          "id": 128093606596,
+          "name": "test (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367431/job/128093606596"
+        },
+        {
+          "id": 128093606340,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367280/job/128093606340"
+        },
+        {
+          "id": 128093606193,
+          "name": "consumer-contract",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367395/job/128093606193"
+        },
+        {
+          "id": 128093605870,
+          "name": "chain",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367253/job/128093605870"
+        },
+        {
+          "id": 128093605818,
+          "name": "source-roundtrip",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276367262/job/128093605818"
+        },
+        {
+          "id": 128093473850,
+          "name": "source-integration (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327917/job/128093473850"
+        },
+        {
+          "id": 128093473528,
+          "name": "windows-security (powershell)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276328347/job/128093473528"
+        },
+        {
+          "id": 128093473421,
+          "name": "windows-security (pwsh)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276328347/job/128093473421"
+        },
+        {
+          "id": 128093473321,
+          "name": "test (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276328079/job/128093473321"
+        },
+        {
+          "id": 128093473219,
+          "name": "test (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276328079/job/128093473219"
+        },
+        {
+          "id": 128093473140,
+          "name": "test (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276328079/job/128093473140"
+        },
+        {
+          "id": 128093472881,
+          "name": "test (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276328079/job/128093472881"
+        },
+        {
+          "id": 128093472559,
+          "name": "source-integration (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327917/job/128093472559"
+        },
+        {
+          "id": 128093472307,
+          "name": "source-integration (ubuntu-24.04, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327917/job/128093472307"
+        },
+        {
+          "id": 128093472212,
+          "name": "fleet (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327963/job/128093472212"
+        },
+        {
+          "id": 128093471944,
+          "name": "fleet (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327963/job/128093471944"
+        },
+        {
+          "id": 128093471903,
+          "name": "source-integration (ubuntu-24.04, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327917/job/128093471903"
+        },
+        {
+          "id": 128093471900,
+          "name": "fleet (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327963/job/128093471900"
+        },
+        {
+          "id": 128093471876,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327916/job/128093471876"
+        },
+        {
+          "id": 128093471839,
+          "name": "paper-causal (ubuntu-24.04)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327929/job/128093471839"
+        },
+        {
+          "id": 128093471703,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327916/job/128093471703"
+        },
+        {
+          "id": 128093471657,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327907/job/128093471657"
+        },
+        {
+          "id": 128093471530,
+          "name": "combined (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327834/job/128093471530"
+        },
+        {
+          "id": 128093471498,
+          "name": "stopped-service (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327871/job/128093471498"
+        },
+        {
+          "id": 128093471471,
+          "name": "fleet (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327963/job/128093471471"
+        },
+        {
+          "id": 128093471347,
+          "name": "policy (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327836/job/128093471347"
+        },
+        {
+          "id": 128093471329,
+          "name": "policy (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327836/job/128093471329"
+        },
+        {
+          "id": 128093471284,
+          "name": "policy (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327836/job/128093471284"
+        },
+        {
+          "id": 128093471260,
+          "name": "policy (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327836/job/128093471260"
+        },
+        {
+          "id": 128093471223,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327907/job/128093471223"
+        },
+        {
+          "id": 128093471220,
+          "name": "combined (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327834/job/128093471220"
+        },
+        {
+          "id": 128093471176,
+          "name": "combined (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327834/job/128093471176"
+        },
+        {
+          "id": 128093471147,
+          "name": "paper-causal (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327929/job/128093471147"
+        },
+        {
+          "id": 128093470987,
+          "name": "combined (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327834/job/128093470987"
+        },
+        {
+          "id": 128093470916,
+          "name": "stopped-service (windows-2022)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276327871/job/128093470916"
+        }
+      ],
+      "qualification": "METADATA_ONLY_NO_CASE_LOG_ARTIFACT_ADMISSION"
+    },
+    {
+      "repository": "bybit-cluster-grid",
+      "pr": 264,
+      "head": "431a9be37e6e1c2d6bddbcea659b96d7211ac5c9",
+      "observed_utc": "2026-11-06T19:07:38.478897+00:00",
+      "command": [
+        "gh",
+        "api",
+        "--paginate",
+        "--slurp",
+        "repos/YehorBabenko88/bybit-cluster-grid/commits/431a9be37e6e1c2d6bddbcea659b96d7211ac5c9/check-runs?per_page=100"
+      ],
+      "exit_code": 0,
+      "raw_sha256": "501aaa927455c8c4f6fe7cdb79325a07f6bad654e51824ad3ea1228dc0bf33cb",
+      "evidence_file": "release/evidence/current-ci-delta/bybit-cluster-grid-431a9be37e6e1c2d6bddbcea659b96d7211ac5c9.json",
+      "checks": [
+        {
+          "id": 128090769132,
+          "name": "component-sdk (pwsh)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275527846/job/128090769132"
+        },
+        {
+          "id": 128090768697,
+          "name": "component-sdk (powershell)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275527846/job/128090768697"
+        },
+        {
+          "id": 128090763126,
+          "name": "python-preflight (3.12)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525269/job/128090763126"
+        },
+        {
+          "id": 128090762789,
+          "name": "python-preflight (3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525269/job/128090762789"
+        },
+        {
+          "id": 128090761944,
+          "name": "windows-contracts (powershell)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525375/job/128090761944"
+        },
+        {
+          "id": 128090761894,
+          "name": "windows-contracts (pwsh)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525375/job/128090761894"
+        },
+        {
+          "id": 128090761493,
+          "name": "linux-postgres18",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525375/job/128090761493"
+        },
+        {
+          "id": 128090760473,
+          "name": "build-windows-bundle",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525279/job/128090760473"
+        },
+        {
+          "id": 128090755817,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525424/job/128090755817"
+        },
+        {
+          "id": 128090755772,
+          "name": "disposable-postgres",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525424/job/128090755772"
+        },
+        {
+          "id": 128090755598,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525424/job/128090755598"
+        },
+        {
+          "id": 128090755594,
+          "name": "disposable-postgres",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525253/job/128090755594"
+        },
+        {
+          "id": 128090755496,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525253/job/128090755496"
+        },
+        {
+          "id": 128090755461,
+          "name": "offline-model (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525265/job/128090755461"
+        },
+        {
+          "id": 128090755412,
+          "name": "offline-model (ubuntu-24.04)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525265/job/128090755412"
+        },
+        {
+          "id": 128090755039,
+          "name": "real-three-voters",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525265/job/128090755039"
+        },
+        {
+          "id": 128090754802,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525253/job/128090754802"
+        },
+        {
+          "id": 128090754782,
+          "name": "synthetic-and-disposable-pg18",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/bybit-cluster-grid/actions/runs/42275525262/job/128090754782"
+        }
+      ],
+      "qualification": "METADATA_ONLY_NO_CASE_LOG_ARTIFACT_ADMISSION"
+    },
+    {
+      "repository": "unified-system",
+      "pr": 24,
+      "head": "175b48a2a0d2882669172abc5774bd71b42e2215",
+      "observed_utc": "2026-11-06T19:07:39.659989+00:00",
+      "command": [
+        "gh",
+        "api",
+        "--paginate",
+        "--slurp",
+        "repos/YehorBabenko88/unified-system/commits/175b48a2a0d2882669172abc5774bd71b42e2215/check-runs?per_page=100"
+      ],
+      "exit_code": 0,
+      "raw_sha256": "c27f6faa089d3497e464bde0d653e38a251b27b8f422d4d76779a34a69d7d500",
+      "evidence_file": "release/evidence/current-ci-delta/unified-system-175b48a2a0d2882669172abc5774bd71b42e2215.json",
+      "checks": [
+        {
+          "id": 128094097030,
+          "name": "policy (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511231/job/128094097030"
+        },
+        {
+          "id": 128094096978,
+          "name": "policy (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511231/job/128094096978"
+        },
+        {
+          "id": 128094096965,
+          "name": "policy (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511231/job/128094096965"
+        },
+        {
+          "id": 128094096266,
+          "name": "policy (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511231/job/128094096266"
+        },
+        {
+          "id": 128094095108,
+          "name": "loopback (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511277/job/128094095108"
+        },
+        {
+          "id": 128094095089,
+          "name": "components-windows",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511305/job/128094095089"
+        },
+        {
+          "id": 128094095058,
+          "name": "loopback (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511277/job/128094095058"
+        },
+        {
+          "id": 128094095051,
+          "name": "loopback (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511277/job/128094095051"
+        },
+        {
+          "id": 128094095022,
+          "name": "windows-security (powershell)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511296/job/128094095022"
+        },
+        {
+          "id": 128094095008,
+          "name": "paper-causal (ubuntu-24.04)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511290/job/128094095008"
+        },
+        {
+          "id": 128094094987,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511272/job/128094094987"
+        },
+        {
+          "id": 128094094882,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511280/job/128094094882"
+        },
+        {
+          "id": 128094094694,
+          "name": "loopback (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511277/job/128094094694"
+        },
+        {
+          "id": 128094094677,
+          "name": "combined (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511316/job/128094094677"
+        },
+        {
+          "id": 128094094674,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511280/job/128094094674"
+        },
+        {
+          "id": 128094094659,
+          "name": "paper-causal (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511290/job/128094094659"
+        },
+        {
+          "id": 128094094630,
+          "name": "windows-security (pwsh)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511296/job/128094094630"
+        },
+        {
+          "id": 128094094614,
+          "name": "test (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511291/job/128094094614"
+        },
+        {
+          "id": 128094094552,
+          "name": "combined (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511316/job/128094094552"
+        },
+        {
+          "id": 128094094547,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511272/job/128094094547"
+        },
+        {
+          "id": 128094094506,
+          "name": "test (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511291/job/128094094506"
+        },
+        {
+          "id": 128094094427,
+          "name": "test (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511291/job/128094094427"
+        },
+        {
+          "id": 128094094365,
+          "name": "actual-http",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511297/job/128094094365"
+        },
+        {
+          "id": 128094094361,
+          "name": "combined (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511316/job/128094094361"
+        },
+        {
+          "id": 128094094313,
+          "name": "operator-grid-contracts",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511255/job/128094094313"
+        },
+        {
+          "id": 128094094296,
+          "name": "stopped-service (windows-2022)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510902/job/128094094296"
+        },
+        {
+          "id": 128094094207,
+          "name": "test (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511291/job/128094094207"
+        },
+        {
+          "id": 128094094203,
+          "name": "source-roundtrip",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511265/job/128094094203"
+        },
+        {
+          "id": 128094094105,
+          "name": "consumer-contract",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511359/job/128094094105"
+        },
+        {
+          "id": 128094094103,
+          "name": "combined (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511316/job/128094094103"
+        },
+        {
+          "id": 128094093996,
+          "name": "source-integration (ubuntu-24.04, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510849/job/128094093996"
+        },
+        {
+          "id": 128094093975,
+          "name": "source-integration (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510849/job/128094093975"
+        },
+        {
+          "id": 128094093943,
+          "name": "source-contract",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511260/job/128094093943"
+        },
+        {
+          "id": 128094093875,
+          "name": "fleet (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510841/job/128094093875"
+        },
+        {
+          "id": 128094093863,
+          "name": "wrong-producer",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511281/job/128094093863"
+        },
+        {
+          "id": 128094093762,
+          "name": "handoff-negative",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276511268/job/128094093762"
+        },
+        {
+          "id": 128094093733,
+          "name": "stopped-service (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510902/job/128094093733"
+        },
+        {
+          "id": 128094093667,
+          "name": "source-integration (ubuntu-24.04, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510849/job/128094093667"
+        },
+        {
+          "id": 128094093646,
+          "name": "fleet (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510841/job/128094093646"
+        },
+        {
+          "id": 128094093569,
+          "name": "fleet (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510841/job/128094093569"
+        },
+        {
+          "id": 128094093322,
+          "name": "source-integration (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510849/job/128094093322"
+        },
+        {
+          "id": 128094093277,
+          "name": "fleet (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510841/job/128094093277"
+        },
+        {
+          "id": 128094093064,
+          "name": "chain",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510851/job/128094093064"
+        },
+        {
+          "id": 128094092994,
+          "name": "status-consumer",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276510908/job/128094092994"
+        },
+        {
+          "id": 128094063996,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502229/job/128094063996"
+        },
+        {
+          "id": 128094063808,
+          "name": "stopped-service (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502254/job/128094063808"
+        },
+        {
+          "id": 128094063610,
+          "name": "source-integration (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502204/job/128094063610"
+        },
+        {
+          "id": 128094063541,
+          "name": "source-integration (ubuntu-24.04, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502204/job/128094063541"
+        },
+        {
+          "id": 128094063457,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502386/job/128094063457"
+        },
+        {
+          "id": 128094063333,
+          "name": "source-integration (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502204/job/128094063333"
+        },
+        {
+          "id": 128094063247,
+          "name": "combined (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502307/job/128094063247"
+        },
+        {
+          "id": 128094063219,
+          "name": "fleet (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502296/job/128094063219"
+        },
+        {
+          "id": 128094063209,
+          "name": "source-integration (ubuntu-24.04, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502204/job/128094063209"
+        },
+        {
+          "id": 128094063201,
+          "name": "combined (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502307/job/128094063201"
+        },
+        {
+          "id": 128094063180,
+          "name": "paper-causal (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502230/job/128094063180"
+        },
+        {
+          "id": 128094063121,
+          "name": "windows-security (pwsh)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502219/job/128094063121"
+        },
+        {
+          "id": 128094063119,
+          "name": "combined (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502307/job/128094063119"
+        },
+        {
+          "id": 128094063098,
+          "name": "stopped-service (windows-2022)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502254/job/128094063098"
+        },
+        {
+          "id": 128094063047,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502229/job/128094063047"
+        },
+        {
+          "id": 128094063006,
+          "name": "test (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502203/job/128094063006"
+        },
+        {
+          "id": 128094062999,
+          "name": "fleet (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502296/job/128094062999"
+        },
+        {
+          "id": 128094062978,
+          "name": "test (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502203/job/128094062978"
+        },
+        {
+          "id": 128094062927,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502386/job/128094062927"
+        },
+        {
+          "id": 128094062898,
+          "name": "test (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502203/job/128094062898"
+        },
+        {
+          "id": 128094062866,
+          "name": "windows-security (powershell)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502219/job/128094062866"
+        },
+        {
+          "id": 128094062860,
+          "name": "fleet (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502296/job/128094062860"
+        },
+        {
+          "id": 128094062794,
+          "name": "policy (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502257/job/128094062794"
+        },
+        {
+          "id": 128094062788,
+          "name": "fleet (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502296/job/128094062788"
+        },
+        {
+          "id": 128094062674,
+          "name": "policy (ubuntu-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502257/job/128094062674"
+        },
+        {
+          "id": 128094062655,
+          "name": "combined (windows-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502307/job/128094062655"
+        },
+        {
+          "id": 128094062635,
+          "name": "paper-causal (ubuntu-24.04)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502230/job/128094062635"
+        },
+        {
+          "id": 128094062585,
+          "name": "policy (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502257/job/128094062585"
+        },
+        {
+          "id": 128094062515,
+          "name": "test (ubuntu-latest, 3.11)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502203/job/128094062515"
+        },
+        {
+          "id": 128094062302,
+          "name": "policy (windows-latest, 3.13)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502257/job/128094062302"
+        },
+        {
+          "id": 128094061944,
+          "name": "components-windows",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/unified-system/actions/runs/42276502174/job/128094061944"
+        }
+      ],
+      "qualification": "METADATA_ONLY_NO_CASE_LOG_ARTIFACT_ADMISSION"
+    },
+    {
+      "repository": "math",
+      "pr": 113,
+      "head": "dbb9bb1da9b180a8bb9f1d5401f1117894256941",
+      "observed_utc": "2026-11-06T19:07:41.409877+00:00",
+      "command": [
+        "gh",
+        "api",
+        "--paginate",
+        "--slurp",
+        "repos/YehorBabenko88/math/commits/dbb9bb1da9b180a8bb9f1d5401f1117894256941/check-runs?per_page=100"
+      ],
+      "exit_code": 0,
+      "raw_sha256": "05bd8be1a02546cd4eba1a0b7726d0f334988753179c0f1ef526547c7c81e4f3",
+      "evidence_file": "release/evidence/current-ci-delta/math-dbb9bb1da9b180a8bb9f1d5401f1117894256941.json",
+      "checks": [
+        {
+          "id": 128086308505,
+          "name": "observation",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42274233717/job/128086308505"
+        },
+        {
+          "id": 128077020698,
+          "name": "Q01 fault / ubuntu-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077020698"
+        },
+        {
+          "id": 128077020599,
+          "name": "Q01 fault / windows-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077020599"
+        },
+        {
+          "id": 128077020458,
+          "name": "Q01 fault / ubuntu-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077020458"
+        },
+        {
+          "id": 128077020451,
+          "name": "Q01 stress / ubuntu-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077020451"
+        },
+        {
+          "id": 128077020418,
+          "name": "Q01 fault / windows-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077020418"
+        },
+        {
+          "id": 128077020402,
+          "name": "Q01 stress / ubuntu-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077020402"
+        },
+        {
+          "id": 128077020363,
+          "name": "Q01 stress / windows-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077020363"
+        },
+        {
+          "id": 128077020261,
+          "name": "Q01 quick / ubuntu-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077020261"
+        },
+        {
+          "id": 128077020259,
+          "name": "Q01 quick / windows-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077020259"
+        },
+        {
+          "id": 128077020236,
+          "name": "Q01 stress / windows-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077020236"
+        },
+        {
+          "id": 128077020184,
+          "name": "Q01 quick / ubuntu-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077020184"
+        },
+        {
+          "id": 128077020093,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526531/job/128077020093"
+        },
+        {
+          "id": 128077020073,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526531/job/128077020073"
+        },
+        {
+          "id": 128077019986,
+          "name": "Windows platform Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526462/job/128077019986"
+        },
+        {
+          "id": 128077019937,
+          "name": "Q01 quick / windows-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077019937"
+        },
+        {
+          "id": 128077019832,
+          "name": "scientific-contracts (windows-latest, 24)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526375/job/128077019832"
+        },
+        {
+          "id": 128077019828,
+          "name": "Windows platform Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526462/job/128077019828"
+        },
+        {
+          "id": 128077019769,
+          "name": "Full suite Node 24 / PostgreSQL 18",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526462/job/128077019769"
+        },
+        {
+          "id": 128077019757,
+          "name": "Full suite Node 22 / PostgreSQL 16",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526462/job/128077019757"
+        },
+        {
+          "id": 128077019725,
+          "name": "bounded (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526516/job/128077019725"
+        },
+        {
+          "id": 128077019724,
+          "name": "chromium",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526517/job/128077019724"
+        },
+        {
+          "id": 128077019715,
+          "name": "Native-free contracts / powershell / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526403/job/128077019715"
+        },
+        {
+          "id": 128077019658,
+          "name": "scientific-contracts (ubuntu-latest, 22)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526375/job/128077019658"
+        },
+        {
+          "id": 128077019640,
+          "name": "bounded (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526516/job/128077019640"
+        },
+        {
+          "id": 128077019610,
+          "name": "Full suite Node 22 / PostgreSQL 18",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526462/job/128077019610"
+        },
+        {
+          "id": 128077019572,
+          "name": "diagnostic (windows-2022)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526395/job/128077019572"
+        },
+        {
+          "id": 128077019535,
+          "name": "Native-free contracts / pwsh / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526403/job/128077019535"
+        },
+        {
+          "id": 128077019527,
+          "name": "Windows contracts / powershell",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526402/job/128077019527"
+        },
+        {
+          "id": 128077019490,
+          "name": "scientific-contracts (windows-latest, 22)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526375/job/128077019490"
+        },
+        {
+          "id": 128077019462,
+          "name": "Q01 Windows laboratory guard contracts",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526468/job/128077019462"
+        },
+        {
+          "id": 128077019435,
+          "name": "test",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526465/job/128077019435"
+        },
+        {
+          "id": 128077019397,
+          "name": "Native-free contracts / pwsh / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526403/job/128077019397"
+        },
+        {
+          "id": 128077019326,
+          "name": "Full suite Node 24 / PostgreSQL 16",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526462/job/128077019326"
+        },
+        {
+          "id": 128077019310,
+          "name": "Native-free contracts / powershell / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526403/job/128077019310"
+        },
+        {
+          "id": 128077019206,
+          "name": "native-pdf",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526444/job/128077019206"
+        },
+        {
+          "id": 128077019086,
+          "name": "Windows contracts / pwsh",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526402/job/128077019086"
+        },
+        {
+          "id": 128077019078,
+          "name": "scientific-contracts (ubuntu-latest, 24)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526375/job/128077019078"
+        },
+        {
+          "id": 128077018944,
+          "name": "diagnostic (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271526395/job/128077018944"
+        },
+        {
+          "id": 128076988664,
+          "name": "scientific-contracts (windows-latest, 22)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516483/job/128076988664"
+        },
+        {
+          "id": 128076988541,
+          "name": "scientific-contracts (ubuntu-latest, 22)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516483/job/128076988541"
+        },
+        {
+          "id": 128076988540,
+          "name": "scientific-contracts (windows-latest, 24)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516483/job/128076988540"
+        },
+        {
+          "id": 128076988303,
+          "name": "scientific-contracts (ubuntu-latest, 24)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516483/job/128076988303"
+        },
+        {
+          "id": 128076987361,
+          "name": "bounded (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516333/job/128076987361"
+        },
+        {
+          "id": 128076987033,
+          "name": "Native-free contracts / powershell / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516270/job/128076987033"
+        },
+        {
+          "id": 128076986995,
+          "name": "synthetic (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516508/job/128076986995"
+        },
+        {
+          "id": 128076986959,
+          "name": "Native-free contracts / powershell / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516270/job/128076986959"
+        },
+        {
+          "id": 128076986898,
+          "name": "Native-free contracts / pwsh / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516270/job/128076986898"
+        },
+        {
+          "id": 128076986884,
+          "name": "bounded (ubuntu-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516333/job/128076986884"
+        },
+        {
+          "id": 128076986871,
+          "name": "Windows contracts / powershell",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516238/job/128076986871"
+        },
+        {
+          "id": 128076986816,
+          "name": "synthetic (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516508/job/128076986816"
+        },
+        {
+          "id": 128076986781,
+          "name": "diagnostic (windows-2025)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516417/job/128076986781"
+        },
+        {
+          "id": 128076986763,
+          "name": "Q01 fault / windows-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986763"
+        },
+        {
+          "id": 128076986634,
+          "name": "Full suite Node 22 / PostgreSQL 18",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516280/job/128076986634"
+        },
+        {
+          "id": 128076986549,
+          "name": "Full suite Node 24 / PostgreSQL 16",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516280/job/128076986549"
+        },
+        {
+          "id": 128076986532,
+          "name": "native-pdf",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516231/job/128076986532"
+        },
+        {
+          "id": 128076986523,
+          "name": "Q01 quick / windows-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986523"
+        },
+        {
+          "id": 128076986504,
+          "name": "Q01 stress / ubuntu-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986504"
+        },
+        {
+          "id": 128076986466,
+          "name": "Q01 fault / windows-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986466"
+        },
+        {
+          "id": 128076986455,
+          "name": "Native-free contracts / pwsh / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516270/job/128076986455"
+        },
+        {
+          "id": 128076986437,
+          "name": "Q01 quick / ubuntu-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986437"
+        },
+        {
+          "id": 128076986432,
+          "name": "Q01 quick / ubuntu-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986432"
+        },
+        {
+          "id": 128076986422,
+          "name": "Q01 quick / windows-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986422"
+        },
+        {
+          "id": 128076986414,
+          "name": "Q01 fault / ubuntu-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986414"
+        },
+        {
+          "id": 128076986402,
+          "name": "Q01 stress / windows-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986402"
+        },
+        {
+          "id": 128076986365,
+          "name": "Windows contracts / pwsh",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516238/job/128076986365"
+        },
+        {
+          "id": 128076986359,
+          "name": "Q01 fault / ubuntu-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986359"
+        },
+        {
+          "id": 128076986346,
+          "name": "Windows platform Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516280/job/128076986346"
+        },
+        {
+          "id": 128076986340,
+          "name": "Q01 stress / windows-latest / Node 24",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986340"
+        },
+        {
+          "id": 128076986333,
+          "name": "Full suite Node 22 / PostgreSQL 16",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516280/job/128076986333"
+        },
+        {
+          "id": 128076986293,
+          "name": "test",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516384/job/128076986293"
+        },
+        {
+          "id": 128076986242,
+          "name": "Q01 stress / ubuntu-latest / Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986242"
+        },
+        {
+          "id": 128076986237,
+          "name": "diagnostic (windows-2022)",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516417/job/128076986237"
+        },
+        {
+          "id": 128076986212,
+          "name": "Windows platform Node 22",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516280/job/128076986212"
+        },
+        {
+          "id": 128076986106,
+          "name": "chromium",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516261/job/128076986106"
+        },
+        {
+          "id": 128076986076,
+          "name": "Q01 Windows laboratory guard contracts",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516246/job/128076986076"
+        },
+        {
+          "id": 128076985953,
+          "name": "Full suite Node 24 / PostgreSQL 18",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/math/actions/runs/42271516280/job/128076985953"
+        }
+      ],
+      "qualification": "METADATA_ONLY_NO_CASE_LOG_ARTIFACT_ADMISSION"
+    },
+    {
+      "repository": "meta_analyse",
+      "pr": 77,
+      "head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+      "observed_utc": "2026-11-06T19:07:42.955669+00:00",
+      "command": [
+        "gh",
+        "api",
+        "--paginate",
+        "--slurp",
+        "repos/YehorBabenko88/meta_analyse/commits/88b45c328bfdc8131ff0c6d139fddd8b27a4050c/check-runs?per_page=100"
+      ],
+      "exit_code": 0,
+      "raw_sha256": "9ad1c563587d0449c295ce4df95a62c02898ea48f20d8125acd2263df71a9580",
+      "evidence_file": "release/evidence/current-ci-delta/meta_analyse-88b45c328bfdc8131ff0c6d139fddd8b27a4050c.json",
+      "checks": [
+        {
+          "id": 128008300462,
+          "name": "platform-coverage",
+          "status": "queued",
+          "conclusion": null,
+          "url": "https://github.com/YehorBabenko88/meta_analyse/actions/runs/42246115725/job/128008300462"
+        },
+        {
+          "id": 128001764304,
+          "name": "platform-coverage",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/meta_analyse/actions/runs/42245983689/job/128001764304"
+        },
+        {
+          "id": 127988657957,
+          "name": "archive-pinned-contract",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/meta_analyse/actions/runs/42246115725/job/127988657957"
+        },
+        {
+          "id": 127988653313,
+          "name": "disposable-postgres18",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/YehorBabenko88/meta_analyse/actions/runs/42246115427/job/127988653313"
+        },
+        {
+          "id": 127988651806,
+          "name": "synthetic",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/YehorBabenko88/meta_analyse/actions/runs/42246115427/job/127988651806"
+        },
+        {
+          "id": 127988651482,
+          "name": "linux",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/meta_analyse/actions/runs/42246115725/job/127988651482"
+        },
+        {
+          "id": 127988651137,
+          "name": "windows",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/meta_analyse/actions/runs/42246115725/job/127988651137"
+        },
+        {
+          "id": 127988198800,
+          "name": "archive-pinned-contract",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/meta_analyse/actions/runs/42245983689/job/127988198800"
+        },
+        {
+          "id": 127988198522,
+          "name": "windows",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/meta_analyse/actions/runs/42245983689/job/127988198522"
+        },
+        {
+          "id": 127988198051,
+          "name": "linux",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/meta_analyse/actions/runs/42245983689/job/127988198051"
+        }
+      ],
+      "qualification": "METADATA_ONLY_NO_CASE_LOG_ARTIFACT_ADMISSION"
+    },
+    {
+      "repository": "Terminan",
+      "pr": 69,
+      "head": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+      "observed_utc": "2026-11-06T19:07:44.127199+00:00",
+      "command": [
+        "gh",
+        "api",
+        "--paginate",
+        "--slurp",
+        "repos/YehorBabenko88/Terminan/commits/42686cd8fafcefaed3c5df5adaee5173d27543fd/check-runs?per_page=100"
+      ],
+      "exit_code": 0,
+      "raw_sha256": "01302ddc88f2885753e386f7d80c57d31ef3402d547396840bc1d7fb00353b24",
+      "evidence_file": "release/evidence/current-ci-delta/Terminan-42686cd8fafcefaed3c5df5adaee5173d27543fd.json",
+      "checks": [
+        {
+          "id": 127997926078,
+          "name": "synthetic-overlay",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777064/job/127997926078"
+        },
+        {
+          "id": 127997924984,
+          "name": "runtime (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777279/job/127997924984"
+        },
+        {
+          "id": 127997924901,
+          "name": "cache (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777101/job/127997924901"
+        },
+        {
+          "id": 127997924658,
+          "name": "contracts (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777217/job/127997924658"
+        },
+        {
+          "id": 127997924653,
+          "name": "visual (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777161/job/127997924653"
+        },
+        {
+          "id": 127997924586,
+          "name": "scientific-ui",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777105/job/127997924586"
+        },
+        {
+          "id": 127997924566,
+          "name": "runtime (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777279/job/127997924566"
+        },
+        {
+          "id": 127997924564,
+          "name": "contracts (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777217/job/127997924564"
+        },
+        {
+          "id": 127997924538,
+          "name": "compatibility-v20",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777105/job/127997924538"
+        },
+        {
+          "id": 127997924454,
+          "name": "cache (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777101/job/127997924454"
+        },
+        {
+          "id": 127997924229,
+          "name": "contracts (ubuntu-24.04, 3.11)",
+          "status": "completed",
+          "conclusion": "failure",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777108/job/127997924229"
+        },
+        {
+          "id": 127997924208,
+          "name": "contracts (ubuntu-24.04, 3.14)",
+          "status": "completed",
+          "conclusion": "failure",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777108/job/127997924208"
+        },
+        {
+          "id": 127997924188,
+          "name": "windows-ui",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777217/job/127997924188"
+        },
+        {
+          "id": 127997924176,
+          "name": "contracts (windows-latest, 3.14)",
+          "status": "completed",
+          "conclusion": "failure",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777108/job/127997924176"
+        },
+        {
+          "id": 127997924142,
+          "name": "visual (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777161/job/127997924142"
+        },
+        {
+          "id": 127997923685,
+          "name": "contracts (windows-latest, 3.11)",
+          "status": "completed",
+          "conclusion": "failure",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248777108/job/127997923685"
+        },
+        {
+          "id": 127997893648,
+          "name": "cache (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767809/job/127997893648"
+        },
+        {
+          "id": 127997892633,
+          "name": "contracts (ubuntu-24.04, 3.11)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767844/job/127997892633"
+        },
+        {
+          "id": 127997892629,
+          "name": "contracts (windows-latest, 3.14)",
+          "status": "completed",
+          "conclusion": "failure",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767844/job/127997892629"
+        },
+        {
+          "id": 127997892518,
+          "name": "cache (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767809/job/127997892518"
+        },
+        {
+          "id": 127997892282,
+          "name": "contracts (windows-latest, 3.11)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767844/job/127997892282"
+        },
+        {
+          "id": 127997891866,
+          "name": "contracts (ubuntu-24.04, 3.14)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767844/job/127997891866"
+        },
+        {
+          "id": 127997891451,
+          "name": "runtime (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767578/job/127997891451"
+        },
+        {
+          "id": 127997890978,
+          "name": "visual (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767582/job/127997890978"
+        },
+        {
+          "id": 127997890887,
+          "name": "runtime (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767578/job/127997890887"
+        },
+        {
+          "id": 127997890742,
+          "name": "compatibility-v20",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767643/job/127997890742"
+        },
+        {
+          "id": 127997890713,
+          "name": "contracts (ubuntu-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767726/job/127997890713"
+        },
+        {
+          "id": 127997890679,
+          "name": "windows-ui",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767726/job/127997890679"
+        },
+        {
+          "id": 127997890676,
+          "name": "synthetic-overlay",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767633/job/127997890676"
+        },
+        {
+          "id": 127997890648,
+          "name": "contracts (windows-latest)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767726/job/127997890648"
+        },
+        {
+          "id": 127997890535,
+          "name": "visual (ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767582/job/127997890535"
+        },
+        {
+          "id": 127997890246,
+          "name": "scientific-ui",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/YehorBabenko88/Terminan/actions/runs/42248767643/job/127997890246"
+        }
+      ],
+      "qualification": "METADATA_ONLY_NO_CASE_LOG_ARTIFACT_ADMISSION"
+    }
+  ]
+}

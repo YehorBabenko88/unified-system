@@ -1,0 +1,2 @@
+# Actual Terminan consumer / Supervisor HTTP negative
+Runs the actual pinned Terminan PR22 source_contract('grid') against a disposable Supervisor HTTP server deliberately masquerading at the Grid port. Terminan must reject the producer identity and return UNAVAILABLE, never accept the source as Grid. This is a negative security contract, not positive Supervisor integration. Terminan PR22 requires a separate reviewed supervisor-specific consumer API before positive connection. No persistent service, real data or physical operation.

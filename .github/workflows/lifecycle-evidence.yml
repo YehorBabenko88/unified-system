@@ -1,0 +1,37 @@
+name: Five-module lifecycle evidence
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  synthetic:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install hash-pinned full-suite test dependencies
+        run: |
+          python -m pip install --only-binary=:all: --require-hashes -r docs/ci/requirements-unittest.lock
+      - run: python -I -S -B scripts/bootstrap_ci_unittest.py
+      - name: Exact-head software evidence
+        shell: python
+        run: |
+          import hashlib,json,os,pathlib,subprocess
+          value={'head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'tree':subprocess.check_output(['git','rev-parse','HEAD^{tree}'],text=True).strip(),'run':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'scope':'SYNTHETIC_ONLY','physical':'NOT_RUN','production':'NO_GO'}
+          p=pathlib.Path('lifecycle-evidence.json');p.write_text(json.dumps(value,sort_keys=True),encoding='utf-8')
+          pathlib.Path('lifecycle-evidence.sha256').write_text(hashlib.sha256(p.read_bytes()).hexdigest(),encoding='utf-8')
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lifecycle-${{ matrix.os }}
+          path: lifecycle-evidence.*

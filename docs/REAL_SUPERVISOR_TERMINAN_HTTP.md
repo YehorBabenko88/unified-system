@@ -1,0 +1,2 @@
+# Actual source-owned Supervisor -> Terminan loopback
+CI imports the real Unified Supervisor WSGI callable and the exact pinned Terminan PR26 dashboard/consumer, binds a disposable HTTP server to 127.0.0.1 and checks BLOCKED/UNVERIFIED/no trading authority. This is a real code-level HTTP integration test, but not an installed service, authenticated process, real source provenance, hostile transport stress, physical acceptance or production readiness. No external network or database.

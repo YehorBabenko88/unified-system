@@ -1,0 +1,200 @@
+{
+  "schema": "agent7.meta-final-junit-source-diagnosis.v1",
+  "time_utc": "2026-11-06T19:02:35.895705+00:00",
+  "status": "HISTORICAL_CAUSE_CONFIRMED_ALREADY_FIXED_IN_APPROVED_BASE",
+  "current_head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+  "current_tree": "83304074f9cc3f90c09615c7f6920e1a07eab0c6",
+  "base": "2c4db055e56e36384a2661d443f9abc7b2331e90",
+  "failed_run": {
+    "run": 41669712005,
+    "attempt": 1,
+    "job": 126034506020,
+    "source": "fa487affd99310bd523f31f8c6935132a57e745a",
+    "tree": "b8651c3ac6d5149dd91b97b6070f22895a2cb996",
+    "event_merge_sha": "d5a37af7b01c51703c6dc46bee8b6e9d8b41a1cf",
+    "workflow": "CI",
+    "lane": "windows",
+    "original_log_summary": "3018 passed,1 skipped; then BLOCKED:FINAL_INTEGRATION_JUNIT_REJECTED",
+    "artifact": {
+      "id": 13247288810,
+      "name": "windows-test-evidence",
+      "zip_file": "original-meta-windows-test-evidence-41669712005.zip",
+      "bytes": 156375,
+      "sha256": "f64d9fccd4a8491ab49329f61a7bd47b65a20ca2daba315882ad1904d598bcbc",
+      "api_digest_matched": true,
+      "junit_member": "junit-001.xml",
+      "cases": 3019,
+      "skips": 1,
+      "source_metadata_matched": true
+    }
+  },
+  "cause": {
+    "producer": "pytest_collection_finish in integration_synthetic_boundary.py, imported by ci_identity_manifest.py",
+    "parser": "check_final_integration_junit.check projects and validates exact identities/status, then rejects skippedcase outside collected allowed_skips",
+    "identity": "case_a2e39e55d3db11ee9cef3d3b524d33669736faec8caba9d76014f22816f3950b",
+    "raw_identity": [
+      "tests.test_headless_service",
+      "test_untracked_index_record_spoof_cannot_replace_removed_index_entry"
+    ],
+    "hash_independently_recomputed_matches_actual_artifact": true,
+    "existing_test_skip_reason": "Windows forbids TAB in filenames",
+    "historical_producer_defect": "Windows fullscope allowedskip identity missing from manifest; parser failclosed behavior correct",
+    "parser_and_projector_unchanged_historical_to_current": true
+  },
+  "existing_fix": {
+    "first_commit": "9be00e56922d1fba0583df6a32083ffcc29900c2",
+    "shared_policy_commit": "4963ccdbe34de7eb798d06ccb64a91bf64f77178",
+    "both_ancestors_of_approved_base": true,
+    "PR77_addresses_defect": false,
+    "PR77_relationship": "Only newOHLCVtests/evidencedoc; inherits pre-existing fix fromPR76base",
+    "new_source_change_needed": false,
+    "skip_policy_or_gate_weakened_by_A7": false
+  },
+  "actual_later_ci": {
+    "run": 41675207073,
+    "attempt": 1,
+    "job": 126053860674,
+    "source": "9be00e56922d1fba0583df6a32083ffcc29900c2",
+    "gate": "PASS exact synthetic JUnit identities3022",
+    "overall_job": "FAILURE_LATER_UI_EVIDENCE_NOT_JUNIT"
+  },
+  "actual_current_ci": {
+    "run": 42246115725,
+    "attempt": 1,
+    "job": 127988651137,
+    "source": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+    "job_status": "SUCCESS",
+    "original_log_summary": "3122 passed,1 skipped; PASS exact synthetic JUnit identities3123; authorizationNONE",
+    "full_workflow_status": "Prior snapshot platformcoverageQUEUED; no full runSUCCESS inferred"
+  },
+  "local_causal_reproducer": {
+    "schema": "agent7.meta-junit-causal-reproducer.v1",
+    "head": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+    "tree": "83304074f9cc3f90c09615c7f6920e1a07eab0c6",
+    "scope": "ONE synthetic collected case and synthetic XML; no original raw JUnit or full historical suite replay; no native/DB/network",
+    "results": [
+      {
+        "producer": "historical",
+        "producer_ref": "fa487affd99310bd523f31f8c6935132a57e745a",
+        "opaque_identity": "case_a2e39e55d3db11ee9cef3d3b524d33669736faec8caba9d76014f22816f3950b",
+        "allowed_skips": [],
+        "gate": "REJECTED",
+        "case_count": null,
+        "error": "FINAL_INTEGRATION_JUNIT_REJECTED"
+      },
+      {
+        "producer": "current",
+        "producer_ref": "88b45c328bfdc8131ff0c6d139fddd8b27a4050c",
+        "opaque_identity": "case_a2e39e55d3db11ee9cef3d3b524d33669736faec8caba9d76014f22816f3950b",
+        "allowed_skips": [
+          "case_a2e39e55d3db11ee9cef3d3b524d33669736faec8caba9d76014f22816f3950b"
+        ],
+        "gate": "ACCEPTED",
+        "case_count": 1,
+        "error": null
+      }
+    ],
+    "new_skip_added": false,
+    "existing_fix_commits": [
+      "9be00e56922d1fba0583df6a32083ffcc29900c2",
+      "4963ccdbe34de7eb798d06ccb64a91bf64f77178"
+    ]
+  },
+  "local_existing_guard_tests": {
+    "command": "python -m pytest --noconftest -q -o addopts=--import-mode=importlib tests/test_final_integration_junit.py tests/test_platform_coverage.py --basetemp=../meta-junit-source-cases-v1 --json-report --json-report-file=../../outputs/meta-junit-source-tests.json",
+    "exit_code": 0,
+    "passed": 48,
+    "skipped": 0,
+    "scope": "Pure software gate checks; no full historical raw suite replay/native/DB/network"
+  },
+  "source": [
+    {
+      "path": "scripts/integration_synthetic_boundary.py",
+      "git_blob": "7389e84a0a4af6bdbf59fe865500551462032e05",
+      "sha256": "2e6eb26a2766ad545e68fce64147bfdfd446df6475355aede956fa8fafed7347"
+    },
+    {
+      "path": "scripts/ci_identity_manifest.py",
+      "git_blob": "4be2836916134f75f49596e6cdb0c3f18dd32870",
+      "sha256": "44525d7319cbce8d48f5988824dd5aac47b97e780cafb4bf27de427a038dba54"
+    },
+    {
+      "path": "scripts/ci_skip_policy.py",
+      "git_blob": "74ac5d7d2150204a8b2872f666ad35fb70c74b8d",
+      "sha256": "4de48912236291ba706c07683409fa7a68e762b8a6f02d95397e8207abbfafb7"
+    },
+    {
+      "path": "scripts/check_final_integration_junit.py",
+      "git_blob": "cd5c6f56c4e3a8f359bc830e134d2f683d2d63d1",
+      "sha256": "af6e34462746816376a263ceadc070ef6ed1bd0edc47aed33082a57d3056b7ce"
+    },
+    {
+      "path": "scripts/project_public_ci_evidence.py",
+      "git_blob": "383fd186bcc718e71156f8a6f8f260922166a2b2",
+      "sha256": "585c7b797e52375cf29c71507f7e80c2681735a5415fd6b7c19fd384d05f1081"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "git_blob": "7a74b7fb9b07df01c1204d5dfff15da436e8d120",
+      "sha256": "32248e03775c3162a328ef2f2c4293e2633d35ac753923512a314e684489427e"
+    },
+    {
+      "path": "tests/test_headless_service.py",
+      "git_blob": "9de8dac2aaddccac60b9d5fe95dacb9c2ca6618a",
+      "sha256": "33e31904e9763a027df1c51aa0596ea7216a101033b51238501294d8d00ba964"
+    }
+  ],
+  "original_log_hashes": [
+    {
+      "job": 121222289423,
+      "file": "original-meta-job-121222289423.log",
+      "bytes": 60883,
+      "sha256": "bd3c7b98fb80983abe1a4a50cf1b2231679824622434a6820e4e7e8059020436"
+    },
+    {
+      "job": 121222289621,
+      "file": "original-meta-job-121222289621.log",
+      "bytes": 36919,
+      "sha256": "b0da19968431c62025c807e42f02e376ef6e91bfe776ce64f26d86a23fb24090"
+    },
+    {
+      "job": 121199671990,
+      "file": "original-meta-job-121199671990.log",
+      "bytes": 51552,
+      "sha256": "393a7527d91b09342dd29ff9820135d08c4a69aded291103c3c7adef859e42ff"
+    },
+    {
+      "job": 127370930155,
+      "file": "original-meta-job-127370930155.log",
+      "bytes": 76674,
+      "sha256": "b4f70b25ebb1bf9fd5c4d12fa4a1e399cd5558d6213198dc59e348c097a3826c"
+    },
+    {
+      "job": 127370930297,
+      "file": "original-meta-job-127370930297.log",
+      "bytes": 106413,
+      "sha256": "5ca9417ce755bebc1429286cfbf341e76c276b6cdcb7a450672939fd8ec99374"
+    },
+    {
+      "job": 126053860674,
+      "file": "original-meta-job-126053860674.log",
+      "bytes": 73149,
+      "sha256": "c791b1e9bfd347d6fcf231ca6990674fcfb8c5fc1b7d25b56e9c9713c42d32e2"
+    },
+    {
+      "job": 126034506020,
+      "file": "original-meta-job-126034506020.log",
+      "bytes": 72888,
+      "sha256": "cd4140ecf034b63404d7cbecc3f785f3134ba64ca940f8a2b7057ade73a46fd7"
+    },
+    {
+      "job": 127988651137,
+      "file": "original-meta-job-127988651137.log",
+      "bytes": 103293,
+      "sha256": "e5a6cc909cc15e1344d9f922fb695d3ec54d2261bc78961e7000de718f6486ba"
+    }
+  ],
+  "source_changed": false,
+  "endpoint_runtime_or_physical_acceptance": "NOT_ESTABLISHED",
+  "overall": "NO-GO"
+}

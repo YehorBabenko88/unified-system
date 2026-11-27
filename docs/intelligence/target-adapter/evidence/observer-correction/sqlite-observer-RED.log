@@ -1,0 +1,40 @@
+test_actual_target_no_python_network_and_only_owned_sqlite (test_direct.DirectTests.test_actual_target_no_python_network_and_only_owned_sqlite) ... FAIL
+test_actual_target_no_python_network_and_only_owned_sqlite (test_direct.DirectTests.test_actual_target_no_python_network_and_only_owned_sqlite) ... ERROR
+
+======================================================================
+ERROR: test_actual_target_no_python_network_and_only_owned_sqlite (test_direct.DirectTests.test_actual_target_no_python_network_and_only_owned_sqlite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\shutil.py", line 633, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] Der Prozess kann nicht auf die Datei zugreifen, da sie von einem anderen Prozess verwendet wird: 'C:\\Users\\LS-5\\AppData\\Local\\Temp\\target-adapter-test-5ncemjfb\\stand-sibling\\outside.sqlite'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\tempfile.py", line 954, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\tempfile.py", line 934, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\shutil.py", line 781, in rmtree
+    return _rmtree_unsafe(path, onexc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\shutil.py", line 635, in _rmtree_unsafe
+    onexc(os.unlink, fullname, err)
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\tempfile.py", line 909, in onexc
+    _os.unlink(path)
+PermissionError: [WinError 32] Der Prozess kann nicht auf die Datei zugreifen, da sie von einem anderen Prozess verwendet wird: 'C:\\Users\\LS-5\\AppData\\Local\\Temp\\target-adapter-test-5ncemjfb\\stand-sibling\\outside.sqlite'
+
+======================================================================
+FAIL: test_actual_target_no_python_network_and_only_owned_sqlite (test_direct.DirectTests.test_actual_target_no_python_network_and_only_owned_sqlite)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\gateway-target-adapter-20261109\gateway-runtime-recovery-20261107\tests/gateway_target_adapter\test_direct.py", line 143, in test_actual_target_no_python_network_and_only_owned_sqlite
+    with self.assertRaises(RuntimeError):sqlite3.connect(path,uri=uri)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.046s
+
+FAILED (failures=1, errors=1)

@@ -1,0 +1,50 @@
+{
+  "schema": "terminan.authority-v3-semantic-review.v1",
+  "reviewed_exact_bytes": [
+    {
+      "file": "AUTHORITY-EVENT-ORDERED-V3-REVIEW1.md",
+      "sha256": "d9d02baec67d5efbdb3124626d6e9d017cc9d5a2d19025f9293f4cc9f789a8d5"
+    },
+    {
+      "file": "AUTHORITY-REQUIREMENT-TRACEABILITY-REVIEW1.md",
+      "sha256": "66d317091a69817aa6790d0fe3f9d4b9339e2b2c268033ac1990a314883b0880"
+    },
+    {
+      "file": "AUTHORITY-REQUIREMENT-TRACEABILITY-EVIDENCE.json",
+      "sha256": "64a83ea87016d756be0eb7b612b11379392763f2522efc29c12d3e02e5484295"
+    }
+  ],
+  "scope_ack": "ACK_EVENT_ORDERED_V3_A6_CONSUMER_SEMANTICS_ONLY",
+  "basis": "Fresh review; no ACK inherited from strict drafts. Direct A6 human instructions require backend auth/RBAC, expired operator session rejection, no-quorum/stale UI and revision/command-id safety; they do not specify exact UTC-at-Raft-commit/FSM-apply or literal wall-clock machine-lease invalidation. No conflicting direct owner instruction found in this chat.",
+  "traceability_scope": "Reviewed exact A2 trace/evidence and direct A6 user messages; did not re-search all historical chats or independently repeat ROOT eleven-attachment audit. Negative search conclusion is bounded, not universal.",
+  "accepted": [
+    "Existing Grid Consul/Raft remains sole authority; majority denial and no heartbeat/local/cache/SQLite authority. No healthy-leader preemption by LS5 preference.",
+    "Lease validity/revocation is explicitly event ordered. Publication after committed session invalidation/revoke/terminal transition fails atomically, including no successor. Publication ordered before invalidation retains historical immutable receipt/debit. Local displayed expiry estimate is not a quorum authorization fact.",
+    "Generation, leader and lease sessions/indexes, assignment/grant/worker incarnation, closures/eligibility/holds/debit/reservation and idempotency/expected roots are coupled in one bounded transaction, not precheck+SQL. Unknown renewal/outcome is not renewed permission or automatic resubmission.",
+    "Authoritative ordering uses known receipt/domain revision/index semantics, not audit UTC or fabricated Raft term. submitted/observed-committed audit labels describe actual observations with qualified clocks or explicit null under NEW schema.",
+    "Paused external sender/resource effects and civil-time/credential/confirmation policies are separately gated; v3 does not certify containment or exact physical stop.",
+    "Historical receipt reconciliation never implies current execution permission, job cancellation or authority lifetime owned by UI. No missing receipt means permission to rekey/retry."
+  ],
+  "compatibility_conditions_not_new_owner_requirements": [
+    "Expired operator session rejection, backend RBAC and operation-bound reauth/confirmation remain literal A6 requirements; cannot relabel human credential/confirmation expiry as Consul lease invalidation. V3 explicitly preserves these separate gates.",
+    "Current authentication/read scope must authorize receipt replay/reconciliation; historical predecessor receipt is not a reusable credential or permission to expose hidden data.",
+    "UI must distinguish observed authority ACTIVE/revoked state, local execution-stop estimate and observation freshness; never label an estimated timestamp as exact committed_at or infer revocation solely from wall clock.",
+    "Unknown clock/audit timestamps cannot populate success fields requiring trusted timestamps. Existing v1/v2 snapshot freshness policies stay closed absent their independent provider/time ACK; v3 lease ordering does not renew LIVE.",
+    "Checkpointv1 committed_at_utc and frozen receipt/event schemas are not silently reinterpreted. New pinned domain schema/profile or explicitly owner-approved mapping required before product data-success."
+  ],
+  "instruction_conflicts_found": "NONE_WITHIN_A6_DIRECT_INSTRUCTIONS_AND_THIS_SCOPED_SEMANTIC_REVIEW",
+  "pending_owner_acceptance": [
+    "ROOT design decision and concrete source allocation",
+    "A3/A4 checkpoint/receipt schema and lineage mapping",
+    "A1/A4/A5 source-side fencing/containment and every-mutator closure/debit implementation",
+    "Identity/RBAC/read provider and independent civil-time policy qualification",
+    "Real Consul ordering/durability/failover/Windows and physical acceptance"
+  ],
+  "gate_effect": "NONE; semantic review is not ROOT design approval, runtime admission, strict-time PASS or permission to change old contracts.",
+  "consumer_head_unchanged": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+  "source_or_shared_schema_changes": "NONE",
+  "runtime_endpoint_ack": "NOT_AVAILABLE",
+  "strict_wall_clock_tests": "OUT_OF_PROFILE_NOT_MARKED_PASS",
+  "timing_or_physical_acceptance": "NOT_RUN",
+  "go_no_go": "NO-GO"
+}

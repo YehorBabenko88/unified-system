@@ -1,0 +1,385 @@
+{
+  "head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+  "retrieval": "12 bounded GETs, no retry or CI mutation",
+  "runs": [
+    {
+      "run": {
+        "id": 42716081580,
+        "head_sha": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "event": "pull_request",
+        "run_attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-09T22:55:10Z",
+        "run_started_at": "2026-11-09T22:55:10Z",
+        "updated_at": "2026-11-09T23:05:58Z",
+        "path": ".github/workflows/lab-stopped-service.yml"
+      },
+      "jobs": [
+        {
+          "id": 129497843097,
+          "name": "stopped-service (windows-2025)",
+          "runner_id": 1000097123,
+          "runner_name": "GitHub Actions 1000097123",
+          "runner_group_name": "GitHub Actions",
+          "labels": [
+            "windows-2025"
+          ],
+          "started_at": "2026-11-09T22:59:21Z",
+          "completed_at": "2026-11-09T23:02:35Z",
+          "conclusion": "success",
+          "tests_passed": [
+            "test_all_office_and_adminit_variants_reject_os_name (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_all_office_and_adminit_variants_reject_os_name)",
+            "test_artifact_ownership_output_is_confined_to_runner_command_file (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_artifact_ownership_output_is_confined_to_runner_command_file)",
+            "test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed)",
+            "test_crlf_operator_file_does_not_replace_exact_lf_git_blob (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_crlf_operator_file_does_not_replace_exact_lf_git_blob)",
+            "test_download_rejects_size_hash_and_cross_host_final_response (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_rejects_size_hash_and_cross_host_final_response)",
+            "test_download_requires_pinned_bytes_and_exclusive_destination (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_requires_pinned_bytes_and_exclusive_destination)",
+            "test_entry_uses_os_name_and_rejects_before_network_or_acl (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_entry_uses_os_name_and_rejects_before_network_or_acl)",
+            "test_git_blob_wrong_size_or_pin_is_rejected_without_normalization (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_git_blob_wrong_size_or_pin_is_rejected_without_normalization)",
+            "test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias)",
+            "test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state)",
+            "test_only_hosted_windows_fresh_descendant_is_admitted_without_effects (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_only_hosted_windows_fresh_descendant_is_admitted_without_effects)",
+            "test_phase_guard_requires_exact_action_and_plan_digest (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_phase_guard_requires_exact_action_and_plan_digest)",
+            "test_redirects_require_https_same_host_no_credentials_and_bounded_hops (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_redirects_require_https_same_host_no_credentials_and_bounded_hops)",
+            "test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp)",
+            "test_workflow_scopes_disposable_matrix_and_report_artifact (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_workflow_scopes_disposable_matrix_and_report_artifact)"
+          ],
+          "unittest_summary": [
+            [
+              "15",
+              "4.195"
+            ]
+          ],
+          "fixture_summary": [
+            "{\"result\": \"PASS_COMPONENT_STOPPED_SERVICE_ONLY\", \"failure_stage\": null, \"error_code\": null, \"source_proof\": \"NOT_EVALUATED\", \"activation\": \"BLOCKED\", \"physical\": \"NOT_RUN\"}"
+          ]
+        },
+        {
+          "id": 129497843388,
+          "name": "stopped-service (windows-2022)",
+          "runner_id": 1000097132,
+          "runner_name": "GitHub Actions 1000097132",
+          "runner_group_name": "GitHub Actions",
+          "labels": [
+            "windows-2022"
+          ],
+          "started_at": "2026-11-09T23:02:52Z",
+          "completed_at": "2026-11-09T23:05:58Z",
+          "conclusion": "success",
+          "tests_passed": [
+            "test_all_office_and_adminit_variants_reject_os_name (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_all_office_and_adminit_variants_reject_os_name)",
+            "test_artifact_ownership_output_is_confined_to_runner_command_file (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_artifact_ownership_output_is_confined_to_runner_command_file)",
+            "test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed)",
+            "test_crlf_operator_file_does_not_replace_exact_lf_git_blob (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_crlf_operator_file_does_not_replace_exact_lf_git_blob)",
+            "test_download_rejects_size_hash_and_cross_host_final_response (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_rejects_size_hash_and_cross_host_final_response)",
+            "test_download_requires_pinned_bytes_and_exclusive_destination (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_requires_pinned_bytes_and_exclusive_destination)",
+            "test_entry_uses_os_name_and_rejects_before_network_or_acl (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_entry_uses_os_name_and_rejects_before_network_or_acl)",
+            "test_git_blob_wrong_size_or_pin_is_rejected_without_normalization (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_git_blob_wrong_size_or_pin_is_rejected_without_normalization)",
+            "test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias)",
+            "test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state)",
+            "test_only_hosted_windows_fresh_descendant_is_admitted_without_effects (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_only_hosted_windows_fresh_descendant_is_admitted_without_effects)",
+            "test_phase_guard_requires_exact_action_and_plan_digest (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_phase_guard_requires_exact_action_and_plan_digest)",
+            "test_redirects_require_https_same_host_no_credentials_and_bounded_hops (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_redirects_require_https_same_host_no_credentials_and_bounded_hops)",
+            "test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp)",
+            "test_workflow_scopes_disposable_matrix_and_report_artifact (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_workflow_scopes_disposable_matrix_and_report_artifact)"
+          ],
+          "unittest_summary": [
+            [
+              "15",
+              "4.688"
+            ]
+          ],
+          "fixture_summary": [
+            "{\"result\": \"PASS_COMPONENT_STOPPED_SERVICE_ONLY\", \"failure_stage\": null, \"error_code\": null, \"source_proof\": \"NOT_EVALUATED\", \"activation\": \"BLOCKED\", \"physical\": \"NOT_RUN\"}"
+          ]
+        }
+      ]
+    },
+    {
+      "run": {
+        "id": 42716071876,
+        "head_sha": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "event": "push",
+        "run_attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-09T22:55:06Z",
+        "run_started_at": "2026-11-09T22:55:06Z",
+        "updated_at": "2026-11-09T22:59:18Z",
+        "path": ".github/workflows/lab-stopped-service.yml"
+      },
+      "jobs": [
+        {
+          "id": 129497812412,
+          "name": "stopped-service (windows-2022)",
+          "runner_id": 1000097115,
+          "runner_name": "GitHub Actions 1000097115",
+          "runner_group_name": "GitHub Actions",
+          "labels": [
+            "windows-2022"
+          ],
+          "started_at": "2026-11-09T22:56:12Z",
+          "completed_at": "2026-11-09T22:59:17Z",
+          "conclusion": "success",
+          "tests_passed": [
+            "test_all_office_and_adminit_variants_reject_os_name (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_all_office_and_adminit_variants_reject_os_name)",
+            "test_artifact_ownership_output_is_confined_to_runner_command_file (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_artifact_ownership_output_is_confined_to_runner_command_file)",
+            "test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed)",
+            "test_crlf_operator_file_does_not_replace_exact_lf_git_blob (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_crlf_operator_file_does_not_replace_exact_lf_git_blob)",
+            "test_download_rejects_size_hash_and_cross_host_final_response (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_rejects_size_hash_and_cross_host_final_response)",
+            "test_download_requires_pinned_bytes_and_exclusive_destination (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_requires_pinned_bytes_and_exclusive_destination)",
+            "test_entry_uses_os_name_and_rejects_before_network_or_acl (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_entry_uses_os_name_and_rejects_before_network_or_acl)",
+            "test_git_blob_wrong_size_or_pin_is_rejected_without_normalization (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_git_blob_wrong_size_or_pin_is_rejected_without_normalization)",
+            "test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias)",
+            "test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state)",
+            "test_only_hosted_windows_fresh_descendant_is_admitted_without_effects (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_only_hosted_windows_fresh_descendant_is_admitted_without_effects)",
+            "test_phase_guard_requires_exact_action_and_plan_digest (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_phase_guard_requires_exact_action_and_plan_digest)",
+            "test_redirects_require_https_same_host_no_credentials_and_bounded_hops (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_redirects_require_https_same_host_no_credentials_and_bounded_hops)",
+            "test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp)",
+            "test_workflow_scopes_disposable_matrix_and_report_artifact (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_workflow_scopes_disposable_matrix_and_report_artifact)"
+          ],
+          "unittest_summary": [
+            [
+              "15",
+              "4.997"
+            ]
+          ],
+          "fixture_summary": [
+            "{\"result\": \"PASS_COMPONENT_STOPPED_SERVICE_ONLY\", \"failure_stage\": null, \"error_code\": null, \"source_proof\": \"NOT_EVALUATED\", \"activation\": \"BLOCKED\", \"physical\": \"NOT_RUN\"}"
+          ]
+        },
+        {
+          "id": 129497812918,
+          "name": "stopped-service (windows-2025)",
+          "runner_id": 1000097114,
+          "runner_name": "GitHub Actions 1000097114",
+          "runner_group_name": "GitHub Actions",
+          "labels": [
+            "windows-2025"
+          ],
+          "started_at": "2026-11-09T22:56:08Z",
+          "completed_at": "2026-11-09T22:59:14Z",
+          "conclusion": "success",
+          "tests_passed": [
+            "test_all_office_and_adminit_variants_reject_os_name (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_all_office_and_adminit_variants_reject_os_name)",
+            "test_artifact_ownership_output_is_confined_to_runner_command_file (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_artifact_ownership_output_is_confined_to_runner_command_file)",
+            "test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_bootstrap_blob_wrong_pin_and_unknown_source_member_fail_closed)",
+            "test_crlf_operator_file_does_not_replace_exact_lf_git_blob (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_crlf_operator_file_does_not_replace_exact_lf_git_blob)",
+            "test_download_rejects_size_hash_and_cross_host_final_response (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_rejects_size_hash_and_cross_host_final_response)",
+            "test_download_requires_pinned_bytes_and_exclusive_destination (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_download_requires_pinned_bytes_and_exclusive_destination)",
+            "test_entry_uses_os_name_and_rejects_before_network_or_acl (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_entry_uses_os_name_and_rejects_before_network_or_acl)",
+            "test_git_blob_wrong_size_or_pin_is_rejected_without_normalization (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_git_blob_wrong_size_or_pin_is_rejected_without_normalization)",
+            "test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_accepts_canonical_fake_tools_under_short_temp_alias)",
+            "test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_inert_orchestration_dry_run_uses_fakes_only_and_preserves_state)",
+            "test_only_hosted_windows_fresh_descendant_is_admitted_without_effects (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_only_hosted_windows_fresh_descendant_is_admitted_without_effects)",
+            "test_phase_guard_requires_exact_action_and_plan_digest (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_phase_guard_requires_exact_action_and_plan_digest)",
+            "test_redirects_require_https_same_host_no_credentials_and_bounded_hops (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_redirects_require_https_same_host_no_credentials_and_bounded_hops)",
+            "test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_staged_archive_is_only_byte_integrity_and_confined_to_runner_temp)",
+            "test_workflow_scopes_disposable_matrix_and_report_artifact (tests.test_ci_stopped_service_acceptance.HostedStoppedServiceTests.test_workflow_scopes_disposable_matrix_and_report_artifact)"
+          ],
+          "unittest_summary": [
+            [
+              "15",
+              "3.849"
+            ]
+          ],
+          "fixture_summary": [
+            "{\"result\": \"PASS_COMPONENT_STOPPED_SERVICE_ONLY\", \"failure_stage\": null, \"error_code\": null, \"source_proof\": \"NOT_EVALUATED\", \"activation\": \"BLOCKED\", \"physical\": \"NOT_RUN\"}"
+          ]
+        }
+      ]
+    }
+  ],
+  "artifact_qualification": [
+    {
+      "run_id": 42716081580,
+      "artifact_id": 13718637089,
+      "archive_sha256": "c3180be5547f06f1739084d4cad4a29fe834ef1da3edccfd110315315d413e3a",
+      "github_digest_matches": true,
+      "manifest_valid": true,
+      "report_sha256": "755e609ca2ff2cc7b03fc60369ec897eb5955e6363bd1b07f5c3b9bedb6552ce",
+      "result": "PASS_COMPONENT_STOPPED_SERVICE_ONLY",
+      "scope": "DISPOSABLE_HOSTED_STOPPED_SERVICE_ONLY",
+      "stages": [
+        {
+          "result": "PASS",
+          "stage": "native_create_inspect"
+        },
+        {
+          "code": "ABSENT",
+          "ownership": "RETAINED",
+          "result": "PASS",
+          "scm": "ABSENT",
+          "stage": "native_app_only_remove",
+          "state": "RETAINED",
+          "uninstall_journal": "RETAINED"
+        }
+      ],
+      "service_start": "NOT_RUN",
+      "activation": "BLOCKED",
+      "physical": "NOT_RUN",
+      "source_proof": "NOT_EVALUATED",
+      "execution_authority": false,
+      "installation_closure": false,
+      "publisher_authenticated": false,
+      "python_version": "3.12.10",
+      "test_source": {
+        "checkout": "EXACT_HEAD_CLEAN",
+        "git_version": "git version 2.56.0.windows.4",
+        "head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "script_sha256": "9dfa27978c6748afa169b0a986f7b0fef80e20c90de5c101575a41708375b2e4",
+        "tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c"
+      },
+      "test_source_after": {
+        "checkout": "EXACT_HEAD_CLEAN",
+        "git_version": "git version 2.56.0.windows.4",
+        "head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "script_sha256": "9dfa27978c6748afa169b0a986f7b0fef80e20c90de5c101575a41708375b2e4",
+        "tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c"
+      }
+    },
+    {
+      "run_id": 42716081580,
+      "artifact_id": 13718237782,
+      "archive_sha256": "32bb64d282bc6dfb3f6bcf64d847ceefea7ad13b0403092053f2a8629e41daf3",
+      "github_digest_matches": true,
+      "manifest_valid": true,
+      "report_sha256": "e652564990c1ae3a665b4251abf7fdd6833f9cda392dff99d905777426666a76",
+      "result": "PASS_COMPONENT_STOPPED_SERVICE_ONLY",
+      "scope": "DISPOSABLE_HOSTED_STOPPED_SERVICE_ONLY",
+      "stages": [
+        {
+          "result": "PASS",
+          "stage": "native_create_inspect"
+        },
+        {
+          "code": "ABSENT",
+          "ownership": "RETAINED",
+          "result": "PASS",
+          "scm": "ABSENT",
+          "stage": "native_app_only_remove",
+          "state": "RETAINED",
+          "uninstall_journal": "RETAINED"
+        }
+      ],
+      "service_start": "NOT_RUN",
+      "activation": "BLOCKED",
+      "physical": "NOT_RUN",
+      "source_proof": "NOT_EVALUATED",
+      "execution_authority": false,
+      "installation_closure": false,
+      "publisher_authenticated": false,
+      "python_version": "3.12.10",
+      "test_source": {
+        "checkout": "EXACT_HEAD_CLEAN",
+        "git_version": "git version 2.56.0.windows.4",
+        "head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "script_sha256": "9dfa27978c6748afa169b0a986f7b0fef80e20c90de5c101575a41708375b2e4",
+        "tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c"
+      },
+      "test_source_after": {
+        "checkout": "EXACT_HEAD_CLEAN",
+        "git_version": "git version 2.56.0.windows.4",
+        "head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "script_sha256": "9dfa27978c6748afa169b0a986f7b0fef80e20c90de5c101575a41708375b2e4",
+        "tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c"
+      }
+    },
+    {
+      "run_id": 42716071876,
+      "artifact_id": 13718756017,
+      "archive_sha256": "c201ff70620e7f8363b8b78df90e76da6991249b976aaf61aeefc6c234c057e6",
+      "github_digest_matches": true,
+      "manifest_valid": true,
+      "report_sha256": "d263c4e293865442e5353359a836fa2a5e184de4189eba38f89099df7024088a",
+      "result": "PASS_COMPONENT_STOPPED_SERVICE_ONLY",
+      "scope": "DISPOSABLE_HOSTED_STOPPED_SERVICE_ONLY",
+      "stages": [
+        {
+          "result": "PASS",
+          "stage": "native_create_inspect"
+        },
+        {
+          "code": "ABSENT",
+          "ownership": "RETAINED",
+          "result": "PASS",
+          "scm": "ABSENT",
+          "stage": "native_app_only_remove",
+          "state": "RETAINED",
+          "uninstall_journal": "RETAINED"
+        }
+      ],
+      "service_start": "NOT_RUN",
+      "activation": "BLOCKED",
+      "physical": "NOT_RUN",
+      "source_proof": "NOT_EVALUATED",
+      "execution_authority": false,
+      "installation_closure": false,
+      "publisher_authenticated": false,
+      "python_version": "3.12.10",
+      "test_source": {
+        "checkout": "EXACT_HEAD_CLEAN",
+        "git_version": "git version 2.56.0.windows.4",
+        "head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "script_sha256": "9dfa27978c6748afa169b0a986f7b0fef80e20c90de5c101575a41708375b2e4",
+        "tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c"
+      },
+      "test_source_after": {
+        "checkout": "EXACT_HEAD_CLEAN",
+        "git_version": "git version 2.56.0.windows.4",
+        "head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "script_sha256": "9dfa27978c6748afa169b0a986f7b0fef80e20c90de5c101575a41708375b2e4",
+        "tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c"
+      }
+    },
+    {
+      "run_id": 42716071876,
+      "artifact_id": 13716594619,
+      "archive_sha256": "0cd9e52f653fbacb4f16c39d79a2bc8c5fe781521a432c30ef5da94918a1f093",
+      "github_digest_matches": true,
+      "manifest_valid": true,
+      "report_sha256": "2dcce2c736d0f26f606227294e49984c1c1236762e02861b849ba843b056a7fb",
+      "result": "PASS_COMPONENT_STOPPED_SERVICE_ONLY",
+      "scope": "DISPOSABLE_HOSTED_STOPPED_SERVICE_ONLY",
+      "stages": [
+        {
+          "result": "PASS",
+          "stage": "native_create_inspect"
+        },
+        {
+          "code": "ABSENT",
+          "ownership": "RETAINED",
+          "result": "PASS",
+          "scm": "ABSENT",
+          "stage": "native_app_only_remove",
+          "state": "RETAINED",
+          "uninstall_journal": "RETAINED"
+        }
+      ],
+      "service_start": "NOT_RUN",
+      "activation": "BLOCKED",
+      "physical": "NOT_RUN",
+      "source_proof": "NOT_EVALUATED",
+      "execution_authority": false,
+      "installation_closure": false,
+      "publisher_authenticated": false,
+      "python_version": "3.12.10",
+      "test_source": {
+        "checkout": "EXACT_HEAD_CLEAN",
+        "git_version": "git version 2.56.0.windows.4",
+        "head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "script_sha256": "9dfa27978c6748afa169b0a986f7b0fef80e20c90de5c101575a41708375b2e4",
+        "tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c"
+      },
+      "test_source_after": {
+        "checkout": "EXACT_HEAD_CLEAN",
+        "git_version": "git version 2.56.0.windows.4",
+        "head": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+        "script_sha256": "9dfa27978c6748afa169b0a986f7b0fef80e20c90de5c101575a41708375b2e4",
+        "tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c"
+      }
+    }
+  ],
+  "scope_conclusion": "Confirmed disposable hosted stopped-service fixture on Windows2022/2025, both push and PR attempt1; 15 identical regression cases each job (60 executions,15 distinct cases), native_create_inspect + APP_ONLY removal. NOT full CI matrix/physical activation/native worker/runtime qualification. Pure-source and mandatory states only from prior Root snapshot, not refreshed."
+}

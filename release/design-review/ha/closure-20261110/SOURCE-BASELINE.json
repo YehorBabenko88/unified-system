@@ -1,0 +1,257 @@
+{
+  "schema": "unified.ha.source-inspection.v1",
+  "date": "2026-11-10",
+  "scope": "SELECTED_PRIMARY_GIT_BLOBS_AND_OWNER_REPORTS_ONLY_NOT_ALL_FILE_RUNTIME_CLOSURE",
+  "implementation_base": "NONE_APPROVED",
+  "source_catalog": {
+    "head": "3af06455b601a328e94339327a0597eada802c38",
+    "manifest_sha256": "3d20438f30fcb2b14661ae2681136d3c27007a5f1bc7f34c062f078a47184236",
+    "scope": "SOURCE_ONLY"
+  },
+  "inspected_sources": [
+    {
+      "scope": "Root executable source input",
+      "head": "1d923f6a33e1f0f16cd476f1b4e5e65ee03a8a6c",
+      "tree": "e5ad4acf893b99cb71ad1b55cd642fcb4946de7c",
+      "files": {
+        "unified_system/gateway_native_negative.py": {
+          "blob": "9e0cf6abc1bf9e11b2dde8a8f70e89b8b5bf250f",
+          "bytes": 10456,
+          "sha256": "bb56a83189839ee054cdb2fb233884b7ed4f88d61cff74bac3dd066ab91e40a2",
+          "public_ast_signatures_not_invoked": [
+            "async DisposableNativeNegativeGateway.submit(self, original_lab13_bytes, *, accepted_tls, leader)",
+            "async DisposableNativeNegativeGateway.lookup(self, original_lab13_bytes, *, accepted_tls, leader)"
+          ]
+        },
+        "unified_system/gateway_research_identity.py": {
+          "blob": "e10519767bad164534f99e42e5b04eb69d823d9c",
+          "bytes": 26610,
+          "sha256": "481724cd2efca312773fa4152d1c223b46ced6529d96b2d74f452cdf57932d7f",
+          "public_ast_signatures_not_invoked": [
+            "async ResearchIdentityBroker.open_session(self, server_ssl_socket, *, leader)",
+            "async ResearchIdentityBroker.capture_current(self, context, *, scope, request_bytes)",
+            "ResearchIdentityBroker.require_capture(self, capture, *, expected_authority, scope, request_bytes)",
+            "ResearchIdentityBroker.invalidate_context_local_only(self, context)",
+            "async ResearchIdentityBroker.invalidate_context(self, context)",
+            "async ResearchIdentityBroker.close(self)"
+          ]
+        },
+        "unified_system/storage/result_publication.py": {
+          "blob": "a30b2f0290fa9ca7b3c9e39fa391d7a703559a8e",
+          "bytes": 7267,
+          "sha256": "f6c1833771546134f97c45a4c53aae7fe5c16bb3cb73fff182821f4a0be952ed",
+          "public_ast_signatures_not_invoked": [
+            "LocalByteClosure.value(self)",
+            "LocalByteClosure.sha256(self)",
+            "LocalByteClosure.publication_confirmed(self)",
+            "LocalByteClosure.semantic_closure_verified(self)",
+            "build_local_closure(entries)",
+            "stage_local_closure(store, claim, entries)",
+            "copy_local_closure(source, destination, claim)",
+            "commit_result(original_intent_bytes)",
+            "reconcile_result(original_intent_bytes)",
+            "readback_local_closure(owned_store, claim)"
+          ]
+        },
+        "unified_system/storage/publication.py": {
+          "blob": "32a68e4e77e0b6dfc68948a14c086f3c48540e3a",
+          "bytes": 598,
+          "sha256": "e9a92a2477c07ebbcf520d6e65a93237a723ed067f106bffcd605e3b4c7b4d12",
+          "public_ast_signatures_not_invoked": [
+            "async PublicationAdapter.commit_storage(self, intent_bytes)",
+            "async PublicationAdapter.reconcile_storage(self, original_intent_bytes)"
+          ]
+        },
+        "unified_system/storage/replica_evidence.py": {
+          "blob": "55d657da86bea6187191b86e5120cf49f61719b0",
+          "bytes": 3401,
+          "sha256": "23ea42e433f70de35345030bce8fc0a8f30d7097dc022006249a7bd714af1c9d",
+          "public_ast_signatures_not_invoked": [
+            "LocalReplicaObservation.replica_valid(self)",
+            "LocalReplicaObservation.failure_domain_verified(self)",
+            "LocalReplicaObservation.publication_confirmed(self)",
+            "ReplicaClosureInventory.capture_result_closure(self, original_intent_bytes, *, expected_authority)",
+            "LocalInventoryReadback.store_id(self)",
+            "LocalInventoryReadback.closure_sha256(self)",
+            "LocalInventoryReadback.objects(self)",
+            "LocalInventoryReadback.native_replica_eligible(self)",
+            "LocalInventoryReadback.failure_domain_qualified(self)",
+            "LocalInventoryReadback.semantic_closure_verified(self)",
+            "LocalInventoryReadback.publication_confirmed(self)"
+          ]
+        },
+        "unified_system/storage/publication_records.py": {
+          "blob": "b6e70b634da595d3b796c7ce59f48582b1fdcc0f",
+          "bytes": 1606,
+          "sha256": "65653bc442091bb935bd69d5873c33dc161083ceff51010f6805736ddbca8257",
+          "public_ast_signatures_not_invoked": [
+            "publication_identifier(value)",
+            "RetainedPublicationIntent.sha256(self)",
+            "RetainedPublicationIntent.authority_verified(self)",
+            "PendingPublicationObservation.native_outcome(self)",
+            "PendingPublicationObservation.publication_confirmed(self)",
+            "PendingPublicationObservation.retry_authorized(self)",
+            "PendingPublicationObservation.hold_release_authorized(self)"
+          ]
+        },
+        "unified_system/storage/publication_recovery.py": {
+          "blob": "04f5166c4b4b8dd62c324cae0b45f64106696aa9",
+          "bytes": 7162,
+          "sha256": "7a25a13533f66296d8626859374ebe850860cd825c5e094e6f2b2092ba0b3285",
+          "public_ast_signatures_not_invoked": [
+            "PendingPublicationJournal.retain(self, original)",
+            "PendingPublicationJournal.mark_attempt_uncertain(self, publication_id)",
+            "PendingPublicationJournal.recover_original(self, publication_id)",
+            "PendingPublicationJournal.verify_staged_original(self, publication_id)",
+            "PendingPublicationJournal.observation(self, publication_id)"
+          ]
+        }
+      }
+    },
+    {
+      "scope": "Grid negative/local adopted reference",
+      "head": "2f94da511681811588e0f850a0a0e9dc4479c8b8",
+      "tree": "3e9664296a225d2ba20f594f73b1495c18fe8185",
+      "files": {
+        "grid/coordination.py": {
+          "blob": "a508951bdcf243dfe865bbba108af5377ddddb38",
+          "bytes": 15085,
+          "sha256": "3dd73d3eb3dfb576f7174a94fab05a0f87fe248ffcacccfa19786ccc74f0776b",
+          "public_ast_signatures_not_invoked": [
+            "canonical(value)",
+            "async ConsulSessionAuthority.close(self)",
+            "async ConsulSessionAuthority.acquire(self, owner)",
+            "async ConsulSessionAuthority.validate(self, lease)",
+            "async ConsulSessionAuthority.renew(self, lease)",
+            "async ConsulSessionAuthority.release(self, lease)",
+            "async ConsulSessionAuthority.write_control(self, lease, name, payload)",
+            "async ConsulSessionAuthority.read_control(self, name)",
+            "floating_leader_guard(leader)",
+            "coordinator_authority(settings, *, external_fence_verifier=None)"
+          ]
+        },
+        "grid/authority_assignment_v1.py": {
+          "blob": "a629b18b0445e943e5f7483d559df1ae35272519",
+          "bytes": 37001,
+          "sha256": "5b972b6d81eeaf6f2283584c5b0482552fa9bf0717a4379838900a72da791491",
+          "public_ast_signatures_not_invoked": [
+            "AssignmentLayout.storage_binding(self, node_id, volume_id, instance_id, reservation_id, policy_id, basis_id, *, policy_revision, basis_revision)",
+            "AssignmentLayout.storage_policy_current(self, node_id, volume_id, instance_id)",
+            "AssignmentLayout.runtime_policy(self, policy_id)",
+            "parse_runtime_policy(raw)",
+            "async AssignmentAuthority.execute(self, original_request_bytes, *, context, leader)",
+            "async AssignmentAuthority.reconcile(self, original_request_bytes, *, context)",
+            "async ResearchLabAuthority.submit(self, original_lab13_bytes, *, context, leader, owned_attempt=None)",
+            "async ResearchLabAuthority.lookup(self, original_lab13_bytes, *, context)",
+            "RootRegistrationCustody.retain_original(self)",
+            "RootRegistrationCustody.begin_rpc(self, *, rpc_kind, rpc_attempt_id, endpoint_sha256)",
+            "RootRegistrationCustody.finish_rpc(self, *, rpc_attempt_id, outcome, native_session_id=None)",
+            "RootRegistrationCustody.read_state(self)",
+            "RootRegistrationCustody.close(self)"
+          ]
+        }
+      }
+    },
+    {
+      "scope": "Grid unadopted closed preparation",
+      "head": "b4001028f1260bfa09bd2f0a0196a630c51c940b",
+      "tree": "a26fe4ffeb40d4731abd0ae3f5681267807bb567",
+      "files": {
+        "grid/authority_assignment_v1.py": {
+          "blob": "658a68fe9fe4f5bdc13a3df00f140404b7be102e",
+          "bytes": 61535,
+          "sha256": "2c51e5f035c2020c781d47db2db386227bd82710059f70aba5cba16b61c74f4b",
+          "public_ast_signatures_not_invoked": [
+            "AssignmentLayout.storage_binding(self, node_id, volume_id, instance_id, reservation_id, policy_id, basis_id, *, policy_revision, basis_revision)",
+            "AssignmentLayout.storage_policy_current(self, node_id, volume_id, instance_id)",
+            "AssignmentLayout.runtime_policy(self, policy_id)",
+            "parse_runtime_policy(raw)",
+            "async AssignmentAuthority.execute(self, original_request_bytes, *, context, leader)",
+            "async AssignmentAuthority.reconcile(self, original_request_bytes, *, context)",
+            "async ResearchLabAuthority.submit(self, original_lab13_bytes, *, context, leader, owned_attempt=None)",
+            "async ResearchLabAuthority.lookup(self, original_lab13_bytes, *, context)",
+            "RootRegistrationCustody.retain_original(self)",
+            "RootRegistrationCustody.begin_rpc(self, *, rpc_kind, rpc_attempt_id, endpoint_sha256)",
+            "RootRegistrationCustody.finish_rpc(self, *, rpc_attempt_id, outcome, native_session_id=None)",
+            "RootRegistrationCustody.read_state(self)",
+            "RootRegistrationCustody.close(self)",
+            "async UnqualifiedWorkerCommissioner.commission_unqualified_worker(self, original_intent_bytes, *, leader)",
+            "async UnqualifiedWorkerCommissioner.reconcile_unqualified_worker(self, original_intent_bytes, *, leader)"
+          ]
+        }
+      }
+    },
+    {
+      "scope": "A5 actual local-only source",
+      "head": "623c1ebe33c14707b99ad526678f5225f553e49a",
+      "tree": "8590259d5dcab44199cd19ff0ed66f23c091f6ae",
+      "files": {
+        "unified_system/gateway_worker.py": {
+          "blob": "db980a4a71e024e9c6e04f1f5b4f335cbcc8b7c0",
+          "bytes": 34592,
+          "sha256": "60c1f4ec663cd6760d34cc682d59fb1528145e3df035437d15b7ab2c4fb9d811",
+          "public_ast_signatures_not_invoked": [
+            "capacity_freshness_v1(*, observed_start_ns, observed_end_ns, now_ns, observation_incarnation_id, expected_incarnation_id, max_age_ns=None)",
+            "cpu_hard_cap_policy_v1(requested_millicores, *, processor_groups, active_processor_count, process_affinity_mask, system_affinity_mask, already_reserved_millicores, parent_cpu_control, dfss_state)",
+            "GatewayWorker.start(self, *args, **kwargs)",
+            "GatewayWorker.resource_capabilities()",
+            "GatewayWorker.prepare_attempt(self, original_lab13_bytes, *, grid_source_root)",
+            "GatewayWorker.inspect_attempt(self, attempt)",
+            "GatewayWorker.require_owned_attempt(expected_worker, attempt, *, original_lab13_bytes)",
+            "GatewayWorker.abort_attempt(self, attempt)"
+          ]
+        },
+        "unified_system/gateway_jobs.py": {
+          "blob": "e8c58c549d9918bcddc394421f3df77edc25a2ad",
+          "bytes": 3202,
+          "sha256": "6e12a0ec03989749a6fc5359ff6e4d72c820be1c8561eb721ac7b962c458211e",
+          "public_ast_signatures_not_invoked": [
+            "prepare_intent(raw)",
+            "async ResearchJobs.submit(self, original_request_bytes, *, context)",
+            "async ResearchJobs.lookup(self, original_request_bytes, *, context)",
+            "async ResearchJobs.reconnect(self, original_request_bytes, *, context)",
+            "async ResearchJobs.status(self, job_id, *, context)",
+            "async ResearchJobs.cancel(self, original_cancel_bytes, *, context)"
+          ]
+        }
+      }
+    }
+  ],
+  "owner_reports": [
+    {
+      "original_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-5-resource-aware-distributed\\outputs\\AGENT5-A2-R2-R4-R5-ACTUAL-API-INVENTORY-20261110.json",
+      "retained_file": "AGENT5-A2-R2-R4-R5-ACTUAL-API-INVENTORY-20261110.json",
+      "sha256": "dd816238621ebc71cd6f563137251ba775197e7ae4886fe0d8b145ef307074b7",
+      "bytes": 4720,
+      "read_in_full": true
+    },
+    {
+      "original_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-4-distributed-storage-integrity\\outputs\\A4-ACTUAL-PUBLICATION-API-INVENTORY-20261110.json",
+      "retained_file": "A4-ACTUAL-PUBLICATION-API-INVENTORY-20261110.json",
+      "sha256": "6da7e8d242774194e4dbc7aaadce8f736e04a258d9cffd65bd76fe844c8b08b6",
+      "bytes": 4242,
+      "read_in_full": true
+    },
+    {
+      "original_path": "C:\\Users\\LS-5\\Documents\\Codex\\2026-11-06\\codex-agent-4-distributed-storage-integrity\\outputs\\A4-R2-R4-R5-SOURCE-DESIGN-HANDOFF-20261110.md",
+      "retained_file": "A4-R2-R4-R5-SOURCE-DESIGN-HANDOFF-20261110.md",
+      "sha256": "44fb1cbf949209c60715b50b0cfb7288fd0b06c80703a581a36e082a9a0e0348",
+      "bytes": 8184,
+      "read_in_full": true
+    }
+  ],
+  "a4_imports_in_root_match_current_owner_hashes": true,
+  "source_modules_imported_or_executed": false,
+  "tests": 0,
+  "native_rpc": 0,
+  "job_calls": 0,
+  "browser_calls": 0,
+  "physical_calls": 0,
+  "permissions": {
+    "implementation": false,
+    "native_writes": false,
+    "activation": false,
+    "dispatch": false,
+    "operator_ha_approval": false
+  }
+}

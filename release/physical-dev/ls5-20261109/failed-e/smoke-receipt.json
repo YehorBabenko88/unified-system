@@ -1,0 +1,160 @@
+{
+  "schema": "unified.ls5.disposable-smoke.v1",
+  "package_sha256": "c0e5fe1d5a25f4d88488bbf5d33c9b5f47770890bf60b9c26cdacfa0aabd5886",
+  "source_refs": {
+    "runtime-unified": {
+      "commit": "ba2b1cec0c2b114586afb73696e282117eede987",
+      "name": "runtime-unified",
+      "repository": "YehorBabenko88/unified-system",
+      "tree": "4e5c535367e4e7711a64096ff6e9c78038c55717"
+    },
+    "harness": {
+      "commit": "e203c0bbeaa176a843a7d80b2eadfefe8fce7385",
+      "name": "harness",
+      "repository": "YehorBabenko88/unified-system",
+      "tree": "7ca3b471eb7ee2411eb83da68f8e068ee42c803c"
+    },
+    "strattester": {
+      "commit": "aed8a7c8a952f96803c207d5e90b133969a47f04",
+      "name": "strattester",
+      "repository": "YehorBabenko88/strattester",
+      "tree": "eed3a87c6e33f0993424f20b49ab5af93bd09b9a"
+    },
+    "meta_analyse": {
+      "commit": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+      "name": "meta_analyse",
+      "repository": "YehorBabenko88/meta_analyse",
+      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848"
+    },
+    "terminan": {
+      "commit": "161ea1e0fc3a3a4cd64783b0e111e1e119e14d71",
+      "name": "terminan",
+      "repository": "YehorBabenko88/Terminan",
+      "tree": "5b84ecbeb86dc897c9e9362790da9f0e6ade668a"
+    }
+  },
+  "public_submit": "DENY",
+  "publication": "LOCAL_UNATTESTED",
+  "resource_qualification": "NOT_GRANTED",
+  "parent_chain": "UNKNOWN_MAY_BE_STRICTER",
+  "native_job_admission": false,
+  "physical_cluster_admission": false,
+  "target": "ACTUAL_DIRECT_TARGET_BYTES_MATCH",
+  "render": "NO_COMPLETION_EVIDENCE",
+  "cleanup": "FAILED_OR_UNCONFIRMED",
+  "result": "FAIL_OR_UNCONFIRMED",
+  "stages": {
+    "backend": {
+      "reported_pid": 147552,
+      "go_status": "FLUSH_COMPLETED_NOT_EXECUTION_ACK",
+      "identity": {
+        "pid": 147552,
+        "creation_filetime": 134387394342748715,
+        "image_path": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-package-e203c0b-e\\tooling\\python\\python.exe",
+        "token": {
+          "elevated": false,
+          "elevation_type": 3,
+          "effective_administrator": false
+        },
+        "identity_scope": "RETAINED_HANDLE_AND_IMAGE_PATH_NOT_LOADED_DLL_ATTESTATION",
+        "own_job_membership_before_go": 1,
+        "own_job_readback_before_go": {
+          "flags": 8972,
+          "active": 16,
+          "process_commit": 536870912,
+          "job_commit": 1073741824,
+          "user_time_100ns": 100000000,
+          "end_action": 0
+        }
+      },
+      "returncode": 0
+    },
+    "render": {
+      "reported_pid": 145648,
+      "go_status": "FLUSH_COMPLETED_NOT_EXECUTION_ACK",
+      "identity": {
+        "pid": 145648,
+        "creation_filetime": 134387394348111500,
+        "image_path": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-package-e203c0b-e\\tooling\\node\\node.exe",
+        "token": {
+          "elevated": false,
+          "elevation_type": 3,
+          "effective_administrator": false
+        },
+        "identity_scope": "RETAINED_HANDLE_AND_IMAGE_PATH_NOT_LOADED_DLL_ATTESTATION",
+        "own_job_membership_before_go": 1,
+        "own_job_readback_before_go": {
+          "flags": 8972,
+          "active": 16,
+          "process_commit": 536870912,
+          "job_commit": 1073741824,
+          "user_time_100ns": 100000000,
+          "end_action": 0
+        }
+      },
+      "returncode": 73
+    }
+  },
+  "parent_token": {
+    "elevated": false,
+    "elevation_type": 3,
+    "effective_administrator": false
+  },
+  "configured_limits": {
+    "flags": 8972,
+    "active": 16,
+    "process_commit": 536870912,
+    "job_commit": 1073741824,
+    "user_time_100ns": 100000000,
+    "end_action": 0
+  },
+  "backend_identity": {
+    "pid": 147552,
+    "creation_filetime": 134387394342748715,
+    "image_path": "C:\\Users\\LS-5\\.codex\\native-e2e-evidence-20261109\\ls5-package-e203c0b-e\\tooling\\python\\python.exe",
+    "token": {
+      "elevated": false,
+      "elevation_type": 3,
+      "effective_administrator": false
+    },
+    "identity_scope": "RETAINED_HANDLE_AND_IMAGE_PATH_NOT_LOADED_DLL_ATTESTATION",
+    "own_job_membership_before_go": 1,
+    "own_job_readback_before_go": {
+      "flags": 8972,
+      "active": 16,
+      "process_commit": 536870912,
+      "job_commit": 1073741824,
+      "user_time_100ns": 100000000,
+      "end_action": 0
+    }
+  },
+  "artifact_sha256": "f4997d7d26211676cd8664e53d7999f8b71f203510f3b9a275b439c403e03940",
+  "failure_type": "SmokeBlocked",
+  "failure_code": "OWN_STAGE_EXIT_FAILED",
+  "work_elapsed_ns": 20048962900,
+  "accounting": {
+    "active": 0,
+    "total": 31,
+    "terminated": 0,
+    "user_100ns": 66250000,
+    "kernel_100ns": 79687500,
+    "peak_commit_process": 336117760,
+    "peak_commit_job": 336195584,
+    "scope": "OBSERVED_OWN_JOB_COUNTERS_NOT_RESOURCE_OR_RSS_QUALIFICATION"
+  },
+  "primary_exit_codes": [
+    0,
+    73
+  ],
+  "retirement_evidence": {
+    "own_job_active": 0,
+    "all_retained_primaries_exited": true,
+    "workload_success_is_separate": true
+  },
+  "cleanup_error": "SmokeBlocked",
+  "watchdog": "EXPIRED_FAILED_OR_UNCONFIRMED",
+  "cleanup_elapsed_ns": 2323200,
+  "family_elapsed_ns": 20051286100,
+  "time_budget": "EXCEEDED",
+  "package_before_after_equal": true
+}

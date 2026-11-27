@@ -1,0 +1,92 @@
+{
+  "schema": "unified.mandatory-skip-inventory.v1",
+  "source_head": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
+  "source_log": "evidence/full-suite-durable.stderr.log",
+  "skips": [
+    {
+      "test": "test_symlink (test_artifacts.ArtifactTests.test_symlink)",
+      "reason": "'symlink unavailable'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "test_foreign_owner_refuses_normalization_before_acl_changes (test_lab_capsule_acl.CapsuleAclTests.test_foreign_owner_refuses_normalization_before_acl_changes)",
+      "reason": "'Current token cannot assign SYSTEM as foreign test owner'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "test_protected_file_foreign_owner_is_rejected (test_lab_capsule_acl.CapsuleAclTests.test_protected_file_foreign_owner_is_rejected)",
+      "reason": "'Current token cannot assign SYSTEM as foreign file owner'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "test_token_default_admin_owner_descendants_are_supported_conditionally (test_lab_capsule_acl.CapsuleAclTests.test_token_default_admin_owner_descendants_are_supported_conditionally)",
+      "reason": "'Current token is not an unfiltered administrator with Administrators default owner'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "test_dangling_link_rejected (test_lab_capsule_builder.BuilderTests.test_dangling_link_rejected)",
+      "reason": "'Windows symlink privilege unavailable'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "test_real_term_validator_roundtrip_when_explicitly_supplied (test_lab_observation_writer.ProducerTests.test_real_term_validator_roundtrip_when_explicitly_supplied)",
+      "reason": "'explicit admitted Term checkout and raw source pin not configured'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "test_symlink_parent_rejected_before_directory_creation (test_lab_observation_writer.WriterTests.test_symlink_parent_rejected_before_directory_creation)",
+      "reason": "'symlink privilege unavailable'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "setUpClass (test_lab_paper_pipeline.ComposedTests)",
+      "reason": "'explicit Grid/Stratt source checkouts absent; composed runtime NOT_RUN'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "Optional sibling Grid source; synthetic registry, owned loopback only.",
+      "reason": "'Optional sibling Grid source and test dependencies not provisioned'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "test_commit_retry_read_and_unknown_reconcile_actual_bridge (test_operator_grid_composition.GridCompositionTests.test_commit_retry_read_and_unknown_reconcile_actual_bridge)",
+      "reason": "'GRID_TEST_ROOT required for actual cross-repository composition'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "test_lost_response_reconciles_same_command_and_two_windows (test_operator_grid_composition.GridCompositionTests.test_lost_response_reconciles_same_command_and_two_windows)",
+      "reason": "'GRID_TEST_ROOT required for actual cross-repository composition'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "test_no_quorum_unknown_has_no_invented_owner (test_operator_grid_composition.GridCompositionTests.test_no_quorum_unknown_has_no_invented_owner)",
+      "reason": "'GRID_TEST_ROOT required for actual cross-repository composition'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "test_dangling_links_are_not_valid_future_paths (test_runtime_process.PathPolicyTests.test_dangling_links_are_not_valid_future_paths)",
+      "reason": "'symlink privilege unavailable'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    },
+    {
+      "test": "test_linked_ancestor_rejected_before_descendant_metadata (test_runtime_process.PathPolicyTests.test_linked_ancestor_rejected_before_descendant_metadata)",
+      "reason": "'symlink privilege unavailable'",
+      "waiver": null,
+      "disposition": "UNWAIVED_BLOCKS_RELEVANT_ACCEPTANCE"
+    }
+  ],
+  "scope": "LOCAL828_RETAINS14_SKIPS_NOT_FULL_ACCEPTANCE"
+}

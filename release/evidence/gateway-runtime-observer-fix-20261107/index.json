@@ -1,0 +1,36 @@
+{
+  "source_head": "bcfa243b6ecb5389270152612217f8d89643a248",
+  "tests_run": 146,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "source_inventory_equal": true,
+  "change": "Class-level owned ObjectStore observer, positive200 count1 then wrongview403 count0; runtime unchanged from815",
+  "a8_finding": "TEST_INSTRUMENTATION_P2_NOT_RUNTIME_BYPASS",
+  "unqualified_log": "Working-tree CRLF source admission failure retained separately; not a qualified source execution",
+  "full_vertical_e2e": false,
+  "production": false,
+  "physical": false,
+  "files": [
+    {
+      "path": "gateway-read-qualification.json",
+      "bytes": 421794,
+      "sha256": "45baf92d9ff601b90750209b67c6cbce80c8fb719fd074cb7c777b37ff53fec8"
+    },
+    {
+      "path": "observer-calibration-red.log",
+      "bytes": 1104,
+      "sha256": "cbba133089264433211780407960ec2270d5645c53b13ae65bbd4d6317323522"
+    },
+    {
+      "path": "original-qualified.log",
+      "bytes": 24362,
+      "sha256": "897bc2c897b34791b7a52ef2c406006addac87e4f1cb16c25cda0ce0f2ca3425"
+    },
+    {
+      "path": "unqualified-working-tree-source-admission-failure.log",
+      "bytes": 1893,
+      "sha256": "42391da857c7ed1b98c0431f6a692e562367fffc3e96ac62c0dfdad4eb4732ca"
+    }
+  ]
+}

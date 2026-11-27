@@ -1,0 +1,2 @@
+# Unified -> Terminan presentation contract
+Pinned Terminan PR22 consumer renders Unified's conservative synthetic Grid PARTIAL as GAP with explicit AGGREGATED_HISTORY_NOT_L2 provenance and renders unqualified historical research as UNAVAILABLE. This tests actual consumer presentation code, not HTTP transport, browser rendering, runtime source identity or production data. It must not grant trading or physical authority.

@@ -1,0 +1,54 @@
+test_duplicate_correlation_header_rejected (test_get_http.GetParsingTests.test_duplicate_correlation_header_rejected) ... ok
+test_get_command_only_headers_rejected (test_get_http.GetParsingTests.test_get_command_only_headers_rejected) ... FAIL
+test_get_uses_only_existing_get_command_operation (test_get_http.GetParsingTests.test_get_uses_only_existing_get_command_operation) ... FAIL
+test_missing_native_provider_closed_before_request_fields (test_get_http.GetParsingTests.test_missing_native_provider_closed_before_request_fields) ... ok
+test_nonempty_or_ambiguous_get_framing_rejected (test_get_http.GetParsingTests.test_nonempty_or_ambiguous_get_framing_rejected) ... FAIL
+test_original_query_uuid_alias_rejected (test_get_http.GetParsingTests.test_original_query_uuid_alias_rejected) ... FAIL
+test_wrong_method_has_get_allow (test_get_http.GetParsingTests.test_wrong_method_has_get_allow) ... FAIL
+
+======================================================================
+FAIL: test_get_command_only_headers_rejected (test_get_http.GetParsingTests.test_get_command_only_headers_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\agent2-ha-authority-client-20261106\unified-system\tests\control_mux\test_get_http.py", line 32, in test_get_command_only_headers_rejected
+    self.assertEqual(self.handle(self.request(headers=[(b'X-Request-ID',QUERY.encode()),(header,b'1')])).status,400)
+AssertionError: 503 != 400
+
+======================================================================
+FAIL: test_get_uses_only_existing_get_command_operation (test_get_http.GetParsingTests.test_get_uses_only_existing_get_command_operation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\agent2-ha-authority-client-20261106\unified-system\tests\control_mux\test_get_http.py", line 21, in test_get_uses_only_existing_get_command_operation
+    response=self.handle(self.request());self.assertEqual(response.status,401)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 503 != 401
+
+======================================================================
+FAIL: test_nonempty_or_ambiguous_get_framing_rejected (test_get_http.GetParsingTests.test_nonempty_or_ambiguous_get_framing_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\agent2-ha-authority-client-20261106\unified-system\tests\control_mux\test_get_http.py", line 28, in test_nonempty_or_ambiguous_get_framing_rejected
+    self.assertEqual(self.handle(self.request(headers=headers,body=body)).status,400)
+AssertionError: 503 != 400
+
+======================================================================
+FAIL: test_original_query_uuid_alias_rejected (test_get_http.GetParsingTests.test_original_query_uuid_alias_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\agent2-ha-authority-client-20261106\unified-system\tests\control_mux\test_get_http.py", line 24, in test_original_query_uuid_alias_rejected
+    self.assertEqual(self.handle(self.request(headers=[(b'X-Request-ID',ORIGINAL.encode())])).status,400)
+AssertionError: 503 != 400
+
+======================================================================
+FAIL: test_wrong_method_has_get_allow (test_get_http.GetParsingTests.test_wrong_method_has_get_allow)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\agent2-ha-authority-client-20261106\unified-system\tests\control_mux\test_get_http.py", line 34, in test_wrong_method_has_get_allow
+    response=self.handle(self.request(method='POST'));self.assertEqual(response.status,405)
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 503 != 405
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.013s
+
+FAILED (failures=5)

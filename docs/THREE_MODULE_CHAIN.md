@@ -1,0 +1,2 @@
+# Three-module pinned synthetic chain
+This CI exercises actual source-owned Strattester receipt hashing, Grid handoff acceptance with an explicitly synthetic pin, and Terminan historical presentation. It does not execute ResearchRunner, source-owned snapshot verification, live PG18, actual network transport, browser UI or owner trust provisioning. It is not a physical or production E2E. A synthetic accepted historical handoff cannot grant trading authority.

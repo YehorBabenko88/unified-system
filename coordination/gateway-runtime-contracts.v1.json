@@ -1,0 +1,67 @@
+{
+  "schema": "unified.gateway.runtime-contracts.v1",
+  "scope": "DISPOSABLE_READ_ONLY_SOURCE_QUALIFIED_LOCAL_NOT_FULL_SYSTEM",
+  "source_head": "815fd51d3bbba0b2ec4b87af8a085dd36bf46cf1",
+  "source_tree": "d25d762a8f9ac712c518862e63b494baec98cb10",
+  "identity": {
+    "head": "9428e3d8a74e5ee93dcd6c3caef59dcd7b98c8ab",
+    "runtime_sha256": "84093865e8477ef6562100d41137922785446c9cb4e024c9ba7105593a2b36c1",
+    "local_abi_sha256": "ed04f0ced69919b153b6caf676f962498dafaf483f977dc173fad5d2655a0605",
+    "expected_issuer": "FIXED_OWNER_METHOD_REQUIRED",
+    "current_checks": {
+      "manifest": 2,
+      "query": 7
+    }
+  },
+  "query": {
+    "head": "f19f7feee0f63da34a20607a8cae59191180aa7c",
+    "module_sha256": "1186062afaf7d87609acf934a8cf2f55405f7786bdc0f76516956ff89424b9cd",
+    "profile_sha256": "c2a1d18ffe268205cc3ab04f49bd44a55b08ed6725c106d73975aedee8678684",
+    "source_pin_correction_sha256": "a0582b591797ff38913f91f65182335b2d5b6eec0c24687a196337ed249440a3"
+  },
+  "manifest": {
+    "head": "ec5ee6feadc4977af8b0fbaee7f82927d777ab94",
+    "module_sha256": "a374718b80456b916500956c294e2988af539dc8b02c1735d39a450d17e1b06e",
+    "request_schema_sha256": "af86efffc096b2412bc0f046360ca42eeb3206216858e21603f1ee87ccc99a89"
+  },
+  "qualification": {
+    "tests": 146,
+    "raw_files": 1513,
+    "skips": 0,
+    "hosted": "PENDING",
+    "independent_http_review": "REQUESTED_EXACT_815FD51",
+    "native_human": false,
+    "physical": false,
+    "production": false,
+    "job_admission": false,
+    "committed_artifact_registry": false
+  },
+  "runtime_mutation_contracts": "PENDING_NO_STAND_READ_SCOPE_UPGRADE",
+  "owner_source_reviews": {
+    "scope": "STATIC_EXACT_815_SOURCE_CONTRACT_COMPATIBILITY_NOT_RUNTIME_ADMISSION",
+    "runtime_unchanged_at": "bcfa243b6ecb5389270152612217f8d89643a248",
+    "A3": {
+      "commit": "fe4b243caf60529f8ed09924110f2e596b163da8",
+      "sha256": "64b3f3a13503f49433d6a512f0bd93b2127a94589f9cea0bd3a195d29ee0c383"
+    },
+    "A4": {
+      "sha256": "4f54649e879694e69574223568bbd3dd386d0a2c3f25ed99a557b706ab0a8b96"
+    }
+  },
+  "native_session_format_successor": {
+    "repository": "YehorBabenko88/bybit-cluster-grid",
+    "commit": "81f20c30b1a6f10663a7eb73e398305b01c0b71d",
+    "tree": "e718c01cdb8b0ead0edbae5ac6dc437a9f631762",
+    "path": "docs/coordination/assignment-v1/native-session-correction-review1/lease-lock.schema.json",
+    "sha256": "9bdb1084004fcc6cfb76fa0f1bce0013b6a26a9b288cbb71c82db621feb4f4d0",
+    "owner_acks": [
+      "A2",
+      "A4",
+      "A5",
+      "ROOT"
+    ],
+    "freeze": "FORMAT_ONLY",
+    "runtime_source_admission": false,
+    "successor_full_native_plan_reencoding_and_measurement": "REQUIRED"
+  }
+}

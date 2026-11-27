@@ -1,0 +1,3 @@
+The removed standalone workflow checked out Terminan 81793290113a457ee8c038600639c3b8cbe78020 and imported the retired terminan.consumer API. It had no active consumer other than its own obsolete workflow. Neither its PASS nor the three archived v1 source-status assertions qualifies the canonical Terminan package.
+
+Both original files are retained as raw Git bytes. The three assertions remain historical obligations, HELD for an explicit semantic mapping to current source-quality DTOs. No compatibility alias or substitute PASS is introduced. Runtime, native and release acceptance remain NO_GO. The current package has independent source/wheel/browser and frozen-source quality tests; their scopes do not close these three historical assertions automatically.
