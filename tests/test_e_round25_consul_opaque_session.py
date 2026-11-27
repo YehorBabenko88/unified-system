@@ -502,6 +502,74 @@ class OpaqueSessionTests(unittest.TestCase):
 
         asyncio.run(exercise())
 
+    def test_consul_txn_requires_target_kv_commit_result(self):
+        from unified_system.consul_authority import CoordinationLost
+
+        async def exercise(response, should_accept):
+            state = {"value": b"", "held": False, "requests": []}
+            key = "isolated/round25/leader"
+            target = "isolated/round25/state/probe"
+
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == "/v1/kv/" + key:
+                    if req.method == "PUT":
+                        state["value"] = req.content
+                        state["held"] = True
+                        return httpx.Response(200, json=True)
+                    return httpx.Response(200, json=[{
+                        "Key": key, "Session": OBSERVED if state["held"] else "",
+                        "ModifyIndex": 41,
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if path == "/v1/txn":
+                    sent = json.loads(req.content)
+                    self.assertEqual(len(sent), 3)
+                    self.assertEqual(
+                        [item["KV"]["Verb"] for item in sent],
+                        ["check-session", "check-index", "set"])
+                    self.assertEqual(sent[0]["KV"]["Session"], OBSERVED)
+                    self.assertEqual(sent[1]["KV"]["Index"], 41)
+                    self.assertEqual(sent[2]["KV"]["Key"], target)
+                    state["requests"].append(sent)
+                    return httpx.Response(200, json=response)
+                raise AssertionError("unexpected Consul request")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                lease = await authority.acquire("owner")
+                self.assertTrue(await authority.validate(lease))
+                if should_accept:
+                    self.assertIsNone(await authority.write_control(
+                        lease, "probe", {"value": 17}))
+                else:
+                    with self.assertRaises(CoordinationLost):
+                        await authority.write_control(lease, "probe", {"value": 17})
+                self.assertEqual(len(state["requests"]), 1)
+
+        target = "isolated/round25/state/probe"
+        positive = {"Results": [{"KV": {"Key": target, "ModifyIndex": 42}}]}
+        asyncio.run(exercise(positive, True))
+        for bad in (
+            {}, {"Results": []}, {"Results": None}, {"Results": "wrong"},
+            {"Results": [None]},
+            {"Results": [{"KV": {"Key": "foreign", "ModifyIndex": 42}}]},
+            {"Results": [{"KV": {"Key": target, "ModifyIndex": 0}}]},
+            {"Results": [{"KV": {"Key": target, "ModifyIndex": True}}]},
+            {"Results": [{"KV": {"Key": target, "ModifyIndex": 42}}],
+             "Errors": "invalid"},
+            {"Results": [{"KV": {"Key": target, "ModifyIndex": 42}}],
+             "Errors": [{"OpIndex": 1, "What": "check-index failed"}]},
+        ):
+            with self.subTest(bad=repr(bad)):
+                asyncio.run(exercise(bad, False))
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
