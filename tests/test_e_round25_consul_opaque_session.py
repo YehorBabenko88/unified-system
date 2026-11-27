@@ -799,6 +799,37 @@ class OpaqueSessionTests(unittest.TestCase):
             with self.subTest(outcome=outcome):
                 asyncio.run(exercise(outcome))
 
+    def test_mutation_uses_full_deadline_read_failover_divides_budget(self):
+        # Mutations are single-attempt; shortening their timeout by the
+        # number of configured backup endpoints causes false UNKNOWN results.
+        async def exercise(method):
+            calls = []
+            def handler(req):
+                calls.append((req.url.host, req.extensions["timeout"]["read"]))
+                if req.url.host == "first.example":
+                    raise httpx.ReadTimeout("first leader outcome unknown")
+                return httpx.Response(200, json={"second": True})
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://first.example:8500", "http://second.example:8500"),
+                "isolated/round25", isolated_lab=True,
+                request_timeout=2.0,
+            ), client=client)
+            async with client:
+                if method == "GET":
+                    self.assertEqual(
+                        await authority._request("GET", "/v1/kv/test"),
+                        {"second": True})
+                    self.assertEqual(calls, [
+                        ("first.example", 1.0), ("second.example", 1.0)])
+                else:
+                    with self.assertRaises(CoordinationUnavailable):
+                        await authority._request("PUT", "/v1/session/create")
+                    self.assertEqual(calls, [("first.example", 2.0)])
+        for method in ("GET", "PUT"):
+            with self.subTest(method=method):
+                asyncio.run(exercise(method))
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
