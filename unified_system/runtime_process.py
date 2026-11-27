@@ -673,9 +673,10 @@ class _WindowsNonServiceLabToken:
             w.LPCWSTR, ctypes.c_void_p, ctypes.c_void_p]
         self._a.CreateProcessAsUserW.restype = w.BOOL
         # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | DETACHED_PROCESS.
-        # The original Win2022 native CI established restricted Python/SCM
-        # execution and nested Job containment with this console topology;
-        # CREATE_NO_WINDOW instead exited at DLL initialization (0xC0000142).
+        # Original Win2022/Python3.11 native CI proved restricted script/SCM
+        # and inline nested Job execution with this console topology; the
+        # other Python versions and file-backed descendants remain unqualified.
+        # CREATE_NO_WINDOW exited at DLL initialization (0xC0000142).
         # Only console topology differs: original LOW token, no inherited
         # handles, assignment before resume and Job/SCM checks stay mandatory.
         return bool(self._a.CreateProcessAsUserW(
