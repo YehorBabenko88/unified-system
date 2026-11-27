@@ -32,13 +32,17 @@ class OpaqueSessionTests(unittest.TestCase):
         self.assertIsInstance(uuid.UUID(first.session_id), uuid.UUID)
         active = claim_model(None, first, legacy_quiescent=True)
         stopped = stop_model(active, first)
-        next_owner = self.identity("OpaqueSession_2", token=41)
+        next_owner = self.identity(str(uuid.uuid4()), token=41)
         self.assertEqual(claim_model(stopped, next_owner, legacy_quiescent=True).identity,
                          next_owner)
         with self.assertRaises(ResourceFenceBlocked):
             claim_model(stopped, self.identity(token=40), legacy_quiescent=True)
         self.assertNotEqual(first.session_id, OBSERVED.upper())
-        self.assertEqual(self.identity(OBSERVED.upper()).session_id, OBSERVED.upper())
+        with self.assertRaises(ResourceFenceBlocked):
+            self.identity(OBSERVED.upper())
+        # Safe opaque transport does not imply SQL eligibility.
+        with self.assertRaises(ResourceFenceBlocked):
+            self.identity("OpaqueSession_2")
 
     def test_uuid4_instance_node_stay_strict(self):
         original = self.identity()
