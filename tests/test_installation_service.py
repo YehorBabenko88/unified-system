@@ -190,6 +190,16 @@ class ServiceResourceTests(unittest.TestCase):
   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
    service._NativeReceiptCustody(paths)
  
+ def test_r35_native_custody_shares_sqlite_write_but_not_delete(self):
+  from unified_system import installation_service as service
+  import inspect
+  source=inspect.getsource(service._NativeReceiptCustody.__enter__)
+  self.assertIn("h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,0x00200000,None)",source)
+  self.assertNotIn("0x1|0x2|0x4",source)
+  self.assertIn("self.handles[key]=h",source)
+  self.assertIn("self.close()",source)
+  # This is a static source contract, not a Win32 share-mode experiment.
+
  def test_r35_retained_native_custody_handle_budget_fails_closed(self):
   from unified_system import installation_service as service
   paths={'root':self.root}
