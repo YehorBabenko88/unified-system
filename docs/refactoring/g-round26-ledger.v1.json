@@ -262,16 +262,16 @@
     },
     {
       "id": "G-012",
-      "status": "MIGRATED_SOURCE_ONLY_PARITY_BLOCKED",
+      "status": "MIGRATED_SOURCE_API21_CANDIDATE_PARITY_NOT_ACCEPTED",
       "repo": "Terminan",
       "path": "terminan/qualified_partial.py::qualified_timeframe_rows",
       "owner": "D",
       "consumers": [
         "previous D #129 terminan/data.py::qualified_market_data_timeframe_chart; switched to B qualified-rollup in D #130"
       ],
-      "replacement": "Grid B lossless v2 exact Decimal DTO under B owner development + Terminan D131 strict future consumer, old B306/D131 incompatible; G retains original D #129 rollback",
-      "tests": "G R30 original source gate exact GitHub files 8 PASS after one fixture 1 FAIL corrected, diff D130 -68 lines real, lossless parity NOT_PROVEN; B306 currently drops valid exact 0.01 delta; original B/D full E2E NOT_RUN",
-      "rollback": "keep D #129 parent branch and original Math intact; revert D #130 scoped deletion if accepted positive/negative parity fails; no legacy Grid strategy/Meta retirement authorized"
+      "replacement": "Grid B307 36883fbf3d02e84822638aa87d0f307972852dbc market_data_v2/qualified_rollup.py blob 2f27598a2fd0f7a561e350996894cabcabd40050 LIVE + historical source exact Decimal2.1; Terminan D132 f4ffbe2913dee0a9987f8b9ad68f2b7df5ad360f terminan/qualified_rollup.py blob 77c6855c52030d5d9b0e839e0c9245b947db41b5 + chart UI; canonical Math 9e6acbd9",
+      "tests": "GitHub source G v2 AST static checker updated; 12/12 exact original G Python tests PASS after two initial fixture failures corrected, all 0 fail/error/skip at final head. D/B source DTO 29/29 top and 15/15 rows per D/H/J; original B307→D132 imported Python/real HTTP/installed wheel E2E NOT_RUN by G, H/F independent full differential outstanding. Historic source_only not exchange attested. Retire 68 lines NOT ACCEPTED until native regression.",
+      "rollback": "D #129 previous independent aggregation must remain recoverable; do not delete legacy Grid strategy or Meta code; preserve full original 1m and research"
     }
   ],
   "deletion_gate": {
@@ -293,7 +293,8 @@
     "windows": "NOT_RUN",
     "linux": "NOT_RUN",
     "real_host": "NOT_RUN",
-    "G_round29_source_contract": "PASS 6 local exact GitHub code tests (synthetic fixtures), source cross-owner DTO FAIL; native E2E NOT_RUN"
+    "G_round29_source_contract": "PASS 6 local exact GitHub code tests (synthetic fixtures), source cross-owner DTO FAIL; native E2E NOT_RUN",
+    "G_R31_versioned_api21_source": "PASS 12 original G synthetic unittest exact GitHub SHA, initial 2 fixture failures fixed; original B307/D132 runtime NOT_RUN"
   },
   "restrictions": [
     "no main merge",
@@ -392,6 +393,32 @@
       "strattester/marketdata/l2_recorder.py"
     ],
     "owner_dependency": "B canonical alternate APIs and H differential consumer parity before source removal",
+    "release_authorized": false,
+    "production_authorized": false
+  },
+  "round31_execution": {
+    "clean_pr": 183,
+    "base_sha": "498b0c11d7d0fad6fc4219c0e81814f27076c8ab",
+    "grid_sha": "36883fbf3d02e84822638aa87d0f307972852dbc",
+    "terminan_sha": "f4ffbe2913dee0a9987f8b9ad68f2b7df5ad360f",
+    "math_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+    "grid_blob": "2f27598a2fd0f7a561e350996894cabcabd40050",
+    "terminan_blob": "77c6855c52030d5d9b0e839e0c9245b947db41b5",
+    "versioned_api": "2.1",
+    "precision_contract": "CANONICAL_MATH_EXACT_STORED_1M",
+    "test_scope": "byte-identical original G checker and tests only; synthetic v2 fixtures not original B/D runtime",
+    "original_tests": {
+      "pass": 12,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "initial_fixture_fail": 2
+    },
+    "proof_of_native_B_D_parity": "NOT_RUN",
+    "win_pg_consul_installer": "NOT_RUN",
+    "g012_retirement": false,
+    "g006_retirement": false,
+    "actual_deleted_legacy_files": 0,
     "release_authorized": false,
     "production_authorized": false
   }
