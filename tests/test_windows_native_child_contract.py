@@ -896,7 +896,7 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.addCleanup(lambda: program.__setitem__('argv', original_argv))
         code = (
             'import pathlib,sys;'
-            'p=pathlib.Path(%r);'
+            'p=pathlib.Path(%r)\n'
             'try:\n'
             ' data=p.read_bytes()\n'
             'except OSError as e:\n'
