@@ -212,7 +212,14 @@ class WindowsHijackTests(unittest.TestCase):
         try:
             if parent_cwd is not None:
                 os.chdir(parent_cwd)
-            output, status = service._run(service.powershell_argv(self.exe, code), env=env, timeout=15)
+            try:
+                output, status = service._run(
+                    service.powershell_argv(self.exe, code), env=env, timeout=15)
+            except ValueError as exc:
+                # Preserve the original hard 15s deadline and fail closed.
+                # Record only an inert classification of the failing contract;
+                # never replay or bypass a rejected native PowerShell child.
+                self.fail('original bounded PowerShell child rejected: %s' % exc)
         finally:
             os.chdir(previous)
         self.assertEqual(status, 0, output)
