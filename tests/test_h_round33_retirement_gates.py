@@ -118,6 +118,20 @@ class HRound33RetirementGateTests(unittest.TestCase):
                           http["skipped"]), (72, 0, 0, 0))
         self.assertEqual(ev["native_installed_e2e"], "NOT_RUN")
 
+    def test_round34_original_sqlite_source_pass_cannot_override_full_ci_failure(self):
+        gate = self.data["round34_original_g123_source"]
+        self.assertEqual(gate["source_sha"],
+                         "97e5e48c867370741e8349c422399384aef977ae")
+        self.assertEqual(gate["original_sqlite_py_source_pass"], 10)
+        self.assertEqual(gate["original_numeric_source_function_pass"], 13)
+        self.assertEqual(gate["original_pytest_run"], 45999989212)
+        self.assertEqual(gate["original_pytest_ubuntu311"],
+                         {"PASS": 566, "FAIL": 1, "ERROR": 0, "SKIP": 1})
+        self.assertTrue(gate["original_pytest_fix_needed"])
+        self.assertFalse(gate["original_full_ci_pass"])
+        self.assertFalse(gate["g006_retirement_allowed"])
+        self.assertFalse(self.data["global_deletion_gate"]["deletion_allowed"])
+
     def test_release_and_deletion_gates_are_all_blocked(self):
         d = self.data["global_deletion_gate"]
         for field in ("owner_ack", "complete_original_symbol_inventory",
