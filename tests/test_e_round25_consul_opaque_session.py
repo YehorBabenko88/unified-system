@@ -551,6 +551,11 @@ class OpaqueSessionTests(unittest.TestCase):
                 else:
                     with self.assertRaises(CoordinationLost):
                         await authority.write_control(lease, "probe", {"value": 17})
+                    # A false/stale set acknowledgement is UNKNOWN, not a
+                    # retriable success: quarantine exactly this old lease.
+                    self.assertEqual(authority._deadlines[lease.session_id], 0)
+                    self.assertFalse(await authority.validate(lease))
+                    self.assertFalse(await authority.renew(lease))
                 self.assertEqual(len(state["requests"]), 1)
 
         target = "isolated/round25/state/probe"
