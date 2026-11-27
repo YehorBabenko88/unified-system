@@ -224,13 +224,19 @@ class ConsulSessionAuthority:
     async def release(self, lease):
         if self._sessions.get(getattr(lease, 'session_id', None)) != lease:
             return
+        # Never allow a stale local lease to validate while destruction is
+        # in flight or its outcome remains unknown.
         self._deadlines[lease.session_id] = 0
-        try:
-            # Destroying our own session releases the persistent KV lock. Never
-            # delete the key: its Raft ModifyIndex remains the resource fence.
-            await self._request('PUT', '/v1/session/destroy/' + lease.session_id)
-        finally:
-            self._sessions.pop(lease.session_id, None)
+        # Destroying our own session releases the persistent KV lock. Never
+        # delete the key: its Raft ModifyIndex remains the resource fence.
+        # Consul may return HTTP 200 with JSON false, or the reply can be
+        # lost after commit. Preserve the exact session identity for explicit
+        # idempotent cleanup/reconciliation until success is confirmed.
+        destroyed = await self._request(
+            'PUT', '/v1/session/destroy/' + lease.session_id)
+        if destroyed is not True:
+            raise CoordinationLost('Consul session destroy unconfirmed')
+        self._sessions.pop(lease.session_id, None)
 
     def _state_key(self, name):
         if type(name) is not str or not re.fullmatch(r'[A-Za-z0-9_-]{1,100}', name):
