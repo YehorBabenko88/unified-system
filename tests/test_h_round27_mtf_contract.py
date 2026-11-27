@@ -284,5 +284,18 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
         self.assertFalse(g["full_strattester_unique_function_migration_pass"])
 
 
+    def test_round33_generic_mtf_legacy_browser_expectation_is_unsafe(self):
+        gate = _load_contract()["round33_gate"]
+        failure = gate["browser_test_failure"]
+        self.assertIn("generic /api/candles?timeframe=5m",
+                      failure["fail_closed_behavior_expected"])
+        self.assertIn("chart MUST remain empty",
+                      failure["fail_closed_behavior_expected"])
+        self.assertIn("Do NOT let generic 2-candle",
+                      failure["required_owner_fix"])
+        self.assertFalse(gate["source_browser_test_not_release"] is False)
+        self.assertFalse(gate["production_release_admitted"])
+
+
 if __name__ == "__main__":
     unittest.main()

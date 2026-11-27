@@ -186,7 +186,9 @@
       "passed": 0,
       "failed": 1,
       "errors": 0,
-      "skipped": 0
+      "skipped": 0,
+      "fail_closed_behavior_expected": "On 5m selection, generic /api/candles?timeframe=5m response is NOT a valid source-qualified MTF receipt. If exact /api/market-data/qualified/timeframe returns [] or lacks a five-bar validated receipt, chart MUST remain empty and the receipt text must indicate UNAVAILABLE.",
+      "required_owner_fix": "Fix Playwright test expectation and wait for exact receipt refusal; do NOT let generic 2-candle 5m mock bypass managed Grid source qualification."
     },
     "strattester_guard_ci": {
       "head_sha": "c95ced815575ab3fe25f619f97e9bf040d58f3da",
@@ -205,6 +207,7 @@
       "terminan_test_workflow_sha": "3608e41b90b2dbf7a80d7daa86582a2440e11330"
     },
     "native_pg18_consul_windows_installer_pass": false,
-    "full_strattester_unique_function_migration_pass": false
+    "full_strattester_unique_function_migration_pass": false,
+    "source_browser_test_not_release": true
   }
 }
