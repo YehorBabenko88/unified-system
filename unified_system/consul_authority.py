@@ -11,7 +11,6 @@ import re
 import ssl
 import time
 from urllib.parse import quote, urlsplit
-import uuid
 
 import httpx
 
