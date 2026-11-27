@@ -128,6 +128,16 @@ class OpaqueSessionTests(unittest.TestCase):
                 self.assertFalse(await authority.validate(
                     ConsulLease("owner", OBSERVED, 42)))
                 self.assertTrue(await authority.renew(lease))
+                original_value = state["value"]
+                state["modify"] += 1
+                self.assertFalse(await authority.validate(lease))
+                state["modify"] -= 1
+                state["value"] = json.dumps({
+                    "owner": "attacker", "session_id": OBSERVED,
+                    "namespace": "isolated/round25",
+                }).encode("ascii")
+                self.assertFalse(await authority.validate(lease))
+                state["value"] = original_value
                 state["held"] = False
                 self.assertFalse(await authority.validate(lease))
                 state["held"] = True
