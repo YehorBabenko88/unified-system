@@ -1,0 +1,101 @@
+{
+  "schema": "unified-system.j.round35.disposable.v1",
+  "scope": "SYNTHETIC_ISOLATED_CI_ONLY_NO_RELEASE_AUTHORITY",
+  "source_j_head": "9216949952ead1935b5b80e16d625d6e588a9576",
+  "frozen_pr166_sha": "9349d7f3ed93ef82d120976816b968e0b716b067",
+  "release": "CODE_NO_GO_PRODUCTION_NO_GO",
+  "authorize_release": false,
+  "authorize_physical_delete": false,
+  "authorize_live_trading": false,
+  "authorize_user_database": false,
+  "authorize_main_merge": false,
+  "authorize_disable_acl": false,
+  "sources": {
+    "A": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 162,
+      "sha": "c14bb55ece3b580600a6f6e528d1faa0b4790ea8",
+      "status": "PREVIOUSLY_IMPORTED_NOT_NATIVE_ACCEPTED"
+    },
+    "B": {
+      "repo": "YehorBabenko88/bybit-cluster-grid",
+      "pr": 311,
+      "sha": "8719dfb0a865fa3b4cce09050c8f15e36f2dfe16",
+      "status": "INFORMATIONAL_ONLY_NO_ROSTER_CUTOVER"
+    },
+    "C": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 170,
+      "sha": "c015e39257faff78548cff42acc50fa0b915650f",
+      "previous_source_blob": "076980d9556bf3a685091f16129ef321cb1372be",
+      "status": "LATEST_HEAD_UNQUALIFIED_NATIVE_REQUIRED"
+    },
+    "D": {
+      "repo": "YehorBabenko88/Terminan",
+      "pr": 136,
+      "sha": "d091fd98fd48d11d27ff64c7e0485ada04e25548",
+      "previous_tested_sha": "a28ad9454fa71287ef368d898dfd788ec3481f7d",
+      "status": "LATEST_HEAD_UNQUALIFIED_PREVIOUS_2_BROWSER_TESTS"
+    },
+    "E": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 171,
+      "sha": "856480fa64e125144409570fdea50ed9d7220401",
+      "status": "LATEST_HEAD_UNQUALIFIED_NATIVE_ACL_REQUIRED"
+    },
+    "F": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 180,
+      "sha": "bfa0817afc1e08946a8f0059dd8a6fcd885e3830",
+      "status": "NATIVE_OWNER_REVIEW_REQUIRED"
+    },
+    "G": {
+      "repo": "YehorBabenko88/Strattester",
+      "pr": 123,
+      "sha": "ae6a47434dec459584105c5f877f749bc7676b16",
+      "previous_fixture_sha": "9cfa91eaa9dce4553625c3d61dc34607dbe7aca2",
+      "status": "LATEST_HEAD_UNQUALIFIED_NO_LEGACY_RETIREMENT"
+    },
+    "H": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 181,
+      "sha": "e23c3785c0ed8ec68d4a9993941d4c04dc5fdddc",
+      "status": "PARITY_NOT_PROVEN"
+    },
+    "I": {
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 182,
+      "sha": "da42b3e7d047f65f0ef78a18f1b8c2bf2d38f52f",
+      "previous_owner_sha": "89f6bf9d0c012007b34ba3b3ce3b06b3343762af",
+      "status": "LATEST_HEAD_UNQUALIFIED_DELETE_GATES_FALSE"
+    },
+    "Math": {
+      "repo": "YehorBabenko88/math",
+      "sha": "9e6acbd9e12a91189f57234828e31640983af553",
+      "status": "SOLE_CANONICAL_NO_DUPLICATE"
+    }
+  },
+  "original_checkpoint_candidates": [
+    {
+      "blob": "cad4ccf970470eb86a487c484cee9be15ea9614d",
+      "status": "STATIC_UNBALANCED_NATIVE_NOT_YET_RUN"
+    },
+    {
+      "blob": "076980d9556bf3a685091f16129ef321cb1372be",
+      "status": "STATIC_BALANCED_NATIVE_NOT_YET_RUN"
+    }
+  ],
+  "native_gates": {
+    "postgresql_18": "NOT_RUN",
+    "consul_acl_ttl": "NOT_RUN",
+    "windows_installer": "NOT_RUN",
+    "ui_e2e": "NOT_RUN",
+    "ci_scheduler": "ZERO_JOB_INFRA_BLOCKED"
+  },
+  "integration_policy": {
+    "owner_blob_import": "REVIEWED_EXACT_ONLY",
+    "draft_branch_merge": "DENIED",
+    "recorded_roster_delist": "DENIED",
+    "legacy_retirement": "DENIED"
+  }
+}
