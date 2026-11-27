@@ -169,12 +169,20 @@ class ConsulSessionAuthority:
         session = created.get('ID') if type(created) is dict else None
         if not _consul_session_id(session):
             raise CoordinationUnavailable('Consul session identity invalid')
+        destroy_attempted = False
         try:
             value = canonical({'owner': owner, 'session_id': session, 'namespace': self.config.namespace})
             won = await self._request('PUT', '/v1/kv/' + quote(self.key, safe='/'),
                                       params={'acquire': session}, content=value)
             if won is not True:
-                await self._request('PUT', '/v1/session/destroy/' + session)
+                # A failed KV acquire must clean up only once; if destroy
+                # replied false or its reply was lost, retrying from the
+                # exception handler would replay an unknown mutation.
+                destroy_attempted = True
+                destroyed = await self._request(
+                    'PUT', '/v1/session/destroy/' + session)
+                if destroyed is not True:
+                    raise CoordinationLost('Consul unacquired session destroy unconfirmed')
                 return None
             row = await self._read_lock()
             token = row.get('ModifyIndex') if row else None
@@ -187,10 +195,14 @@ class ConsulSessionAuthority:
             self._deadlines[session] = started + self.config.ttl_seconds - 1
             return lease
         except BaseException:
-            try:
-                await self._request('PUT', '/v1/session/destroy/' + session)
-            except CoordinationUnavailable:
-                pass
+            if not destroy_attempted:
+                destroy_attempted = True
+                try:
+                    # Best-effort single attempt; failure remains UNKNOWN and
+                    # never authorizes another Root lease or writer claim.
+                    await self._request('PUT', '/v1/session/destroy/' + session)
+                except CoordinationUnavailable:
+                    pass
             raise
 
     async def validate(self, lease):
