@@ -1,0 +1,98 @@
+{
+  "schema": "unified.gateway.accepted-sdk-pin-migration.v1",
+  "root_base": "d549a6667c820ce548ffdaca51c367f1da8e52bc",
+  "changes": [
+    {
+      "kind": "terminan_source_pin",
+      "old": "b99913690ce29ce60e73414cc4d626ca989916ce",
+      "new": "75a906d36574bfdc19acd966e79a6c168dc71ad4",
+      "reason": "Align active gateway and native profile to independently accepted Term117 cohort; no API or protocol expansion."
+    },
+    {
+      "kind": "math_source_pin",
+      "old": "de8194f71311a6d7dddb69be9de812030ed1f13f",
+      "new": "a5868944bf1bae813403a32b22d329c1da6f8238",
+      "reason": "Align to accepted Math135; named untouched_decimal_levels function AST unchanged."
+    },
+    {
+      "kind": "native_request_schema_sha256",
+      "old": "342187bea8ace00b409f04a0fb739757184b5bb933741b597a83ed08a765ce4d",
+      "new": "91a83569d749641966f974d61dcf1568704da1855940944bad3a9f137874850a",
+      "reason": "Same native v2 fieldsets; fixed Terminan target_version literal changes raw schema identity."
+    },
+    {
+      "kind": "research_identity_module_sha256",
+      "old": "4ab708291fe16b5df75d1a5d710d965db9a7f017877f4ee38ab071ab54763a68",
+      "new": "acd4fe82cc436396fa69599e5182eaaf0702697e22ec43f6cb0fcadb9f53c626",
+      "reason": "Only fixed producer/Math/schema identity literals change; preserve ownership/revocation/authorization bodies."
+    },
+    {
+      "kind": "native_negative_module_sha256",
+      "old": "0081058d43955daaf82941bdef2e279c4a3e2f33c48fc44531614ca76f9326f2",
+      "new": "e8ba5f16b9271f3bddfb1e7df12c03cb5a762b93ede0104c14659ea1154734d4",
+      "reason": "Only the identity module raw-byte guard is resealed; active manifest tracks the resulting module hash."
+    },
+    {
+      "kind": "fixed_descriptor_sha256",
+      "old": "7915bed39696c2f99995e4dddfe0d352b16a69694854c012ffb7b88041eb6e13",
+      "new": "799da05e0bd9b9571dbad8d17daa2045f8dea7745125e3ff9e1c7dd42ef3c0f4",
+      "reason": "Descriptor source revision strings change; actual 2081-byte scientific artifact remains byte-identical."
+    },
+    {
+      "kind": "fixed_target_request_sha256",
+      "old": "442e4719ec8dbf6bf0024c5e1ebe1f42f86a87d013b7271347b9790573e62eed",
+      "new": "df99950173b3764b117e3e0c072b9d5da698c0d5d62e6cc361ed4f2d5dab108b",
+      "reason": "Same direct v2 fieldsets and limits; target_version now binds Term117."
+    },
+    {
+      "kind": "descriptive_entrypoint",
+      "old": "terminan.analytics.ohlcv_research.analyze_ohlcv_research -> market_math.untouched_levels",
+      "new": "terminan.analytics.ohlcv_research.analyze_ohlcv_research -> terminan.analytics.core.untouched_levels -> market_math.untouched_decimal_levels",
+      "reason": "Correct inherited nonexistent Math display symbol; actual execution already delegates to unchanged untouched_decimal_levels. No capability ID change."
+    }
+  ],
+  "protocols": {
+    "direct_request": "unified.gateway.target-request.v2",
+    "direct_result": "unified.gateway.direct-target-result.v2",
+    "native_request": "unified.gateway.target-native-request.v2",
+    "profile": "unified.authority.canonical-research-profile.v3",
+    "fieldsets": "UNCHANGED",
+    "old_aliases": "NONE",
+    "old_source_records": "NOT_ADOPTED_OR_REWRITTEN",
+    "old_owned_journal_reuse": "OLD_FIXED_TARGET_VERSION_REFUSED; fresh disposable namespace required"
+  },
+  "preservation": {
+    "native_roles": 43,
+    "native_case_body_proof": "PIN-AST-PRESERVATION.json",
+    "production_source_harness": "UNCHANGED",
+    "native_harness_test_roles": 11,
+    "negative_control_change": "Only two raw-bootstrap call contexts set sys.pycache_prefix=None; outer test remains fresh-X and audits all effects.",
+    "original_provenance": "All existing SOURCE-PRESERVATION and native-case/protected-method proof files retained byte-for-byte."
+  },
+  "verification": {
+    "python311": {
+      "pure_direct_policy": 4,
+      "root_inert_guards": 27,
+      "native_DTO": 9,
+      "native_harness": 11,
+      "scientific_artifact": "2081 bytes c7cdb408d8536fa4db3dcb714ff7ae7d64c562a45189005b23242d7da3991174",
+      "jsonschema": "NOT_RUN: compatible cp311 rpds unavailable; no dependency installation"
+    },
+    "python312": {
+      "pure_direct_policy": 4,
+      "root_inert_guards": 27,
+      "native_DTO": 9,
+      "native_harness": 11,
+      "target_schema_calibrations": 25,
+      "native_schema_calibrations": 2,
+      "scientific_artifact": "Same 2081 raw bytes"
+    },
+    "actual_SourceFence": "NOT_RUN",
+    "actual_disposable_stand": "NOT_RUN",
+    "actual_native_roles": "NOT_RUN",
+    "mtls_consul_scm_provider_process": "NOT_RUN",
+    "physical": "NOT_RUN",
+    "release_status": "NO_GO",
+    "old_native_or_139_PASS_promoted": false
+  }
+}

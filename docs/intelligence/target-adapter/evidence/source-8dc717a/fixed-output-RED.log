@@ -1,0 +1,17 @@
+test_fixed_profile_output_tampering_after_actual_target_refused (test_direct.DirectTests.test_fixed_profile_output_tampering_after_actual_target_refused) ... FAIL
+
+======================================================================
+FAIL: test_fixed_profile_output_tampering_after_actual_target_refused (test_direct.DirectTests.test_fixed_profile_output_tampering_after_actual_target_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\gateway-target-adapter-20261109\gateway-runtime-recovery-20261107\tests/gateway_target_adapter\test_direct.py", line 196, in test_fixed_profile_output_tampering_after_actual_target_refused
+    self.assertEqual(result['status'],'FAILED',mutation)
+AssertionError: 'DIRECT_TARGET_PASS' != 'FAILED'
+- DIRECT_TARGET_PASS
++ FAILED
+ : row
+
+----------------------------------------------------------------------
+Ran 1 test in 0.197s
+
+FAILED (failures=1)

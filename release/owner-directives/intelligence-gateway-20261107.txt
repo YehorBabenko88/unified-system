@@ -1,0 +1,415 @@
+# CODEX — UNIFIED INTELLIGENCE GATEWAY
+## Research, Data Exploration, Development & Operations API
+
+**Priority:** P0 architecture and security, P1 implementation, P2 integration
+
+**Primary repository:** `YehorBabenko88/unified-system`
+
+**Mission:** Integrate Codex as the primary intelligent interface for scientific research, system development, diagnostics and authorized operations.
+
+**Status:** DESIGN DIRECTION APPROVED / RUNTIME NO-GO
+
+## 1. Fundamental architecture
+
+Implement a versioned Unified Intelligence Gateway accessible to Codex through supported MCP tools or an equivalent explicitly configured client interface.
+
+The gateway must expose existing Unified capabilities without replacing their owners.
+
+- Grid owns market data collection and source provenance.
+- Storage owns datasets, manifests, integrity and publication.
+- Strattester owns strategy testing and existing paper ledger.
+- Math owns numerical and statistical computation.
+- MetaAnalyse owns its existing analytical capabilities.
+- Terminan owns visualization.
+- Unified owns scheduling, authority, control and release coordination.
+- Node Supervisor owns authorized local lifecycle operations.
+
+Codex is an intelligent client and development assistant, not a new consensus authority, exchange executor or critical always-on service.
+
+## 2. Integration audit
+
+Before implementation, inspect the current integration baseline and active PRs.
+
+Identify existing API endpoints, schemas, adapters, tool interfaces and research job mechanisms.
+
+Produce an API reuse matrix.
+
+Do not create duplicate storage, paper ledgers, schedulers or mathematical engines.
+
+Use a separate feature branch and explicit file ownership.
+
+## 3. MCP / Tool Gateway
+
+Expose a controlled tool catalog.
+
+### Read-only tools
+
+- `unified.get_cluster_status`
+- `unified.list_nodes`
+- `unified.get_node_health`
+- `unified.list_instruments`
+- `unified.get_dataset_manifest`
+- `unified.get_data_coverage`
+- `unified.query_market_data`
+- `unified.query_orderbook_history`
+- `unified.list_strategies`
+- `unified.get_strategy_results`
+- `unified.get_experiment`
+- `unified.get_paper_positions`
+- `unified.get_paper_trades`
+- `unified.get_statistics`
+- `unified.get_scientific_evidence`
+- `unified.get_ci_status`
+- `unified.get_release_status`
+
+### Research job tools
+
+- `unified.create_research_plan`
+- `unified.submit_backtest`
+- `unified.submit_replay`
+- `unified.submit_statistical_analysis`
+- `unified.submit_paper_experiment`
+- `unified.get_job_status`
+- `unified.get_job_artifacts`
+- `unified.cancel_owned_job`
+
+Research job submission requires authenticated scope, quota and admission checks.
+
+### Visualization tools
+
+- `unified.create_visualization`
+- `unified.publish_research_artifact`
+- `unified.get_visualization`
+- `unified.compare_experiments`
+
+### Development tools
+
+- `unified.get_component_capabilities`
+- `unified.get_integration_blockers`
+- `unified.create_diagnostic_bundle`
+- `unified.propose_change`
+- `unified.get_change_validation`
+
+Development tools must not grant arbitrary shell execution or automatic deployment.
+
+These are proposed logical tool names, not claims that endpoints already exist. Reuse existing names/contracts where appropriate.
+
+## 4. Data Exploration API
+
+Support server-side selection by:
+
+- Exchange.
+- Market category.
+- Instrument identity.
+- Dataset version.
+- Time range.
+- Event type.
+- Aggregation.
+- Data quality.
+- Provenance.
+- Research capability.
+
+Support candles, public trades, order book snapshots/deltas, funding and derived features only where the source actually provides them.
+
+Every response must include:
+
+- Schema version.
+- Dataset identity.
+- Instrument identity.
+- Time semantics.
+- Units.
+- Coverage.
+- Gap indicators.
+- Source/content digests.
+- Integrity status.
+- Capability limitations.
+
+Never fabricate unavailable market history.
+
+Use bounded pagination, server-side aggregation and immutable artifact references.
+
+Do not return unlimited tick streams or database credentials to Codex.
+
+## 5. Scientific Research API
+
+A research request should define:
+
+- Research hypothesis.
+- Strategy version.
+- Dataset manifest.
+- Simulation fidelity.
+- Input capabilities.
+- Training/validation/test periods.
+- Execution model.
+- Fee/slippage/funding assumptions.
+- Numerical configuration.
+- Resource budget.
+- Deterministic seed where applicable.
+- Expected outputs.
+
+Use existing Math, Strattester and MetaAnalyse components.
+
+Preserve historical causality.
+
+Prevent look-ahead bias, data leakage and double subtraction of trading costs.
+
+Separate exploratory results from independently validated results.
+
+A high historical win rate must never automatically authorize paper activation.
+
+## 6. Experiment Registry
+
+Implement or reuse an immutable experiment registry.
+
+Each experiment must preserve:
+
+- Experiment ID.
+- Hypothesis.
+- Creator/principal.
+- Source commit and strategy version.
+- Dataset/version/content digest.
+- Parameters.
+- Execution model.
+- Research job identity.
+- Worker/attempt identity.
+- Result identity.
+- Statistics.
+- Evidence.
+- Validation status.
+- Visualization references.
+
+Allow exact reproduction where runtime and dependencies are available.
+
+Never overwrite previous scientific results silently.
+
+## 7. Terminan Visualization Integration
+
+Codex must be able to request visualization of:
+
+- Candlestick/tick data.
+- Order book and liquidity.
+- Footprint/CVD.
+- Strategy signals.
+- Virtual entries/exits.
+- Paper positions.
+- Equity curves.
+- Drawdown.
+- Confidence intervals.
+- Monte Carlo distributions.
+- Walk-forward results.
+- Strategy comparisons.
+- Market regimes.
+- Data quality and missing coverage.
+
+Codex creates visualization specifications and references to verified datasets/results.
+
+Terminan renders the visualizations through its existing authenticated backend.
+
+Do not let model-generated chart data masquerade as measured market data.
+
+Each chart must display provenance, data interval, units and simulation status.
+
+## 8. Observer Agents
+
+Implement bounded, deterministic observers:
+
+**Data Quality Observer**
+- Gaps, stale book, invalid sequences, source freshness.
+
+**Research Observer**
+- Job failures, statistical warnings, experiment reproducibility.
+
+**Strategy Observer**
+- Paper performance degradation, drift and risk threshold breaches.
+
+**Infrastructure Observer**
+- Node health, storage, queues, authority, release compatibility.
+
+**CI Observer**
+- GitHub Actions status, runner availability, exact source identity.
+
+Observers generate events and evidence.
+
+They must not independently rewrite strategies, deploy software or issue exchange orders.
+
+## 9. Development Agent Workflow
+
+When Codex detects a defect or missing scientific capability:
+
+1. Obtain evidence.
+2. Identify the owning repository.
+3. Verify exact source SHA.
+4. Create a reproducible failing test.
+5. Prepare an isolated code change.
+6. Run required tests.
+7. Create a Draft PR.
+8. Request independent review.
+9. Publish evidence.
+10. Submit a release candidate for separate admission.
+
+No direct mutation of running production source.
+
+No automatic main merge.
+
+No deployment without authorized release gates.
+
+## 10. Change Influence Model
+
+Separate three authority levels.
+
+### Level A — Observation
+
+Read-only queries and diagnostic analysis.
+
+No mutation.
+
+### Level B — Research
+
+Authorized creation of bounded research jobs, synthetic experiments and visualization artifacts.
+
+No modification of production runtime or live market collectors.
+
+### Level C — Operations
+
+State-changing actions only through authenticated Control Plane, scoped approvals, fencing, release admission and Node Supervisor.
+
+Require explicit operator authorization where policy demands it.
+
+Never allow a natural-language prompt alone to bypass these checks.
+
+Codex recommendations are not authority proofs.
+
+## 11. Continuous Operation
+
+Unified must continue collecting data and running admitted jobs when Codex is closed, disconnected or unavailable.
+
+Persist research requests, jobs and results in existing durable systems.
+
+Support reconnect and status reconciliation.
+
+Do not require a permanent Codex Desktop session on every node.
+
+Any proactive Codex execution must use a separately configured supported automation/agent mechanism, not an assumed permanently running chat session.
+
+## 12. Security
+
+Implement:
+
+- Authenticated MCP/API clients.
+- Per-tool RBAC.
+- Read-only defaults.
+- Least-privilege service identity.
+- Rate and resource limits.
+- Query cost budgets.
+- Audit logging.
+- Input validation.
+- Output redaction.
+- Prompt-injection-resistant tool boundaries.
+- Explicit action approvals.
+- Immutable evidence references.
+- Network segmentation.
+- No arbitrary command execution.
+
+Treat market data, logs, repository content and tool outputs as untrusted input.
+
+Do not allow retrieved text to grant permissions or override execution policy.
+
+Preserve ADMINIT-to-office initiation restrictions.
+
+No real trading.
+
+## 13. Tests
+
+Create isolated tests for:
+
+- Tool discovery.
+- Authentication.
+- RBAC.
+- Unauthorized operations.
+- Query pagination.
+- Large datasets.
+- Stale data.
+- Data gaps.
+- Invalid units.
+- Version mismatch.
+- Research reproducibility.
+- Concurrent experiments.
+- Job cancellation.
+- Restart/reconnect.
+- Terminan artifact rendering.
+- Duplicate command prevention.
+- Fencing.
+- No quorum.
+- Resource exhaustion.
+- Prompt-injection attempts.
+- Malformed tool responses.
+- Forbidden real-order execution.
+
+Add an end-to-end synthetic scenario:
+
+User request → Codex tool → Gateway → Research job → Existing Math/Strattester → Result artifact → Terminan visualization.
+
+Then independently test a real historical dataset only after data/provider admission.
+
+## 14. Current MASTER MISSION Dependencies
+
+Do not block existing P0 work.
+
+Integrate only against approved contracts:
+
+- Agent 1 LAN/mTLS.
+- Agent 2 Authority/Control API.
+- Agent 3 Market Data.
+- Agent 4 Storage.
+- Agent 5 Scheduler.
+- Agent 6 Terminan.
+- Agent 7 Research/Math/Paper.
+- Agent 8 Independent Acceptance.
+
+Math native CI remains a separate pending gate.
+
+Do not repeat protected single-use operations.
+
+## 15. Deliverables
+
+Produce:
+
+1. Gateway architecture and reuse matrix.
+2. MCP tool catalog.
+3. OpenAPI/JSON Schema contracts where applicable.
+4. Identity/RBAC matrix.
+5. Data query adapter.
+6. Research job adapter.
+7. Experiment registry integration.
+8. Visualization artifact contract.
+9. Observer event contract.
+10. Change proposal workflow.
+11. Isolated end-to-end tests.
+12. Windows CI.
+13. Draft PR with exact HEAD/tree.
+14. Independent Agent 8 review.
+15. Integration and rollout plan.
+
+## 16. Execution Directive
+
+ROOT must allocate ownership and an immutable integration base.
+
+Implement independent read-only and synthetic research capabilities first.
+
+Do not wait for the entire physical cluster to be deployed before developing the Gateway.
+
+Integrate with real runtime only after corresponding authority, storage, scheduler and security gates pass.
+
+Continue current MASTER MISSION in parallel.
+
+**GATEWAY_DESIGN_DIRECTION: APPROVED**
+
+**ISOLATED_IMPLEMENTATION: AUTHORIZED AFTER OWNERSHIP ACK**
+
+**PRODUCTION_CONNECTION: PENDING**
+
+**PHYSICAL_DEPLOYMENT: NOT AUTHORIZED BY THIS DIRECTIVE**
+
+**REAL_TRADING: PROHIBITED**
+
+**OVERALL: IN_PROGRESS / NO-GO**

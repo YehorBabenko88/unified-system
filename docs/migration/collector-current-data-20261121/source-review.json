@@ -1,0 +1,65 @@
+{
+  "schema": "unified.canonical-collector.data-pin-review.v1",
+  "previous_data": "ecc2c5d95997bfb68dd2242bca4146184e0485f3",
+  "current_data": "b5ca6363be1f530fbbb4c44fdc1e8f747aaef87d",
+  "closure": [
+    {
+      "path": "market_data/__init__.py",
+      "old": {
+        "sha256": "91447944015cec709e8aa7655f7e9d64e1e4508e7023a57fe3746911c0fc6fed",
+        "bytes": 22
+      },
+      "current": {
+        "sha256": "91447944015cec709e8aa7655f7e9d64e1e4508e7023a57fe3746911c0fc6fed",
+        "bytes": 22
+      },
+      "unchanged": true
+    },
+    {
+      "path": "market_data/synthetic_collector.py",
+      "old": {
+        "sha256": "bd62494ebbc55a63b995673104c5860067ad2db1d4896e97d0e212c4beec86f9",
+        "bytes": 4252
+      },
+      "current": {
+        "sha256": "bd62494ebbc55a63b995673104c5860067ad2db1d4896e97d0e212c4beec86f9",
+        "bytes": 4252
+      },
+      "unchanged": true
+    },
+    {
+      "path": "market_data/public_trades.py",
+      "old": {
+        "sha256": "7d82d5a889ea7e43c4e47165273202fccccf18fb35dae0f3d1cc8405a30223a0",
+        "bytes": 6225
+      },
+      "current": {
+        "sha256": "513e028ecf10e95eff6bf9223c6cd6bf76715aa144db7bee6de72a2779502216",
+        "bytes": 6368
+      },
+      "unchanged": false
+    },
+    {
+      "path": "market_data/raw_capture.py",
+      "old": {
+        "sha256": "2840088090ceb888d7bf5a680b4fae1dd6f3b0ba887153c9e1afd4b2a7ca401d",
+        "bytes": 18387
+      },
+      "current": {
+        "sha256": "3f1430206f677c9485a62e60e389908de4b27b68e39e865885b84a804a3b28a1",
+        "bytes": 18861
+      },
+      "unchanged": false
+    }
+  ],
+  "synthetic_collector_raw_unchanged": true,
+  "public_trade_default_decimal_differential_each_python": 108,
+  "public_trades_non_codec_AST_unchanged": true,
+  "raw_capture_change": "Shared exact receipt predicate adds observation/payload consistency validation; original sink result predicates remain enforced",
+  "readonly_workflow_test_each_python": 1,
+  "workflow_inverse": "Only two exact Data SHA literals change; jobs/roles/platforms/permissions/qualifier unchanged",
+  "actual_finite_collector": "NOT_RUN_LOCALLY_PENDING_EXACT_HEAD_HOSTED",
+  "SourceFence": "NOT_RUN_LOCALLY",
+  "native": "NOT_RUN",
+  "production": "NO_GO"
+}

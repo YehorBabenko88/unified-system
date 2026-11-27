@@ -1,0 +1,39 @@
+{
+    "schema":  "unified.actual-staging-acl-observation.v1",
+    "path":  "C:\\Users\\LS-5\\Documents\\Codex\\UnifiedPilot\\LS5-20261107-4b4d98ef222b4f80af346e3c1975840a",
+    "identity_sid":  "S-1-5-21-12977273-2956189057-260416802-1002",
+    "observed_at_utc":  "2026-11-07T09:20:56.9710738Z",
+    "powershell":  "5.1.26100.9711",
+    "namespace":  "OBSERVED_NO_REPARSE_FIXED_LOCAL_PATH",
+    "acl":  "REJECTED",
+    "acl_changed":  false,
+    "admission":  "NOT_GRANTED",
+    "acl_error":  "Untrusted writable ACL",
+    "backup_access_services":  [
+                                   {
+                                       "Name":  "sshd",
+                                       "State":  "Running",
+                                       "StartMode":  "Auto",
+                                       "StartName":  "LocalSystem"
+                                   },
+                                   {
+                                       "Name":  "TeamViewer",
+                                       "State":  "Running",
+                                       "StartMode":  "Auto",
+                                       "StartName":  "LocalSystem"
+                                   },
+                                   {
+                                       "Name":  "TermService",
+                                       "State":  "Stopped",
+                                       "StartMode":  "Manual",
+                                       "StartName":  "NT Authority\\NetworkService"
+                                   },
+                                   {
+                                       "Name":  "WinRM",
+                                       "State":  "Stopped",
+                                       "StartMode":  "Manual",
+                                       "StartName":  "NT AUTHORITY\\NetworkService"
+                                   }
+                               ],
+    "backup_admin_access":  "NOT_DEMONSTRATED_END_TO_END"
+}

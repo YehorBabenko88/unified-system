@@ -1,0 +1,196 @@
+{
+  "schema": "unified.integration.source-observation.v1",
+  "snapshot_id": "20261110-root96",
+  "status": "IN_PROGRESS_NO_GO",
+  "approval": "SOURCE_OBSERVATION_ONLY",
+  "repositories": [
+    {
+      "repository": "YehorBabenko88/unified-system",
+      "head": "96b17905a5be923857aa1e778085eaeec6f0f27f",
+      "tree": "e868213d3fd47739c05aa1fc9f70a8d7658a1333",
+      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
+    },
+    {
+      "repository": "YehorBabenko88/bybit-cluster-grid",
+      "head": "fb177d14b1e6e399bd9b66ae7cb35d3838acbd81",
+      "tree": "2cba4b0a1ee7621ef213600d6334db8e9ac7dae1",
+      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
+    },
+    {
+      "repository": "YehorBabenko88/strattester",
+      "head": "887e3eeaf23ef8d9d1429435bc88bbac8099c6e6",
+      "tree": "954f3364cb70369705f658e89fcc6ae8ce547eec",
+      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
+    },
+    {
+      "repository": "YehorBabenko88/math",
+      "head": "2446d04624469e34aa96ed766be7a4887d6d654c",
+      "tree": "12c4e3cbd3557c7f4f634f5241c7e4b51eafba4f",
+      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
+    },
+    {
+      "repository": "YehorBabenko88/meta_analyse",
+      "head": "f3c01a23fa5baaeeeb28eb8e9397e72b5ef4d5a1",
+      "tree": "c155c935a801fa98b7c78219c9798ce1f1be8848",
+      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
+    },
+    {
+      "repository": "YehorBabenko88/Terminan",
+      "head": "dc810b03c3accf0e6f28fca1d5068f4171bb909d",
+      "tree": "d5bbb6f73c841ba93ae74354ea72cc0989212d92",
+      "role": "OBSERVED_DRAFT_SOURCE_NOT_ADMITTED_RUNTIME"
+    }
+  ],
+  "not_a_release_candidate": true,
+  "source_combination_executed": false,
+  "root_draft_pr": "https://github.com/YehorBabenko88/unified-system/pull/82",
+  "inventory": [
+    {
+      "node": "LS5",
+      "role": "CENTRAL_COORDINATOR",
+      "qualification": "LEVEL1_SCOPED_PILOT_ONLY"
+    },
+    {
+      "node": "PC3",
+      "role": "COORDINATOR",
+      "qualification": "READ_ONLY_ONLY"
+    },
+    {
+      "node": "PC4",
+      "role": "COORDINATOR",
+      "qualification": "SMOKE_BLOCKED_NONADMIN_CHANNEL_UNCONFIRMED"
+    },
+    {
+      "node": "PC2",
+      "role": "WORKER",
+      "qualification": "RESOURCE_QUALIFICATION_PENDING_NO_USER_PROCESS_CHANGES"
+    },
+    {
+      "node": "PC1",
+      "role": "WINDOWS_HOME_WORKER",
+      "qualification": "INDEPENDENT_HOME_QUALIFICATION_PENDING"
+    },
+    {
+      "node": "LS7",
+      "role": "WINDOWS_HOME_WORKER",
+      "qualification": "INDEPENDENT_HOME_QUALIFICATION_PENDING"
+    }
+  ],
+  "excluded_nodes": [
+    "ADMINIT"
+  ],
+  "contracts": [
+    {
+      "name": "atomic-read-bridge-design",
+      "sha256": "7c4d9024a0cc78c51f2fceb4efd451d9ec9855f939be0a6b2daa92c4aded46ff",
+      "status": "EXACT_A2_A4_A5_A6_A8_DESIGN_ACK_ONLY; TEST_SOURCE_PREPARATION_ALLOCATED; PRODUCTION_EDIT_HELD"
+    },
+    {
+      "name": "LAN_Approach_A_owner_approved_design",
+      "sha256": "f0d2eb3ccd96d263bdbedc2a2bcdd43238a542807c81e7e2531dccb9225cd7f8",
+      "status": "ISOLATED_IMPLEMENTATION_APPROVED_NOT_RUNTIME_ADMISSION"
+    },
+    {
+      "name": "Bybit_egress_frozen_profile",
+      "sha256": "16606dee585398ae6d92139ffc1cf2ed37a4d2e08759aaa08f0c3b85958b8049",
+      "status": "PROVIDER_SENDS_BLOCKED"
+    }
+  ],
+  "hosted_observations": [
+    {
+      "family": "MissionController58",
+      "run": 42880543983,
+      "status": "ORIGINAL_ARTIFACTS_VERIFIED_WINDOWS_UBUNTU_SCOPED",
+      "evidence_sha256": "d4efd1499fa01cce90469d4f36aa176882065a2ec9360498c9e3de6614c206cf"
+    },
+    {
+      "family": "LAN68",
+      "run": 42880544189,
+      "status": "RUN_SUCCESS_ORIGINAL_EVIDENCE_REVIEW_PENDING"
+    },
+    {
+      "family": "Component161",
+      "run": 42880544101,
+      "status": "RUN_SUCCESS_ORIGINAL_EVIDENCE_REVIEW_PENDING"
+    },
+    {
+      "family": "Gateway25",
+      "run": 42880544065,
+      "status": "RUN_SUCCESS_ORIGINAL_LOG_REVIEW_PENDING"
+    },
+    {
+      "family": "Supervisor132",
+      "run": 42880544083,
+      "status": "RUN_SUCCESS_ORIGINAL_EVIDENCE_REVIEW_PENDING"
+    },
+    {
+      "family": "Preparation36",
+      "run": 42880544154,
+      "status": "WINDOWS_PREFLIGHT_FAILURE; UBUNTU_SUCCESS_ORIGINAL_REVIEW_PENDING"
+    }
+  ],
+  "safety": {
+    "public_submit": "DENY",
+    "logical_mutations": "DISABLED_STRICT_OPTION1",
+    "provider_sends": "BLOCKED",
+    "real_orders": "PROHIBITED",
+    "physical_fault_injection": "NOT_AUTHORIZED",
+    "production_deployment": "NOT_AUTHORIZED",
+    "protected_branch_merge": "NOT_AUTHORIZED",
+    "tailscale_removal": "BLOCKED",
+    "code_signing": "BLOCKED_NO_TRUSTED_PUBLISHER"
+  },
+  "rollback": {
+    "installation_performed_by_snapshot": false,
+    "existing_services_or_data_removed": false,
+    "plan": "No rollout authorized. Preserve current LS5 scoped pilot and existing data; do not replace service/runtime. Any future pilot needs exact artifact/source and backup verification, nonadmin launch gate and reviewed APP_ONLY stop/switchback plan before installation."
+  },
+  "acceptance": {
+    "native_authority": "NOT_ADMITTED",
+    "scheduler_worker": "NATIVE_ADMISSION_PENDING",
+    "storage": "LOCAL_UNATTESTED_NO_COMMITTED_RECEIPT",
+    "terminan": "NO_AUTHENTICATED_SCIENTIFIC_READ",
+    "physical": "BLOCKED_NO_GO"
+  },
+  "coverage": "Six targeted families below are not the complete required CI; mandatory broad failures remain OPEN.",
+  "all_repository_runs_at_head": {
+    "total": 37,
+    "success": 26,
+    "failure": 10,
+    "cancelled": 1,
+    "source": "GitHub Actions original API snapshot retained by Integration Owner; attempt1, no manual retry"
+  },
+  "mandatory_broad_failures": {
+    "six_source_pr_run": 42880544113,
+    "six_source_push_run": 42880534434,
+    "ubuntu_job": 130055333690,
+    "ubuntu_tests": 1181,
+    "ubuntu_errors": 1,
+    "ubuntu_skips": 50,
+    "observed_error": "LAN heartbeat fixture readiness RuntimeError; renewed.get(timeout=3) queue.Empty at tests/test_lan_transport.py:200",
+    "windows": "Four six-source jobs: 1181 tests, three native phase timeout failures, ten skips each. Other broad Windows jobs additionally have 30s native timeout and MUX DISCONNECTED errors.",
+    "root_cause": "NOT_ESTABLISHED_BEYOND_OBSERVED_DEADLINES_AND_READINESS",
+    "F26": "OPEN; scoped LAN68 and Component161 successes do not close broad suite failure",
+    "remaining_failed_runs": [
+      42880544141,
+      42880543902,
+      42880543886,
+      42880543964,
+      42880534329,
+      42880534188,
+      42880534282
+    ],
+    "cancelled_run": 42880534450
+  },
+  "ownership_registry": {
+    "ROOT": "Integration, source assembly, shared ABI and release admission; no protected merge permission",
+    "Agent1": "LAN transport and traffic enforcement",
+    "Agent2": "Authority, fencing and native admission",
+    "Agent3": "Bybit quota/provider policy and market data",
+    "Agent4": "Storage and publication",
+    "Agent5": "Existing Scheduler and assignment",
+    "Agent6": "Terminan and visualization",
+    "Agent7": "Existing research engines and Math native blockers",
+    "Agent8": "Independent audit; scoped findings never imply full acceptance"
+  }
+}

@@ -1,0 +1,433 @@
+{
+  "schema": "unified.final-node-inventory.v1",
+  "source_report_sha256": "ca2571ec03f501b55ce3ba3348e3b3acc3242514916a3d5721867f9269d44c87",
+  "source_script_sha256": "da27f623be55b1992b471f60458c8cb00dc8e06b2df4cff0c8c93f4e6c5bc53d",
+  "scope": "READ_ONLY_PINNED_SSH_OR_LOCAL_OBSERVATION_NOT_INSTALLATION_ADMISSION",
+  "nodes": [
+    {
+      "node": "LS5",
+      "role": "PREFERRED_COORDINATOR",
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observed_utc": "2026-11-06T17:05:52.9307747Z",
+      "os": {
+        "Caption": "Microsoft Windows 11 Pro",
+        "Version": "10.0.26300",
+        "BuildNumber": "26300",
+        "OSArchitecture": "64-Bit",
+        "LastBootUpTime": "/Date(1793363336285)/",
+        "TotalVisibleMemorySize": 66425480,
+        "FreePhysicalMemory": 38387148,
+        "TotalVirtualMemorySize": 70619784,
+        "FreeVirtualMemory": 37892272
+      },
+      "disk": [
+        {
+          "DeviceID": "C:",
+          "FileSystem": "NTFS",
+          "Size": 1999291445248,
+          "FreeSpace": 1614537482240
+        }
+      ],
+      "firewall": [
+        {
+          "Name": "Domain",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Private",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Public",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        }
+      ],
+      "services": [
+        {
+          "Name": "postgresql-x64-18",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "Tailscale",
+          "Status": 4,
+          "StartType": 2
+        }
+      ],
+      "component_errors": [],
+      "network_snapshot_sha256": "19e11baae8a76fcb469f4aa2c0d276cb3ece7952dfa4b69b7219d602ca1e1602",
+      "runtime_account_admission": "NOT_VERIFIED",
+      "installation_readiness": "BLOCKED_OTHER_GATES",
+      "security_review": "NOT_FULLY_QUALIFIED"
+    },
+    {
+      "node": "PC1",
+      "role": "WORKER",
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observed_utc": "2026-11-06T17:05:59.2305899Z",
+      "os": {
+        "Caption": "Microsoft Windows 11 Home",
+        "Version": "10.0.26200",
+        "BuildNumber": "26200",
+        "OSArchitecture": "64-Bit",
+        "LastBootUpTime": "/Date(1793890072500)/",
+        "TotalVisibleMemorySize": 8252684,
+        "FreePhysicalMemory": 3515512,
+        "TotalVirtualMemorySize": 13233420,
+        "FreeVirtualMemory": 4860852
+      },
+      "disk": [
+        {
+          "DeviceID": "C:",
+          "FileSystem": "NTFS",
+          "Size": 254735806464,
+          "FreeSpace": 121839841280
+        }
+      ],
+      "firewall": [
+        {
+          "Name": "Domain",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Private",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Public",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        }
+      ],
+      "services": [
+        {
+          "Name": "ekrn",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "ekrnEpfw",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "postgresql-x64-17",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "Tailscale",
+          "Status": 4,
+          "StartType": 2
+        }
+      ],
+      "component_errors": [],
+      "network_snapshot_sha256": "5e9ddaa826c11d62957af4dfae234a851ebc727d4107f3a09a26cce97a9b3362",
+      "runtime_account_admission": "NOT_VERIFIED",
+      "installation_readiness": "BLOCKED_OTHER_GATES",
+      "security_review": "NOT_FULLY_QUALIFIED"
+    },
+    {
+      "node": "PC2",
+      "role": "WORKER",
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observed_utc": "2026-11-06T17:06:03.7625300Z",
+      "os": {
+        "Caption": "Microsoft Windows 11 Pro",
+        "Version": "10.0.26300",
+        "BuildNumber": "26300",
+        "OSArchitecture": "64-Bit",
+        "LastBootUpTime": "/Date(1793915747500)/",
+        "TotalVisibleMemorySize": 16477408,
+        "FreePhysicalMemory": 5885652,
+        "TotalVirtualMemorySize": 45253480,
+        "FreeVirtualMemory": 30555196
+      },
+      "disk": [
+        {
+          "DeviceID": "C:",
+          "FileSystem": "NTFS",
+          "Size": 254468419584,
+          "FreeSpace": 78808522752
+        }
+      ],
+      "firewall": [
+        {
+          "Name": "Domain",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Private",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Public",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        }
+      ],
+      "services": [
+        {
+          "Name": "ekrn",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "ekrnEpfw",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "postgresql-x64-17",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "Tailscale",
+          "Status": 4,
+          "StartType": 2
+        }
+      ],
+      "component_errors": [],
+      "network_snapshot_sha256": "bc6b2df16c43a40cb848cfd1c7c02d3ee00711ee7b9211e5e4fb3e6f338bf7fe",
+      "runtime_account_admission": "NOT_VERIFIED",
+      "installation_readiness": "BLOCKED_OTHER_GATES",
+      "security_review": "NOT_FULLY_QUALIFIED"
+    },
+    {
+      "node": "PC3",
+      "role": "COORDINATOR_WORKER",
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observed_utc": "2026-11-06T17:06:08.6597682Z",
+      "os": {
+        "Caption": "Microsoft Windows 11 Pro",
+        "Version": "10.0.26300",
+        "BuildNumber": "26300",
+        "OSArchitecture": "64-Bit",
+        "LastBootUpTime": "/Date(1793976190500)/",
+        "TotalVisibleMemorySize": 33396912,
+        "FreePhysicalMemory": 25936856,
+        "TotalVirtualMemorySize": 35494064,
+        "FreeVirtualMemory": 27320724
+      },
+      "disk": [
+        {
+          "DeviceID": "C:",
+          "FileSystem": "NTFS",
+          "Size": 496771264512,
+          "FreeSpace": 358052995072
+        }
+      ],
+      "firewall": [
+        {
+          "Name": "Domain",
+          "Enabled": 0,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Private",
+          "Enabled": 0,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Public",
+          "Enabled": 0,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        }
+      ],
+      "services": [
+        {
+          "Name": "ekrn",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "ekrnEpfw",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "postgresql-x64-18",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "Tailscale",
+          "Status": 4,
+          "StartType": 2
+        }
+      ],
+      "component_errors": [],
+      "network_snapshot_sha256": "4cbf122f5d6ef61257ad3b9ee215da44f6a59746fd8a5b64f3addc28f4591e24",
+      "runtime_account_admission": "NOT_VERIFIED",
+      "installation_readiness": "BLOCKED_OTHER_GATES",
+      "security_review": "REQUIRED_EXISTING_WINDOWS_FIREWALL_PROFILES_OFF"
+    },
+    {
+      "node": "PC4",
+      "role": "COORDINATOR_WORKER",
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observed_utc": "2026-11-06T17:06:13.9621025Z",
+      "os": {
+        "Caption": "Microsoft Windows 11 Pro",
+        "Version": "10.0.26200",
+        "BuildNumber": "26200",
+        "OSArchitecture": "64-Bit",
+        "LastBootUpTime": "/Date(1793910624500)/",
+        "TotalVisibleMemorySize": 32679288,
+        "FreePhysicalMemory": 22544336,
+        "TotalVirtualMemorySize": 34776440,
+        "FreeVirtualMemory": 22829352
+      },
+      "disk": [
+        {
+          "DeviceID": "C:",
+          "FileSystem": "NTFS",
+          "Size": 999027634176,
+          "FreeSpace": 853904396288
+        }
+      ],
+      "firewall": [
+        {
+          "Name": "Domain",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Private",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Public",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        }
+      ],
+      "services": [
+        {
+          "Name": "ekrn",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "ekrnEpfw",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "postgresql-x64-18",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "Tailscale",
+          "Status": 4,
+          "StartType": 2
+        }
+      ],
+      "component_errors": [],
+      "network_snapshot_sha256": "cf714b629d58f9189cc6bd1e5f35ac83cedd86293327da5dcd13cf60fe3bb13d",
+      "runtime_account_admission": "NOT_VERIFIED",
+      "installation_readiness": "BLOCKED_OTHER_GATES",
+      "security_review": "NOT_FULLY_QUALIFIED"
+    },
+    {
+      "node": "LS7",
+      "role": "WORKER",
+      "status": "OBSERVED_READ_ONLY_INVENTORY",
+      "observed_utc": "2026-11-06T17:06:18.1024355Z",
+      "os": {
+        "Caption": "Microsoft Windows 11 Home",
+        "Version": "10.0.26200",
+        "BuildNumber": "26200",
+        "OSArchitecture": "64-Bit",
+        "LastBootUpTime": "/Date(1793890306500)/",
+        "TotalVisibleMemorySize": 8151360,
+        "FreePhysicalMemory": 3310936,
+        "TotalVirtualMemorySize": 10051904,
+        "FreeVirtualMemory": 3847232
+      },
+      "disk": [
+        {
+          "DeviceID": "C:",
+          "FileSystem": "NTFS",
+          "Size": 486731149312,
+          "FreeSpace": 408522055680
+        }
+      ],
+      "firewall": [
+        {
+          "Name": "Domain",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Private",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        },
+        {
+          "Name": "Public",
+          "Enabled": 1,
+          "DefaultInboundAction": 0,
+          "DefaultOutboundAction": 0
+        }
+      ],
+      "services": [
+        {
+          "Name": "ekrn",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "ekrnEpfw",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "postgresql-x64-18",
+          "Status": 4,
+          "StartType": 2
+        },
+        {
+          "Name": "Tailscale",
+          "Status": 4,
+          "StartType": 2
+        }
+      ],
+      "component_errors": [],
+      "network_snapshot_sha256": "647b0735e53bc500aa7bcfd25f543a7177a413b7a945b10e193a32962cbacfc2",
+      "runtime_account_admission": "NOT_VERIFIED",
+      "installation_readiness": "BLOCKED_OTHER_GATES",
+      "security_review": "NOT_FULLY_QUALIFIED"
+    }
+  ],
+  "adminit_excluded": true,
+  "network_or_service_mutations": false,
+  "physical_fault_injection": false
+}

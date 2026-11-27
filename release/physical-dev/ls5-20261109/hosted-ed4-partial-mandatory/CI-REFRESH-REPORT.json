@@ -1,0 +1,792 @@
+{
+  "head": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+  "GET_count": 10,
+  "runs": [
+    {
+      "id": 42721792598,
+      "head_sha": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+      "event": "pull_request",
+      "path": ".github/workflows/ls5-physical-dev-source.yml",
+      "status": "queued",
+      "conclusion": null,
+      "created_at": "2026-11-09T23:36:11Z",
+      "updated_at": "2026-11-09T23:36:11Z",
+      "run_attempt": 1
+    },
+    {
+      "id": 42721792637,
+      "head_sha": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+      "event": "pull_request",
+      "path": ".github/workflows/paper-causal.yml",
+      "status": "queued",
+      "conclusion": null,
+      "created_at": "2026-11-09T23:36:11Z",
+      "updated_at": "2026-11-09T23:36:11Z",
+      "run_attempt": 1
+    },
+    {
+      "id": 42721780126,
+      "head_sha": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+      "event": "push",
+      "path": ".github/workflows/paper-causal.yml",
+      "status": "queued",
+      "conclusion": null,
+      "created_at": "2026-11-09T23:36:06Z",
+      "updated_at": "2026-11-09T23:36:06Z",
+      "run_attempt": 1
+    }
+  ],
+  "jobs": [
+    {
+      "run_id": 42721792598,
+      "total_count": 2,
+      "jobs": [
+        {
+          "id": 129517288707,
+          "run_id": 42721792598,
+          "run_attempt": 1,
+          "head_sha": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+          "name": "source (ubuntu-24.04)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-09T23:36:13Z",
+          "started_at": "2026-11-09T23:36:13Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "steps": []
+        },
+        {
+          "id": 129517289007,
+          "run_id": 42721792598,
+          "run_attempt": 1,
+          "head_sha": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+          "name": "source (windows-latest)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-09T23:36:13Z",
+          "started_at": "2026-11-09T23:36:13Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "windows-latest"
+          ],
+          "steps": []
+        }
+      ]
+    },
+    {
+      "run_id": 42721792637,
+      "total_count": 2,
+      "jobs": [
+        {
+          "id": 129517288550,
+          "run_id": 42721792637,
+          "run_attempt": 1,
+          "head_sha": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+          "name": "paper-causal (ubuntu-24.04)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-09T23:36:13Z",
+          "started_at": "2026-11-09T23:36:13Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "steps": []
+        },
+        {
+          "id": 129517289049,
+          "run_id": 42721792637,
+          "run_attempt": 1,
+          "head_sha": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+          "name": "paper-causal (windows-2025)",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-09T23:36:13Z",
+          "started_at": "2026-11-09T23:37:30Z",
+          "completed_at": "2026-11-09T23:38:08Z",
+          "runner_id": 1000097262,
+          "runner_name": "GitHub Actions 1000097262",
+          "runner_group_id": 0,
+          "runner_group_name": "GitHub Actions",
+          "labels": [
+            "windows-2025"
+          ],
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-09T23:37:31Z",
+              "completed_at": "2026-11-09T23:37:32Z"
+            },
+            {
+              "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-09T23:37:32Z",
+              "completed_at": "2026-11-09T23:37:37Z"
+            },
+            {
+              "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-09T23:37:37Z",
+              "completed_at": "2026-11-09T23:37:40Z"
+            },
+            {
+              "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-09T23:37:40Z",
+              "completed_at": "2026-11-09T23:37:43Z"
+            },
+            {
+              "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-09T23:37:43Z",
+              "completed_at": "2026-11-09T23:37:45Z"
+            },
+            {
+              "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-09T23:37:45Z",
+              "completed_at": "2026-11-09T23:37:45Z"
+            },
+            {
+              "name": "Install hash-locked test fixture dependencies outside sources",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-09T23:37:45Z",
+              "completed_at": "2026-11-09T23:37:50Z"
+            },
+            {
+              "name": "Gate regression checks",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-09T23:37:50Z",
+              "completed_at": "2026-11-09T23:37:51Z"
+            },
+            {
+              "name": "All sixteen actual composed tests without skips",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-09T23:37:51Z",
+              "completed_at": "2026-11-09T23:38:01Z"
+            },
+            {
+              "name": "Preserve synthetic evidence even on failure",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-09T23:38:01Z",
+              "completed_at": "2026-11-09T23:38:02Z"
+            },
+            {
+              "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16,
+              "started_at": "2026-11-09T23:38:02Z",
+              "completed_at": "2026-11-09T23:38:02Z"
+            },
+            {
+              "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17,
+              "started_at": "2026-11-09T23:38:02Z",
+              "completed_at": "2026-11-09T23:38:03Z"
+            },
+            {
+              "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 18,
+              "started_at": "2026-11-09T23:38:03Z",
+              "completed_at": "2026-11-09T23:38:04Z"
+            },
+            {
+              "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 19,
+              "started_at": "2026-11-09T23:38:04Z",
+              "completed_at": "2026-11-09T23:38:06Z"
+            },
+            {
+              "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20,
+              "started_at": "2026-11-09T23:38:06Z",
+              "completed_at": "2026-11-09T23:38:07Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21,
+              "started_at": "2026-11-09T23:38:07Z",
+              "completed_at": "2026-11-09T23:38:07Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run_id": 42721780126,
+      "total_count": 2,
+      "jobs": [
+        {
+          "id": 129517241158,
+          "run_id": 42721780126,
+          "run_attempt": 1,
+          "head_sha": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+          "name": "paper-causal (windows-2025)",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-09T23:36:07Z",
+          "started_at": "2026-11-09T23:36:14Z",
+          "completed_at": "2026-11-09T23:37:04Z",
+          "runner_id": 1000097255,
+          "runner_name": "GitHub Actions 1000097255",
+          "runner_group_id": 0,
+          "runner_group_name": "GitHub Actions",
+          "labels": [
+            "windows-2025"
+          ],
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-09T23:36:15Z",
+              "completed_at": "2026-11-09T23:36:16Z"
+            },
+            {
+              "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-09T23:36:16Z",
+              "completed_at": "2026-11-09T23:36:22Z"
+            },
+            {
+              "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-09T23:36:22Z",
+              "completed_at": "2026-11-09T23:36:25Z"
+            },
+            {
+              "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-09T23:36:25Z",
+              "completed_at": "2026-11-09T23:36:29Z"
+            },
+            {
+              "name": "Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-09T23:36:29Z",
+              "completed_at": "2026-11-09T23:36:32Z"
+            },
+            {
+              "name": "Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-09T23:36:32Z",
+              "completed_at": "2026-11-09T23:36:32Z"
+            },
+            {
+              "name": "Install hash-locked test fixture dependencies outside sources",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-09T23:36:32Z",
+              "completed_at": "2026-11-09T23:36:39Z"
+            },
+            {
+              "name": "Gate regression checks",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-09T23:36:39Z",
+              "completed_at": "2026-11-09T23:36:40Z"
+            },
+            {
+              "name": "All sixteen actual composed tests without skips",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-09T23:36:40Z",
+              "completed_at": "2026-11-09T23:36:56Z"
+            },
+            {
+              "name": "Preserve synthetic evidence even on failure",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-09T23:36:56Z",
+              "completed_at": "2026-11-09T23:36:57Z"
+            },
+            {
+              "name": "Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 16,
+              "started_at": "2026-11-09T23:36:57Z",
+              "completed_at": "2026-11-09T23:36:57Z"
+            },
+            {
+              "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 17,
+              "started_at": "2026-11-09T23:36:57Z",
+              "completed_at": "2026-11-09T23:36:58Z"
+            },
+            {
+              "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 18,
+              "started_at": "2026-11-09T23:36:58Z",
+              "completed_at": "2026-11-09T23:36:59Z"
+            },
+            {
+              "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 19,
+              "started_at": "2026-11-09T23:36:59Z",
+              "completed_at": "2026-11-09T23:37:01Z"
+            },
+            {
+              "name": "Post Run actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 20,
+              "started_at": "2026-11-09T23:37:01Z",
+              "completed_at": "2026-11-09T23:37:02Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 21,
+              "started_at": "2026-11-09T23:37:02Z",
+              "completed_at": "2026-11-09T23:37:02Z"
+            }
+          ]
+        },
+        {
+          "id": 129517241491,
+          "run_id": 42721780126,
+          "run_attempt": 1,
+          "head_sha": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+          "name": "paper-causal (ubuntu-24.04)",
+          "status": "queued",
+          "conclusion": null,
+          "created_at": "2026-11-09T23:36:07Z",
+          "started_at": "2026-11-09T23:36:07Z",
+          "completed_at": null,
+          "runner_id": 0,
+          "runner_name": "",
+          "runner_group_id": 0,
+          "runner_group_name": "",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "steps": []
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "run_id": 42721792637,
+      "artifact_id": 13720276979,
+      "name": "synthetic-causal-paper-windows-2025-42721792637-1",
+      "sha256": "486837a2a20cb0fc61370d92f656f9aaebe896c1eb39c5f91030460ea7bb64e9",
+      "github_digest_verified": true,
+      "report_sha256": "2cf7a36951399d16aebc9973ea40225d0d1d62520487c23014b8e7d0460f247a",
+      "report": {
+        "actual": [
+          "Grid observation validation",
+          "BookTapeResearch strategy",
+          "Strattester paper account and native PaperLedger",
+          "Unified SnapshotWriter",
+          "Terminan pinned snapshot reader"
+        ],
+        "duration_600s": "NOT_RUN",
+        "evidence_class": "SYNTHETIC",
+        "expected_ids": [
+          "test_lab_paper_pipeline.GuardTests.test_numeric_funding_representation_is_exact_without_rounding_milliseconds",
+          "test_lab_paper_pipeline.GuardTests.test_missing_kernel_source_admission_precedes_all_factories_and_files",
+          "test_lab_paper_pipeline.ComposedTests.test_ten_actual_strategy_risk_later_quotes_native_ledger_and_writer",
+          "test_lab_paper_pipeline.ComposedTests.test_unknown_funding_and_legacy_context_never_create_paper_fill",
+          "test_lab_paper_pipeline.ComposedTests.test_funding_survives_actual_processing_delay_without_relabelling_selection",
+          "test_lab_paper_pipeline.ComposedTests.test_fractional_hour_and_integral_float_funding_values_keep_exact_units",
+          "test_lab_paper_pipeline.ComposedTests.test_risk_processing_cannot_refresh_expired_strategy_window",
+          "test_lab_paper_pipeline.ComposedTests.test_reconnect_retains_uncertain_collateral_and_never_reuses_old_book",
+          "test_lab_paper_pipeline.ComposedTests.test_publication_failure_stops_without_retry_or_new_source_io",
+          "test_lab_paper_pipeline.ComposedTests.test_tiny_hold_budget_rejects_ten_minute_plan_before_audit_creation",
+          "test_lab_paper_pipeline.ComposedTests.test_first_new_quote_before_latency_is_not_relabelled_as_a_fill",
+          "test_lab_paper_pipeline.ComposedTests.test_revocation_stops_before_another_source_read_and_preserves_cash_reservation",
+          "test_lab_paper_pipeline.ComposedTests.test_elapsed_window_stops_reads_without_claiming_qualification",
+          "test_lab_paper_pipeline.ComposedTests.test_provider_failure_holds_cursor_then_normal_poll_uses_real_later_asof",
+          "test_lab_paper_pipeline.ComposedTests.test_foreign_native_ledger_trade_stops_before_writer_callback",
+          "test_lab_paper_pipeline.ComposedTests.test_actual_native_result_reaches_existing_writer_and_pinned_term_reader"
+        ],
+        "live_market_data": "NOT_RUN",
+        "modeled": [
+          "market frames",
+          "clock",
+          "kernel admission callback"
+        ],
+        "physical_acceptance": "NOT_EVALUATED",
+        "real_orders": "PROHIBITED",
+        "schema": "unified.causal-paper-ci.v1",
+        "sources_after": {
+          "grid": {
+            "head": "204897c9f3f6ccaf33ae6d02415b97d0049d7e1e",
+            "origin": "https://github.com/YehorBabenko88/bybit-cluster-grid",
+            "tracked_count": 652,
+            "tracked_raw_sha256": "19b639e623803f166be0a076129ef02f0fd402f8eecef473daba48e80e936d0e",
+            "tree": "73a1d12b7453533d57b44df95a253bb299ac2bfe"
+          },
+          "stratt": {
+            "head": "25eb939f8a816a80ac7c042ce75ec4d9173cd4ce",
+            "origin": "https://github.com/YehorBabenko88/strattester",
+            "tracked_count": 760,
+            "tracked_raw_sha256": "2494484e202395c4af1f6e204e1064537dac749012f2cd8152d5b99676f8c9f8",
+            "tree": "29c8bf9b4a607291d845e3026904074a33480373"
+          },
+          "terminan": {
+            "head": "de89c9be291cf89f389698aa9b43045ecd636447",
+            "origin": "https://github.com/YehorBabenko88/Terminan",
+            "tracked_count": 303,
+            "tracked_raw_sha256": "94f715a3e42a7de072212286d38e0ad892a99a85b132f3c52b64dbdfcb5cb9ea",
+            "tree": "117eef4f6dd39a94c2213453535548335e50456e"
+          },
+          "unified": {
+            "head": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+            "origin": "https://github.com/YehorBabenko88/unified-system",
+            "tracked_count": 1711,
+            "tracked_raw_sha256": "c82ff67ced61fb3156ae77f722592b684683a8d0efe243671794c0856a1d4a12",
+            "tree": "9fa20a242d408976dec84e99e53bdf3d4f7969bb"
+          }
+        },
+        "sources_before": {
+          "grid": {
+            "head": "204897c9f3f6ccaf33ae6d02415b97d0049d7e1e",
+            "origin": "https://github.com/YehorBabenko88/bybit-cluster-grid",
+            "tracked_count": 652,
+            "tracked_raw_sha256": "19b639e623803f166be0a076129ef02f0fd402f8eecef473daba48e80e936d0e",
+            "tree": "73a1d12b7453533d57b44df95a253bb299ac2bfe"
+          },
+          "stratt": {
+            "head": "25eb939f8a816a80ac7c042ce75ec4d9173cd4ce",
+            "origin": "https://github.com/YehorBabenko88/strattester",
+            "tracked_count": 760,
+            "tracked_raw_sha256": "2494484e202395c4af1f6e204e1064537dac749012f2cd8152d5b99676f8c9f8",
+            "tree": "29c8bf9b4a607291d845e3026904074a33480373"
+          },
+          "terminan": {
+            "head": "de89c9be291cf89f389698aa9b43045ecd636447",
+            "origin": "https://github.com/YehorBabenko88/Terminan",
+            "tracked_count": 303,
+            "tracked_raw_sha256": "94f715a3e42a7de072212286d38e0ad892a99a85b132f3c52b64dbdfcb5cb9ea",
+            "tree": "117eef4f6dd39a94c2213453535548335e50456e"
+          },
+          "unified": {
+            "head": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+            "origin": "https://github.com/YehorBabenko88/unified-system",
+            "tracked_count": 1711,
+            "tracked_raw_sha256": "c82ff67ced61fb3156ae77f722592b684683a8d0efe243671794c0856a1d4a12",
+            "tree": "9fa20a242d408976dec84e99e53bdf3d4f7969bb"
+          }
+        },
+        "status": "PASS_SYNTHETIC_CAUSAL_COMPOSITION_ONLY",
+        "terminan_reader_git_blob": "c8b8328cc2df327d98d6bd4543232a55f8ddf30d",
+        "terminan_reader_raw_sha256": "694bd5b4fa091395231fcbdcbc7032864fd2caedfc86080c86cbf664469a4189",
+        "test_dependencies_after": {
+          "file_count": 155,
+          "raw_sha256": "5a99a4f4081b67d112006a78120e9ac528e1190190b1c2ce8669df586997d2e5",
+          "versions": {
+            "colorama": "0.4.6",
+            "iniconfig": "2.1.0",
+            "packaging": "24.2",
+            "pluggy": "1.5.0",
+            "pytest": "8.3.5"
+          }
+        },
+        "test_dependencies_before": {
+          "file_count": 155,
+          "raw_sha256": "5a99a4f4081b67d112006a78120e9ac528e1190190b1c2ce8669df586997d2e5",
+          "versions": {
+            "colorama": "0.4.6",
+            "iniconfig": "2.1.0",
+            "packaging": "24.2",
+            "pluggy": "1.5.0",
+            "pytest": "8.3.5"
+          }
+        },
+        "tests": {
+          "errors": 0,
+          "expected_failures": 0,
+          "failures": 0,
+          "finished": [
+            "test_lab_paper_pipeline.ComposedTests.test_actual_native_result_reaches_existing_writer_and_pinned_term_reader",
+            "test_lab_paper_pipeline.ComposedTests.test_elapsed_window_stops_reads_without_claiming_qualification",
+            "test_lab_paper_pipeline.ComposedTests.test_first_new_quote_before_latency_is_not_relabelled_as_a_fill",
+            "test_lab_paper_pipeline.ComposedTests.test_foreign_native_ledger_trade_stops_before_writer_callback",
+            "test_lab_paper_pipeline.ComposedTests.test_fractional_hour_and_integral_float_funding_values_keep_exact_units",
+            "test_lab_paper_pipeline.ComposedTests.test_funding_survives_actual_processing_delay_without_relabelling_selection",
+            "test_lab_paper_pipeline.ComposedTests.test_provider_failure_holds_cursor_then_normal_poll_uses_real_later_asof",
+            "test_lab_paper_pipeline.ComposedTests.test_publication_failure_stops_without_retry_or_new_source_io",
+            "test_lab_paper_pipeline.ComposedTests.test_reconnect_retains_uncertain_collateral_and_never_reuses_old_book",
+            "test_lab_paper_pipeline.ComposedTests.test_revocation_stops_before_another_source_read_and_preserves_cash_reservation",
+            "test_lab_paper_pipeline.ComposedTests.test_risk_processing_cannot_refresh_expired_strategy_window",
+            "test_lab_paper_pipeline.ComposedTests.test_ten_actual_strategy_risk_later_quotes_native_ledger_and_writer",
+            "test_lab_paper_pipeline.ComposedTests.test_tiny_hold_budget_rejects_ten_minute_plan_before_audit_creation",
+            "test_lab_paper_pipeline.ComposedTests.test_unknown_funding_and_legacy_context_never_create_paper_fill",
+            "test_lab_paper_pipeline.GuardTests.test_missing_kernel_source_admission_precedes_all_factories_and_files",
+            "test_lab_paper_pipeline.GuardTests.test_numeric_funding_representation_is_exact_without_rounding_milliseconds"
+          ],
+          "run": 16,
+          "skipped": 0,
+          "started": [
+            "test_lab_paper_pipeline.ComposedTests.test_actual_native_result_reaches_existing_writer_and_pinned_term_reader",
+            "test_lab_paper_pipeline.ComposedTests.test_elapsed_window_stops_reads_without_claiming_qualification",
+            "test_lab_paper_pipeline.ComposedTests.test_first_new_quote_before_latency_is_not_relabelled_as_a_fill",
+            "test_lab_paper_pipeline.ComposedTests.test_foreign_native_ledger_trade_stops_before_writer_callback",
+            "test_lab_paper_pipeline.ComposedTests.test_fractional_hour_and_integral_float_funding_values_keep_exact_units",
+            "test_lab_paper_pipeline.ComposedTests.test_funding_survives_actual_processing_delay_without_relabelling_selection",
+            "test_lab_paper_pipeline.ComposedTests.test_provider_failure_holds_cursor_then_normal_poll_uses_real_later_asof",
+            "test_lab_paper_pipeline.ComposedTests.test_publication_failure_stops_without_retry_or_new_source_io",
+            "test_lab_paper_pipeline.ComposedTests.test_reconnect_retains_uncertain_collateral_and_never_reuses_old_book",
+            "test_lab_paper_pipeline.ComposedTests.test_revocation_stops_before_another_source_read_and_preserves_cash_reservation",
+            "test_lab_paper_pipeline.ComposedTests.test_risk_processing_cannot_refresh_expired_strategy_window",
+            "test_lab_paper_pipeline.ComposedTests.test_ten_actual_strategy_risk_later_quotes_native_ledger_and_writer",
+            "test_lab_paper_pipeline.ComposedTests.test_tiny_hold_budget_rejects_ten_minute_plan_before_audit_creation",
+            "test_lab_paper_pipeline.ComposedTests.test_unknown_funding_and_legacy_context_never_create_paper_fill",
+            "test_lab_paper_pipeline.GuardTests.test_missing_kernel_source_admission_precedes_all_factories_and_files",
+            "test_lab_paper_pipeline.GuardTests.test_numeric_funding_representation_is_exact_without_rounding_milliseconds"
+          ],
+          "unexpected_successes": 0
+        }
+      }
+    },
+    {
+      "run_id": 42721780126,
+      "artifact_id": 13720431637,
+      "name": "synthetic-causal-paper-windows-2025-42721780126-1",
+      "sha256": "c8d8b27d7b05c15d08806ca1ab52d8bad304aef15e7aa278fb72e39f103c9bdb",
+      "github_digest_verified": true,
+      "report_sha256": "d9d006d9f9056b0889f5e507c683e5afbe3da8f59aeb897e337c95dcd5d38df0",
+      "report": {
+        "actual": [
+          "Grid observation validation",
+          "BookTapeResearch strategy",
+          "Strattester paper account and native PaperLedger",
+          "Unified SnapshotWriter",
+          "Terminan pinned snapshot reader"
+        ],
+        "duration_600s": "NOT_RUN",
+        "evidence_class": "SYNTHETIC",
+        "expected_ids": [
+          "test_lab_paper_pipeline.GuardTests.test_numeric_funding_representation_is_exact_without_rounding_milliseconds",
+          "test_lab_paper_pipeline.GuardTests.test_missing_kernel_source_admission_precedes_all_factories_and_files",
+          "test_lab_paper_pipeline.ComposedTests.test_ten_actual_strategy_risk_later_quotes_native_ledger_and_writer",
+          "test_lab_paper_pipeline.ComposedTests.test_unknown_funding_and_legacy_context_never_create_paper_fill",
+          "test_lab_paper_pipeline.ComposedTests.test_funding_survives_actual_processing_delay_without_relabelling_selection",
+          "test_lab_paper_pipeline.ComposedTests.test_fractional_hour_and_integral_float_funding_values_keep_exact_units",
+          "test_lab_paper_pipeline.ComposedTests.test_risk_processing_cannot_refresh_expired_strategy_window",
+          "test_lab_paper_pipeline.ComposedTests.test_reconnect_retains_uncertain_collateral_and_never_reuses_old_book",
+          "test_lab_paper_pipeline.ComposedTests.test_publication_failure_stops_without_retry_or_new_source_io",
+          "test_lab_paper_pipeline.ComposedTests.test_tiny_hold_budget_rejects_ten_minute_plan_before_audit_creation",
+          "test_lab_paper_pipeline.ComposedTests.test_first_new_quote_before_latency_is_not_relabelled_as_a_fill",
+          "test_lab_paper_pipeline.ComposedTests.test_revocation_stops_before_another_source_read_and_preserves_cash_reservation",
+          "test_lab_paper_pipeline.ComposedTests.test_elapsed_window_stops_reads_without_claiming_qualification",
+          "test_lab_paper_pipeline.ComposedTests.test_provider_failure_holds_cursor_then_normal_poll_uses_real_later_asof",
+          "test_lab_paper_pipeline.ComposedTests.test_foreign_native_ledger_trade_stops_before_writer_callback",
+          "test_lab_paper_pipeline.ComposedTests.test_actual_native_result_reaches_existing_writer_and_pinned_term_reader"
+        ],
+        "live_market_data": "NOT_RUN",
+        "modeled": [
+          "market frames",
+          "clock",
+          "kernel admission callback"
+        ],
+        "physical_acceptance": "NOT_EVALUATED",
+        "real_orders": "PROHIBITED",
+        "schema": "unified.causal-paper-ci.v1",
+        "sources_after": {
+          "grid": {
+            "head": "204897c9f3f6ccaf33ae6d02415b97d0049d7e1e",
+            "origin": "https://github.com/YehorBabenko88/bybit-cluster-grid",
+            "tracked_count": 652,
+            "tracked_raw_sha256": "19b639e623803f166be0a076129ef02f0fd402f8eecef473daba48e80e936d0e",
+            "tree": "73a1d12b7453533d57b44df95a253bb299ac2bfe"
+          },
+          "stratt": {
+            "head": "25eb939f8a816a80ac7c042ce75ec4d9173cd4ce",
+            "origin": "https://github.com/YehorBabenko88/strattester",
+            "tracked_count": 760,
+            "tracked_raw_sha256": "2494484e202395c4af1f6e204e1064537dac749012f2cd8152d5b99676f8c9f8",
+            "tree": "29c8bf9b4a607291d845e3026904074a33480373"
+          },
+          "terminan": {
+            "head": "de89c9be291cf89f389698aa9b43045ecd636447",
+            "origin": "https://github.com/YehorBabenko88/Terminan",
+            "tracked_count": 303,
+            "tracked_raw_sha256": "94f715a3e42a7de072212286d38e0ad892a99a85b132f3c52b64dbdfcb5cb9ea",
+            "tree": "117eef4f6dd39a94c2213453535548335e50456e"
+          },
+          "unified": {
+            "head": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+            "origin": "https://github.com/YehorBabenko88/unified-system",
+            "tracked_count": 1711,
+            "tracked_raw_sha256": "c82ff67ced61fb3156ae77f722592b684683a8d0efe243671794c0856a1d4a12",
+            "tree": "9fa20a242d408976dec84e99e53bdf3d4f7969bb"
+          }
+        },
+        "sources_before": {
+          "grid": {
+            "head": "204897c9f3f6ccaf33ae6d02415b97d0049d7e1e",
+            "origin": "https://github.com/YehorBabenko88/bybit-cluster-grid",
+            "tracked_count": 652,
+            "tracked_raw_sha256": "19b639e623803f166be0a076129ef02f0fd402f8eecef473daba48e80e936d0e",
+            "tree": "73a1d12b7453533d57b44df95a253bb299ac2bfe"
+          },
+          "stratt": {
+            "head": "25eb939f8a816a80ac7c042ce75ec4d9173cd4ce",
+            "origin": "https://github.com/YehorBabenko88/strattester",
+            "tracked_count": 760,
+            "tracked_raw_sha256": "2494484e202395c4af1f6e204e1064537dac749012f2cd8152d5b99676f8c9f8",
+            "tree": "29c8bf9b4a607291d845e3026904074a33480373"
+          },
+          "terminan": {
+            "head": "de89c9be291cf89f389698aa9b43045ecd636447",
+            "origin": "https://github.com/YehorBabenko88/Terminan",
+            "tracked_count": 303,
+            "tracked_raw_sha256": "94f715a3e42a7de072212286d38e0ad892a99a85b132f3c52b64dbdfcb5cb9ea",
+            "tree": "117eef4f6dd39a94c2213453535548335e50456e"
+          },
+          "unified": {
+            "head": "ed4ac58066c29ba21bbe258c3e303991766baf4c",
+            "origin": "https://github.com/YehorBabenko88/unified-system",
+            "tracked_count": 1711,
+            "tracked_raw_sha256": "c82ff67ced61fb3156ae77f722592b684683a8d0efe243671794c0856a1d4a12",
+            "tree": "9fa20a242d408976dec84e99e53bdf3d4f7969bb"
+          }
+        },
+        "status": "PASS_SYNTHETIC_CAUSAL_COMPOSITION_ONLY",
+        "terminan_reader_git_blob": "c8b8328cc2df327d98d6bd4543232a55f8ddf30d",
+        "terminan_reader_raw_sha256": "694bd5b4fa091395231fcbdcbc7032864fd2caedfc86080c86cbf664469a4189",
+        "test_dependencies_after": {
+          "file_count": 155,
+          "raw_sha256": "e7e5bd6c01ed70670e3ab0fdaaabc3876309041f5d2ce0fd1d576bb22dcffcf6",
+          "versions": {
+            "colorama": "0.4.6",
+            "iniconfig": "2.1.0",
+            "packaging": "24.2",
+            "pluggy": "1.5.0",
+            "pytest": "8.3.5"
+          }
+        },
+        "test_dependencies_before": {
+          "file_count": 155,
+          "raw_sha256": "e7e5bd6c01ed70670e3ab0fdaaabc3876309041f5d2ce0fd1d576bb22dcffcf6",
+          "versions": {
+            "colorama": "0.4.6",
+            "iniconfig": "2.1.0",
+            "packaging": "24.2",
+            "pluggy": "1.5.0",
+            "pytest": "8.3.5"
+          }
+        },
+        "tests": {
+          "errors": 0,
+          "expected_failures": 0,
+          "failures": 0,
+          "finished": [
+            "test_lab_paper_pipeline.ComposedTests.test_actual_native_result_reaches_existing_writer_and_pinned_term_reader",
+            "test_lab_paper_pipeline.ComposedTests.test_elapsed_window_stops_reads_without_claiming_qualification",
+            "test_lab_paper_pipeline.ComposedTests.test_first_new_quote_before_latency_is_not_relabelled_as_a_fill",
+            "test_lab_paper_pipeline.ComposedTests.test_foreign_native_ledger_trade_stops_before_writer_callback",
+            "test_lab_paper_pipeline.ComposedTests.test_fractional_hour_and_integral_float_funding_values_keep_exact_units",
+            "test_lab_paper_pipeline.ComposedTests.test_funding_survives_actual_processing_delay_without_relabelling_selection",
+            "test_lab_paper_pipeline.ComposedTests.test_provider_failure_holds_cursor_then_normal_poll_uses_real_later_asof",
+            "test_lab_paper_pipeline.ComposedTests.test_publication_failure_stops_without_retry_or_new_source_io",
+            "test_lab_paper_pipeline.ComposedTests.test_reconnect_retains_uncertain_collateral_and_never_reuses_old_book",
+            "test_lab_paper_pipeline.ComposedTests.test_revocation_stops_before_another_source_read_and_preserves_cash_reservation",
+            "test_lab_paper_pipeline.ComposedTests.test_risk_processing_cannot_refresh_expired_strategy_window",
+            "test_lab_paper_pipeline.ComposedTests.test_ten_actual_strategy_risk_later_quotes_native_ledger_and_writer",
+            "test_lab_paper_pipeline.ComposedTests.test_tiny_hold_budget_rejects_ten_minute_plan_before_audit_creation",
+            "test_lab_paper_pipeline.ComposedTests.test_unknown_funding_and_legacy_context_never_create_paper_fill",
+            "test_lab_paper_pipeline.GuardTests.test_missing_kernel_source_admission_precedes_all_factories_and_files",
+            "test_lab_paper_pipeline.GuardTests.test_numeric_funding_representation_is_exact_without_rounding_milliseconds"
+          ],
+          "run": 16,
+          "skipped": 0,
+          "started": [
+            "test_lab_paper_pipeline.ComposedTests.test_actual_native_result_reaches_existing_writer_and_pinned_term_reader",
+            "test_lab_paper_pipeline.ComposedTests.test_elapsed_window_stops_reads_without_claiming_qualification",
+            "test_lab_paper_pipeline.ComposedTests.test_first_new_quote_before_latency_is_not_relabelled_as_a_fill",
+            "test_lab_paper_pipeline.ComposedTests.test_foreign_native_ledger_trade_stops_before_writer_callback",
+            "test_lab_paper_pipeline.ComposedTests.test_fractional_hour_and_integral_float_funding_values_keep_exact_units",
+            "test_lab_paper_pipeline.ComposedTests.test_funding_survives_actual_processing_delay_without_relabelling_selection",
+            "test_lab_paper_pipeline.ComposedTests.test_provider_failure_holds_cursor_then_normal_poll_uses_real_later_asof",
+            "test_lab_paper_pipeline.ComposedTests.test_publication_failure_stops_without_retry_or_new_source_io",
+            "test_lab_paper_pipeline.ComposedTests.test_reconnect_retains_uncertain_collateral_and_never_reuses_old_book",
+            "test_lab_paper_pipeline.ComposedTests.test_revocation_stops_before_another_source_read_and_preserves_cash_reservation",
+            "test_lab_paper_pipeline.ComposedTests.test_risk_processing_cannot_refresh_expired_strategy_window",
+            "test_lab_paper_pipeline.ComposedTests.test_ten_actual_strategy_risk_later_quotes_native_ledger_and_writer",
+            "test_lab_paper_pipeline.ComposedTests.test_tiny_hold_budget_rejects_ten_minute_plan_before_audit_creation",
+            "test_lab_paper_pipeline.ComposedTests.test_unknown_funding_and_legacy_context_never_create_paper_fill",
+            "test_lab_paper_pipeline.GuardTests.test_missing_kernel_source_admission_precedes_all_factories_and_files",
+            "test_lab_paper_pipeline.GuardTests.test_numeric_funding_representation_is_exact_without_rounding_milliseconds"
+          ],
+          "unexpected_successes": 0
+        }
+      }
+    }
+  ],
+  "classification": "PARTIAL_SUCCESS_AND_QUEUED_NO_FAILURE_OBSERVED",
+  "cause": "UNKNOWN: runner_id0/empty runner/no steps establishes unassigned queued jobs, not reason for queue. API started_at on queued job is retained as raw metadata, not execution proof.",
+  "qualification": "Two Windows2025 mandatory jobs prove 7 gate-regression tests in logs plus16 unique composed synthetic tests/0skip in digest-verified artifacts. Four Ubuntu/pure-source jobs remain queued. No full matrix or physical qualification."
+}

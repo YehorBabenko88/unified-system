@@ -1,0 +1,2 @@
+const {defineConfig}=require('@playwright/test');
+module.exports=defineConfig({testDir:'.',testMatch:'actual-ui.spec.cjs',workers:1,reporter:[['list'],['json',{outputFile:process.env.FIVE_EVIDENCE+'/chromium-results.json'}]],use:{browserName:'chromium',baseURL:'http://127.0.0.1:18765'},webServer:{command:'python integration/serve_terminan.py',cwd:require('node:path').resolve(__dirname,'..'),url:'http://127.0.0.1:18765/infrastructure',reuseExistingServer:false,timeout:20000}});

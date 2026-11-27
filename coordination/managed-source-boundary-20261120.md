@@ -1,0 +1,9 @@
+# Canonical managed source boundary
+
+Source identity is exactly unified_system, market_data, math, terminan. Application dispatch accepts only market_data.cli main(["serve"], startup_admission=source) and terminan.server main(["--host", "127.0.0.1", "--port", port], startup_admission=source). The original owned-Python argv, manifest source roots, loopback health URL and data port are checked before application imports.
+
+Managed read-only serve uses the existing private per-start ProcessDriver bearer and live source admission; it has no consumer for historical Grid fleet tokens. Runtime admission does not read or inject those credentials. Dedicated database credentials and receipt ownership remain separate mandatory gates. The data-first operational handoff remains unported. Data-first profiles refuse ACTIVATION_DATA_FIRST_UNPORTED. Historical Grid authentication is not adopted. Raw entry ownership/hash/revocation checks remain mandatory. This source migration grants no operational readiness.
+
+Validation: 26 selected pure tests on CPython 3.11 and 3.12 with an audit hook refusing all subprocess.Popen and os.system events; canonical admission, dispatcher argv, private grant/revocation and protected runtime ordering covered with fakes. Raw entry/native tests, installation, services and sockets were not executed under the security pause. No tests were disabled. The wider inherited installer fixture cohort requires coordinated canonical capsule updates and must not be represented by this scoped result.
+
+Managed service registration must repin service_entry.py exact Git bytes after integration. service_entry.py embeds the exact LF service_bootstrap.py digest; explicit Git attributes preserve those bytes across checkouts. Release artifacts must be exported from committed Git blobs.

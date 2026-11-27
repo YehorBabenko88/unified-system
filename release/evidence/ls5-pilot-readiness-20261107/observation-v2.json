@@ -1,0 +1,382 @@
+{
+  "schema": "unified.ls5-pilot-readiness-observation.v1",
+  "observed_at_utc": "2026-11-07T07:36:15.5071000Z",
+  "computer": "LS5",
+  "identity": {
+    "sid": "S-1-5-21-12977273-2956189057-260416802-1002",
+    "elevated": false,
+    "name": "LS5\\LS-5"
+  },
+  "os": {
+    "Caption": "Microsoft Windows 11 Pro",
+    "Version": "10.0.26300",
+    "BuildNumber": "26300",
+    "LastBootUpTime": "2026-10-30T13:28:58.077699+01:00",
+    "FreePhysicalMemory": 37904644,
+    "FreeVirtualMemory": 37443292
+  },
+  "disks": {
+    "DeviceID": "C:",
+    "Size": 1999291445248,
+    "FreeSpace": 1602965274624
+  },
+  "services": [
+    {
+      "Name": "postgresql-x64-18",
+      "State": "Running",
+      "StartMode": "Auto",
+      "StartName": "NT AUTHORITY\\NetworkService"
+    },
+    {
+      "Name": "sshd",
+      "State": "Running",
+      "StartMode": "Auto",
+      "StartName": "LocalSystem"
+    },
+    {
+      "Name": "Tailscale",
+      "State": "Running",
+      "StartMode": "Auto",
+      "StartName": "LocalSystem"
+    }
+  ],
+  "listeners": [
+    {
+      "LocalAddress": "::",
+      "LocalPort": 61234,
+      "OwningProcess": 7572
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 55432,
+      "OwningProcess": 6916
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49674,
+      "OwningProcess": 1676
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49668,
+      "OwningProcess": 4712
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49667,
+      "OwningProcess": 3048
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49666,
+      "OwningProcess": 2392
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49665,
+      "OwningProcess": 1536
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 49664,
+      "OwningProcess": 1704
+    },
+    {
+      "LocalAddress": "::1",
+      "LocalPort": 42050,
+      "OwningProcess": 41956
+    },
+    {
+      "LocalAddress": "fd7a:115c:a1e0::2431:a06f",
+      "LocalPort": 38549,
+      "OwningProcess": 7260
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 21077,
+      "OwningProcess": 14708
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 7680,
+      "OwningProcess": 22488
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 5357,
+      "OwningProcess": 4
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 445,
+      "OwningProcess": 4
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 135,
+      "OwningProcess": 2012
+    },
+    {
+      "LocalAddress": "::",
+      "LocalPort": 22,
+      "OwningProcess": 4180
+    },
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 62783,
+      "OwningProcess": 7572
+    },
+    {
+      "LocalAddress": "100.103.160.110",
+      "LocalPort": 62465,
+      "OwningProcess": 7260
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 61234,
+      "OwningProcess": 7572
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 55432,
+      "OwningProcess": 6916
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49674,
+      "OwningProcess": 1676
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49668,
+      "OwningProcess": 4712
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49667,
+      "OwningProcess": 3048
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49666,
+      "OwningProcess": 2392
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49665,
+      "OwningProcess": 1536
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 49664,
+      "OwningProcess": 1704
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 33333,
+      "OwningProcess": 7572
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 21077,
+      "OwningProcess": 14708
+    },
+    {
+      "LocalAddress": "127.0.0.1",
+      "LocalPort": 5939,
+      "OwningProcess": 18564
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 5040,
+      "OwningProcess": 8212
+    },
+    {
+      "LocalAddress": "192.168.2.173",
+      "LocalPort": 139,
+      "OwningProcess": 4
+    },
+    {
+      "LocalAddress": "100.103.160.110",
+      "LocalPort": 139,
+      "OwningProcess": 4
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 135,
+      "OwningProcess": 2012
+    },
+    {
+      "LocalAddress": "0.0.0.0",
+      "LocalPort": 22,
+      "OwningProcess": 4180
+    }
+  ],
+  "network": [
+    {
+      "gateway": [
+        "192.168.2.1"
+      ],
+      "interface": "Ethernet",
+      "dns": [
+        "fd16:90fe:6f83:0:2e3a:fdff:febe:bdd8",
+        "2003:ec:3709:6c00:2e3a:fdff:febe:bdd8",
+        "fd16:90fe:6f83:0:2e3a:fdff:febe:bdd8",
+        "2003:ec:3712:2500:2e3a:fdff:febe:bdd8",
+        "192.168.2.1"
+      ],
+      "index": 12,
+      "ipv4": [
+        "192.168.2.173"
+      ]
+    },
+    {
+      "gateway": [
+        null
+      ],
+      "interface": "Tailscale",
+      "dns": [
+        "fec0:0:0:ffff::1",
+        "fec0:0:0:ffff::2",
+        "fec0:0:0:ffff::3"
+      ],
+      "index": 26,
+      "ipv4": [
+        "100.103.160.110"
+      ]
+    },
+    {
+      "gateway": [
+        null
+      ],
+      "interface": "WLAN",
+      "dns": [
+        "192.168.2.1"
+      ],
+      "index": 10,
+      "ipv4": [
+        "169.254.55.84"
+      ]
+    }
+  ],
+  "firewall": [
+    {
+      "Name": "Domain",
+      "Enabled": 1,
+      "DefaultInboundAction": 0,
+      "DefaultOutboundAction": 0
+    },
+    {
+      "Name": "Private",
+      "Enabled": 1,
+      "DefaultInboundAction": 0,
+      "DefaultOutboundAction": 0
+    },
+    {
+      "Name": "Public",
+      "Enabled": 1,
+      "DefaultInboundAction": 0,
+      "DefaultOutboundAction": 0
+    }
+  ],
+  "policies": [
+    {
+      "Scope": 4,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 3,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 0,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 1,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 2,
+      "ExecutionPolicy": 1
+    }
+  ],
+  "installations": [
+    {
+      "DisplayName": "Python 3.15.2 Documentation (64-bit)",
+      "DisplayVersion": "3.15.2150.0",
+      "InstallLocation": ""
+    },
+    {
+      "DisplayName": "Python 3.15.2 Executables (64-bit)",
+      "DisplayVersion": "3.15.2150.0",
+      "InstallLocation": ""
+    },
+    {
+      "DisplayName": "Python 3.15.2 Test Suite (64-bit)",
+      "DisplayVersion": "3.15.2150.0",
+      "InstallLocation": ""
+    },
+    {
+      "DisplayName": "Python 3.15.2 Core Interpreter (64-bit)",
+      "DisplayVersion": "3.15.2150.0",
+      "InstallLocation": ""
+    },
+    {
+      "DisplayName": "Python 3.15.2 Development Libraries (64-bit)",
+      "DisplayVersion": "3.15.2150.0",
+      "InstallLocation": ""
+    },
+    {
+      "DisplayName": "Python 3.15.2 Tcl/Tk Support (64-bit)",
+      "DisplayVersion": "3.15.2150.0",
+      "InstallLocation": ""
+    },
+    {
+      "DisplayName": "Node.js",
+      "DisplayVersion": "24.22.1",
+      "InstallLocation": ""
+    },
+    {
+      "DisplayName": "Python 3.15.2 Standard Library (64-bit)",
+      "DisplayVersion": "3.15.2150.0",
+      "InstallLocation": ""
+    },
+    {
+      "DisplayName": "Python 3.15.2 pip Bootstrap (64-bit)",
+      "DisplayVersion": "3.15.2150.0",
+      "InstallLocation": ""
+    },
+    {
+      "DisplayName": "Python 3.15.2 Add to Path (64-bit)",
+      "DisplayVersion": "3.15.2150.0",
+      "InstallLocation": ""
+    },
+    {
+      "DisplayName": "Python Launcher",
+      "DisplayVersion": "3.15.2150.0",
+      "InstallLocation": ""
+    }
+  ],
+  "candidate_existing_roots": [
+    {
+      "path": "C:\\Program Files\\Unified",
+      "exists": false
+    },
+    {
+      "path": "C:\\ProgramData\\Unified",
+      "exists": false
+    },
+    {
+      "path": "C:\\Unified",
+      "exists": false
+    }
+  ],
+  "backup_admin_channel": "NOT_VERIFIED_END_TO_END",
+  "release_manifest": "NOT_ADMITTED",
+  "backup_restore": "NOT_RUN",
+  "rollback": "NOT_RUN",
+  "install_authorized_by_this_observation": false,
+  "errors": [],
+  "finished_at_utc": "2026-11-07T07:36:21.4710574Z"
+}

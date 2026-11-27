@@ -1,0 +1,287 @@
+{
+  "schema": "terminan.disposable.fresh-file-render.v1",
+  "scope": "LOCAL_UNATTESTED_FRESH_FILE_RENDER_NOT_PRODUCER_AUTH_OR_MARKET_VERIFICATION",
+  "input_sha256": {
+    "request": "4cf1df7beb92853123db57742ceb0bc788d2ad129288b8f1777de7f55a1bb232",
+    "envelope": "653ecbd6964c27352698378ceb13877095fd5509f1fab1f7023cbd88216c02a7",
+    "artifact": "f4997d7d26211676cd8664e53d7999f8b71f203510f3b9a275b439c403e03940"
+  },
+  "renderer_sha256": "574dbf0882577708ab1e4c0ed73d6401eb6fabce3b3dc1b1375fc5952689241f",
+  "node": "v24.22.1",
+  "playwright": "1.56.1",
+  "chromium_revision": "1194",
+  "authenticated_gateway": false,
+  "verified_market_data": false,
+  "production_admission": false,
+  "hard_resource_containment": "NOT_QUALIFIED",
+  "browser_run": "FINISHED",
+  "render": "LOCAL_UNATTESTED_MODEL_AND_DOM_AGREEMENT",
+  "cleanup": {
+    "context": "CLOSED",
+    "client": "DISCONNECTED",
+    "server": "CLOSED",
+    "http": "CLOSED",
+    "confirmed": true,
+    "exit_observed": true,
+    "fallback_sdk_kill": false,
+    "budget_ms": 10000,
+    "expired": false,
+    "deadline_expired": false,
+    "expiration_phase": null,
+    "pid": 142944,
+    "exit_code": 0,
+    "signal_observed": false,
+    "observed_elapsed_ms": 49.6534
+  },
+  "page_requests": 3,
+  "blocked_page_requests": 0,
+  "http_status": 200,
+  "rendered_model_sha256": "4a513a5ce13b192c26205de1cebe51b306e5492558fcdc4fde31e448004106b2",
+  "screenshot_sha256": "c2cd43f0e1489d42f1687ac8122b87bde86495bd153df8f1342714310792e30e",
+  "levels": 4,
+  "input_rows": 3,
+  "sync_spawn_guard": {
+    "scope": "PINNED_SDK_SPAWNSYNC_RESTRICTION_NOT_OS_BOUNDARY",
+    "installed": true,
+    "denied_attempts": 0,
+    "root_job_teardown_required": false
+  },
+  "root_job_teardown_required": false,
+  "result": "LOCAL_RENDER_PASS_NOT_AUTH_OR_PHYSICAL_ACCEPTANCE",
+  "diagnostics": {
+    "schema": "terminan.render.diagnostics.v1",
+    "clock": "NODE_MONOTONIC_MS_SINCE_PROCESS_START_NOT_UTC",
+    "events": [
+      {
+        "phase": "PREPARE",
+        "state": "BEGIN",
+        "elapsed_ms": 43
+      },
+      {
+        "phase": "PREPARE",
+        "state": "OK",
+        "elapsed_ms": 4815
+      },
+      {
+        "phase": "TOOLING_VALIDATE",
+        "state": "BEGIN",
+        "elapsed_ms": 4815
+      },
+      {
+        "phase": "TOOLING_VALIDATE",
+        "state": "OK",
+        "elapsed_ms": 10535
+      },
+      {
+        "phase": "RUN_DIRECTORY",
+        "state": "BEGIN",
+        "elapsed_ms": 10535
+      },
+      {
+        "phase": "RUN_DIRECTORY",
+        "state": "OK",
+        "elapsed_ms": 11105
+      },
+      {
+        "phase": "HTTP_LISTEN",
+        "state": "BEGIN",
+        "elapsed_ms": 11106
+      },
+      {
+        "phase": "HTTP_LISTEN",
+        "state": "OK",
+        "elapsed_ms": 11117
+      },
+      {
+        "phase": "BROWSER_LAUNCH",
+        "state": "BEGIN",
+        "elapsed_ms": 11524
+      },
+      {
+        "phase": "BROWSER_LAUNCH",
+        "state": "OK",
+        "elapsed_ms": 11661
+      },
+      {
+        "phase": "OWNED_PID_WRITE",
+        "state": "BEGIN",
+        "elapsed_ms": 11661
+      },
+      {
+        "phase": "OWNED_PID_WRITE",
+        "state": "OK",
+        "elapsed_ms": 12259
+      },
+      {
+        "phase": "SPAWN_VALIDATE",
+        "state": "BEGIN",
+        "elapsed_ms": 12259
+      },
+      {
+        "phase": "SPAWN_VALIDATE",
+        "state": "OK",
+        "elapsed_ms": 12259
+      },
+      {
+        "phase": "CLIENT_CONNECT",
+        "state": "BEGIN",
+        "elapsed_ms": 12259
+      },
+      {
+        "phase": "CLIENT_CONNECT",
+        "state": "OK",
+        "elapsed_ms": 12276
+      },
+      {
+        "phase": "CONTEXT_CREATE",
+        "state": "BEGIN",
+        "elapsed_ms": 12276
+      },
+      {
+        "phase": "CONTEXT_CREATE",
+        "state": "OK",
+        "elapsed_ms": 12281
+      },
+      {
+        "phase": "ROUTE_INSTALL",
+        "state": "BEGIN",
+        "elapsed_ms": 12281
+      },
+      {
+        "phase": "ROUTE_INSTALL",
+        "state": "OK",
+        "elapsed_ms": 12283
+      },
+      {
+        "phase": "PAGE_CREATE",
+        "state": "BEGIN",
+        "elapsed_ms": 12283
+      },
+      {
+        "phase": "PAGE_CREATE",
+        "state": "OK",
+        "elapsed_ms": 12335
+      },
+      {
+        "phase": "PAGE_NAVIGATE",
+        "state": "BEGIN",
+        "elapsed_ms": 12335
+      },
+      {
+        "phase": "PAGE_NAVIGATE",
+        "state": "OK",
+        "elapsed_ms": 12401
+      },
+      {
+        "phase": "PAGE_WAIT",
+        "state": "BEGIN",
+        "elapsed_ms": 12402
+      },
+      {
+        "phase": "PAGE_WAIT",
+        "state": "OK",
+        "elapsed_ms": 12470
+      },
+      {
+        "phase": "MODEL_VALIDATE",
+        "state": "BEGIN",
+        "elapsed_ms": 12470
+      },
+      {
+        "phase": "MODEL_VALIDATE",
+        "state": "OK",
+        "elapsed_ms": 12478
+      },
+      {
+        "phase": "SCREENSHOT",
+        "state": "BEGIN",
+        "elapsed_ms": 12478
+      },
+      {
+        "phase": "SCREENSHOT",
+        "state": "OK",
+        "elapsed_ms": 12527
+      },
+      {
+        "phase": "SCREENSHOT_WRITE",
+        "state": "BEGIN",
+        "elapsed_ms": 12527
+      },
+      {
+        "phase": "SCREENSHOT_WRITE",
+        "state": "OK",
+        "elapsed_ms": 13102
+      },
+      {
+        "phase": "INPUT_CONFIRM",
+        "state": "BEGIN",
+        "elapsed_ms": 13102
+      },
+      {
+        "phase": "INPUT_CONFIRM",
+        "state": "OK",
+        "elapsed_ms": 16621
+      },
+      {
+        "phase": "CONTEXT_CLOSE",
+        "state": "BEGIN",
+        "elapsed_ms": 16622
+      },
+      {
+        "phase": "CONTEXT_CLOSE",
+        "state": "OK",
+        "elapsed_ms": 16629
+      },
+      {
+        "phase": "CLIENT_DISCONNECT",
+        "state": "BEGIN",
+        "elapsed_ms": 16629
+      },
+      {
+        "phase": "CLIENT_DISCONNECT",
+        "state": "OK",
+        "elapsed_ms": 16630
+      },
+      {
+        "phase": "SERVER_CLOSE",
+        "state": "BEGIN",
+        "elapsed_ms": 16631
+      },
+      {
+        "phase": "SERVER_CLOSE",
+        "state": "OK",
+        "elapsed_ms": 16671
+      },
+      {
+        "phase": "SERVER_EXIT_OBSERVE",
+        "state": "BEGIN",
+        "elapsed_ms": 16671
+      },
+      {
+        "phase": "SERVER_EXIT_OBSERVE",
+        "state": "OK",
+        "elapsed_ms": 16671
+      },
+      {
+        "phase": "HTTP_CLOSE",
+        "state": "BEGIN",
+        "elapsed_ms": 16671
+      },
+      {
+        "phase": "HTTP_CLOSE",
+        "state": "OK",
+        "elapsed_ms": 16671
+      },
+      {
+        "phase": "RECEIPT_WRITE",
+        "state": "BEGIN",
+        "elapsed_ms": 16671
+      }
+    ],
+    "event_count": 45,
+    "stream_bytes": 2678,
+    "overflow": false,
+    "io_failed": false,
+    "finalization": "ENDED_BEFORE_FINAL_WRITE"
+  }
+}

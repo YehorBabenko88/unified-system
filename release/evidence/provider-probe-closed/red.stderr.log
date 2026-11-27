@@ -1,0 +1,69 @@
+test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) ... 
+  test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'api.bybit.com', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'}) ... FAIL
+  test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'api.bybit.com', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'}) ... FAIL
+  test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'API.BYBIT.COM', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'}) ... FAIL
+  test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'www.microsoft.com', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'}) ... FAIL
+  test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'api.bybit.com', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'}) ... FAIL
+  test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'unadmitted.invalid', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'}) ... FAIL
+test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) ... FAIL
+
+======================================================================
+FAIL: test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'api.bybit.com', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\root-provider-probe-safety\tests\test_network_probe_provider_closed.py", line 72, in test_actual_function_blocks_provider_before_every_network_primitive
+    self.assertEqual(row['network_primitive_calls'], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'api.bybit.com', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\root-provider-probe-safety\tests\test_network_probe_provider_closed.py", line 72, in test_actual_function_blocks_provider_before_every_network_primitive
+    self.assertEqual(row['network_primitive_calls'], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'API.BYBIT.COM', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\root-provider-probe-safety\tests\test_network_probe_provider_closed.py", line 72, in test_actual_function_blocks_provider_before_every_network_primitive
+    self.assertEqual(row['network_primitive_calls'], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'www.microsoft.com', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\root-provider-probe-safety\tests\test_network_probe_provider_closed.py", line 72, in test_actual_function_blocks_provider_before_every_network_primitive
+    self.assertEqual(row['network_primitive_calls'], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'api.bybit.com', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\root-provider-probe-safety\tests\test_network_probe_provider_closed.py", line 72, in test_actual_function_blocks_provider_before_every_network_primitive
+    self.assertEqual(row['network_primitive_calls'], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive) (result={'host': 'unadmitted.invalid', 'dns': 'FAIL', 'tcp443': 'NOT_RUN', 'https': 'NOT_RUN', 'api': 'NOT_RUN'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\root-provider-probe-safety\tests\test_network_probe_provider_closed.py", line 72, in test_actual_function_blocks_provider_before_every_network_primitive
+    self.assertEqual(row['network_primitive_calls'], 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_actual_function_blocks_provider_before_every_network_primitive (test_network_probe_provider_closed.ProviderClosedTests.test_actual_function_blocks_provider_before_every_network_primitive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\root-provider-probe-safety\tests\test_network_probe_provider_closed.py", line 76, in test_actual_function_blocks_provider_before_every_network_primitive
+    self.assertTrue(data['blocked_return_precedes_network'])
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 0.694s
+
+FAILED (failures=7)

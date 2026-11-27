@@ -1,0 +1,40 @@
+test_actual_principal_wrong_view_rejected_before_any_object_read (test_query_front.QueryFrontTests.test_actual_principal_wrong_view_rejected_before_any_object_read) ... ok
+test_chain_valid_but_unregistered_client_fingerprint_is_unauthenticated (test_query_front.QueryFrontTests.test_chain_valid_but_unregistered_client_fingerprint_is_unauthenticated) ... ok
+test_corrupt_owned_audit_blocks_disclosure_without_repair_or_object_read (test_query_front.QueryFrontTests.test_corrupt_owned_audit_blocks_disclosure_without_repair_or_object_read) ... Exception in thread gateway-disposable-peer:
+Traceback (most recent call last):
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\threading.py", line 1075, in _bootstrap_inner
+ERROR
+test_duplicate_read_and_explicit_front_restart_preserve_result_not_job_grants (test_query_front.QueryFrontTests.test_duplicate_read_and_explicit_front_restart_preserve_result_not_job_grants) ...     self.run()
+  File "C:\Users\LS-5\AppData\Local\Python\pythoncore-3.12-64\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\LS-5\.codex\worktrees\gateway-runtime-integration-20261107\unified-system\unified_system\gateway_runtime_composition.py", line 111, in _worker
+    status, encoded = self._manifest_composition.exchange(peer, bytes(header), deadline)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\gateway-runtime-integration-20261107\unified-system\unified_system\gateway_runtime_composition.py", line 266, in exchange
+    self.flush('AUTHENTICATED_BEFORE_BODY')
+  File "C:\Users\LS-5\.codex\worktrees\gateway-runtime-integration-20261107\unified-system\unified_system\gateway_runtime_composition.py", line 230, in flush
+    records=self.journal.read()
+            ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\gateway-runtime-integration-20261107\unified-system\unified_system\journal.py", line 23, in read
+    rows=db.execute("SELECT sequence,state,receipt,previous_hash,digest FROM transitions ORDER BY sequence LIMIT 100001").fetchall()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.DatabaseError: file is not a database
+ok
+test_real_authenticated_bounded_query_digest_gaps_and_audit (test_query_front.QueryFrontTests.test_real_authenticated_bounded_query_digest_gaps_and_audit) ... ok
+
+======================================================================
+ERROR: test_corrupt_owned_audit_blocks_disclosure_without_repair_or_object_read (test_query_front.QueryFrontTests.test_corrupt_owned_audit_blocks_disclosure_without_repair_or_object_read)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\gateway-runtime-integration-20261107\unified-system\tests\gateway_runtime\test_query_front.py", line 79, in test_corrupt_owned_audit_blocks_disclosure_without_repair_or_object_read
+    headers,response=self.get(front,self.request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\LS-5\.codex\worktrees\gateway-runtime-integration-20261107\unified-system\tests\gateway_runtime\test_query_front.py", line 44, in get
+    h,b=bytes(output).split(b'\r\n\r\n',1);return h,json.loads(b)
+    ^^^
+ValueError: not enough values to unpack (expected 2, got 1)
+
+----------------------------------------------------------------------
+Ran 5 tests in 2.002s
+
+FAILED (errors=1)

@@ -1,0 +1,2 @@
+# Historical handoff negative source smoke
+This check executes actual pinned Grid PR249 handoff validator with an empty trust policy and a spoofed Strattester v1.1 record. Both must fail closed. It does not produce a real qualified Strattester receipt, provision owner trust, exercise the positive Grid path, access PG18, or authorize trading. It is a narrow adversarial contract check, not an end-to-end acceptance.

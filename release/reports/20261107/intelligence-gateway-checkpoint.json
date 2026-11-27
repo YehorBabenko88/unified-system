@@ -1,0 +1,94 @@
+{
+  "schema": "unified.gateway.checkpoint.v1",
+  "source_head": "b1261c560922ac6fc255d79809759d7d06035f0a",
+  "local_tests": 16,
+  "skips": 0,
+  "source_before_after_equal": true,
+  "source_files": 1378,
+  "implemented": [
+    "OFFLINE_CATALOG_34_PROPOSED_TOOLS",
+    "CLOSED_QUERY_PREPARATION",
+    "DETERMINISTIC_RESEARCH_PLAN_PREPARATION",
+    "UNCONDITIONAL_RUNTIME_DENIAL"
+  ],
+  "mcp_registered": false,
+  "authentication_available": false,
+  "data_backend": null,
+  "research_job_backend": null,
+  "experiment_registry_binding": null,
+  "visualization_backend": null,
+  "actual_engine_e2e": "BLOCKED_NO_ADMITTED_OWNER_SEAMS",
+  "independent_review": {
+    "status": "PASS_BOUNDED_OFFLINE_CONTRACTS_ONLY",
+    "url": "https://github.com/YehorBabenko88/unified-system/blob/b3815b86673d0ab297ea8ace0c963fed00ccddd0/docs/audits/agent8-20261106/phase80/independent-review.md",
+    "review_commit": "b3815b86673d0ab297ea8ace0c963fed00ccddd0",
+    "tested_source": "b1261c560922ac6fc255d79809759d7d06035f0a",
+    "unique_tests": 16,
+    "skips": 0,
+    "primary_source_files": 1378,
+    "extra_invalid_cases": 26,
+    "runtime_denials": 35,
+    "sourceguard_negative_cases": 4,
+    "runtime_admission": false,
+    "hosted_pass": false
+  },
+  "hosted_ci": {
+    "state": "QUEUED_AT_OBSERVATION",
+    "attempt": 1,
+    "runs": [
+      42382136861,
+      42382109787
+    ],
+    "source_head": "e2fa604a6b39852db1075efc2ced07b8120801a2",
+    "terminal_pass": false
+  },
+  "master_mission": "IN_PROGRESS / NO-GO",
+  "scope": [
+    "DEVELOPMENT",
+    "ISOLATED_CONTRACT_TESTS"
+  ],
+  "owner_seams": {
+    "A2": {
+      "client_identity": "NONE",
+      "read_query_disclosure": "NONE",
+      "research_submission": "NONE",
+      "cancellation": "NONE",
+      "reply": "Owner explicitly denies implicit Gateway grants from Assignment/GET_COMMAND contracts"
+    },
+    "A6": {
+      "authenticated_visualization_artifact": "NONE",
+      "local_projection": "NOT_A_BACKEND_OR_AUTHENTICATION"
+    },
+    "A3": {
+      "query": "NONE",
+      "authorized_identity_lookup": "NONE",
+      "coverage_gap_time_read": "NONE",
+      "offline_candidates": "claim parsing / prepare_kline_page are not query or completeness admission"
+    },
+    "A4": {
+      "authenticated_manifest_query": "NONE",
+      "experiment_result_registry_binding": "NONE",
+      "offline_candidate_head": "f9f2d04595cf2360dab78980996ae6c34c9e26fc",
+      "offline_candidate_tree": "7fa3c8ad67c4efece7e2a692f48fb63a9e40ffd3",
+      "local_functions": [
+        "decode_manifest",
+        "validate_manifest_successor",
+        "read_manifest_object"
+      ],
+      "admission_from_hash_syntax": false
+    },
+    "A7": {
+      "admitted_gateway_job_experiment_results": "NONE",
+      "admitted_fee_funding_profile": "NONE",
+      "offline_candidates": "PINNED_EXISTING_LOCAL_APIS_NOT_GATEWAY_ADMITTED",
+      "inventory_path": "release/evidence/intelligence-gateway-20261107/agent7-seams-original.json",
+      "inventory_sha256": "1346e99605a07b1f3e80c5bb624800a0ca86725a2aaaec5775d8b9489f1caed2",
+      "owner_verified_file_count": 14,
+      "root_independent_blob_reverification": "NOT_RUN",
+      "execution": "NOT_EXECUTED"
+    }
+  },
+  "real_trading": "PROHIBITED",
+  "physical_deployment": "NOT_AUTHORIZED",
+  "pr": "https://github.com/YehorBabenko88/unified-system/pull/44"
+}

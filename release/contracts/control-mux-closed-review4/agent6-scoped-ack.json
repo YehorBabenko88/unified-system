@@ -1,0 +1,45 @@
+{
+  "schema": "terminan.closed-mux-review4-consumer-review.v1",
+  "exact_pins": {
+    "MANIFEST.json": "1c1f0311db7204bd47cb758e7e4e4fe2d7723f7d59e90bd13b52f6fb8b1f83c3",
+    "control-mux-closed.schema.json": "335cda8e5d451fd9ab90586b6f6a4d6fbaf5f52eabb5a11762d9100ed92fefdf",
+    "codec-bounds.json": "be9a0eb518ab14683cbb8e002e18f05e03d948b8c5d1537d635736bde8789203",
+    "PROTOCOL.md": "8737de43f8cd422ea40bf30140f2d5149cd2f978955561c07fb8b3c6a6c604aa"
+  },
+  "fresh_scoped_ack": "ACK_REVIEW4_CLOSED_SCHEMA_CANONICAL_OPERATION_COUNTER_AND_NODE_HOST_WRITER_MODEL_SCOPE_ONLY",
+  "previous_ack_transferred": false,
+  "blocking_findings_in_bounded_scope": "NONE_FOUND",
+  "verification": {
+    "manifest_members_raw_hashes_lengths": 27,
+    "regenerated_schema_hash": "MATCH",
+    "schema_lookup_models": 69,
+    "actual_python_node_raw_and_direct_boundary_vectors": 28,
+    "node_host_input_checks": 24,
+    "additional_original_regression_and_host_probes": "Sparseall/partial,overriddenforEach,inheritedhole rejected;dense positive roundtrips;arrayaccessor/allproxytraps/revokedproxy rejected with0getter0trap calls",
+    "counter_and_byte_regressions": "Previous12/13depth,32768/32769nodes,object/key/string/array/raw2MiB boundaries retained in28vectors; originalA1depth andA6nodecount behavior aligned",
+    "python": "3.15.2",
+    "node": "v24.22.1",
+    "execution": "Own scratch only; source manifests/reports untouched; derivative reports do not inherit original report raw hashes"
+  },
+  "resolved_findings": [
+    "A1-CLOSED-R1-01 wrong operation/state/status/result tuple rejected by pinned matrix, valid409rejection/204ACK-CLOSE semantics preserved",
+    "A1-CLOSED-R2-01 container depth consistently counted",
+    "A6-CLOSED-R2-02 object keys consistently counted as nodes",
+    "A1-CLOSED-R3-01 sparse own-index arrays rejected before array emission; no hole compaction",
+    "A6 related overriddenforEach/inheritedindex cases rejected without input iteration hooks"
+  ],
+  "ack_limits": [
+    "This ACK approves only reviewed proposal bytes/model scope; no real endpoint, identity/provider, nativeConsul/index/receipt proof, actual global quota/containment, load/retention/time/freshness or physical admission.",
+    "Node util.types.isProxy guard is Node-specific; this is not a portable browser implementation. Any actual browser adapter/API allocation requires separate review; do not paste Node helper or assume browser host-graph guarantees.",
+    "Ordinary trusted runtime intrinsics are assumed by host model; this is not a hardened sandbox against hostile mutation of interpreter builtins.",
+    "New no-JSONnumeric opt-in transport and domain arrays32/exactASCIIstrings require A3/A4/A5/A7 exact units/scale/grammar/root representation ACK; no old data conversion/truncation/splitting/schema-root-cursor reuse. Unsupported domains remainUNAVAILABLE.",
+    "All authority/domain/route/header/CSRF/view/session/hash relationships remain semantic beyond JSONSchema; successful structural/model checks are not backendauthorization.",
+    "A2 owns endpoint implementation; no shared/frozen/PR31/product edits authorized by this review. ROOT allocation/design approval remains separate."
+  ],
+  "product_head_unchanged": "42686cd8fafcefaed3c5df5adaee5173d27543fd",
+  "product_shared_PR31_frozen_edits": "NONE",
+  "runtime_endpoint_ack": "NOT_AVAILABLE",
+  "native_provider_globalquota_containment": "NOT_QUALIFIED",
+  "physical_admission": "NOT_RUN",
+  "overall_go_no_go": "NO-GO"
+}

@@ -1,0 +1,32 @@
+{
+  "source_head": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
+  "source_tree": "d19857aa229691be6ed2c7287e79f92b16baa961",
+  "command": [
+    "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-c",
+    "import sys,os;sys.path[:0]=['.', 'C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-5-resource-aware-distributed/work/schema-tools','C:/Users/LS-5/Documents/Codex/2026-11-06/codex-agent-8-independent-security-ci/work/audit-venv/Lib/site-packages'];import yaml;from pathlib import Path;d=yaml.safe_load(Path('.github/workflows/final-integration.yml').read_bytes());s=next(x['run'] for x in d['jobs']['boundary']['steps'] if x.get('name')=='Integrated component tests (mandatory, no skips)');exec(compile(s,'actual-final-integration-workflow','exec'))"
+  ],
+  "environment_delta": {
+    "EXPECTED_HEAD": "c9f3735c1efa2d5ae0e2dfbe52987a49c520bdf5",
+    "GITHUB_RUN_ID": "LOCAL_ROOT_C9",
+    "GITHUB_RUN_ATTEMPT": "1"
+  },
+  "exit_code": 0,
+  "scope": "ACTUAL_EMBEDDED_WORKFLOW_LOCAL_WINDOWS_75_0SKIP_RAW_SOURCE_PREPOST_NOT_HOSTED",
+  "raw_bound_inputs": 377,
+  "files": {
+    "exact-c9-workflow.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exact-c9-workflow.stdout.log": "2656e5d5e07496c95999d3888af5e2ba348037c0d4a3c8d56cd41eef924121ea",
+    "partial-integration-ci-evidence.json": "db67de46c7e4215180740c38dcf4695a8f0e45ab90dd596927be4d24084f572a",
+    "partial-integration-ci-tests.log": "ba9c10dc4525c17a8a19d2c20050d097004e5a06516a77b808416c6f039c4a96",
+    "qualified-import-green-receipt.json": "949ed37b3dd97dc47eda70cb104b332ef358e2542f77e07c5055af0d3c973e11",
+    "qualified-import-green.stderr.log": "3e11475d1286aa50ce9bbdb42a64596e428e993640f47bcbb36c32353572faa2",
+    "qualified-import-green.stdout.log": "490234999006061e935ef22302910f23fe02923ba4ddb464cce8406f92be6019",
+    "qualified-import-red-receipt.json": "3e1bfa7e3b6e0bfd2798a5b9091b00722ea718e111218e29c2dda358a7d1a4a1",
+    "qualified-import-red.stderr.log": "ee0378a9dd443a9d94e497efa3c573b029942f93ff1d91509f8e4915dfa98d4e",
+    "qualified-import-red.stdout.log": "86c196a5f9f112d1fa7ae3a620df44df5a3e64d0ea015dcd33e85dab99dfb05f"
+  }
+}

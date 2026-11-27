@@ -1,0 +1,64 @@
+{
+  "schema": "unified.four-owner.source-cohort.v1",
+  "release_status": "NO_GO",
+  "execution_authority": false,
+  "trading_authorized": false,
+  "sources": {
+    "unified_system": {
+      "commit": "ENCLOSING_HEAD",
+      "base": "4a6188e8a988acec134bfec1ac1875fd7b67f57f",
+      "repository": "YehorBabenko88/unified-system"
+    },
+    "market_data": {
+      "commit": "2478cad274f9d1f2dde6617b6b22a2576dc83f45",
+      "repository": "YehorBabenko88/strattester",
+      "distribution": "market-data",
+      "package": "market_data",
+      "metadata_version": "0.1.0",
+      "build_members": [
+        "pyproject.toml",
+        "README.md",
+        "market_data/"
+      ]
+    },
+    "math": {
+      "commit": "b3cb935aee7d6569d6fd0cfaff70ea9b9e5f0df3",
+      "repository": "YehorBabenko88/math",
+      "distribution": "unified-math-kernels",
+      "package": "market_math",
+      "metadata_version": "0.1.0",
+      "build_members": [
+        "pyproject.toml",
+        "python/market_math.py",
+        "python/market_compute_api.py",
+        "python/history_statistics.py"
+      ]
+    },
+    "terminan": {
+      "commit": "fc0bed4937ab5dbb039320aae48e49b01b31bb43",
+      "repository": "YehorBabenko88/Terminan",
+      "distribution": "unified-terminan",
+      "package": "terminan",
+      "metadata_version": "0.1.0",
+      "build_members": [
+        "pyproject.toml",
+        "README.md",
+        "terminan/"
+      ]
+    }
+  },
+  "builders": {
+    "setuptools": "80.9.0",
+    "wheel": "0.45.1"
+  },
+  "scope": "SYNTHETIC_OFFLINE_CAUSAL_INSTALLED_WHEELS_PRIVATE_SQLITE_ONLY",
+  "unqualified": {
+    "source_authenticity": "NOT_EVALUATED",
+    "point_in_time_availability": "UNKNOWN",
+    "native_installation": "NOT_RUN",
+    "physical": "NOT_RUN",
+    "production": "NO_GO"
+  },
+  "enforce_repository_origins": true,
+  "child_no_site": true
+}

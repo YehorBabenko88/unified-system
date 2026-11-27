@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Users\\LS-5\\AppData\\Local\\Python\\pythoncore-3.12-64\\python.exe",
+    "-I",
+    "-S",
+    "-B",
+    "-c",
+    "import sys,unittest;sys.path.insert(0,'.');s=unittest.TestSuite(unittest.defaultTestLoader.discover('tests',pattern=p) for p in ('test_network_probe_provider_closed.py','test_network_probe_transport.py','test_network_deployment_guard.py','test_lan_probe_inventory.py'));r=unittest.TextTestRunner(verbosity=2).run(s);print('COUNTS',r.testsRun,len(r.failures),len(r.errors),len(r.skipped));raise SystemExit(not r.wasSuccessful() or bool(r.skipped))"
+  ],
+  "cwd": "C:\\Users\\LS-5\\.codex\\worktrees\\root-provider-probe-safety",
+  "exit_code": 0,
+  "product_probe_sha256": "d4ee6509050c2af21576b58e53a70c16ccfe75a8be6780e1aadd8b79ca07a0ff",
+  "test_sha256": "3809c2e5c4496f29a2bbdb868792944ebe21717e06d0d2148fcb444762d5d429",
+  "scope": "NATIVE_POWERSHELL_AST_INSTRUMENTED_MODEL_AND_EXISTING_TRANSPORT_GUARD_INVENTORY_REGRESSIONS_NO_NETWORK_CALLS",
+  "files": {
+    "green.stderr.log": "f4e78e2aea0f70c4a209ccea7c74327f513df5d1a353106c00f8807cce5388ff",
+    "green.stdout.log": "75d9b7f99aa20878b081bb1db708e70f32fbddc666f16f547951d43563307901",
+    "red-receipt.json": "fafefe46bfb45f6a03b9aab3fdce2bb122870005d26c5f580bfdedee1db01b20",
+    "red.stderr.log": "c2754d95f7e2137f38f8c8e6625095f745b67a67f430763078ca0e3621d3ab52",
+    "red.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

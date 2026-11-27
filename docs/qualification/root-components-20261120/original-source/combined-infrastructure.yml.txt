@@ -1,0 +1,29 @@
+name: Combined infrastructure cross-stream smoke
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  combined:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Exact source identity
+        shell: pwsh
+        run: |
+          if ((git rev-parse HEAD).Trim() -ne '${{ github.event.pull_request.head.sha || github.sha }}') { throw 'source SHA mismatch' }
+      - name: Combined fleet lifecycle release-boundary regressions
+        run: python -m unittest discover -s tests -p test_combined_control_plane.py -v
+      - name: Syntax and static imports
+        run: python -m compileall -q unified_system tests

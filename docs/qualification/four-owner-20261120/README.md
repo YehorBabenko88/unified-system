@@ -1,0 +1,24 @@
+# Four-owner source gate — NO_GO
+
+Base 07400889f5400a847493380ae5230387c104196a. Canonical source pins: Data5bb26e2f469c407c16bd4165ba80844db6e4379d, Math7b2e89b2818388913953ededbe106a225ec78ec9, Termb99913690ce29ce60e73414cc4d626ca989916ce, Root exact enclosing workflow HEAD. No active Grid/Meta checkout or runtime alias is accepted. Strattester is the actual GitHub hosting repository for canonical market_data, not an imported package.
+
+## Gate classification
+
+1. Pure installed SDK/source gate: existing SourceFence before/after all4 source trees, raw-Git source export into reviewed static setuptools backends,3 independently built wheels, namespace/metadata/rawmember and loaded SDK/Root origin checks, exact23 non-skipped/non-XFAIL cases. Actual DataTrade/footprint/history export→Math kernels→Term orderflow/history/singlePaperEngine, precision3/5/28 and100k exact events, causal clocks/digests/authority negatives, unconfirmed ACK/restart refusal with explicit fake stores/ledger, Root private capability isolation and actual protected execute refusal. PASS_SCOPED remains releaseNO_GO, not native/source-auth/PIT approval. Source gates preserve Python3.11/3.13 and add3.12 on Windows/Linux.
+2. Hosted bounded software gate: original Math6 worker/cancellation/deadline/capacity/HTTP/slow-body tests remain actual required executions with exact case IDs/counts and source fences. Local NOT_RUN. No npm/fullscript replay.
+3. Mandatory managed-runtime/pipeline/browser gate: remains nonzero BLOCKED until concrete canonical protected live startup admission, source/database capability and canonical monitor/producer/result/graph/display adapters are qualified. Existing Root lab_runtime.main --execute refusal is independently exercised before prepare/process calls. No unsigned/config/env-boolean grant is invented. All4 old browser fault cases and6 owned-runtime obligations remain explicit blockers; no blocked receipt is a passing runtime acceptance.
+4. Full Root discovery is retained unchanged in tests.yml/lifecycle-evidence/installer-security and the approved owner-boundary.yml consumer. Original31db artifacts1183tests16FAIL12ERROR48SKIP were inspected, not hidden by the23-case source subset. Root owns their separate repairs.
+
+## Preserved obligations
+
+PRESERVATION-MAP.json maps every original source assertion, scientific case, browser case and allocated script role to a concrete current test or blocked API/proof. Original workflow/verifier raw bytes are retained under original-source with hashes; no v1 historical evidence was relabeled as a current four-owner PASS. Native target-binding Meta/Stratt protocol migration remains Root-owned and separate.
+
+Current Termb999 has no terminan.infrastructure/consumer or /infrastructure,/api/infrastructure. Its /monitor,/api/monitor contract is different and the monitor source adapter returns SOURCE_ADAPTER_NOT_CONNECTED. A standalone server cannot replace the original owned managed runtime proof. The old actual producer→persisted result→scientific graph→display positive chain is not replaced by a handcrafted receipt or fake store; it remains mandatory BLOCKED.
+
+## Local proof boundary
+
+23 pure cases pass on Python3.11 (3.512s) and3.12 (3.637s) against3 extracted existing wheels (no build/install/newdeps): Data wheel d3a4ae467b5dc352524cac88246f86bb982f1bb2d904babb8de81d523a8d94c3(39rawmembers), Math ee31b5b11b9e8c5cf6cd18d16550bb420b35259955e7709db6c49ef1cb5f9c77(3), fresh actual Termb999 wheel5577092653a9433ef01704572a9b8c7810b1468559abc945a49da6612df82366(56). All member bytes independently match exact Git sources; oldb348 artifact was superseded rather than relabeled. Strict socket/subprocess/system/SQL/ctypes audit remains active. Root driver ctypes import was initially refused; an explicitly refusing import shape is used ONLY for inert fake-driver tests, never PID/native custody/PKI success. Real SourceFence/Git/Windows namespace calls and Node/browser/process/native qualification are NOT_RUN locally. Hosted outcomes and independent review remain required.
+
+No core/runtime/admission module, external source working tree, native profile or gateway target binding is edited here. No branch/repo/data deletion, merge, service, security or production action.
+
+The follow-up consumer cutover removes the former five/three CLI names. Current commands are verify_owner_boundary.py, verify_market_analysis_chain.py, verify_result_handoff.py and verify_result_provenance.py; no aliases remain. Three previously stale workflows passed positional upstream to the new CLI and checked out retired sources. Their canonical replacements call owner-source-suite.yml with exact four owners, retain Linux/Python3.11 subset obligations, and leave the full Windows/Linux matrix and full Root regression enabled. Original workflow bytes and hashes are retained alongside the previous source snapshots.

@@ -1,0 +1,619 @@
+"""Stopped service orchestration against isolated fake Windows boundaries only."""
+import copy,hashlib,os,tempfile,unittest
+from pathlib import Path
+from unittest.mock import patch
+from tests.test_lab_release import fixture
+from unified_system import lab_release
+from unified_system.installation_service import ServiceResource,service_plan,parse_service_sid,WindowsServiceBoundary
+
+# Inert simulated System32: production powershell_argv path guard is NOT mocked.
+FAKE_SYSTEM32 = Path(tempfile.gettempdir()).resolve() / 'UnifiedInertSystem32'
+
+class FakeWindows:
+ def __init__(self):self.calls=[];self.service=None;self.fault=None;self.acl='a'*64;self.host='TEST-PC'
+ def computer_name(self):return self.host
+ def native_tools(self):return {'sc':{'path':str(Path(tempfile.gettempdir()).resolve()/'fixture-sc.exe'),'sha256':'a'*64},'powershell':{'path':str(FAKE_SYSTEM32/'WindowsPowerShell/v1.0/powershell.exe'),'sha256':'b'*64}}
+ def sid(self,name):return 'S-1-5-80-1-2-3-4-5'
+ def call(self,action,plan,guard):
+  if guard is None or guard(action,plan['plan_sha256']) is not True:raise ValueError('approval')
+  self.calls.append(action)
+  if self.fault==action:raise OSError('INJECTED_PRIVATE_FAULT')
+  base=Path(plan['root'])
+  if action=='BEGIN':
+   if self.service is not None or base.exists():raise ValueError('foreign')
+   base.mkdir();(base/'ownership').mkdir();(base/'state').mkdir()
+   return {'root_device':base.stat().st_dev,'root_inode':base.stat().st_ino}
+  if action=='SEAL':return {'code_acl_sha256':self.acl,'state_acl_sha256':self.acl,'acl_policy':'EXACT_SERVICE_SID_V1'}
+  if action=='REGISTER':
+   if self.service is not None:raise ValueError('foreign')
+   self.service=dict(service_name=plan['service_name'],service_sid=plan['service_sid'],account='NT AUTHORITY\\LocalService',start_type=3,sid_type=1,state=1,binary_path='"'+plan['nssm']+'"',application=plan['python'],parameters=plan['parameters'],directory=plan['code'],app_exit='Exit',marker=plan['plan_sha256'],code_acl_sha256=self.acl,state_acl_sha256=self.acl,acl_policy='EXACT_SERVICE_SID_V1')
+  if action in ('REGISTER','INSPECT'):
+   if self.service is None:raise ValueError('missing')
+   return copy.deepcopy(self.service)
+  raise AssertionError(action)
+
+class ServiceResourceTests(unittest.TestCase):
+ def setUp(self):
+  self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name).resolve()
+  self.source=self.root/'capsule';self.source.mkdir();manifest=fixture(self.source)
+  for name,raw in {'runtime/nssm/nssm.exe':b'INERT_WRAPPER','runtime/python/python.exe':b'INERT_PYTHON','sources/unified_system/unified_system/owned_python.py':b'INERT_BOOTSTRAP'}.items():
+   path=self.source/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
+  entry=self.source/'sources/unified_system/unified_system/service_entry.py';entry.write_bytes((Path(__file__).resolve().parents[1]/'unified_system/service_entry.py').read_bytes().replace(b'\r\n',b'\n')) # LF Git-blob fixture, not production normalization
+  helper=self.source/'sources/unified_system/unified_system/service_bootstrap.py';helper.write_bytes((Path(__file__).resolve().parents[1]/'unified_system/service_bootstrap.py').read_bytes().replace(b'\r\n',b'\n'))
+  from tests.test_lab_capsule_builder import builder
+  manifest['files'],manifest['directories']=builder.inventory(self.source)
+  raw=lab_release.canonical(manifest);(self.source/'lab-release.json').write_bytes(raw);self.pin=hashlib.sha256(raw).hexdigest()
+  self.backend=FakeWindows();self.grants=[]
+  self.policy=patch('unified_system.installation_service.NSSM_PIN',hashlib.sha256(b'INERT_WRAPPER').hexdigest());self.policy.start();self.addCleanup(self.policy.stop)
+ def guard(self,action,pin):self.grants.append((action,pin));return True
+ def plan(self):
+  return service_plan(self.source,self.pin,self.root/'service','install','node','CONTROL',self.backend)
+ def test_entry_denies_missing_protected_grant_or_token_and_ignores_caller_flags(self):
+  import subprocess,sys
+  entry=Path(__file__).resolve().parents[1]/'unified_system/service_entry.py'
+  poison=self.root/'poison';poison.mkdir();marker=self.root/'unexpected-import'
+  (poison/'sitecustomize.py').write_text('from pathlib import Path;Path('+repr(str(marker))+').touch()')
+  for arguments in ([],['--execute'],['--activation-ticket','owner-approved']):
+   environment=dict(os.environ,PYTHONPATH=str(poison),UNIFIED_ACTIVATED='true')
+   result=subprocess.run([sys.executable,'-I','-S','-B',str(entry),*arguments],env=environment,capture_output=True,timeout=10)
+   self.assertEqual(result.returncode,78);self.assertEqual(result.stdout.replace(b'\r\n',b'\n'),b'BLOCKED_SERVICE_ACTIVATION\n');self.assertEqual(result.stderr,b'')
+  self.assertFalse(marker.exists())
+ def test_registered_command_uses_only_reviewed_protected_entry(self):
+  plan=self.plan();self.assertNotIn('--execute',plan['parameters']);self.assertNotIn('lab_runtime',plan['parameters'])
+  self.assertIn('service_entry.py',plan['parameters'])
+
+ def test_callback_mutating_original_plan_never_redirects_owned_effects(self):
+  for trigger in ('BEGIN','STAGE'):
+   with self.subTest(trigger=trigger):
+    backend=FakeWindows();plan=service_plan(self.source,self.pin,self.root/('service-'+trigger),'install','node','CONTROL',backend)
+    approved_code=Path(plan['code']);outside=self.root/('unapproved-'+trigger)
+    def mutate(action,pin):
+     if action==trigger:plan['code']=str(outside);plan['root']=str(outside/'also-unapproved')
+     return True
+    resource=ServiceResource.create(plan,backend,mutate)
+    self.assertFalse(outside.exists(),'caller alias redirected owned writes')
+    self.assertTrue(approved_code.exists());self.assertEqual(resource.plan['code'],str(approved_code))
+
+ def test_exact_computer_binding_rejects_wrong_host_before_begin(self):
+  plan=self.plan();self.assertEqual(plan['computer_name'],'TEST-PC')
+  self.backend.host='OTHER-PC'
+  with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,self.guard)
+  self.assertFalse(Path(plan['root']).exists());self.assertEqual(self.backend.calls,[])
+ @unittest.skipUnless(os.name=='nt','GetComputerNameW host identity independent of env')
+ def test_computer_env_spoof_does_not_admit_wrong_host(self):
+  import unified_system.installation_service as service
+  from unified_system.contracts import seal
+  actual=service.current_computer_name();plan=self.plan();plan['computer_name']='DefinitelyOtherHost'
+  plan['plan_sha256']=seal({k:v for k,v in plan.items() if k!='plan_sha256'})
+  with patch.dict(os.environ,{'COMPUTERNAME':'DefinitelyOtherHost'}),patch.object(service,'_run') as child:
+   self.assertEqual(service.current_computer_name(),actual)
+   with self.assertRaises(ValueError):WindowsServiceBoundary().call('BEGIN',plan,self.guard)
+   child.assert_not_called()
+  self.assertFalse(Path(plan['root']).exists())
+
+ def republish_entry(self,raw):
+  import json
+  entry='sources/unified_system/unified_system/service_entry.py'
+  (self.source/entry).write_bytes(raw)
+  manifest=json.loads((self.source/'lab-release.json').read_bytes())
+  manifest['files'][entry]={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}
+  published=lab_release.canonical(manifest);(self.source/'lab-release.json').write_bytes(published);self.pin=hashlib.sha256(published).hexdigest()
+ def test_crlf_operator_checkout_accepts_exact_reviewed_lf_capsule(self):
+  import unified_system.installation_service as service
+  raw=(self.source/'sources/unified_system/unified_system/service_entry.py').read_bytes();self.assertNotIn(b'\r\n',raw)
+  operator=self.root/'crlf-operator';operator.mkdir();(operator/'service_entry.py').write_bytes(raw.replace(b'\n',b'\r\n'))
+  self.assertNotEqual(hashlib.sha256((operator/'service_entry.py').read_bytes()).hexdigest(),hashlib.sha256(raw).hexdigest())
+  manifest_before=(self.source/'lab-release.json').read_bytes()
+  with patch.object(service,'__file__',str(operator/'installation_service.py')):
+   plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+   self.assertEqual(resource.inspect(self.guard)['status'],'STOPPED_RESOURCE_RECORDED')
+  self.assertEqual((self.source/'sources/unified_system/unified_system/service_entry.py').read_bytes(),raw)
+  self.assertEqual((self.source/'lab-release.json').read_bytes(),manifest_before)
+ def test_crlf_candidate_and_executing_candidate_remain_unadmitted_even_resealed(self):
+  raw=(self.source/'sources/unified_system/unified_system/service_entry.py').read_bytes();marker=self.root/'candidate-executed'
+  executing=('from pathlib import Path\nPath('+repr(str(marker))+').write_text("EXECUTED")\n').encode()+raw
+  for modified in (raw.replace(b'\n',b'\r\n'),executing):
+   with self.subTest(crlf=modified!=executing):
+    self.republish_entry(modified)
+    self.assertEqual(lab_release.verify_capsule(self.source,self.pin)['manifest_sha256'],self.pin)
+    with self.assertRaises(ValueError):self.plan()
+    self.assertFalse(marker.exists());self.assertEqual(self.backend.calls,[]);self.assertFalse((self.root/'service').exists())
+
+ def test_missing_or_wrong_bootstrap_member_fails_even_with_resealed_capsule(self):
+  import json
+  from tests.test_lab_capsule_builder import builder
+  helper=self.source/'sources/unified_system/unified_system/service_bootstrap.py'
+  for missing in (False,True):
+   if missing:helper.unlink()
+   else:helper.write_bytes(b'UNREVIEWED_BOOTSTRAP')
+   manifest=json.loads((self.source/'lab-release.json').read_bytes());(self.source/'lab-release.json').unlink();manifest['files'],manifest['directories']=builder.inventory(self.source)
+   raw=lab_release.canonical(manifest);(self.source/'lab-release.json').write_bytes(raw);self.pin=hashlib.sha256(raw).hexdigest()
+   self.assertEqual(lab_release.verify_capsule(self.source,self.pin)['manifest_sha256'],self.pin)
+   with self.assertRaises(ValueError):self.plan()
+   self.assertFalse((self.root/'service').exists())
+
+ def test_default_denial_precedes_mutation(self):
+  plan=self.plan()
+  with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend)
+  self.assertEqual(self.backend.calls,[]);self.assertFalse(Path(plan['root']).exists())
+ def test_stopped_owned_resource_actual_capsule_staging_and_reopen(self):
+  plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+  snapshot=resource.inspect(self.guard)
+  self.assertEqual(snapshot['status'],'STOPPED_RESOURCE_RECORDED');self.assertEqual(snapshot['readiness'],'NOT_PROVEN')
+  self.assertEqual(lab_release.verify_capsule(plan['code'],self.pin)['manifest_sha256'],self.pin)
+  self.assertEqual(ServiceResource.open(plan,self.backend).inspect(self.guard),snapshot)
+  self.assertEqual(self.backend.service['state'],1);self.assertFalse(any(x in self.backend.calls for x in ('START','STOP','DELETE')))
+  self.assertTrue(all(pin==plan['plan_sha256'] for _,pin in self.grants))
+ def test_r35_native_roster_includes_root_ancestors_and_undeclared_parents(self):
+  from unified_system import installation_service as service
+  p=self.plan();root=Path(p['root']);code=Path(p['code'])
+  manifest={'files':{'runtime/python/python.exe':{'sha256':'a'*64,'bytes':1}},
+            'directories':[]}
+  paths=service._native_roster_paths(root,code,manifest)
+  self.assertEqual(paths['root'],root)
+  self.assertEqual(paths['ancestor:0'],root.parent)
+  self.assertEqual(paths['parent:runtime'],code/'runtime')
+  self.assertEqual(paths['parent:runtime/python'],code/'runtime/python')
+  self.assertEqual(paths['file:lab-release.json'],code/'lab-release.json')
+  self.assertEqual(paths['file:runtime/python/python.exe'],code/'runtime/python/python.exe')
+  self.assertEqual(set(paths),set(dict(paths)))
+  # Cross-owner J estimator parity: explicit directory identity must not
+  # also be counted/opened as a second parent identity of the same path.
+  explicit={'files':{'a/b/c.py':{},'a/d.py':{}},
+            'directories':['a','a/b']}
+  roster=service._native_roster_paths(root,code,explicit)
+  self.assertEqual(len(roster),6+len(root.parents)+2+2)
+  self.assertEqual(roster['directory:a'],code/'a')
+  self.assertEqual(roster['directory:a/b'],code/'a/b')
+  self.assertNotIn('parent:a',roster)
+  self.assertNotIn('parent:a/b',roster)
+  for hostile in ('../foreign.bin','runtime/../../foreign.bin'):
+   with self.subTest(path=hostile),self.assertRaises(ValueError):
+    service._native_roster_paths(root,code,{'files':{hostile:{}},'directories':[]})
+
+ def test_r35_native_roster_repeated_handle_read_rejects_identity_drift(self):
+  from unified_system import installation_service as service
+  paths={'root':self.root,'ancestor:0':self.root.parent,'file:owner':self.root/'owner'}
+  good={'volume_serial':1,'file_id_128':'a'*32}
+  changed={'volume_serial':1,'file_id_128':'b'*32}
+  with patch.object(service,'_native_file_identity',return_value=good) as probe:
+   self.assertEqual(service._capture_native_roster(paths),dict.fromkeys(paths,good))
+   self.assertEqual(probe.call_count,2*len(paths))
+  calls=[0]
+  def changing(path):
+   calls[0]+=1
+   return changed if calls[0]==2*len(paths) else good
+  with patch.object(service,'_native_file_identity',side_effect=changing):
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._capture_native_roster(paths)
+  self.assertEqual(calls[0],2*len(paths))
+  with patch.object(service,'_native_file_identity',
+                    side_effect=lambda path: dict(good,volume_serial=2) if path==paths['ancestor:0'] else good):
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._capture_native_roster(paths)
+
+ def test_r35_retained_native_custody_fails_closed_outside_windows(self):
+  from unified_system import installation_service as service
+  paths={'root':self.root,'ancestor:0':self.root.parent}
+  if os.name=='nt':
+   self.skipTest('Native custody is tested only with disposable Windows native runner')
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._NativeReceiptCustody(paths)
+ 
+ def test_r35_native_custody_shares_sqlite_write_but_not_delete(self):
+  from unified_system import installation_service as service
+  import inspect
+  source=inspect.getsource(service._NativeReceiptCustody.__enter__)
+  self.assertIn("flags=_native_roster_open_flags(key)",source)
+  self.assertIn("h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,flags,None)",source)
+  identity_source=inspect.getsource(service._native_file_identity)
+  self.assertIn("h=k.CreateFileW(str(root),0x80,0x1|0x2,None,3,0x00200000|0x02000000,None)",identity_source)
+  self.assertNotIn("0x1|0x2|0x4",source)
+  self.assertIn("self.handles[key]=h",source)
+  self.assertIn("self.close()",source)
+  # This is a static source contract, not a Win32 share-mode experiment.
+
+ def test_r35_native_win32_directory_backup_flags_and_unknown_roles(self):
+  from unified_system import installation_service as service
+  # Actual production flag-decider executed; independent of Windows/SCM.
+  for name in ('root','code','ownership','state','ancestor:0',
+               'directory:runtime','parent:runtime'):
+   with self.subTest(directory=name):
+    self.assertIs(service._native_roster_is_file(name),False)
+    self.assertEqual(service._native_roster_open_flags(name),0x02200000)
+  for name in ('ownership:service.sqlite','file:lab-release.json',
+               'file:runtime/runner.py'):
+   with self.subTest(file=name):
+    self.assertIs(service._native_roster_is_file(name),True)
+    self.assertEqual(service._native_roster_open_flags(name),0x00200000)
+  for name in ('','FILE:foreign','file:','directory:','parent:','ancestor:',
+               'foreign','ownership:forged.sqlite',None,True):
+   with self.subTest(invalid=name),self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._native_roster_open_flags(name)
+  for name in ('root','file:run.py'):
+   self.assertEqual(service._native_roster_open_flags(name)&0x00000004,0)
+   self.assertEqual(service._native_roster_open_flags(name)&0x04000000,0)
+
+ def test_r35_custody_real_enter_fake_kernel_directory_flags_and_close(self):
+  from unified_system import installation_service as service
+  import ctypes
+  from unittest.mock import Mock
+  # Exercise original __enter__/__exit__, fake kernel and original role flags.
+  # No Windows native call, service install, filesystem deletion or SCM.
+  paths={'root':self.root,'ancestor:0':self.root.parent,
+         'file:lab-release.json':self.source/'lab-release.json'}
+  kernel=Mock();kernel.CreateFileW.side_effect=[101,102,103]
+  kernel.CloseHandle.return_value=True
+  custody=object.__new__(service._NativeReceiptCustody)
+  custody.paths=paths;custody.handles={};custody.kernel=None;custody.closed=False
+  identity={'volume_serial':5,'file_id_128':'a'*32}
+  with patch.object(ctypes,'WinDLL',return_value=kernel,create=True):
+   with patch.object(service,'_safe',side_effect=lambda path:path):
+    with patch.object(custody,'_read',return_value=dict.fromkeys(paths,identity)):
+     with patch.object(custody,'verify',return_value=dict.fromkeys(paths,identity)):
+      with custody as entered:
+       self.assertIs(entered,custody)
+       self.assertEqual(len(custody.handles),3)
+       opened=kernel.CreateFileW.call_args_list
+       self.assertEqual([call.args[5] for call in opened],
+                        [0x02200000,0x02200000,0x00200000])
+       self.assertTrue(all(call.args[2]==0x1|0x2 for call in opened))
+       self.assertEqual(kernel.CloseHandle.call_count,0)
+  self.assertEqual([call.args[0] for call in kernel.CloseHandle.call_args_list],
+                   [103,102,101])
+  self.assertEqual(custody.handles,{})
+  self.assertTrue(custody.closed)
+
+ def test_r35_custody_fake_kernel_partial_open_failure_releases_handles(self):
+  from unified_system import installation_service as service
+  import ctypes
+  from unittest.mock import Mock
+  paths={'root':self.root,'ancestor:0':self.root.parent}
+  kernel=Mock();kernel.CreateFileW.side_effect=[101,ctypes.c_void_p(-1).value]
+  kernel.CloseHandle.return_value=True
+  custody=object.__new__(service._NativeReceiptCustody)
+  custody.paths=paths;custody.handles={};custody.kernel=None;custody.closed=False
+  with patch.object(ctypes,'WinDLL',return_value=kernel,create=True):
+   with patch.object(service,'_safe',side_effect=lambda path:path):
+    with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+     custody.__enter__()
+  self.assertEqual([call.args[0] for call in kernel.CloseHandle.call_args_list],[101])
+  self.assertEqual(custody.handles,{})
+  self.assertTrue(custody.closed)
+
+ def test_r35_roster_capacity_checked_before_root_creation(self):
+  from unified_system import installation_service as service
+  import inspect
+  code=inspect.getsource(service.ServiceResource.create)
+  self.assertLess(code.index('_native_receipt_roster_budget(preflight)'),
+                  code.index("resource._call('BEGIN',guard)"))
+  self.assertLess(code.index("resource._call('BEGIN',guard)"),
+                  code.index('lab_release.stage_capsule('))
+  # On Windows the original boundary must remain untouched when the
+  # preflight rejects; this test uses only the private fake SCM boundary.
+  if os.name=='nt':
+   plan=self.plan()
+   with patch.object(service,'_native_receipt_roster_budget',
+                     side_effect=ValueError('OWNED_SERVICE_REJECTED')):
+    with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+     service.ServiceResource.create(plan,self.backend,self.guard)
+   self.assertEqual(self.backend.calls,[])
+   self.assertFalse(Path(plan['root']).exists())
+
+ def test_r35_complete_v2_roster_preflight_budget(self):
+  from unified_system import installation_service as service
+  tiny={'root':self.root,'ancestor:0':self.root.parent}
+  self.assertIs(service._native_receipt_roster_budget(tiny),tiny)
+  # A moderate roster is eligible; a 513-member roster is denied on
+  # count even though a 512-member roster can exceed the byte budget.
+  within={'root':self.root}
+  within.update({'file:'+str(i):self.root/str(i) for i in range(399)})
+  self.assertEqual(len(within),400)
+  self.assertIs(service._native_receipt_roster_budget(within),within)
+  too_many={'root':self.root}
+  too_many.update({'file:'+str(i):self.root/str(i) for i in range(512)})
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(too_many)
+  lengthy={'root':self.root,'file:'+'x'*301:self.root/'x'}
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(lengthy)
+  # 200 Unicode code points, but 400 UTF-8 bytes. The previous len(str)
+  # gate admitted this path despite its per-key encoded-byte violation.
+  multibyte={'root':self.root,'file:'+'é'*200:self.root/'unicode'}
+  self.assertLess(len('file:'+'é'*200),300)
+  self.assertGreater(len(('file:'+'é'*200).encode('utf-8')),300)
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(multibyte)
+  large={'root':self.root}
+  large.update({'file:'+str(i).zfill(5)+'x'*225:self.root/str(i)
+                for i in range(320)})
+  self.assertLessEqual(len(large),512)
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(large)
+
+ def test_r35_retained_native_custody_handle_budget_fails_closed(self):
+  from unified_system import installation_service as service
+  paths={'root':self.root}
+  paths.update({'file:'+str(i):self.root/str(i) for i in range(512)})
+  if os.name!='nt':
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._NativeReceiptCustody(paths)
+  else:
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._NativeReceiptCustody(paths)
+
+ def test_r35_retained_native_custody_closes_all_handles_after_crash(self):
+  from unified_system import installation_service as service
+  # Fake kernel only: no Win32 execution and no actual file removal.
+  class FakeKernel:
+   def __init__(self):self.closed=[]
+   def CloseHandle(self,h):
+    self.closed.append(h);return True
+  obj=object.__new__(service._NativeReceiptCustody)
+  obj.paths={'root':self.root,'ancestor:0':self.root.parent}
+  obj.handles={'root':101,'ancestor:0':102}
+  obj.kernel=FakeKernel();obj.closed=False
+  with self.assertRaisesRegex(RuntimeError,'INJECTED_RECEIPT_CRASH'):
+   try:
+    raise RuntimeError('INJECTED_RECEIPT_CRASH')
+   finally:obj.close()
+  self.assertEqual(obj.kernel.closed,[102,101])
+  self.assertEqual(obj.handles,{})
+  self.assertTrue(obj.closed)
+  obj.close()
+  self.assertEqual(obj.kernel.closed,[102,101])
+
+ def test_r35_retained_native_custody_detects_drift_before_register(self):
+  from unified_system import installation_service as service
+  obj=object.__new__(service._NativeReceiptCustody)
+  obj.paths={'root':self.root,'ancestor:0':self.root.parent}
+  obj.handles={'root':101,'ancestor:0':102}
+  obj.kernel=None;obj.closed=False
+  expected={'volume_serial':5,'file_id_128':'1'*32}
+  obj.snapshot={'root':dict(expected),'ancestor:0':dict(expected)}
+  with patch.object(obj,'_read',return_value=copy.deepcopy(obj.snapshot)) as handle_read:
+   with patch.object(service,'_native_file_identity',return_value=dict(expected)) as reopened:
+    self.assertEqual(obj.verify(),obj.snapshot)
+    self.assertEqual(handle_read.call_count,2)
+    self.assertEqual(reopened.call_count,2)
+  with patch.object(obj,'_read',return_value=copy.deepcopy(obj.snapshot)):
+   with patch.object(service,'_native_file_identity',
+                     side_effect=[dict(expected),dict(expected,file_id_128='2'*32)]):
+    with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+     obj.verify()
+  obj.closed=True
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   obj.verify()
+
+ def test_r35_windows_registration_retains_custody_through_registered_transition(self):
+  from unified_system import installation_service as service
+  # Exact scoped static order gate: real Windows resource tests remain NOT_RUN.
+  import inspect
+  source=inspect.getsource(service.ServiceResource.create)
+  self.assertIn('with _NativeReceiptCustody(paths) as custody:',source)
+  block=source.split('with _NativeReceiptCustody(paths) as custody:',1)[1].split('  else:',1)[0]
+  for required in ('NATIVE_FILE_IDS','ACL_SEALED','REGISTER_INTENT','REGISTERED'):
+   self.assertIn(required,block)
+  self.assertLess(block.index("'NATIVE_FILE_IDS'"),block.index("'ACL_SEALED'"))
+  self.assertLess(block.index("'ACL_SEALED'"),block.index("'REGISTER_INTENT'"))
+  self.assertLess(block.index("'REGISTER_INTENT'"),block.index("'REGISTERED'"))
+  self.assertGreaterEqual(block.count('custody.verify()'),3)
+
+ def test_r35_oversized_v2_receipt_denied_before_journal(self):
+  from unified_system import installation_service as service
+  small={'schema':service.NATIVE_RECEIPT_SCHEMA,'entries':{},'manifest_sha256':'a'*64,
+         'receipt_sha256':'b'*64}
+  self.assertEqual(service._bounded_native_receipt(small),small)
+  oversized=dict(small,entries={'owner':'x'*65536})
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._bounded_native_receipt(oversized)
+
+ def test_v2_native_installation_receipt_or_explicit_non_windows_denial(self):
+  from unified_system.installation_service import NATIVE_RECEIPT_SCHEMA,_check_native_installation_receipt
+  plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+  self.assertEqual(len(resource._read()),7)
+  entry=resource._read()[3]['receipt']
+  self.assertEqual(entry['kind'],'NATIVE_FILE_IDS')
+  if os.name=='nt':
+   proof=entry['proof'];self.assertEqual(proof['schema'],NATIVE_RECEIPT_SCHEMA)
+   self.assertEqual(_check_native_installation_receipt(proof,plan),proof)
+   self.assertEqual(resource.recorded()['native_file_identity'],proof)
+   self.assertIn('file:lab-release.json',proof['entries'])
+   self.assertIn('ownership:service.sqlite',proof['entries'])
+   self.assertIn('state',proof['entries'])
+  else:
+   self.assertEqual(entry['proof'],{'schema':NATIVE_RECEIPT_SCHEMA,'status':'NOT_RUN'})
+   self.assertIsNone(resource.recorded()['native_file_identity'])
+  self.assertEqual(ServiceResource.open(plan,self.backend).recorded(),resource.recorded())
+  self.assertFalse(resource.inspect(self.guard)['execution_authority'])
+
+ def test_crash_after_v2_native_receipt_before_acl_does_not_adopt_partial_service(self):
+  plan=self.plan();self.backend.fault='SEAL'
+  with self.assertRaisesRegex(OSError,'INJECTED_PRIVATE_FAULT'):
+   ServiceResource.create(plan,self.backend,self.guard)
+  self.assertTrue(Path(plan['code']).is_dir())
+  incomplete=ServiceResource.open(plan,self.backend)
+  receipts=incomplete._read()
+  self.assertEqual([r['receipt']['kind'] for r in receipts],
+                   ['ROOTS','STAGE_INTENT','CODE_STAGED','NATIVE_FILE_IDS'])
+  with self.assertRaises(ValueError):incomplete.recorded()
+  with self.assertRaises(ValueError):incomplete.inspect(self.guard)
+  self.backend.fault=None
+  with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,self.guard)
+  self.assertEqual(self.backend.service,None)
+  self.assertTrue(Path(plan['code']).is_dir())
+
+ def test_v1_unqualified_receipt_remains_readable_but_denied_for_native_uninstall(self):
+  from unified_system.installation_uninstall import Uninstaller,WindowsRemovalBoundary
+  from unified_system.journal import Journal
+  plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+  # Rebuild a legacy V1 chain INSIDE this temporary fake-service fixture only.
+  old=resource.journal.read();self.assertEqual(len(old),7)
+  retained=[x['receipt'] for i,x in enumerate(old) if i!=3]
+  resource.journal.path.unlink()
+  restored=Journal(resource.journal.path);restored.initialize()
+  for i,receipt in enumerate(retained):restored.append('OBSERVING',receipt,expected_sequence=i)
+  legacy=ServiceResource.open(plan,self.backend)
+  self.assertEqual(len(legacy._read()),6)
+  self.assertIsNone(legacy.recorded()['native_file_identity'])
+  before=(Path(plan['code'])/'lab-release.json').read_bytes()
+  with self.assertRaises(ValueError):
+   Uninstaller(legacy,WindowsRemovalBoundary())._members()
+  self.assertEqual((Path(plan['code'])/'lab-release.json').read_bytes(),before)
+  self.assertIsNotNone(self.backend.service)
+
+ def test_native_receipt_rejects_corrupt_version_extra_member_and_bad_volume(self):
+  from unified_system.installation_service import _check_native_installation_receipt,NATIVE_RECEIPT_SCHEMA
+  from unified_system.contracts import seal
+  plan=self.plan()
+  from unified_system import lab_release
+  m=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])['manifest']
+  from unified_system.installation_service import _native_roster_paths
+  names=set(_native_roster_paths(Path(plan['root']),Path(plan['code']),m))
+  identity={'volume_serial':23,'file_id_128':'01'+'00'*15}
+  body={'schema':NATIVE_RECEIPT_SCHEMA,'manifest_sha256':plan['manifest_sha256'],
+        'entries':{key:dict(identity) for key in names}}
+  good=dict(body,receipt_sha256=seal(body))
+  self.assertEqual(_check_native_installation_receipt(good,plan),good)
+  for invalid in (
+    dict(good,schema='unified.installed-file-identity.v1'),
+    dict(good,receipt_sha256='0'*64),
+    dict(good,entries={k:v for k,v in good['entries'].items() if k!='file:lab-release.json'}),
+  ):
+   with self.assertRaises(ValueError):_check_native_installation_receipt(invalid,plan)
+  forged={k:dict(v) for k,v in good['entries'].items()}
+  # A whole installed code tree must not claim a foreign volume.
+  cross={k:dict(v) for k,v in good['entries'].items()}
+  cross['code']['volume_serial']=24
+  cross_receipt=dict(body,entries=cross)
+  cross_receipt['receipt_sha256']=seal({k:v for k,v in cross_receipt.items() if k!='receipt_sha256'})
+  with self.assertRaises(ValueError):
+   _check_native_installation_receipt(cross_receipt,plan)
+  forged['root']['volume_serial']=True
+  bad=dict(body,entries=forged);bad['receipt_sha256']=seal({k:v for k,v in bad.items() if k!='receipt_sha256'})
+  with self.assertRaises(ValueError):_check_native_installation_receipt(bad,plan)
+
+ def test_wrong_phase_grant_and_existing_service_never_adopted(self):
+  plan=self.plan()
+  with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,lambda a,p:p=='wrong')
+  self.backend.service={'foreign':True}
+  with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,self.guard)
+  self.assertEqual(self.backend.service,{'foreign':True});self.assertFalse(Path(plan['root']).exists())
+ def test_partial_failure_retains_and_never_adopts_unreceipted_service(self):
+  plan=self.plan();self.backend.fault='REGISTER'
+  with self.assertRaises(OSError):ServiceResource.create(plan,self.backend,self.guard)
+  self.assertTrue(Path(plan['code']).exists())
+  self.backend.fault=None
+  with self.assertRaises(ValueError):ServiceResource.open(plan,self.backend).inspect(self.guard)
+  with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,self.guard)
+ def test_created_but_unreceipted_service_is_retained_and_not_adopted(self):
+  plan=self.plan()
+  def lost_receipt(action,pin):return not (action=='WRITE_RECEIPT' and self.backend.service is not None)
+  with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,lost_receipt)
+  self.assertIsNotNone(self.backend.service);before=copy.deepcopy(self.backend.service)
+  incomplete=ServiceResource.open(plan,self.backend)
+  with self.assertRaises(ValueError):incomplete.recorded()
+  with self.assertRaises(ValueError):incomplete.inspect(self.guard)
+  with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,self.guard)
+  self.assertEqual(self.backend.service,before)
+ @unittest.skipUnless(os.name=='nt','Native tool phase-pin failure before launch')
+ def test_native_backend_wrong_tool_pins_fail_before_spawn(self):
+  import unified_system.installation_service as service
+  plan=self.plan()
+  with patch.object(service,'_run') as child:
+   with self.assertRaises(ValueError):WindowsServiceBoundary().call('INSPECT',plan,self.guard)
+   child.assert_not_called()
+
+ def test_live_identity_acl_or_configuration_drift_rejected(self):
+  plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+  original=copy.deepcopy(self.backend.service)
+  for key,value in [('account','LocalSystem'),('state',4),('state',True),('start_type',2),('sid_type',0),('service_sid','S-1-5-19'),('application','foreign'),('directory','foreign'),('parameters','--arbitrary'),('marker','f'*64),('code_acl_sha256','b'*64),('acl_policy','GENERIC_LOCALSERVICE')]:
+   with self.subTest(key=key):
+    self.backend.service=copy.deepcopy(original);self.backend.service[key]=value
+    with self.assertRaises(ValueError):resource.inspect(self.guard)
+ def test_no_candidate_byte_or_receipt_admits_execution(self):
+  plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+  (Path(plan['code'])/'runtime/nssm/nssm.exe').write_bytes(b'changed')
+  with self.assertRaises(ValueError):resource.inspect(self.guard)
+ def test_stage_denial_and_resealed_arbitrary_arguments_rejected(self):
+  from unified_system.contracts import seal
+  plan=self.plan()
+  with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,lambda action,pin:action!='STAGE')
+  self.assertFalse(Path(plan['code']).exists());self.assertNotIn('SEAL',self.backend.calls)
+  changed=copy.deepcopy(plan);changed['parameters']='--arbitrary';changed['plan_sha256']=seal({k:v for k,v in changed.items() if k!='plan_sha256'})
+  with self.assertRaises(ValueError):ServiceResource.open(changed,self.backend)
+ def test_private_recorded_copy_survives_partial_code_removal_no_authority(self):
+  plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+  recorded=resource.recorded();recorded['plan']['parameters']='changed';recorded['proof']['state']=4
+  self.assertNotEqual(resource.recorded()['plan']['parameters'],'changed');self.assertEqual(resource.recorded()['proof']['state'],1)
+  (Path(plan['code'])/'runtime/nssm/nssm.exe').unlink()
+  self.assertEqual(resource.recorded()['plan']['plan_sha256'],plan['plan_sha256'])
+  with self.assertRaises(ValueError):resource.inspect(self.guard)
+ @unittest.skipUnless(os.name=='nt','Read-only isolated PowerShell module autoload boundary')
+ def test_poisoned_parent_module_path_cannot_autoload_user_module(self):
+  import subprocess
+  import unified_system.installation_service as service
+  modules=self.root/'poison-modules';module=modules/'UnifiedPoisonProbe';module.mkdir(parents=True);marker=self.root/'autoload-marker'
+  escaped=str(marker).replace("'","''")
+  (module/'evil.psm1').write_text("function Get-UnifiedPoisonProbe { [IO.File]::WriteAllText('"+escaped+"','loaded'); 'POISON' };Export-ModuleMember -Function Get-UnifiedPoisonProbe")
+  (module/'UnifiedPoisonProbe.psd1').write_text("@{RootModule='evil.psm1';ModuleVersion='1.0.0';FunctionsToExport=@('Get-UnifiedPoisonProbe');CmdletsToExport=@();AliasesToExport=@()}")
+  command="try{Get-UnifiedPoisonProbe -ErrorAction Stop}catch{Write-Output 'POISON_NOT_FOUND'}"
+  executable=service._native_tools()['powershell']['path']
+  control=service._environment();control['PSModulePath']=str(modules)
+  from tests.native_phase_diagnostics import phase,run_phased
+  control_command=phase('ENTRY')+phase('CONTROL_LOOKUP_BEGIN')+command+';'+phase('CONTROL_LOOKUP_END')+phase('DONE')
+  result=run_phased([executable,'-NoProfile','-NonInteractive','-Command',control_command],env=control)
+  self.assertEqual(result.returncode,0);self.assertTrue(marker.exists(),'control must demonstrate actual poison autoload');marker.unlink()
+  with patch.dict(os.environ,{'PSModulePath':str(modules)}):safe=service._environment()
+  self.assertEqual(safe['PSModulePath'],str(service._system_directory()/'WindowsPowerShell/v1.0/Modules'))
+  safe_command=phase('ENTRY')+phase('SAFE_LOOKUP_BEGIN')+command+';'+phase('SAFE_LOOKUP_END')+phase('DONE')
+  result=run_phased(service.powershell_argv(executable,safe_command),env=safe,cwd=service.child_directory())
+  self.assertEqual(result.returncode,0);self.assertIn(b'POISON_NOT_FOUND',result.stdout);self.assertFalse(marker.exists())
+
+ @unittest.skipUnless(os.name=='nt','GetSystemDirectoryW native path consistency')
+ def test_env_redirect_does_not_select_native_tools(self):
+  import unified_system.installation_service as service
+  with patch.dict(os.environ,{'SYSTEMROOT':str(self.root/'redirected')}):
+   with patch.object(service,'_run') as child:
+    with self.assertRaises(ValueError):WindowsServiceBoundary().sid('UnifiedLab_ReadOnlyTest')
+    child.assert_not_called()
+
+ def test_documented_sid_parser_localized_strict_bounded(self):
+  sid='S-1-5-80-1-2-3-4-4294967295'
+  self.assertEqual(parse_service_sid('Dienstname: UnifiedLab_abc\nDienst-SID: '+sid+'\n',0),sid)
+  for text,code in [(sid,1),(sid+' '+sid,0),('S-1-5-19',0),('S-1-5-80-01-2-3-4-5',0),('S-1-5-80-1-2-3-4-4294967296',0),(sid+'-6',0),('x'*65537,0),('prefix'+sid,0),(sid+'suffix',0),(sid,False)]:
+   with self.subTest(text=text[:70]),self.assertRaises(ValueError):parse_service_sid(text,code)
+ @unittest.skipUnless(os.name=='nt','Windows documented read-only sc.exe probe')
+ def test_real_read_only_showsid_for_nonexistent_name_no_service_created(self):
+  name='UnifiedLab_SidParserReadOnly_20261104'
+  sid=WindowsServiceBoundary().sid(name)
+  self.assertRegex(sid,r'^S-1-5-80-(?:[0-9]+-){4}[0-9]+$')
+ @unittest.skipUnless(os.name=='nt','PowerShell parser and C# declaration compilation only')
+ def test_real_module_parses_and_native_declarations_compile_without_api_calls(self):
+  import subprocess
+  module=Path(__file__).resolve().parents[1]/'scripts/UnifiedOwnedService.psm1'
+  command="$ErrorActionPreference='Stop';$t=$null;$e=$null;$null=[Management.Automation.Language.Parser]::ParseFile($env:UNIFIED_TEST_MODULE,[ref]$t,[ref]$e);if($e.Count){throw 'PARSER_REJECTED'};$m=Import-Module -Name ([WildcardPattern]::Escape($env:UNIFIED_TEST_MODULE)) -PassThru;& $m {Add-Type -TypeDefinition $script:Native;Write-Output 'DECLARATIONS_COMPILED'}"
+  import unified_system.installation_service as service
+  env=service._environment();env['UNIFIED_TEST_MODULE']=str(module)
+  # These child processes only emit known strings; no SCM/ACL API is called.
+  command+=";$ps=Join-Path ([Environment]::SystemDirectory) 'WindowsPowerShell\\v1.0\\powershell.exe';$child=\"[Console]::OutputEncoding=[Text.Encoding]::GetEncoding([Globalization.CultureInfo]::CurrentCulture.TextInfo.OEMCodePage);[Console]::Write('C:\\LAB\\'+[char]0xdc+[char]0xe9)\";$enc=[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($child));$value=[UnifiedStoppedServiceNative]::Run($ps,('-NoProfile -NonInteractive -EncodedCommand '+$enc));if($value -cne ('C:\\LAB\\'+[char]0xdc+[char]0xe9)){throw 'UNICODE_ROUNDTRIP_REJECTED'};$large=\"[Console]::Write(('x'*70000))\";$enc=[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($large));$limited=$false;try{$null=[UnifiedStoppedServiceNative]::Run($ps,('-NoProfile -NonInteractive -EncodedCommand '+$enc))}catch{$limited=$true};if(-not $limited){throw 'OUTPUT_CAP_NOT_ENFORCED'};Write-Output 'UNICODE_AND_OUTPUT_BOUND_VERIFIED'"
+  from tests.native_phase_diagnostics import phase,run_phased
+  command=phase('ENTRY')+command.replace('$null=[Management.Automation.Language.Parser]::ParseFile',phase('PARSE_BEGIN')+'$null=[Management.Automation.Language.Parser]::ParseFile',1)
+  command=command.replace(';if($e.Count)', ';'+phase('PARSE_END')+'if($e.Count)',1)
+  command=command.replace('$m=Import-Module',phase('IMPORT_BEGIN')+'$m=Import-Module',1)
+  command=command.replace(';& $m {Add-Type',';'+phase('IMPORT_END')+'& $m {'+phase('COMPILE_BEGIN')+'Add-Type',1)
+  command=command.replace(";Write-Output 'DECLARATIONS_COMPILED'",';'+phase('COMPILE_END')+"Write-Output 'DECLARATIONS_COMPILED'",1)
+  command=command.replace('$value=[UnifiedStoppedServiceNative]::Run',phase('UNICODE_BEGIN')+'$value=[UnifiedStoppedServiceNative]::Run',1)
+  command=command.replace(';if($value -cne',';'+phase('UNICODE_END')+'if($value -cne',1)
+  command=command.replace('try{$null=[UnifiedStoppedServiceNative]::Run',phase('CAP_BEGIN')+'try{$null=[UnifiedStoppedServiceNative]::Run',1)
+  command=command.replace(';if(-not $limited)',';'+phase('CAP_END')+'if(-not $limited)',1)+';'+phase('DONE')
+  result=run_phased(service.powershell_argv(service._native_tools()['powershell']['path'],command),env=env,timeout=30,cwd=service.child_directory())
+  self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'));self.assertIn(b'DECLARATIONS_COMPILED',result.stdout);self.assertIn(b'UNICODE_AND_OUTPUT_BOUND_VERIFIED',result.stdout)
+
+ def test_static_module_no_start_stop_delete_or_policy_bypass(self):
+  module=Path(__file__).resolve().parents[1]/'scripts/UnifiedOwnedService.psm1';source=module.read_text()
+  for forbidden in ('CreateServiceSid','RtlCreateServiceSid','Start-Service','Stop-Service','DeleteService','ExecutionPolicy','safe.directory=*'):self.assertNotIn(forbidden,source)
+  self.assertIn('CreateServiceW',source);self.assertIn('QueryServiceConfig2W',source)
+  self.assertIn('NT SERVICE\\',source)
+
+if __name__=='__main__':unittest.main()

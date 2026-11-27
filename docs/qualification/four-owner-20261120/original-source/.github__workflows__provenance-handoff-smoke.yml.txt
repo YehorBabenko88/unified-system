@@ -1,0 +1,22 @@
+name: Pinned historical handoff negative smoke
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  handoff-negative:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: bf9f108b6777085d6725675eac778d61ec55f42b
+          path: upstream/grid
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: test "$(git -C upstream/grid rev-parse HEAD)" = "bf9f108b6777085d6725675eac778d61ec55f42b"
+      - run: python -m scripts.verify_provenance_handoff upstream

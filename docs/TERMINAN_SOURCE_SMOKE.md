@@ -1,0 +1,2 @@
+# Pinned Terminan consumer source smoke
+The workflow checks out Terminan PR22 exact SHA and exercises its actual presentation helper with synthetic input fixtures, verifying UNAVAILABLE/STALE/GAP labels. It does not connect a real Terminan browser, source APIs, PostgreSQL, exchange or Supervisor listener. This is not end-to-end readiness or physical acceptance. Preserve source-only claims and do not infer live data authenticity.

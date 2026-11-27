@@ -1,0 +1,563 @@
+{
+  "schema": "unified.ci-evidence-role-plan.v1",
+  "role_source": "4ba390b8e12070499d54b12e5609c683c00607ee",
+  "ledger_source": {
+    "repository": "YehorBabenko88/math",
+    "commit": "54c3274538b2e4c3f0063db34b8f1f835d5dafeb",
+    "path": "scripts/platform-source-transfers.json",
+    "sha256": "82235cd1cee84270226b64753cba2f76e30967191ec4007471d1365b4bca4755",
+    "git_blob": "8e5087a8b1ff44f955c7ec759152360aaeb8a099"
+  },
+  "cells": [
+    "linux-22-16",
+    "linux-22-18",
+    "linux-24-16",
+    "linux-24-18"
+  ],
+  "files": {
+    "tools/ci_evidence/strict.mjs": "0728aae4211c32bf0a7f19e91d91a36ebf190a2a95282e716864640e58fc37c8",
+    "tools/ci_evidence/github_identity.mjs": "71e7fc45cad9846ec8f6750c073616b56796b44151c43de99682b22d36dcfb99",
+    "tools/ci_evidence/envelope.mjs": "b081be5d7789bd508026c748075e2435e4e61df8f21905119f4e1cc2f0508c9f",
+    "tools/ci_evidence/receiver_journal.mjs": "f2491c60e7f56b9ce41ce0874d704da2ed8e622dc5bd174013a631de61169911",
+    "tools/ci_evidence/zip.mjs": "633be9954ee26f182989592a24829de6f2318a5552263c23f2c6b871e98a08f2",
+    "tools/ci_evidence/oidc_request.mjs": "d7ed8a0b202d49f213480f6fdcc26f06eb604429a14758642d64a59d5cea19c9",
+    "tools/ci_evidence/context.mjs": "1deb79d21868ff0cdc8ce7871b07e696e1c4e11c08ac2cfbc966da3bd0e8cfd4",
+    "tools/ci_evidence/session.mjs": "3b7ce1eef8b3b876fe7d505db21db88db28bbc94409fef1fbbe458e2fe45ef0a",
+    "tools/ci_evidence/synthetic_bundle.mjs": "459caade33cacf7d50b508225b1dedb435159f69ea0b2560fda68ef9102d522c",
+    "tools/ci_evidence/public_summary.mjs": "3d4f63dd2ceb7766965249acd3aa6aafe6e27f59786449f0633ec353ddd1a1ea",
+    "tools/ci_evidence/worker.mjs": "f582b6121c087cba68e50d5b895476280961185e439504fa607f66619ac9fd53",
+    "tools/ci_evidence/hosted.mjs": "2af2b85baba6d9b893982dd7e49a14b9672b2c45bcb228bbfa23e89dacacc6b5",
+    "tools/ci_evidence/diagnostics.mjs": "ed9238d1f92bda2296aaa41c24b984d4647417f657573b9e0179309213f2a075",
+    "tools/ci_evidence/context_init.mjs": "cde73bbfcff528323c4ade54a859ed24d4cf55180239d6460369df95b7983c2c",
+    "tools/ci_evidence/identity_policy.mjs": "8b72983e9d558822ab0c7e79140cdcd9e8f071edfcb961da4eb70fe30506e4a4",
+    "tools/ci_evidence/tests/hosted/confidential-collector-context.test.mjs": "e0d48d41cb0c1e3122869240ba410f661e56a22e60a5da80d2153bb100fd1a41",
+    "tools/ci_evidence/tests/hosted/confidential-collector-oidc.test.mjs": "6bf2d64169d5929d17d3d6fa9b520e9900d591bbd9b5695e81a2328915e9d008",
+    "tools/ci_evidence/tests/hosted/confidential-pr64-blocked-projection.test.mjs": "801fb26109119ff3be23469501b742f787f87f357291d0a16c14e280c50e4e25",
+    "tools/ci_evidence/tests/hosted/confidential-public-privacy.test.mjs": "73d47e8490f66de445c022998efc7e27bdd798cd933e1cd9c1a35ea1e7f12b35",
+    "tools/ci_evidence/tests/hosted/confidential-receipt-schema.test.mjs": "7ec5cee99e715fdf469415f15eb88d6ee820ee8d6ffaa493b889a323a1736fe8",
+    "tools/ci_evidence/tests/hosted/confidential-stage-codes.test.mjs": "ba1f8ea20437a98202e9abd2df8b140a890b7ad84f8725577ad656d20fe06509",
+    "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs": "4ac30205221a156d296f8eeab928b520c8a2036a623673c38e0f67a74865b64d",
+    "tools/ci_evidence/tests/hosted/confidential-synthetic-session.test.mjs": "2734ebd54fa48efd9954755c98221124a52ebc16dc43a1f0ead90d008c2285bb",
+    "tools/ci_evidence/tests/hosted/fixtures/context.mjs": "0f038a215ba5b458dde42afa9309a4cc84cb99a0e937fb46a50697bd0101193b",
+    "tools/ci_evidence/tests/inert_initialization.mjs": "0625035e72b4d372ccdd463c929c1cbb1c2aef73fa8ccdc57ccc8d3a163c65ad",
+    "tools/ci_evidence/tests/inert_identity_policy.mjs": "c28a4f7aa70eaf39ece804d89732d1696254d92bd87d99ed58598c542dec2d85",
+    "tools/ci_evidence/tests/inert_public_diagnostics.mjs": "c8818f5808a0f3d45ed14fea56a1b83bbf0826c7d6c41c9ceb07bf71084ef6ff",
+    "tools/ci_evidence/tests/inert_loader.mjs": "da2c0e9081001414f2e794575ccaafbc6fdd912016acaab3d05814461e928d11",
+    "tools/ci_evidence/tests/inert_api_failures.mjs": "d4dbc9e2f059f7fd1af7c80eec8b5de7073973a1112e19acdb263a9c4361557b",
+    "tools/ci_evidence/tests/inert_stage_codes.mjs": "752e0b41ad1b440030b9294ec274ea340b6b49c48aec72f8f5a53ce01568ba5d",
+    "tools/ci_evidence/http_body.mjs": "cab089a1aaac6ef495279acb4967943750604461f9e4711b06cd0a64922c4d91",
+    ".github/workflows/ci-evidence-collector.yml": "258b830fb825aaff9e533e73bd00314578a8cd722de4ed074f6b3c4d08a0f68a"
+  },
+  "roles": [
+    {
+      "id": "279543d7e21b458e719a52a8945d75569202a339adc3c7aac5efe80f3abcda48",
+      "original": {
+        "file": "tests/confidential-collector-context.test.mjs",
+        "name": "live preflight uses independent API objects, a single current job and approved subject forms",
+        "parent": null,
+        "line": 2,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-collector-context.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-collector-context.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "e52ec520f226a97192326037d8ffe0f14813659c7fbf33d481b168f284a13404",
+      "original": {
+        "file": "tests/confidential-collector-oidc.test.mjs",
+        "name": "collector requires signed reusable-workflow immutable pin in addition to full workload checks",
+        "parent": null,
+        "line": 2,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-collector-oidc.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-collector-oidc.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "556e2b34785ed0b3a18db3eb7e3181b7b6e0c8806a96e8e933e8c264cf1dd829",
+      "original": {
+        "file": "tests/confidential-collector-oidc.test.mjs",
+        "name": "OIDC request never sends runtime credential to an unapproved origin or redirects",
+        "parent": null,
+        "line": 3,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-collector-oidc.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-collector-oidc.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "8b4822d8176f6993946741ff8e6fc0968f4bf5163b13396dcda182ee1119f504",
+      "original": {
+        "file": "tests/confidential-pinned-loader.test.mjs",
+        "name": "pinned workflow contains complete immutable blob map and no candidate checkout",
+        "parent": null,
+        "line": 2,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-pinned-loader.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/inert_loader.mjs",
+      "kind": "STATIC"
+    },
+    {
+      "id": "ffe1088a3a4c2e3938b814246d2edb7cc900aa448f78936277c35f0fb0107abd",
+      "original": {
+        "file": "tests/confidential-pinned-loader.test.mjs",
+        "name": "Worker has minimal environment, ciphertext-only request and fixed summary logging",
+        "parent": null,
+        "line": 3,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-pinned-loader.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/inert_loader.mjs",
+      "kind": "STATIC"
+    },
+    {
+      "id": "bfdccec02810f6fcfeef0bf282ed8a4ee2fb1edadc334bdb0cc87121e1beab68",
+      "original": {
+        "file": "tests/confidential-pinned-loader.test.mjs",
+        "name": "embedded collector source remains inside YAML literal block after map regeneration",
+        "parent": null,
+        "line": 5,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-pinned-loader.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/inert_loader.mjs",
+      "kind": "STATIC"
+    },
+    {
+      "id": "700caed4b52f42bc79f84ad1dd5b2d3c923abcb2048c0d9585cd8418d241e257",
+      "original": {
+        "file": "tests/confidential-pr64-blocked-projection.test.mjs",
+        "name": "PR64 failure-only public projection remains blocked and non-authoritative",
+        "parent": null,
+        "line": 13,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-pr64-blocked-projection.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-pr64-blocked-projection.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "316c5e39a2aa2655111c829c2a25122ced63a9ff4663ec0ebc40ea7c3ef41cb1",
+      "original": {
+        "file": "tests/confidential-pr64-blocked-projection.test.mjs",
+        "name": "PR64 collector failure code is fixed, not arbitrary error text",
+        "parent": null,
+        "line": 24,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-pr64-blocked-projection.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-pr64-blocked-projection.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "23cd574298e57927d9e9734527d3783b38f9b8ae1b9b76ea9a0fde87fd91fcc3",
+      "original": {
+        "file": "tests/confidential-pr64-blocked-projection.test.mjs",
+        "name": "public failure cannot be mistaken for success evidence",
+        "parent": null,
+        "line": 30,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-pr64-blocked-projection.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-pr64-blocked-projection.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "219563fb0211f258328fc71ff38a9cfdbe0004c069a9348e7f8bde0726976667",
+      "original": {
+        "file": "tests/confidential-public-privacy.test.mjs",
+        "name": "public artifact whitelist rejects raw extensions, altered gates and arbitrary blocked messages",
+        "parent": null,
+        "line": 3,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-public-privacy.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-public-privacy.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "106e5209f8d0720d80ed54c8597b91701562b1f64e1af85fd1b987be42525bfe",
+      "original": {
+        "file": "tests/confidential-public-privacy.test.mjs",
+        "name": "public summary requires separate REST head/base and workflow source identities",
+        "parent": null,
+        "line": 4,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-public-privacy.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-public-privacy.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "56e9c6b7a318af67a8db490bd57ddb55d1ff3d8cd5425d79653bba9aafe9662a",
+      "original": {
+        "file": "tests/confidential-receipt-schema.test.mjs",
+        "name": "synthetic receipt also rejects signed authority extensions",
+        "parent": null,
+        "line": 2,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-receipt-schema.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-receipt-schema.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "3ad5e642308b8931294eca9ecea61e53e12c5f32077de76cb11493ea82ae258f",
+      "original": {
+        "file": "tests/confidential-stage-codes.test.mjs",
+        "name": "failure stage is fixed, public-safe and never reflects input",
+        "parent": null,
+        "line": 4,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-stage-codes.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-stage-codes.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "cd34a8580a6d9620525b34f134505f62f5ff66bf10343f43d7325cc41c53e207",
+      "original": {
+        "file": "tests/confidential-stage-codes.test.mjs",
+        "name": "collector preserves inner fixed authorization failure code without exposing claims",
+        "parent": null,
+        "line": 11,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-stage-codes.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-stage-codes.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "750308346d00c8c62a1bc2c19d9427eedef9da0b5e52de827375f560cc9a000c",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "builds a narrow deterministic synthetic archive and returns only frozen public metadata",
+        "parent": null,
+        "line": 12,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "abd79bc404f23dda235cc9efe412471814421f7232400a295a446ab3a525dc97",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects wrong expected sourceHead",
+        "parent": null,
+        "line": 24,
+        "column": 41,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "a346c5b2c2e53be2a45058e33b8f75915b5272e2d0c50b8b2febf9c5729a5ff0",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects wrong expected sourceTree",
+        "parent": null,
+        "line": 24,
+        "column": 41,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "1d520c0a06ec2f43474d14010aeb717e3bedd08c618c64dcb6c0b725891ad36a",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects wrong expected runId",
+        "parent": null,
+        "line": 24,
+        "column": 41,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "de9066476fd977e6897caf64da91109eec32a64dc14152edf30d42901f62a7d7",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects wrong expected attempt",
+        "parent": null,
+        "line": 24,
+        "column": 41,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "29d700858ecebbdf4a51ae060768e5080c7602e0ebae7b7131f069f7b4cc7a37",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects wrong expected jobId",
+        "parent": null,
+        "line": 24,
+        "column": 41,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "a43728334ccdb12c70cdb6e20321cf7f6cfe4d2eb52c091545ce30eb0c121586",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects invalid context and malformed canary without echoing it",
+        "parent": null,
+        "line": 27,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "3347abced4ceb318ebddc05e69f85960bc91676a3dca36914392658663a0c9bf",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects damaged ZIP even when outer digest is recomputed",
+        "parent": null,
+        "line": 32,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "c21111896471ad7d6c91a3c137549c5a6661d0011cc31fff59bd39afbad56023",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects manifest missing context in a valid ZIP",
+        "parent": null,
+        "line": 66,
+        "column": 3,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "7f44c52b50771baea82dc6a78448464b022cda7796486bb005a5aa9468b18310",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects manifest extra unsigned field in a valid ZIP",
+        "parent": null,
+        "line": 66,
+        "column": 3,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "369eda6e91c6438ef70cd5c4469d0f7f01a860b7e229439cbf002ed099716a26",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects manifest missing inventory entry in a valid ZIP",
+        "parent": null,
+        "line": 66,
+        "column": 3,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "cce1f0e4faffade1b9552f478169a01f517e94ff5744b2c391c0421ebd8f4b2b",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects manifest extra inventory entry in a valid ZIP",
+        "parent": null,
+        "line": 66,
+        "column": 3,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "abc96af7258813884cf0d84895358dd09b0fc7b7381cd03d529f11d36a898219",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects manifest wrong inventory hash in a valid ZIP",
+        "parent": null,
+        "line": 66,
+        "column": 3,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "a93c54193f1f79cbea66dd942bf6223958b1f0fbae779ffbc5b88c15ef905bf4",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects manifest wrong inventory size in a valid ZIP",
+        "parent": null,
+        "line": 66,
+        "column": 3,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "bda503bafeaf6d257c15964bbf8b3e6181e7c84f74156685e7583fdbf7f557e6",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects opaque extra payload fields even with its manifest updated",
+        "parent": null,
+        "line": 71,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "844d42add2fb00f4d8364f555d72855a54e54d47cfaa57f1fb96404de8fb2a03",
+      "original": {
+        "file": "tests/confidential-synthetic-bundle.test.mjs",
+        "name": "rejects changed pinned package even with a valid ZIP and new outer hash",
+        "parent": null,
+        "line": 75,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-bundle.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-bundle.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "80c9d3aaf5478c01a7379bacd9093687101cfb59bf52e323c3a3fceec3cc6467",
+      "original": {
+        "file": "tests/confidential-synthetic-session.test.mjs",
+        "name": "synthetic encrypted session validates real-shaped issuer proof, rejects replay/mismatches and never grants native acceptance",
+        "parent": null,
+        "line": 3,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-session.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-session.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "cc3f34edb347644bdf2fcfb3bdf6c20119aeaaef454c377fbb1fbd7a445b3d73",
+      "original": {
+        "file": "tests/confidential-synthetic-session.test.mjs",
+        "name": "signed synthetic receipt cannot self-assert operational authority",
+        "parent": null,
+        "line": 5,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-session.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-session.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "8a50239ecd3e93715a43a84181c7256df5ea865ced6cab241cca6923ad41c145",
+      "original": {
+        "file": "tests/confidential-synthetic-session.test.mjs",
+        "name": "independently pinned synthetic receipt identity rejects stale run/job and digest",
+        "parent": null,
+        "line": 16,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-session.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-session.test.mjs",
+      "kind": "HOSTED"
+    },
+    {
+      "id": "276674806584034845240060a8d0c0559f2dab82ca1d058df83cb38c61b3d5fb",
+      "original": {
+        "file": "tests/confidential-synthetic-session.test.mjs",
+        "name": "verified synthetic receipt is frozen against post-verification mutation",
+        "parent": null,
+        "line": 30,
+        "column": 1,
+        "platform": "linux",
+        "occurrence": 1,
+        "destination": "tests/confidential-synthetic-session.test.mjs"
+      },
+      "target": "tools/ci_evidence/tests/hosted/confidential-synthetic-session.test.mjs",
+      "kind": "HOSTED"
+    }
+  ]
+}
