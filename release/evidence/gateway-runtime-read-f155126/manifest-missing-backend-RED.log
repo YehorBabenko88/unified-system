@@ -1,0 +1,25 @@
+test_actual_mtls_scoped_manifest_and_durable_audit (test_manifest_front.ManifestFrontTests.test_actual_mtls_scoped_manifest_and_durable_audit) ... FAIL
+test_actual_principal_wrong_view_denied_without_object_read (test_manifest_front.ManifestFrontTests.test_actual_principal_wrong_view_denied_without_object_read) ... FAIL
+test_wrong_actual_server_pin_cannot_commission (test_manifest_front.ManifestFrontTests.test_wrong_actual_server_pin_cannot_commission) ... ok
+
+======================================================================
+FAIL: test_actual_mtls_scoped_manifest_and_durable_audit (test_manifest_front.ManifestFrontTests.test_actual_mtls_scoped_manifest_and_durable_audit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\gateway-runtime-integration-20261107\unified-system\tests\gateway_runtime\test_manifest_front.py", line 62, in test_actual_mtls_scoped_manifest_and_durable_audit
+    self.assertTrue(headers.startswith(b'HTTP/1.1 200'))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_actual_principal_wrong_view_denied_without_object_read (test_manifest_front.ManifestFrontTests.test_actual_principal_wrong_view_denied_without_object_read)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\LS-5\.codex\worktrees\gateway-runtime-integration-20261107\unified-system\tests\gateway_runtime\test_manifest_front.py", line 73, in test_actual_principal_wrong_view_denied_without_object_read
+    self.assertTrue(headers.startswith(b'HTTP/1.1 403'));self.assertEqual(called,[])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.410s
+
+FAILED (failures=2)

@@ -1,0 +1,2 @@
+# Fail-closed recovery
+The offline coordinator records each completed state in a local SQLite journal. Restart after a non-initial state enters BLOCKED and requires external manual review; it never auto-starts Grid or replays actions. A journal is not an authorization receipt or authenticated source of truth. A future production implementation needs transactional coupling to the source-owned command protocol, external locking, durable trust anchors and explicit owner-signed recovery policy.

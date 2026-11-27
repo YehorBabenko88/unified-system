@@ -1,0 +1,7 @@
+# Integrated release source cohort
+
+The enclosing Root candidate consolidates Root140 component gates, Root141 real offline causal delegation and Root142/143 fresh operator-cache/JUnit corrections. The common26-case and causal21-case SDK gates now bind the same actual sources: Dataa44ce268c39170dfd377b25c75aa3648fcf3476e (Draft113), Matha5868944bf1bae813403a32b22d329c1da6f8238, Terminan75a906d36574bfdc19acd966e79a6c168dc71ad4 (Draft117). Prior141 owner evidence uses Data105 and is preserved as historical source-scoped evidence; it does not qualify this new enclosing HEAD.
+
+Data113 has independent645 source/artifact cases and14 canonical historical consumer cases on both Python3.11/3.12, actual42/3/64 SDK raw bytes and fresh startup import caches. Earlier cancellation failures are retained; cf9 cleanup split preserves writer admission and unknown outcomes. Root141 independently passed21 actual SDK composition cases plus5 additional probes on its own SHA. Root143 fixes the independently reproduced helper10 JUnit fail-closed bug, with actualpytest-generated10-case XML accepted on both versions.
+
+This enclosing Root head must be requalified against actual newly pinned wheels before publication. No source-consistency result grants native/service/provider/installer permission. Native admission/C3, real Windows/Linux full CI, installation/update and security closure remain NO_GO. Existing native/gateway protocol source cohorts are separately pinned historical qualification profiles; their old PASS is not acceptance of this release cohort.

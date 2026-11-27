@@ -1,0 +1,48 @@
+# A1 scoped HA LAN compatibility decision
+
+2026-11-10. SOURCE/DESIGN ONLY / NO-GO. Verdict: SCOPED_DESIGN_REQUIREMENTS_ACK;
+qualified executable HA LAN transport/authenticated-peer/server-lifecycle API = NONE.
+No implementation, imports, tests, native RPC, provisioning or physical action.
+
+Reviewed exact A2 sealed manifest9af6e969ab9bf4dfd8089a34fec1c30bf88573f29e63ec342714fb1e18ca0b61 and DECISIONS.md51358f390f008f3b46504b393e7059fbd799db65344106d987210f4471d27800. Every seven sealed member length/hash verified. This ACK attaches only to those bytes and the requirements below; no operator HA decision, implementation-base choice, new logical-right grant or executable adapter ACK.
+
+## Actual source pin and API inventory
+
+Inspected primary Git objects at Root1d923f6a33e1f0f16cd476f1b4e5e65ee03a8a6c / treee5ad4acf893b99cb71ad1b55cd642fcb4946de7c. This is the requested inspection input, NOT an approved HA assembly. Paired source inventory A1-HA-R2-R4-R5-LAN-SOURCE-INVENTORY-20261110.json records blobOID, rawSHA256, byte lengths and AST method signatures/lines for five modules. It proves only these inspected bytes, not office deployments or all writers.
+
+lan_transport.py rawSHA256f9b5348e120650af459c49131f396fb5629bf7f35d990a757ca317e87d7d1873: PeerRegistry.from_document(doc), peer(node), authenticate(tls,expected=None,*,application_protocol=...) exist. Registry requires six stable enrollments, revision and enrolled leaf pins; authenticate binds ALPN, exact leafSHA256 and sole expected URI SAN to a node. tls_context(ca,cert,key,*,server=False,application_protocol=...) loads caller-provisioned local key/cert with CERT_REQUIRED and platform TLS verification. This is machine/service transport identity, not human/operator/queue authority.
+
+LanTransport.isolated(node,registry,*,client_context,server_context,budget,application_protocol=...), listen(address='127.0.0.1',port=0), accept(*,deadline=None), connect(peer,*,deadline=None,cancel=None), update_registry(new), connect_with_retry(...) and close() exist. Both listen and connect enforce loopback. runtime(...) always raises NATIVE_RUNTIME_ADMISSION_REQUIRED. Separate TLS control/data channels join by authenticated node, protocol version and nonce. Registry replacement closes changed peer/local enrollment sessions; Connection._current rechecks registry admission. No qualified privileged Windows service launcher, server certificate/key custody factory, native ACL writer census, HA endpoint migration, or current-rights HA dispatcher is provided.
+
+lan_mux_channel.py rawSHA256d4f56cf3dc602cf19303e0e45d0661a1aedafe01afcaa2cd29436c515fed8c23: LanMuxChannel.isolated(connection,binding,*,allowed_send_kinds,expected_receive_kinds), send(kind,payload,*,deadline=None,cancel=None), receive(*,deadline=None,cancel=None), close() exist. runtime(...) denies NATIVE_MUX_ADMISSION_REQUIRED. MuxBinding/fragment bindings are connection/stream-attempt/profile framing; they are not an HA fence, queue permit or authority generation proof.
+
+Root gateway_identity.py has DisposableIdentityAuthority.authenticate_connection/authorize_read/require_issued_read and GatewayReadCapability.check_current: isolated READ_DATA capability contract only. Root gateway_research_identity.py has async ResearchIdentityBroker.open_session(server_ssl_socket,*,leader), capture_current(context,*,scope,request_bytes), require_capture(capture,*,expected_authority,scope,request_bytes), local invalidation, async native invalidation and close. Its actual scopes remain SUBMIT_RESEARCH / READ_RESEARCH / CANCEL_OWN_JOB; QUEUE_RESEARCH and CANCEL_QUEUED_OWN_JOB = NONE. These ROOT-owned issuer/context APIs must not be replaced by LAN node strings, claimed actor JSON or a second broker. Their presence does not qualify this HA assembly.
+
+native_peer_identity.py is ABSENT at inspected Root1d. Separate PR45f58e isolated pipe observation is not an imported source dependency here, not LAN mTLS, and not a credential/HA issuer. No pin/result transfer from that PR, the3af source catalog, older egress contracts or reserve/consume permits.
+
+## Message, deadline and outcome compatibility
+
+Transport payloads are bytes, not immutable T20/P/S/N13/D command codecs. APP frame<=65536bytes, control APP<=4096; negotiated mux kinds1/2/3/4 have whole-message ceilings16384/133120/133128/2097152bytes. Fragment header160 and chunk65376, content hash/order/session/attempt binding, receive reservation2xwhole payload, node8MiB and peer1MiB/64queued bounds remain. Whole-message ceilings do not certify HA request size or ledger/native transaction fit. Current broker capture requires bytes length<=16384. A concrete original+all P/base64/records/envelopes/response plan must fit every layer; no chunked native atomic transaction or discarded predicate to fit limits. Exact T20/P/S/N13/D versioned queue/cancel/reconcile codecs and HA dispatch ABI = NONE approved. Keep originals/common bindings unchanged and treat new schema/state as explicit unsupported until all owners ACK exact bytes.
+
+Connect caps an attempt at5s; send/receive use caller local monotonic deadlines (default5s); frame body has a bounded5s assembly; heartbeat10s/peer idle30s; mux receive/whole reassembly defaults10s (kind4 assembly60s), absolute assembly deadlines do not refresh. These are local transport bounds, NOT UTC-at-Raft-commit, native session TTL guarantees, a2.5s proof or Raft voting. Caller cancellation/timeout/closed transport never cancels a possibly committed native operation.
+
+TransportError codes include AUTH_REJECTED, POLICY_REVOKED, DEADLINE, CANCELLED, DISCONNECTED, DELIVERY_UNKNOWN; mux may collapse an attempted fragment failure to MUX_DELIVERY_UNKNOWN. Successful send returns local message/transfer ID, not a native receipt or permission. No typed HA UNKNOWN application result exists in these generic channels. Required adapter mapping: once durable attempt/send possibility exists, retain exact same original/attempt and UNKNOWN on timeout, disconnect, partial read, malformed/ambiguous response, cancellation or uncertain cleanup; no replay/new ID/refund/zero reconstruction. An unsent local rejection is not native DENIED. Local send success is not commit. Same-original consistent reconciliation must use the authority contract; transport connect_with_retry only reconnects and must not be used to repeat a mutation. No automatic leader URL redirect or identity substitution is authorized.
+
+## Auth, lifecycle, credentials and ACL custody requirements ACK
+
+ACK the design requirement for admitted exact server/peer identity and source/client/config before send and after await, with current broker rights/session checks and native generation/session/index/policy/job/ledger predicates in the actual authority transaction. Existing LAN registry equality checks do NOT implement certificate expiry/revocation/current rights at native commit. Existing TLS handshake auth and application heartbeat do not establish Raft authority, human rights, quorum, current policy or failover safety.
+
+LAN transport has no HTTP redirect facility and no credential forwarding policy filter: generic byte send can carry arbitrary bytes. Therefore it cannot prove no credential forwarding by itself. ROOT must own exact server/listener/source/endpoint allowlist, TLS/key provisioning+rotation/revocation and service shutdown/in-flight draining, current issuer and native client configuration, local token/key storage, credential owner/retirement and no delegation to clients/workers. Consul service credentials must stay within the admitted native service; never serialize them into HA command/original/error/redirect messages or forward them to a discovered/unreviewed endpoint. Native HTTP redirect/retry behavior must be pinned by its owning client adapter; LAN reconnect is no substitute. No such qualified HA composition/credential-custody API exists in this inspected A1 source.
+
+D2-WRITER actual deployment inventory = NONE supplied by A1. A static source inventory cannot enumerate real administrative/break-glass tokens, legacy/raw writers or prove old writer retirement. ROOT must supply the requested full principal/token/service/source/ACL-lifecycle census and exclusive adopted writers before queued release. No ACL/network/route/security change is requested or performed by this ACK. D2-RIGHTS: existing broker extension only under owner allocation; proposed new QUEUE rights NONE. No second broker/authority and no authorization from byte budgets, egress permits, heartbeats or node identity.
+
+## Precise remaining blockers and decision
+
+1. ROOT-approved immutable HA implementation assembly and allocations, distinct from inspected1d and3af catalog.
+2. Actual admitted non-loopback HA peer/server/service/key/credential lifecycle and per-command source/current-identity adapter; current runtime factories deny.
+3. Exact logical rights/profile/schema/custody/codec and native client response/redirect/retry ABI, serialized request/response bounds and retained original UNKNOWN joins; current rights do not contain QUEUE.
+4. Real writer/ACL/service credential census, exclusive adoption/retirement and commissioning lineage/receipts; source scan insufficient.
+5. Explicit D4-TIME operator choice; strict commit-time expiry remains unavailable. No local transport setting can open it.
+6. Separately authorized native fault/Windows/physical HA proof; all NOT_RUN here.
+
+This is a scoped ACK of closed design requirements and API absence, not full source compatibility or actual authenticated HA LAN/server lifecycle approval. Positive queue/cancel/release/start/publication and operator HA gate remain CLOSED / NO-GO. No tests or runtime calls were run for this response.

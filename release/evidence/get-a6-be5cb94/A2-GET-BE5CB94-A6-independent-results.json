@@ -1,0 +1,111 @@
+{
+  "qualification": "SYNTHETIC_DENIAL_ONLY_NO_NATIVE_CONSUL_OR_PHYSICAL_PROOF",
+  "head": "be5cb942436f82f374375eabb255768bb139797f",
+  "cases": [
+    {
+      "case": "resolve:UNAUTHENTICATED",
+      "status": 401
+    },
+    {
+      "case": "resolve:SESSION_EXPIRED",
+      "status": 401
+    },
+    {
+      "case": "resolve:FORBIDDEN",
+      "status": 403
+    },
+    {
+      "case": "resolve:UNAVAILABLE",
+      "status": 503
+    },
+    {
+      "case": "resolve:foreign",
+      "status": 503
+    },
+    {
+      "case": "resolve:wrong-return",
+      "status": 503
+    },
+    {
+      "case": "revalidate:UNAUTHENTICATED",
+      "status": 401
+    },
+    {
+      "case": "revalidate:SESSION_EXPIRED",
+      "status": 401
+    },
+    {
+      "case": "revalidate:FORBIDDEN",
+      "status": 403
+    },
+    {
+      "case": "revalidate:UNAVAILABLE",
+      "status": 503
+    },
+    {
+      "case": "revalidate:foreign",
+      "status": 503
+    },
+    {
+      "case": "revalidate:wrong-return",
+      "status": 503
+    },
+    {
+      "case": "identity_binding:UNAUTHENTICATED",
+      "status": 401
+    },
+    {
+      "case": "identity_binding:SESSION_EXPIRED",
+      "status": 401
+    },
+    {
+      "case": "identity_binding:FORBIDDEN",
+      "status": 403
+    },
+    {
+      "case": "identity_binding:UNAVAILABLE",
+      "status": 503
+    },
+    {
+      "case": "identity_binding:foreign",
+      "status": 503
+    },
+    {
+      "case": "identity_binding:wrong-return",
+      "status": 503
+    },
+    {
+      "case": "verify_records:UNAUTHENTICATED",
+      "status": 401
+    },
+    {
+      "case": "verify_records:SESSION_EXPIRED",
+      "status": 401
+    },
+    {
+      "case": "verify_records:FORBIDDEN",
+      "status": 403
+    },
+    {
+      "case": "verify_records:UNAVAILABLE",
+      "status": 503
+    },
+    {
+      "case": "verify_records:foreign",
+      "status": 503
+    },
+    {
+      "case": "verify_records:wrong-return",
+      "status": 503
+    },
+    {
+      "case": "typed-looking storage exception is NOT session expiry",
+      "status": 503
+    },
+    {
+      "case": "clean missing original index unresolved NONE",
+      "status": 503
+    }
+  ],
+  "pass_count": 26
+}

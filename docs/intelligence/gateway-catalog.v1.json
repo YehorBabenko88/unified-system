@@ -1,0 +1,178 @@
+{
+  "schema": "unified.gateway.catalog.v1",
+  "profile": "OFFLINE_CONTRACT_PREPARATION",
+  "runtime_available": false,
+  "authentication_available": false,
+  "tools": [
+    {
+      "name": "unified.get_cluster_status",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.list_nodes",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_node_health",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.list_instruments",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_dataset_manifest",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_data_coverage",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.query_market_data",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.query_orderbook_history",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.list_strategies",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_strategy_results",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_experiment",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_paper_positions",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_paper_trades",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_statistics",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_scientific_evidence",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_ci_status",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_release_status",
+      "level": "OBSERVATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.create_research_plan",
+      "level": "RESEARCH",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.submit_backtest",
+      "level": "RESEARCH",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.submit_replay",
+      "level": "RESEARCH",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.submit_statistical_analysis",
+      "level": "RESEARCH",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.submit_paper_experiment",
+      "level": "RESEARCH",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_job_status",
+      "level": "RESEARCH",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_job_artifacts",
+      "level": "RESEARCH",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.cancel_owned_job",
+      "level": "RESEARCH",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.create_visualization",
+      "level": "VISUALIZATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.publish_research_artifact",
+      "level": "VISUALIZATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_visualization",
+      "level": "VISUALIZATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.compare_experiments",
+      "level": "VISUALIZATION",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_component_capabilities",
+      "level": "DEVELOPMENT",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_integration_blockers",
+      "level": "DEVELOPMENT",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.create_diagnostic_bundle",
+      "level": "DEVELOPMENT",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.propose_change",
+      "level": "DEVELOPMENT",
+      "runtime": "BLOCKED"
+    },
+    {
+      "name": "unified.get_change_validation",
+      "level": "DEVELOPMENT",
+      "runtime": "BLOCKED"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schema": "unified.windows-home-qualification-matrix.v1",
+  "node": "LS7",
+  "os_observed": {
+    "build": "26200",
+    "version": "10.0.26200",
+    "caption": "Microsoft Windows 11 Home",
+    "total_ram_kib": 8151360,
+    "free_virtual_kib": 4075736,
+    "free_ram_kib": 3584852
+  },
+  "role": "WORKER_TERMINAN_CAPABLE_DESIGN_ONLY",
+  "coordinator_admitted": false,
+  "os_edition_change": false,
+  "checks": [
+    {
+      "criterion": "OpenSSH client/server and direct LAN authentication",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "Windows Services and Unified autostart",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "Persistent non-administrative runtime identity",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "mTLS and protected private-key storage",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "Named Pipe ACL and IPC admission",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "Firewall and ESET compatibility without changes",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "Pinned Python/Node/native runtime",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "Math/Strattester/MetaAnalyse worker execution",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "Scheduler/checkpoint/resume/recovery",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "Storage integrity/access/disk budgets",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "Terminan UI/RBAC/Control API",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "Restart and user-logoff recovery",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "Direct LAN independence from Tailscale",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    },
+    {
+      "criterion": "No dependency on Pro-only features",
+      "status": "NOT_QUALIFIED",
+      "evidence": "READONLY_OS_OBSERVATION_IS_NOT_CAPABILITY_ACCEPTANCE"
+    }
+  ],
+  "existing_pinned_ssh": "OBSERVED_SEPARATELY_NOT_DIRECT_LAN_QUALIFICATION",
+  "physical_deployment": "BLOCKED",
+  "security_gates_weakened": false
+}

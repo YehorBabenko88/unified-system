@@ -1,0 +1,20 @@
+# Bootstrap separation — owned Consul commissioning proposal
+
+2026-11-06. DESIGN_ONLY / OWNER_ACK_PENDING / NO-GO for action.
+Addendum to immutable inert-bootstrap-profile-v2-review1.json SHA e2c2de60056203de09cfea375068e2c33ba222044b4dc1e35c8589ef6c7b5aa9. It does not modify that profile, whose no-listener/no-authority-creation rule still holds.
+
+Use three explicit stages, never one permissive bootstrap flag:
+
+1. INERT_BOOTSTRAP: exact locally admitted owned offline files installation, no provider/listener/tasks/application mutations, Bybit NOT_RUN, no quorum prerequisite. Existing v1 guard unchanged; new receipt is install-only.
+2. OWNED_CONSUL_COMMISSIONING (NEW separate proposed profile): ROOT/A2-approved exact service/process commissioning of the already agreed sole Consul cluster on LS5/PC4/PC3. Starting first and second voters cannot require already established2/3 quorum; doing so creates the bootstrap cycle. Only bounded owned voter startup and native consensus membership/election/replication activity needed to form the approved cluster are permitted before quorum. No new authority namespace, replacement election service or arbitrary remote command is allowed. This is not ordinary application runtime and not permission from an inert receipt.
+3. OPERATIONAL: actual independently verified2/3 quorum plus admitted source/identity/domain/budget/provider requirements before application mutation/history/live/distributed processing. Starting processes, seeing peers or a preferred LS5 does not establish quorum or operational readiness. Unknown/no majority denies new application grants/renewals/publications/dispatch. Local caches remain stale/unknown.
+
+Commissioning admission must bind actual nodes, protected config/source/version, owned service identity, existing data directory ownership and exact approved peer membership, actual service/instance identities and narrowly approved existing ports. Do not invent or change network/firewall/router settings to obtain connectivity. Missing ports/identity/source/admission blocks commissioning. Never bootstrap a fresh independent cluster over an existing data directory or force recovery/snapshot/state reset automatically. Preserve ownership and historical authority evidence. ROOT/A2 own exact service/key/namespace/port/action schema and safe stop/rollback; none is implemented or authorized here.
+
+Application admission stays deny-only while voters start. Built-in Consul election/replication can form the sole authority; no application grant/lease/budget/task is issued merely to make the bootstrap test pass. Crash/start sequencing cannot bypass readiness. Provider HTTP/WS, including time GET, stays prohibited until separate exact policy/adapter/admission; Bybit NOT_RUN is never API PASS. General read-only network baseline/config interlock remains required as agreed by ROOT; do not feed incompatible observations into frozen v1.
+
+ROOT's NEW event-ordered v3 design approval at f3bde56c889ebd5e15665a05e113213f511f2b2a chooses session/revocation event ordering only for that new profile; it neither silently opens old strict gates nor eliminates civil-time cooldown/window/cert requirements or paused external sender containment. Exact runtime adapter/new schema ACK and allocation still required.
+
+Required negative/qualification plan (NOT_RUN): first voter starts under exact commissioning admission but application grants deny; second joins under approved plan, real majority evidence required before readiness; absent/partitioned third voter never yields fabricated quorum; independent cluster/new namespace attempt rejects; foreign data-dir/service rejects; network config mutation is absent; service start success/inert receipt cannot promote application profile; loss of majority denies new application work; unknown source/port/key admission blocks before start. Physical Windows service work requires separate ROOT plan/readiness/owner authorization, not this document.
+
+Current direct-user full-LAN-design approval remains pending. ROOT asked for design reconciliation, not actual commissioning. No source, service, network or physical change performed.

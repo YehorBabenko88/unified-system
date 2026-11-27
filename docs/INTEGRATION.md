@@ -1,0 +1,2 @@
+# Synthetic integration milestone
+The offline fixture exercises Coordinator -> sealed synthetic Strattester handoff -> synthetic Grid snapshot -> canonical dashboard report. No Terminan network connection exists; the report is a Terminan-facing **proposed** payload, not a deployed Terminan API. Restart is intentionally BLOCKED and never replays actions. This milestone proves only a deterministic in-process fixture, not cross-repository compatibility, real data authenticity or physical readiness.

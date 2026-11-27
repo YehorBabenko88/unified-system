@@ -1,0 +1,39 @@
+{
+  "root_revision": "035ad06fbe7cc15fd4ab1f40a7029afe9cf8fbdf",
+  "decision": "Unique ephemeral CI challenge/ciphertext vault, not an app/state store",
+  "existing": [
+    {
+      "path": "unified_system/journal.py",
+      "purpose": "application state and receipts",
+      "reuse_for_ci_vault": false,
+      "reason": "No nonce/single-use challenge/sealed capture schema; changing it would alter app state storage"
+    },
+    {
+      "path": "unified_system/node_task_journal.py",
+      "purpose": "node operation scope/fencing/intents/receipts",
+      "reuse_for_ci_vault": false,
+      "reason": "Not OIDC token/ciphertext retention; validates a different exact app schema"
+    },
+    {
+      "path": "unified_system/gateway_identity.py",
+      "purpose": "mTLS service read capabilities",
+      "reuse_for_ci_vault": false,
+      "reason": "No GitHub OIDC/JWKS/workflow/PR merge relation"
+    },
+    {
+      "path": "unified_system/gateway_research_identity.py",
+      "purpose": "mTLS/Consul principal/research job grant",
+      "reuse_for_ci_vault": false,
+      "reason": "Different issuer, authority and operational admission; no fake equivalence"
+    }
+  ],
+  "private_journal_scope": [
+    "fresh hosted RUNNER_TEMP private directory",
+    "no Git ancestors, symlinks or nonordinary existing files",
+    "exact application_id/user_version/three-table schema",
+    "single transaction clock+challenge+sealed capture+receipt",
+    "no app/ObjectStore/Data DB paths or adoption",
+    "keys/capture private and ephemeral, removed after run"
+  ],
+  "approved_parent_scope": "NEW tools/ci_evidence/** + reusable workflow only"
+}

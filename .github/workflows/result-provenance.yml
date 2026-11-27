@@ -1,0 +1,11 @@
+name: Canonical result provenance refusal contract
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-contract:
+    uses: ./.github/workflows/owner-source-suite.yml
+    with:
+      suite: provenance

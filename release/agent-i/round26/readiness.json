@@ -1,0 +1,51 @@
+{
+  "schema": "unified.agent-i.deployment-readiness.v1",
+  "timestamp_utc": "2026-11-27",
+  "baseline": {
+    "repo": "YehorBabenko88/unified-system",
+    "commit": "ad7efedb0cae0893ca1c6ba1c76c9335b507bb6b"
+  },
+  "status": {
+    "code": "NO_GO",
+    "production": "NO_GO"
+  },
+  "scope": "READ_ONLY_SOURCE_AUDIT_AND_PLAN",
+  "execution": {
+    "real_pc": "NOT_RUN",
+    "native_windows": "NOT_RUN",
+    "disposable_install": "NOT_RUN",
+    "service_restart": "NOT_RUN",
+    "backup_restore": "NOT_RUN",
+    "distributed_failover": "NOT_RUN",
+    "uninstall": "NOT_RUN",
+    "update_rollback": "NOT_RUN",
+    "monitoring": "NOT_RUN"
+  },
+  "invariants": [
+    "no_second_supervisor",
+    "no_second_postgresql_owner",
+    "no_pg_5432",
+    "no_user_data_purge",
+    "no_main_merge",
+    "no_pr_166_modification",
+    "no_auto_authority_promotion",
+    "no_untrusted_latest_release"
+  ],
+  "owners": {
+    "windows": "A",
+    "postgresql": "C",
+    "consul": "E",
+    "audit": "F",
+    "retirement": "G",
+    "release": "J"
+  },
+  "blockers": [
+    "A_WIN2022_NATIVE_FAIL",
+    "C_E_B_SESSION_SQL_ABI_UNQUALIFIED",
+    "E_CONSUL_EXPIRY_DURING_COMMIT_NOT_PROVEN",
+    "C_UNKNOWN_COMMIT_NOT_PROVEN",
+    "F_PROTECTED_RELEASE_DENIED",
+    "J_SIGNED_IMMUTABLE_COHORT_MISSING",
+    "PHYSICAL_PC_NOT_RUN"
+  ]
+}

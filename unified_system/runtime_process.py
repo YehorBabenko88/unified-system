@@ -1,0 +1,1699 @@
+"""Owned local subprocess driver; no remote shell or physical authorization.
+
+The deployment boundary must authenticate configuration/artifacts and provide an
+authorization callback. Default execution is denied. PID reuse, stale release
+health and ambiguous interrupted starts fail closed. Health is loopback only.
+"""
+import ctypes
+from dataclasses import dataclass
+import hashlib
+import http.client
+import json
+import math
+import os
+from pathlib import Path
+import re
+import secrets
+import select
+import signal
+import socket
+import threading
+import tempfile
+import ssl
+import stat
+import subprocess
+import time
+from urllib.parse import urlsplit
+
+
+def _sha(path):
+    h=hashlib.sha256()
+    with Path(path).open('rb') as f:
+        for part in iter(lambda:f.read(1024*1024),b''):h.update(part)
+    return h.hexdigest()
+
+
+def _safe_path(path):
+    raw=str(path)
+    if raw.startswith(('\\\\','//')) or '..' in Path(path).parts:raise ValueError('nonlocal runtime path')
+    p=Path(path).absolute()
+    # Inspect ancestors first: looking at a descendant through a junction can
+    # already perform an unintended network or out-of-namespace filesystem read.
+    for part in reversed((p,*p.parents)):
+        try:facts=part.lstat()
+        except FileNotFoundError:continue
+        if stat.S_ISLNK(facts.st_mode) or getattr(facts,'st_file_attributes',0)&1024:
+            raise ValueError('linked runtime path')
+    return p
+
+
+def _win_api():
+    from ctypes import wintypes as w
+    k=ctypes.WinDLL('kernel32',use_last_error=True)
+    k.OpenProcess.argtypes=[w.DWORD,w.BOOL,w.DWORD];k.OpenProcess.restype=w.HANDLE
+    k.CloseHandle.argtypes=[w.HANDLE];k.CloseHandle.restype=w.BOOL
+    k.GetProcessTimes.argtypes=[w.HANDLE,*([ctypes.POINTER(w.FILETIME)]*4)];k.GetProcessTimes.restype=w.BOOL
+    k.QueryFullProcessImageNameW.argtypes=[w.HANDLE,w.DWORD,w.LPWSTR,ctypes.POINTER(w.DWORD)];k.QueryFullProcessImageNameW.restype=w.BOOL
+    k.TerminateProcess.argtypes=[w.HANDLE,w.UINT];k.TerminateProcess.restype=w.BOOL
+    k.WaitForSingleObject.argtypes=[w.HANDLE,w.DWORD];k.WaitForSingleObject.restype=w.DWORD
+    return k,w
+
+
+def _win_creation_time(k,w,handle):
+    """OS creation timestamp from the original retained kernel process handle.
+
+    QueryFullProcessImageNameW can fail after process exit. Unlike PID/name
+    lookup, GetProcessTimes remains bound to the original kernel object.
+    """
+    a,b,c,d=(w.FILETIME() for _ in range(4))
+    if not k.GetProcessTimes(handle,ctypes.byref(a),ctypes.byref(b),
+                             ctypes.byref(c),ctypes.byref(d)):
+        raise ValueError(
+            f'original Windows process creation time unavailable Win32={ctypes.get_last_error()}')
+    return str((a.dwHighDateTime<<32)|a.dwLowDateTime)
+
+
+def _win_identity(k,w,handle):
+    creation=_win_creation_time(k,w,handle)
+    buf=ctypes.create_unicode_buffer(32768);size=w.DWORD(len(buf))
+    if not k.QueryFullProcessImageNameW(handle,0,buf,ctypes.byref(size)):
+        raise ValueError(
+            f'process executable unavailable Win32={ctypes.get_last_error()}')
+    return [creation,str(Path(buf.value).resolve()).casefold()]
+
+
+def _identity(pid):
+    if type(pid) is not int or pid<=0:raise ValueError('invalid process identity')
+    if os.name=='nt':
+        k,w=_win_api();handle=k.OpenProcess(0x1000|0x100000,False,pid)
+        if not handle:
+            if ctypes.get_last_error()==87:return None
+            raise ValueError('process identity unavailable')
+        try:
+            if k.WaitForSingleObject(handle,0)==0:return None
+            return _win_identity(k,w,handle)
+        finally:k.CloseHandle(handle)
+    try:
+        raw=Path(f'/proc/{pid}/stat').read_text();parts=raw[raw.rfind(')')+2:].split()
+        if parts[0]=='Z':return None
+        return [Path('/proc/sys/kernel/random/boot_id').read_text().strip()+':'+parts[19],str(Path(f'/proc/{pid}/exe').resolve(strict=True))]
+    except (FileNotFoundError,ProcessLookupError):return None
+
+
+
+
+class RetainedOsProcessWait:
+    """Read-only, incarnation-bound Win HANDLE / Linux pidfd wait primitive.
+
+    The caller must independently verify its OWNERSHIP of the process, e.g.
+    C's dedicated LAB PostgreSQL marker, executable, data root and PID file.
+    This never signals/kills a process, infers SQL completion, or issues a
+    RootProcessExtinction/RootBackendExtinction grant. Failure is UNKNOWN.
+    """
+
+    def __init__(self, pid, created):
+        if (type(pid) is not int or pid <= 1 or type(created) is not list
+                or len(created) != 2 or not all(type(v) is str and v for v in created)):
+            raise ValueError('owned OS incarnation invalid')
+        self.pid = pid
+        self.created = tuple(created)
+        self._handle = None
+        self._kernel = None
+        self._windows = os.name == 'nt'
+        if _identity(pid) != created:
+            raise ValueError('owned OS incarnation changed')
+        if self._windows:
+            kernel, wintypes = _win_api()
+            handle = kernel.OpenProcess(0x1000 | 0x100000, False, pid)
+            if not handle:
+                raise ValueError('owned OS handle unavailable')
+            try:
+                # Opened handle pins a kernel process object, not a PID
+                # which may later be reused by a different application.
+                if (kernel.WaitForSingleObject(handle, 0) != 0x102
+                        or _win_identity(kernel, wintypes, handle) != created):
+                    raise ValueError('owned OS incarnation changed')
+            except BaseException:
+                kernel.CloseHandle(handle)
+                raise
+            self._kernel, self._handle = kernel, handle
+        else:
+            if not hasattr(os, 'pidfd_open'):
+                raise ValueError('owned OS pidfd unavailable')
+            fd = os.pidfd_open(pid)
+            try:
+                if (_identity(pid) != created
+                        or bool(select.select([fd], [], [], 0)[0])):
+                    raise ValueError('owned OS incarnation changed')
+            except BaseException:
+                os.close(fd)
+                raise
+            self._handle = fd
+
+    def wait_exited(self, timeout):
+        """True only if the retained kernel object has signalled exit."""
+        if (type(timeout) not in (int, float) or not math.isfinite(timeout)
+                or not 0 <= timeout <= 60):
+            raise ValueError('owned OS wait timeout invalid')
+        if self._handle is None:
+            raise ValueError('owned OS wait handle closed')
+        if self._windows:
+            status = self._kernel.WaitForSingleObject(self._handle, int(timeout * 1000))
+            if status == 0:
+                return True
+            if status == 0x102:
+                return False
+            raise ValueError('owned OS wait unavailable')
+        return bool(select.select([self._handle], [], [], timeout)[0])
+
+    def close(self):
+        if self._handle is None:
+            return
+        if self._windows:
+            self._kernel.CloseHandle(self._handle)
+        else:
+            os.close(self._handle)
+        self._handle = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+
+
+
+def _windows_tcp_listener_owner_pids(port):
+    """Read ALL IPv4/IPv6 Windows TCP LISTEN owners; never an admission grant.
+
+    Return a bounded snapshot of kernel owning PIDs for the exact local TCP
+    port, including wildcard binds. This is read-only: an empty snapshot is
+    not durable proof of a departed child, descendants or a future bind.
+    Any API error, buffer race or unsupported platform is UNKNOWN via error.
+    """
+    if os.name != 'nt' or type(port) is not int or not 1 <= port <= 65535:
+        raise ValueError('kernel TCP ownership unavailable')
+    import struct
+    from ctypes import wintypes as w
+    api = ctypes.WinDLL('iphlpapi', use_last_error=True)
+    api.GetExtendedTcpTable.argtypes = [
+        ctypes.c_void_p, ctypes.POINTER(w.DWORD), w.BOOL,
+        w.ULONG, w.ULONG, w.ULONG]
+    api.GetExtendedTcpTable.restype = w.ULONG
+    owners = set()
+    # TABLE_OWNER_PID_LISTENER = 3, MIB_TCP_STATE_LISTEN = 2.
+    for family, row_size, state_offset, port_offset, pid_offset in (
+            (2, 24, 0, 8, 20), (23, 56, 48, 20, 52)):
+        size = w.DWORD(0)
+        result = api.GetExtendedTcpTable(None, ctypes.byref(size),
+                                         False, family, 3, 0)
+        if result not in (0, 122):  # ERROR_INSUFFICIENT_BUFFER
+            raise ValueError('kernel TCP owner census unavailable')
+        for _ in range(4):
+            if not 4 <= size.value <= 2 * 1024 * 1024:
+                raise ValueError('kernel TCP owner census unbounded')
+            buffer = ctypes.create_string_buffer(size.value)
+            result = api.GetExtendedTcpTable(buffer, ctypes.byref(size),
+                                             False, family, 3, 0)
+            if result == 0:
+                raw = buffer.raw
+                count = struct.unpack_from('<I', raw, 0)[0]
+                if count > 32768 or 4 + count * row_size > len(raw):
+                    raise ValueError('kernel TCP owner census malformed')
+                for index in range(count):
+                    offset = 4 + index * row_size
+                    state = struct.unpack_from('<I', raw, offset + state_offset)[0]
+                    local_port = struct.unpack_from('<I', raw, offset + port_offset)[0]
+                    owning_pid = struct.unpack_from('<I', raw, offset + pid_offset)[0]
+                    if (state == 2 and socket.ntohs(local_port & 65535) == port
+                            and owning_pid > 0):
+                        owners.add(owning_pid)
+                break
+            if result != 122:
+                raise ValueError('kernel TCP owner census failed')
+        else:
+            raise ValueError('kernel TCP owner census raced')
+    return tuple(sorted(owners))
+
+
+
+def _windows_service_process_roster():
+    """Read-only bounded native SCM service→PID roster; UNKNOWN raises.
+
+    Includes stopped transitions that still retain a PID. No service is
+    started, stopped, reconfigured or treated as Root-owned by this census.
+    PID alone is not an OS incarnation; compare with a retained process
+    handle and executable/creation identity before any lifecycle decision.
+    """
+    if os.name != 'nt':
+        raise ValueError('Windows SCM ownership unavailable')
+    from ctypes import wintypes as w
+
+    class ServiceStatusProcess(ctypes.Structure):
+        _fields_ = [(name, w.DWORD) for name in (
+            'service_type', 'state', 'controls', 'win32_exit',
+            'service_exit', 'checkpoint', 'wait_hint', 'pid', 'flags')]
+
+    class ServiceEntry(ctypes.Structure):
+        _fields_ = [('name', ctypes.c_wchar_p),
+                    ('display_name', ctypes.c_wchar_p),
+                    ('status', ServiceStatusProcess)]
+
+    adv = ctypes.WinDLL('advapi32', use_last_error=True)
+    adv.OpenSCManagerW.argtypes = [ctypes.c_wchar_p, ctypes.c_wchar_p, w.DWORD]
+    adv.OpenSCManagerW.restype = w.HANDLE
+    adv.CloseServiceHandle.argtypes = [w.HANDLE]
+    adv.CloseServiceHandle.restype = w.BOOL
+    adv.EnumServicesStatusExW.argtypes = [
+        w.HANDLE, w.DWORD, w.DWORD, w.DWORD, ctypes.c_void_p,
+        w.DWORD, ctypes.POINTER(w.DWORD), ctypes.POINTER(w.DWORD),
+        ctypes.POINTER(w.DWORD), ctypes.c_wchar_p]
+    adv.EnumServicesStatusExW.restype = w.BOOL
+
+    # SC_MANAGER_ENUMERATE_SERVICE only; never request control/stop rights.
+    scm = adv.OpenSCManagerW(None, None, 0x0004)
+    if not scm:
+        raise ValueError('Windows SCM access unavailable')
+    try:
+        roster = set()
+        resume = w.DWORD(0)
+        allocation = 65536
+        for _ in range(64):
+            if allocation > 2 * 1024 * 1024:
+                raise ValueError('Windows SCM census unbounded')
+            buf = ctypes.create_string_buffer(allocation)
+            need = w.DWORD(0)
+            got = w.DWORD(0)
+            completed = adv.EnumServicesStatusExW(
+                scm, 0, 0x30, 0x3, buf, allocation,
+                ctypes.byref(need), ctypes.byref(got),
+                ctypes.byref(resume), None)
+            err = ctypes.get_last_error() if not completed else 0
+            if not completed and err != 234:  # ERROR_MORE_DATA
+                raise ValueError('Windows SCM census unavailable')
+            if got.value > 4096 or len(roster) + got.value > 4096:
+                raise ValueError('Windows SCM census unbounded')
+            if got.value:
+                entries = (ServiceEntry * got.value).from_buffer(buf)
+                for entry in entries:
+                    if not entry.name or not 0 < entry.status.pid < 2**32:
+                        continue
+                    roster.add((entry.name, int(entry.status.pid)))
+            if completed:
+                return tuple(sorted(roster))
+            if got.value == 0:
+                # No forward progress means the receiving buffer must grow.
+                allocation = max(allocation * 2, int(need.value))
+            elif resume.value == 0:
+                raise ValueError('Windows SCM census pagination uncertain')
+        raise ValueError('Windows SCM census incomplete')
+    finally:
+        adv.CloseServiceHandle(scm)
+
+
+
+def _windows_process_descendant_snapshot(root_pid, expected_root_created):
+    """Read-only Toolhelp descendants with exact OS identities; not a receipt.
+
+    The root PID must still represent its expected creation/executable at
+    BOTH ends of the enumeration. Every detected descendant has its own
+    identity checked. Parent-PID relations can race with process creation:
+    callers must retain kernel wait handles for the inspected descendants
+    and still exclude new spawns / foreign services before any Root grant.
+    """
+    if (os.name != 'nt' or type(root_pid) is not int or root_pid <= 1
+            or type(expected_root_created) is not list
+            or len(expected_root_created) != 2):
+        raise ValueError('Windows descendant census unavailable')
+    if _identity(root_pid) != expected_root_created:
+        raise ValueError('Windows descendant root identity changed')
+    from ctypes import wintypes as w
+
+    class ProcessEntry(ctypes.Structure):
+        _fields_ = [
+            ('size', w.DWORD), ('usage', w.DWORD),
+            ('pid', w.DWORD), ('heap', ctypes.c_size_t),
+            ('module', w.DWORD), ('threads', w.DWORD),
+            ('parent_pid', w.DWORD), ('priority', w.LONG),
+            ('flags', w.DWORD), ('exe', ctypes.c_wchar * 260),
+        ]
+
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.CreateToolhelp32Snapshot.argtypes = [w.DWORD, w.DWORD]
+    kernel.CreateToolhelp32Snapshot.restype = w.HANDLE
+    kernel.Process32FirstW.argtypes = [w.HANDLE, ctypes.POINTER(ProcessEntry)]
+    kernel.Process32FirstW.restype = w.BOOL
+    kernel.Process32NextW.argtypes = [w.HANDLE, ctypes.POINTER(ProcessEntry)]
+    kernel.Process32NextW.restype = w.BOOL
+    kernel.CloseHandle.argtypes = [w.HANDLE]
+    kernel.CloseHandle.restype = w.BOOL
+
+    snapshot = kernel.CreateToolhelp32Snapshot(0x00000002, 0)
+    if not snapshot or snapshot == ctypes.c_void_p(-1).value:
+        raise ValueError('Windows descendant census unavailable')
+    try:
+        entry = ProcessEntry()
+        entry.size = ctypes.sizeof(ProcessEntry)
+        if not kernel.Process32FirstW(snapshot, ctypes.byref(entry)):
+            raise ValueError('Windows descendant census unavailable')
+        parent_by_pid = {}
+        while True:
+            pid = int(entry.pid)
+            if pid > 0:
+                if pid in parent_by_pid or len(parent_by_pid) >= 16384:
+                    raise ValueError('Windows descendant census ambiguous')
+                parent_by_pid[pid] = int(entry.parent_pid)
+            entry.size = ctypes.sizeof(ProcessEntry)
+            if not kernel.Process32NextW(snapshot, ctypes.byref(entry)):
+                if ctypes.get_last_error() != 18:  # ERROR_NO_MORE_FILES
+                    raise ValueError('Windows descendant census incomplete')
+                break
+    finally:
+        kernel.CloseHandle(snapshot)
+    if _identity(root_pid) != expected_root_created:
+        raise ValueError('Windows descendant root identity changed')
+
+    discovered = set()
+    frontier = {root_pid}
+    for _ in range(16384):
+        children = {pid for pid, parent in parent_by_pid.items()
+                    if parent in frontier and pid != root_pid and pid not in discovered}
+        if not children:
+            break
+        discovered.update(children)
+        if len(discovered) > 4096:
+            raise ValueError('Windows descendant census unbounded')
+        frontier = children
+    else:
+        raise ValueError('Windows descendant census unbounded')
+
+    observations = []
+    for pid in sorted(discovered):
+        identity = _identity(pid)
+        if identity is None:
+            raise ValueError('Windows descendant identity raced')
+        observations.append((pid, tuple(identity)))
+    if _identity(root_pid) != expected_root_created:
+        raise ValueError('Windows descendant root identity changed')
+    return tuple(observations)
+
+
+
+class _WindowsNonServiceLabToken:
+    """A restricted LOW-integrity primary token, not an SCM permission flag.
+
+    The original child is created under this exact token, with no inherited
+    handles. Check the resulting process token before the suspended thread is
+    resumed. Failure always aborts the disposable operation, never falls back
+    to the unrestricted CreateProcessW path. A trusted executable is required;
+    this policy cannot prevent malicious external privileged IPC brokers or
+    possession of independently supplied administrator credentials.
+    """
+
+    def __init__(self):
+        if os.name != 'nt':
+            raise ValueError('restricted Windows LAB token unavailable')
+        from ctypes import wintypes as w
+        self._k = ctypes.WinDLL('kernel32', use_last_error=True)
+        self._a = ctypes.WinDLL('advapi32', use_last_error=True)
+        k, a = self._k, self._a
+        k.GetCurrentProcess.restype = w.HANDLE
+        k.CloseHandle.argtypes = [w.HANDLE]
+        k.CloseHandle.restype = w.BOOL
+        k.LocalFree.argtypes = [ctypes.c_void_p]
+        k.LocalFree.restype = ctypes.c_void_p
+        a.OpenProcessToken.argtypes = [w.HANDLE, w.DWORD, ctypes.POINTER(w.HANDLE)]
+        a.OpenProcessToken.restype = w.BOOL
+        a.CreateRestrictedToken.argtypes = [w.HANDLE, w.DWORD, w.DWORD,
+                                            ctypes.c_void_p, w.DWORD,
+                                            ctypes.c_void_p, w.DWORD,
+                                            ctypes.c_void_p, ctypes.POINTER(w.HANDLE)]
+        a.CreateRestrictedToken.restype = w.BOOL
+        a.ConvertStringSidToSidW.argtypes = [w.LPCWSTR, ctypes.POINTER(ctypes.c_void_p)]
+        a.ConvertStringSidToSidW.restype = w.BOOL
+        a.GetLengthSid.argtypes = [ctypes.c_void_p]
+        a.GetLengthSid.restype = w.DWORD
+        a.SetTokenInformation.argtypes = [w.HANDLE, ctypes.c_int, ctypes.c_void_p, w.DWORD]
+        a.SetTokenInformation.restype = w.BOOL
+        a.GetTokenInformation.argtypes = [w.HANDLE, ctypes.c_int, ctypes.c_void_p,
+                                          w.DWORD, ctypes.POINTER(w.DWORD)]
+        a.GetTokenInformation.restype = w.BOOL
+        a.EqualSid.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+        a.EqualSid.restype = w.BOOL
+        a.CheckTokenMembership.argtypes = [w.HANDLE, ctypes.c_void_p, ctypes.POINTER(w.BOOL)]
+        a.CheckTokenMembership.restype = w.BOOL
+        a.DuplicateTokenEx.argtypes = [w.HANDLE, w.DWORD, ctypes.c_void_p,
+                                       ctypes.c_int, ctypes.c_int, ctypes.POINTER(w.HANDLE)]
+        a.DuplicateTokenEx.restype = w.BOOL
+        a.ImpersonateLoggedOnUser.argtypes = [w.HANDLE]
+        a.ImpersonateLoggedOnUser.restype = w.BOOL
+        a.RevertToSelf.restype = w.BOOL
+
+        class SidAttributes(ctypes.Structure):
+            _fields_ = [('sid', ctypes.c_void_p), ('attributes', w.DWORD)]
+        class MandatoryLabel(ctypes.Structure):
+            _fields_ = [('label', SidAttributes)]
+        self._SidAttributes = SidAttributes
+        self._MandatoryLabel = MandatoryLabel
+        source = w.HANDLE()
+        admin_sid = ctypes.c_void_p()
+        low_sid = ctypes.c_void_p()
+        self._handle = None
+        try:
+            # Query and duplicate only the original token. The restricted
+            # output token independently receives its own required rights.
+            access = 0x0002 | 0x0008
+            if not a.OpenProcessToken(k.GetCurrentProcess(), access, ctypes.byref(source)):
+                raise ValueError('LAB parent token inaccessible')
+            if not a.ConvertStringSidToSidW('S-1-5-32-544', ctypes.byref(admin_sid)):
+                raise ValueError('Administrators SID unavailable')
+            if not a.ConvertStringSidToSidW('S-1-16-4096', ctypes.byref(low_sid)):
+                raise ValueError('Low Integrity SID unavailable')
+            disabled = SidAttributes(admin_sid, 0)
+            enabled_admin = self._check_admin_membership(source, admin_sid)
+            # LocalService/standard-user tokens may not contain an enabled
+            # Administrators SID; no non-existent SID may be forced into
+            # CreateRestrictedToken's disabled group list.
+            disable_count = 1 if enabled_admin else 0
+            disabled_ptr = ctypes.byref(disabled) if disable_count else None
+            # DISABLE_MAX_PRIVILEGE only disables rights and could leave
+            # re-enableable privileges. DELETE every privilege except the
+            # harmless traverse-bypass SeChangeNotify privilege instead.
+            class Luid(ctypes.Structure):
+                _fields_ = [('low', w.DWORD), ('high', w.LONG)]
+            class LuidAttributes(ctypes.Structure):
+                _fields_ = [('luid', Luid), ('attributes', w.DWORD)]
+            a.LookupPrivilegeValueW.argtypes = [
+                w.LPCWSTR, w.LPCWSTR, ctypes.POINTER(Luid)]
+            a.LookupPrivilegeValueW.restype = w.BOOL
+            permitted = Luid()
+            if not a.LookupPrivilegeValueW(None, 'SeChangeNotifyPrivilege',
+                                           ctypes.byref(permitted)):
+                raise ValueError('LAB allowed privilege identity unavailable')
+            roster = self._token_privileges(source)
+            remove = [(lo, hi) for lo, hi, attrs in roster
+                      if (lo, hi) != (permitted.low, permitted.high)]
+            if len(remove) > 128:
+                raise ValueError('LAB privilege deletion unbounded')
+            delete_entries = (LuidAttributes * len(remove))(
+                *(LuidAttributes(Luid(lo, hi), 0) for lo, hi in remove))
+            delete_ptr = (ctypes.cast(delete_entries, ctypes.c_void_p)
+                          if remove else None)
+            restricted = w.HANDLE()
+            if not a.CreateRestrictedToken(source, 0, disable_count, disabled_ptr,
+                                           len(remove), delete_ptr, 0, None,
+                                           ctypes.byref(restricted)):
+                raise ValueError('LAB restricted primary token creation denied')
+            self._handle = restricted
+            # TokenIntegrityLevel requires TOKEN_ADJUST_DEFAULT. The
+            # CreateRestrictedToken return handle must not be assumed to have
+            # that specific access: duplicate the SAME token with only the
+            # required rights, never fall back to an unrestricted token.
+            editable = w.HANDLE()
+            if not a.DuplicateTokenEx(
+                    restricted, 0x0080 | 0x0008 | 0x0002 | 0x0001 | 0x0004,
+                    None, 2, 1, ctypes.byref(editable)):
+                raise ValueError('LAB integrity-adjustable restricted token unavailable')
+            try:
+                integrity = MandatoryLabel(SidAttributes(low_sid, 0x20))
+                size = ctypes.sizeof(integrity) + a.GetLengthSid(low_sid)
+                if not a.SetTokenInformation(editable, 25,
+                                             ctypes.byref(integrity), size):
+                    err = ctypes.get_last_error()
+                    raise ValueError(
+                        f'LAB Low Integrity token setting denied Win32={err}')
+                # This duplicate is the only token eligible for process
+                # launch. Verify every invariant after adjusting its label.
+                self._verify_token(editable, admin_sid, low_sid)
+                self._handle = editable
+                editable = w.HANDLE()
+            finally:
+                if editable:
+                    k.CloseHandle(editable)
+            k.CloseHandle(restricted)
+            restricted = w.HANDLE()
+        except BaseException:
+            self.close()
+            raise
+        finally:
+            if source: k.CloseHandle(source)
+            if admin_sid: k.LocalFree(admin_sid)
+            if low_sid: k.LocalFree(low_sid)
+
+    def _check_admin_membership(self, primary_token, admin_sid):
+        """Check an exact primary token through a temporary impersonation token.
+
+        CheckTokenMembership requires a TokenImpersonation handle: passing a
+        TokenPrimary is invalid on Windows and cannot be treated as a deny.
+        The duplicate is local/read-only and ALWAYS closed.
+        """
+        from ctypes import wintypes as w
+        impersonation = w.HANDLE()
+        # TOKEN_QUERY | TOKEN_IMPERSONATE, SecurityImpersonation=2,
+        # TokenImpersonation=2. No primary token or privilege is replaced.
+        if not self._a.DuplicateTokenEx(
+                primary_token, 0x0008 | 0x0004, None, 2, 2,
+                ctypes.byref(impersonation)):
+            raise ValueError('LAB membership impersonation token unavailable')
+        try:
+            enabled = w.BOOL()
+            if not self._a.CheckTokenMembership(
+                    impersonation, admin_sid, ctypes.byref(enabled)):
+                raise ValueError('LAB token Administrators membership unavailable')
+            return bool(enabled.value)
+        finally:
+            self._k.CloseHandle(impersonation)
+
+    def _token_privileges(self, token):
+        """Return the exact current Windows TOKEN_PRIVILEGES LUID roster."""
+        import struct
+        from ctypes import wintypes as w
+        need = w.DWORD(0)
+        self._a.GetTokenInformation(token, 3, None, 0, ctypes.byref(need))
+        if (ctypes.get_last_error() != 122
+                or not 4 <= need.value <= 8192):
+            raise ValueError('LAB token privileges unavailable')
+        buf = ctypes.create_string_buffer(need.value)
+        if not self._a.GetTokenInformation(
+                token, 3, buf, need.value, ctypes.byref(need)):
+            raise ValueError('LAB token privileges inaccessible')
+        count = struct.unpack_from('<I', buf.raw, 0)[0]
+        if count > 128 or 4 + count * 12 > need.value:
+            raise ValueError('LAB token privilege roster invalid')
+        out = []
+        for index in range(count):
+            low, high_unsigned, attrs = struct.unpack_from(
+                '<III', buf.raw, 4 + index * 12)
+            out.append((low, ctypes.c_int32(high_unsigned).value, attrs))
+        if len({(lo, hi) for lo, hi, _ in out}) != len(out):
+            raise ValueError('LAB duplicate token privileges')
+        return tuple(out)
+
+    def _verify_token(self, token, admin_sid=None, low_sid=None):
+        from ctypes import wintypes as w
+        a = self._a
+        admin_local, low_local = ctypes.c_void_p(), ctypes.c_void_p()
+        try:
+            if admin_sid is None:
+                if not a.ConvertStringSidToSidW('S-1-5-32-544', ctypes.byref(admin_local)):
+                    raise ValueError('LAB Administrators SID verification unavailable')
+                admin_sid = admin_local
+            if low_sid is None:
+                if not a.ConvertStringSidToSidW('S-1-16-4096', ctypes.byref(low_local)):
+                    raise ValueError('LAB integrity SID verification unavailable')
+                low_sid = low_local
+            if self._check_admin_membership(token, admin_sid):
+                raise ValueError('LAB token retains enabled Administrators group')
+            need = w.DWORD(0)
+            a.GetTokenInformation(token, 25, None, 0, ctypes.byref(need))
+            if not ctypes.get_last_error() == 122 or not 8 <= need.value <= 4096:
+                raise ValueError('LAB token integrity query unavailable')
+            buf = ctypes.create_string_buffer(need.value)
+            if not a.GetTokenInformation(token, 25, buf, need.value, ctypes.byref(need)):
+                raise ValueError('LAB token integrity unavailable')
+            label = self._MandatoryLabel.from_buffer(buf)
+            if not label.label.sid or not a.EqualSid(label.label.sid, low_sid):
+                raise ValueError('LAB token is not Low Integrity')
+            # The child must not have dangerous privileges even DISABLED:
+            # AdjustTokenPrivileges could re-enable a disabled privilege.
+            class Luid(ctypes.Structure):
+                _fields_ = [('low', w.DWORD), ('high', w.LONG)]
+            a.LookupPrivilegeValueW.argtypes = [
+                w.LPCWSTR, w.LPCWSTR, ctypes.POINTER(Luid)]
+            a.LookupPrivilegeValueW.restype = w.BOOL
+            allowed = Luid()
+            if not a.LookupPrivilegeValueW(None, 'SeChangeNotifyPrivilege',
+                                           ctypes.byref(allowed)):
+                raise ValueError('LAB allowed privilege identity unavailable')
+            roster = self._token_privileges(token)
+            if any((lo, hi) != (allowed.low, allowed.high)
+                   for lo, hi, attrs in roster):
+                raise ValueError('LAB token contains a re-enableable privilege')
+            # Test the *actual* token against local SCM DACL. This does not
+            # register, start, stop or alter any service.
+            scm = ctypes.WinDLL('advapi32', use_last_error=True)
+            scm.OpenSCManagerW.argtypes = [w.LPCWSTR, w.LPCWSTR, w.DWORD]
+            scm.OpenSCManagerW.restype = w.HANDLE
+            scm.CloseServiceHandle.argtypes = [w.HANDLE]
+            scm.CloseServiceHandle.restype = w.BOOL
+            if not a.ImpersonateLoggedOnUser(token):
+                raise ValueError('LAB SCM capability impersonation unavailable')
+            opened = None
+            error = 0
+            try:
+                opened = scm.OpenSCManagerW(None, None, 0x0002)  # CREATE_SERVICE
+                error = ctypes.get_last_error()
+            finally:
+                if opened: scm.CloseServiceHandle(opened)
+                if not a.RevertToSelf():
+                    raise ValueError('LAB token impersonation revert failed')
+            if opened or error != 5:  # ERROR_ACCESS_DENIED only
+                raise ValueError('LAB SCM CREATE_SERVICE capability not denied')
+        finally:
+            if admin_local: self._k.LocalFree(admin_local)
+            if low_local: self._k.LocalFree(low_local)
+
+    def verify_suspended_process(self, process_handle):
+        from ctypes import wintypes as w
+        token = w.HANDLE()
+        if not self._a.OpenProcessToken(process_handle, 0x0002 | 0x0004 | 0x0008,
+                                        ctypes.byref(token)):
+            raise ValueError('LAB child token unavailable')
+        try:
+            self._verify_token(token)
+        finally:
+            self._k.CloseHandle(token)
+
+    def create_suspended(self, kernel, argv, command, env_buffer, cwd,
+                         startup, info):
+        from ctypes import wintypes as w
+        self._a.CreateProcessAsUserW.argtypes = [
+            w.HANDLE, w.LPCWSTR, w.LPWSTR, ctypes.c_void_p,
+            ctypes.c_void_p, w.BOOL, w.DWORD, ctypes.c_void_p,
+            w.LPCWSTR, ctypes.c_void_p, ctypes.c_void_p]
+        self._a.CreateProcessAsUserW.restype = w.BOOL
+        return bool(self._a.CreateProcessAsUserW(
+            self._handle, str(argv[0]), command, None, None, False,
+            0x00000004 | 0x00000400 | 0x08000000,
+            ctypes.cast(env_buffer, ctypes.c_void_p), str(cwd),
+            ctypes.byref(startup), ctypes.byref(info)))
+
+    def close(self):
+        handle = self._handle
+        self._handle = None
+        if handle: self._k.CloseHandle(handle)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+
+
+class OwnedWindowsJob:
+    """Kernel-backed containment for a NEW, isolated, Root-created child.
+
+    Must be created before CreateProcess and the child must be assigned before
+    it is allowed to execute. Attaching an already running old process cannot
+    close the historical child-spawn race and is deliberately unsupported.
+    The job can keep members contained while Root observes shutdown, but does
+    not independently authorize a new owner, SQL fence or writer epoch.
+    """
+
+    def __init__(self):
+        if os.name != 'nt':
+            raise ValueError('Windows Job Object unavailable')
+        k = ctypes.WinDLL('kernel32', use_last_error=True)
+        from ctypes import wintypes as w
+        k.CreateJobObjectW.argtypes = [ctypes.c_void_p, w.LPCWSTR]
+        k.CreateJobObjectW.restype = w.HANDLE
+        k.CloseHandle.argtypes = [w.HANDLE]
+        k.CloseHandle.restype = w.BOOL
+        k.IsProcessInJob.argtypes = [w.HANDLE, w.HANDLE, ctypes.POINTER(w.BOOL)]
+        k.IsProcessInJob.restype = w.BOOL
+        k.QueryInformationJobObject.argtypes = [
+            w.HANDLE, ctypes.c_int, ctypes.c_void_p, w.DWORD,
+            ctypes.POINTER(w.DWORD)]
+        k.QueryInformationJobObject.restype = w.BOOL
+        self._k = k
+        self._handle = k.CreateJobObjectW(None, None)
+        if not self._handle:
+            raise ValueError('Windows Job Object creation denied')
+        # Prevent children from escaping into a breakaway job and ensure
+        # cleanup if the protected owner closes its final Job handle.
+        class BasicLimits(ctypes.Structure):
+            _fields_ = [('user_time', ctypes.c_int64),
+                        ('job_time', ctypes.c_int64),
+                        ('limit_flags', w.DWORD),
+                        ('minimum_ws', ctypes.c_size_t),
+                        ('maximum_ws', ctypes.c_size_t),
+                        ('active_limit', w.DWORD),
+                        ('affinity', ctypes.c_size_t),
+                        ('priority', w.DWORD),
+                        ('scheduling', w.DWORD)]
+        class IoCounters(ctypes.Structure):
+            _fields_ = [(name, ctypes.c_uint64) for name in
+                        ('read_ops', 'write_ops', 'other_ops',
+                         'read_bytes', 'write_bytes', 'other_bytes')]
+        class ExtendedLimits(ctypes.Structure):
+            _fields_ = [('basic', BasicLimits), ('io', IoCounters),
+                        ('process_memory_limit', ctypes.c_size_t),
+                        ('job_memory_limit', ctypes.c_size_t),
+                        ('peak_process_memory', ctypes.c_size_t),
+                        ('peak_job_memory', ctypes.c_size_t)]
+        k.SetInformationJobObject.argtypes = [
+            w.HANDLE, ctypes.c_int, ctypes.c_void_p, w.DWORD]
+        k.SetInformationJobObject.restype = w.BOOL
+        config = ExtendedLimits()
+        config.basic.limit_flags = 0x00002000  # JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+        if not k.SetInformationJobObject(
+                self._handle, 9, ctypes.byref(config), ctypes.sizeof(config)):
+            k.CloseHandle(self._handle)
+            self._handle = None
+            raise ValueError('Windows Job containment configuration denied')
+        # The Windows launcher must create the child suspended and assign
+        # before ResumeThread; never adopt a running process by numeric PID.
+        self._created_prelaunch = True
+        self._assigned = False
+        # A Job PID snapshot cannot establish historical membership. Keep
+        # the admission gate closed until the original owner tracks all
+        # creation/exit events with trusted kernel evidence.
+        self._historical_member_pids = set()
+        self._member_history_complete = False
+        self._no_scm_capability_verified = None
+
+    def _assign_created_process(self, process_handle):
+        """Private: only the trusted suspended launcher supplies this handle.
+
+        Never accept a PID or a caller-provided created_suspended boolean.
+        The launcher owns both original PROCESS_INFORMATION handles and
+        must terminate its new child if assignment fails.
+        """
+        if self._handle is None or self._assigned:
+            raise ValueError('Windows Job assignment unavailable')
+        from ctypes import wintypes as w
+        self._k.AssignProcessToJobObject.argtypes = [w.HANDLE, w.HANDLE]
+        self._k.AssignProcessToJobObject.restype = w.BOOL
+        if not self._k.AssignProcessToJobObject(self._handle, process_handle):
+            raise ValueError('Windows Job suspended assignment denied')
+        if self.verify_member(process_handle) is not True:
+            raise ValueError('Windows Job membership unverified')
+        self._assigned = True
+        self._k.GetProcessId.argtypes = [w.HANDLE]
+        self._k.GetProcessId.restype = w.DWORD
+        original_pid = int(self._k.GetProcessId(process_handle))
+        members = self.observe_member_pids()
+        if original_pid <= 1 or original_pid not in members:
+            raise ValueError('original suspended process missing from Job roster')
+
+    def assign_suspended_child(self, process_handle, *, created_suspended=False):
+        # Public adoption is forbidden even if a caller claims CREATE_SUSPENDED.
+        raise ValueError('Windows Job public assignment denied')
+
+    def verify_member(self, process_handle):
+        if self._handle is None:
+            raise ValueError('Windows Job Object closed')
+        from ctypes import wintypes as w
+        in_job = w.BOOL()
+        if not self._k.IsProcessInJob(process_handle, self._handle,
+                                      ctypes.byref(in_job)):
+            raise ValueError('Windows Job membership inaccessible')
+        return bool(in_job.value)
+
+    def terminate_owned_tree(self, original_process_handle, timeout=5):
+        """Stop only members of this exact pre-launch owned Job.
+
+        Never accepts a PID. No arbitrary process can be adopted through the
+        public Job API. Failure, mismatched membership, or remaining active
+        members prevents a durable STOPPED receipt.
+        """
+        if self._handle is None or self._assigned is not True:
+            raise ValueError('owned Windows Job not assigned')
+        if type(timeout) not in (int,float) or not 0 < timeout <= 10:
+            raise ValueError('owned Windows Job deadline invalid')
+        if self.verify_member(original_process_handle) is not True:
+            raise ValueError('owned Windows Job original child not a member')
+        from ctypes import wintypes as w
+        self._k.TerminateJobObject.argtypes = [w.HANDLE, w.UINT]
+        self._k.TerminateJobObject.restype = w.BOOL
+        self.observe_member_pids()
+        if not self._k.TerminateJobObject(self._handle, 0):
+            raise ValueError('owned Windows Job termination failed')
+        deadline=time.monotonic()+timeout
+        while self.active_process_count() != 0 and time.monotonic() < deadline:
+            time.sleep(.02)
+        if self.active_process_count() != 0:
+            raise ValueError('owned Windows Job descendants still active')
+
+    def observe_member_pids(self):
+        """Observe current native Job members, without claiming full history.
+
+        A short-lived child may start and exit between snapshots. An exact
+        historical SCM association cannot be ruled out from this alone.
+        """
+        if self._handle is None or self._assigned is not True:
+            raise ValueError('Windows Job membership history unavailable')
+        from ctypes import wintypes as w
+        class ProcessIdList(ctypes.Structure):
+            _fields_ = [('assigned', w.DWORD), ('count', w.DWORD),
+                        ('pids', ctypes.c_size_t * 4096)]
+        buffer = ProcessIdList()
+        returned = w.DWORD()
+        if not self._k.QueryInformationJobObject(
+                self._handle, 3, ctypes.byref(buffer), ctypes.sizeof(buffer),
+                ctypes.byref(returned)):
+            raise ValueError('Windows Job PID history unavailable')
+        if not 0 <= buffer.count <= buffer.assigned <= 4096:
+            raise ValueError('Windows Job PID roster incomplete')
+        if buffer.count != buffer.assigned:
+            raise ValueError('Windows Job PID roster truncated')
+        pids = {int(buffer.pids[i]) for i in range(buffer.count)}
+        if len(pids) != buffer.count or any(pid <= 1 for pid in pids):
+            raise ValueError('Windows Job PID roster invalid')
+        self._historical_member_pids.update(pids)
+        return tuple(sorted(pids))
+
+    def active_process_count(self):
+        if self._handle is None:
+            raise ValueError('Windows Job Object closed')
+        from ctypes import wintypes as w
+        # JOBOBJECT_BASIC_ACCOUNTING_INFORMATION (JobObjectBasicAccounting=1)
+        class Accounting(ctypes.Structure):
+            # JOBOBJECT_BASIC_ACCOUNTING_INFORMATION has *four*
+            # LARGE_INTEGER time fields before its four DWORD counters.
+            # Omitting ThisPeriod* changes the native ABI/returned size.
+            _fields_ = [('total_user', ctypes.c_int64),
+                        ('total_kernel', ctypes.c_int64),
+                        ('period_user', ctypes.c_int64),
+                        ('period_kernel', ctypes.c_int64),
+                        ('total_page_fault', w.DWORD),
+                        ('total_processes', w.DWORD),
+                        ('active_processes', w.DWORD),
+                        ('total_terminated', w.DWORD)]
+        info = Accounting()
+        n = w.DWORD()
+        if not self._k.QueryInformationJobObject(
+                self._handle, 1, ctypes.byref(info), ctypes.sizeof(info),
+                ctypes.byref(n)):
+            raise ValueError('Windows Job membership inaccessible')
+        if n.value != ctypes.sizeof(info):
+            raise ValueError('Windows Job accounting size mismatch')
+        return int(info.active_processes)
+
+    def close(self):
+        if self._handle is not None:
+            self._k.CloseHandle(self._handle)
+            self._handle = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+
+
+
+
+class _OwnedWindowsChild:
+    """Popen-compatible retained process owner, not an arbitrary PID wrapper."""
+
+    def __init__(self, pid, kernel_handle, job):
+        if type(pid) is not int or pid <= 1 or type(kernel_handle) is not int:
+            raise ValueError('owned Windows child identity invalid')
+        self.pid = pid
+        self._handle = kernel_handle
+        self._job = job
+        self.stdin = None
+        self._exit_code = None
+
+    def poll(self):
+        if self._exit_code is not None:
+            return self._exit_code
+        from ctypes import wintypes as w
+        k = ctypes.WinDLL('kernel32', use_last_error=True)
+        k.WaitForSingleObject.argtypes = [w.HANDLE,w.DWORD]
+        k.WaitForSingleObject.restype = w.DWORD
+        k.GetExitCodeProcess.argtypes = [w.HANDLE,ctypes.POINTER(w.DWORD)]
+        k.GetExitCodeProcess.restype = w.BOOL
+        state = k.WaitForSingleObject(self._handle, 0)
+        if state == 0x102:
+            return None
+        if state != 0:
+            raise OSError('owned Windows child wait failed')
+        code = w.DWORD()
+        if not k.GetExitCodeProcess(self._handle, ctypes.byref(code)):
+            raise OSError('owned Windows child exit status unavailable')
+        self._exit_code = int(code.value)
+        return self._exit_code
+
+    def wait(self, timeout=None):
+        from ctypes import wintypes as w
+        if timeout is not None and (type(timeout) not in (int,float)
+                                    or not math.isfinite(timeout) or timeout < 0):
+            raise ValueError('owned Windows child wait timeout invalid')
+        k = ctypes.WinDLL('kernel32', use_last_error=True)
+        k.WaitForSingleObject.argtypes = [w.HANDLE,w.DWORD]
+        k.WaitForSingleObject.restype = w.DWORD
+        millis = 0xffffffff if timeout is None else min(0xfffffffe,int(timeout*1000))
+        result = k.WaitForSingleObject(self._handle, millis)
+        if result == 0x102:
+            raise subprocess.TimeoutExpired(['owned Windows child'], timeout)
+        if result != 0:
+            raise OSError('owned Windows child wait failed')
+        return self.poll()
+
+    def close_owned_handles(self):
+        if self._handle is None: return
+        k = ctypes.WinDLL('kernel32', use_last_error=True)
+        from ctypes import wintypes as w
+        k.CloseHandle.argtypes = [w.HANDLE]
+        k.CloseHandle.restype = w.BOOL
+        # Closing this private Job may terminate descendants. Only A's exact
+        # owned Job created before the process ran is ever closed here.
+        self._job.close()
+        k.CloseHandle(self._handle)
+        self._handle = None
+
+
+def _resume_original_suspended_thread(kernel, original_thread_handle):
+    """Resume only the original CreateProcessW suspended thread.
+
+    Keeping this small checked call separate permits native fault-injection
+    tests to verify cleanup on a failed ResumeThread after Job assignment.
+    No caller-provided created_suspended flag can invoke this launcher.
+    """
+    if kernel.ResumeThread(original_thread_handle) != 1:
+        raise ValueError('Windows suspended resume failed')
+
+
+def _launch_owned_windows_job_process(argv, cwd, env):
+    """Launch a new subprocess suspended and attach before any user code.
+
+    Caller has already verified executable/artifact pins. Uses the existing
+    ProcessDriver Popen owner semantics for retained identity, pipe cleanup and
+    stop(); this is NOT a second lifecycle supervisor. A freshly created Job
+    is configured by OwnedWindowsJob with no breakaway permissions.
+    """
+    if os.name != 'nt' or type(argv) is not list or not argv:
+        raise ValueError('owned Windows launch unavailable')
+    from ctypes import wintypes as w
+
+    class StartupInfo(ctypes.Structure):
+        _fields_ = [('cb', w.DWORD), ('reserved', w.LPWSTR),
+                    ('desktop', w.LPWSTR), ('title', w.LPWSTR),
+                    ('x', w.DWORD), ('y', w.DWORD), ('width', w.DWORD),
+                    ('height', w.DWORD), ('x_chars', w.DWORD),
+                    ('y_chars', w.DWORD), ('fill', w.DWORD),
+                    ('flags', w.DWORD), ('show_window', w.WORD),
+                    ('reserved2_bytes', w.WORD), ('reserved2', ctypes.c_void_p),
+                    ('std_input', w.HANDLE), ('std_output', w.HANDLE),
+                    ('std_error', w.HANDLE)]
+
+    class ProcessInformation(ctypes.Structure):
+        _fields_ = [('process', w.HANDLE), ('thread', w.HANDLE),
+                    ('pid', w.DWORD), ('thread_id', w.DWORD)]
+
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.CreateProcessW.argtypes = [
+        w.LPCWSTR, w.LPWSTR, ctypes.c_void_p, ctypes.c_void_p, w.BOOL,
+        w.DWORD, ctypes.c_void_p, w.LPCWSTR, ctypes.POINTER(StartupInfo),
+        ctypes.POINTER(ProcessInformation)]
+    kernel.CreateProcessW.restype = w.BOOL
+    kernel.ResumeThread.argtypes = [w.HANDLE]
+    kernel.ResumeThread.restype = w.DWORD
+    kernel.TerminateProcess.argtypes = [w.HANDLE, w.UINT]
+    kernel.TerminateProcess.restype = w.BOOL
+    kernel.CloseHandle.argtypes = [w.HANDLE]
+    kernel.CloseHandle.restype = w.BOOL
+    kernel.WaitForSingleObject.argtypes = [w.HANDLE, w.DWORD]
+    kernel.WaitForSingleObject.restype = w.DWORD
+
+    # Explicitly inherit NO handles; no child stdin or secret pipe is needed
+    # for this isolated LAB path. A local preexisting Popen-based process
+    # remains the only owner for non-LAB launches.
+    info = ProcessInformation()
+    startup = StartupInfo()
+    startup.cb = ctypes.sizeof(startup)
+    command = ctypes.create_unicode_buffer(subprocess.list2cmdline(argv))
+    environment = ''.join(
+        str(k) + '=' + str(v) + '\0'
+        for k,v in sorted(env.items(), key=lambda item:item[0].casefold())
+    ) + '\0'
+    env_buffer = ctypes.create_unicode_buffer(environment)
+    # Do not allocate a kill-on-close Job before fallible command/env
+    # validation has completed. On every subsequent launch error the
+    # original process and Job handles are released by the same path.
+    # No unrestricted fallback when restricted token creation/SCM probe fails.
+    security_token = _WindowsNonServiceLabToken()
+    try:
+        job = OwnedWindowsJob()
+    except BaseException:
+        security_token.close()
+        raise
+    created = False
+    try:
+        # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW
+        # Creation cannot execute any process code until ResumeThread.
+        if not security_token.create_suspended(kernel, argv, command,
+                                               env_buffer, cwd, startup, info):
+            raise ValueError('restricted Windows suspended process creation denied')
+        created = True
+        if info.pid <= 1 or not info.process or not info.thread:
+            raise ValueError('Windows suspended process handles invalid')
+        job._assign_created_process(info.process)
+        security_token.verify_suspended_process(info.process)
+        # A fresh issuer-held object is created ONLY after verification of
+        # the actual suspended child token and bound to the original Job.
+        job._no_scm_capability_verified = object()
+        if not job.verify_member(info.process):
+            raise ValueError('Windows Job membership lost')
+        # This call never accepts external thread/process handles; only
+        # the original trusted CreateProcessW PROCESS_INFORMATION pair.
+        _resume_original_suspended_thread(kernel, info.thread)
+        # Retain a duplicated SYNCHRONIZE-capable kernel handle after the
+        # original PROCESS_INFORMATION pair is closed. Do not return a PID-
+        # only pseudo-Popen; wait()/poll() must target the same OS object.
+        duplicate = w.HANDLE()
+        kernel.GetCurrentProcess.argtypes = []
+        kernel.GetCurrentProcess.restype = w.HANDLE
+        kernel.DuplicateHandle.argtypes = [w.HANDLE,w.HANDLE,w.HANDLE,ctypes.POINTER(w.HANDLE),w.DWORD,w.BOOL,w.DWORD]
+        kernel.DuplicateHandle.restype = w.BOOL
+        here = kernel.GetCurrentProcess()
+        if not kernel.DuplicateHandle(here,info.process,here,ctypes.byref(duplicate),0,False,0x2):
+            raise ValueError('Windows retained child handle unavailable')
+        try:
+            return _OwnedWindowsChild(int(info.pid), int(duplicate.value), job)
+        except BaseException:
+            kernel.CloseHandle(duplicate)
+            raise
+    except BaseException:
+        if created and info.process:
+            kernel.TerminateProcess(info.process, 1)
+            kernel.WaitForSingleObject(info.process, 5000)
+        job.close()
+        raise
+    finally:
+        security_token.close()
+        if created:
+            if info.thread: kernel.CloseHandle(info.thread)
+            if info.process: kernel.CloseHandle(info.process)
+
+
+class RetainedWindowsDescendantCensus:
+    """Hold exact kernel process handles for observed Windows descendants.
+
+    A Toolhelp PPID census is NOT a no-new-child barrier. This object binds
+    observed descendants to exact Windows process incarnations, retaining
+    their wait handles, and refuses any claim of complete subtree extinction
+    unless a separate Root-owned creation barrier has been established.
+    No foreign process is signalled or terminated by this class.
+    """
+
+    def __init__(self, root_pid, root_created):
+        if os.name != 'nt':
+            raise ValueError('Windows descendant retention unavailable')
+        self._root = RetainedOsProcessWait(root_pid, root_created)
+        self._children = []
+        self._root_pid = root_pid
+        self._root_created = list(root_created)
+        try:
+            for pid, created in _windows_process_descendant_snapshot(
+                    root_pid, self._root_created):
+                self._children.append(RetainedOsProcessWait(pid, list(created)))
+            # Recheck while handles are retained: a new descendant after the
+            # census is a race, not an invitation to claim no old processes.
+            after = _windows_process_descendant_snapshot(
+                root_pid, self._root_created)
+            if after != tuple((c.pid, c.created) for c in self._children):
+                raise ValueError('Windows descendant census changed')
+        except BaseException:
+            self.close()
+            raise
+
+    def wait_observed_exited(self, timeout):
+        if (type(timeout) not in (int, float) or not math.isfinite(timeout)
+                or not 0 <= timeout <= 60):
+            raise ValueError('Windows descendant deadline invalid')
+        deadline = time.monotonic() + timeout
+        result = []
+        for child in self._children:
+            result.append(child.wait_exited(max(0.0, deadline - time.monotonic())))
+        result.append(self._root.wait_exited(max(0.0, deadline - time.monotonic())))
+        return all(result)
+
+    def verify_complete_extinction(self, *, creation_barrier=False):
+        # Critical: a caller boolean cannot establish a kernel creation
+        # barrier. Until the Root-owned Job Object or another kernel-backed
+        # containment proof exists, never claim complete process extinction.
+        raise ValueError('Windows process creation containment not proven')
+
+    def close(self):
+        for child in self._children:
+            child.close()
+        self._children = []
+        self._root.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+
+
+PRIVATE_DATA_CAPABILITY_ENV='UNIFIED_MARKET_DATA_READ_CAPABILITY'
+
+def _public_environment(program):
+    value=program.get('env',{})
+    if type(value) is not dict or any(type(key) is not str or key.upper() in (PRIVATE_DATA_CAPABILITY_ENV,'PGPASSWORD','PGPASSFILE') for key in value):
+        raise ValueError('private capability cannot be configured')
+    return value
+
+
+@dataclass(frozen=True, slots=True)
+class WindowsJobExtinctionReceipt:
+    operation_id: str
+    release_id: str
+    instance_token: str
+    pid: int
+    creation_time: str
+    executable: str
+    executable_sha256: str
+    port: int
+    process_handle: int
+    job_handle: int
+    active_members: int
+    listener_owners: tuple
+    scm_owners: tuple
+
+
+class ProcessDriver:
+    def __init__(self,root,programs,*,authorize=None,child_environment=None):
+        self.root=_safe_path(root);self.root.mkdir(parents=True,exist_ok=True)
+        self.programs=programs;self.authorize=authorize or (lambda action,module:False);self.children={}
+        self.prestart_rejections={}
+        self._job_receipts={}
+        self._job_launch_bindings={}
+        self._job_evidence_lock=threading.RLock()
+        self.child_environment=child_environment
+        if type(programs) is not dict or not 1<=len(programs)<=64:raise ValueError('bounded programs required')
+        extra_health_budget=0.
+        for name,p in programs.items():
+            _public_environment(p)
+            timeout=p.get('health_timeout_seconds',.5)
+            if type(timeout) not in (int,float) or not math.isfinite(timeout) or not .05<=timeout<=1.:
+                raise ValueError('invalid health deadline')
+            extra_health_budget+=max(0.,timeout-.5)
+            argv=p.get('argv');url=urlsplit(p.get('health_url',''))
+            if (not isinstance(argv,list) or not 1<=len(argv)<=32
+                    or any(type(x) is not str or not x or len(x)>4096 or '\0' in x for x in argv)
+                    or any(x.casefold() in ('-c','-command','-encodedcommand','/c','-e') for x in argv[1:])
+                    or not Path(argv[0]).is_absolute() or not Path(p.get('cwd','')).is_absolute()
+                    or not re.fullmatch('[a-f0-9]{64}',p.get('executable_sha256',''))
+                    or not isinstance(p.get('file_pins'),dict) or not p['file_pins']
+                    or url.scheme not in ('http','https') or url.hostname not in ('127.0.0.1','::1')
+                    or url.username or url.password or url.query or url.fragment or url.port is None):
+                raise ValueError('invalid local program policy')
+            for file,pin in p['file_pins'].items():
+                relative=Path(file)
+                if relative.is_absolute() or '..' in relative.parts or not re.fullmatch('[a-f0-9]{64}',pin):raise ValueError('invalid file pin')
+            external=p.get('external_file_pins',{})
+            if type(external) is not dict or len(external)>64:raise ValueError('invalid external file pins')
+            for file,pin in external.items():
+                if (type(file) is not str or not Path(file).is_absolute() or len(file)>4096
+                        or type(pin) is not str or not re.fullmatch('[a-f0-9]{64}',pin)):
+                    raise ValueError('invalid external file pin')
+                _safe_path(file)
+        # Preserve the builtin profile's four-second baseline publication budget
+        # and its existing .5-second allowance per extension. At most .5s of
+        # additional probe time may be explicitly allocated across this driver.
+        if extra_health_budget>.5:raise ValueError('aggregate health deadline budget')
+    def _file(self,op):
+        if type(op) is not str or not re.fullmatch('[a-f0-9-]{32,36}',op):raise ValueError('invalid operation identity')
+        return _safe_path(self.root/(op+'.json'))
+    def _load(self,op):
+        path=self._file(op)
+        if path.stat().st_nlink!=1 or path.stat().st_size>8192:raise ValueError('invalid private process record')
+        data=json.loads(path.read_text())
+        if not isinstance(data,dict) or not {'pid','created','module_id','version','release_id','token','state'}<=set(data):raise ValueError('invalid private process record')
+        return data
+    def _save(self,op,data,*,new=False):
+        path=self._file(op)
+        if new:
+            fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+            with os.fdopen(fd,'w') as f:json.dump(data,f);f.flush();os.fsync(f.fileno())
+        else:
+            temp=path.with_name(path.name+'.'+secrets.token_hex(8)+'.tmp')
+            fd=os.open(temp,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+            with os.fdopen(fd,'w') as f:json.dump(data,f);f.flush();os.fsync(f.fileno())
+            os.replace(temp,path)
+    def _verify(self,module):
+        _public_environment(self.programs[module])
+        p=self.programs[module];exe=_safe_path(p['argv'][0]);cwd=_safe_path(p['cwd'])
+        if _sha(exe)!=p['executable_sha256']:raise ValueError('runtime executable integrity')
+        for file,pin in p['file_pins'].items():
+            target=_safe_path(cwd/file)
+            if not target.is_file() or _sha(target)!=pin:raise ValueError('runtime file integrity')
+        for file,pin in p.get('external_file_pins',{}).items():
+            target=_safe_path(file)
+            if not target.is_file() or _sha(target)!=pin:raise ValueError('runtime external file integrity')
+    def _market_data_read_capability(self,release_id):
+        """Transient private child handoff, never program configuration or status."""
+        from types import SimpleNamespace
+        candidates=[]
+        for handle in tuple(self.children):
+            record=self._load(handle)
+            if record['module_id']=='market_data' and self.alive(handle):candidates.append((handle,record))
+        if len(candidates)!=1:raise ValueError('owned market data source unavailable')
+        handle,record=candidates[0]
+        if (record['release_id']!=release_id or record['state']!='RUNNING'
+                or record['created'] is None or not re.fullmatch('[a-f0-9]{64}',record['token'])):
+            raise ValueError('market data source identity unavailable')
+        program=self.programs['market_data'];url=urlsplit(program['health_url'])
+        if program['health_url']!=f'http://127.0.0.1:{url.port}/health':raise ValueError('market data source endpoint rejected')
+        commit=_public_environment(program).get('UNIFIED_SOURCE_COMMIT','')
+        if type(commit) is not str or not re.fullmatch('[a-f0-9]{40}',commit) or record.get('source_commit')!=commit:raise ValueError('market data source revision unavailable')
+        spec=SimpleNamespace(module_id='market_data',version=record['version'])
+        ready=self.ready(spec,handle,release_id)
+        if (type(ready) is not dict or ready.get('ready') is not True
+                or ready.get('module_id')!='market_data' or ready.get('version')!=record['version']
+                or ready.get('release_id')!=release_id):
+            raise ValueError('market data source not ready')
+        return dict(port=url.port,token=record['token'],source_commit=commit,release_id=release_id,epoch=handle)
+
+    def start(self,spec,release_id,operation_id):
+        path=self._file(operation_id)
+        phase='AUTHORIZATION_REJECTED'
+        try:
+            if self.authorize('start',spec.module_id) is not True:raise ValueError('runtime execution not authorized')
+            phase='INTEGRITY_REJECTED';self._verify(spec.module_id)
+            capability=self._market_data_read_capability(release_id) if spec.module_id=='terminan' else None
+            program=self.programs[spec.module_id]
+            if program.get('disposable_lab_windows_job') is True:
+                if not (os.name == 'nt' and spec.module_id == 'market_data'
+                        and release_id == 'disposable-lab'):
+                    raise ValueError('isolated Windows Job requires disposable LAB release')
+                # Reject unqualified environment BEFORE durable STARTING. A
+                # secret or alternate service credential cannot cross this
+                # reduced token boundary through arbitrary configured keys.
+                allowed = {'PORT', 'UNIFIED_SOURCE_COMMIT',
+                           'JOB_TEST_PID_FILE', 'JOB_TEST_SENTINEL'}
+                if any(key not in allowed for key in _public_environment(program)):
+                    raise ValueError('restricted LAB environment unqualified')
+        except Exception:
+            # This live driver witnessed rejection before the durable STARTING
+            # intent or Popen. An absent file alone is never that evidence.
+            if not path.exists() and operation_id not in self.children:
+                if len(self.prestart_rejections)>=1024:self.prestart_rejections.pop(next(iter(self.prestart_rejections)))
+                self.prestart_rejections[operation_id]=(spec.module_id,spec.version,release_id,phase)
+            raise
+        self.prestart_rejections.pop(operation_id,None)
+        if path.exists():
+            d=self._load(operation_id)
+            if (d['module_id'],d['version'],d['release_id'])!=(spec.module_id,spec.version,release_id):raise ValueError('operation identity mismatch')
+            if capability is not None and d.get('market_data_epoch')!=capability['epoch']:raise ValueError('dependency epoch changed')
+            # Re-attaching by operation ID requires positive same-incarnation OS
+            # evidence; alive() maps access-denied/invalid records to False and
+            # cannot be a process-ownership or recovery proof.
+            if d['state'] != 'RUNNING' or self.owned_process_state(operation_id) != 'STILL_ALIVE':
+                raise ValueError('ambiguous prior process start')
+            return operation_id
+        d=dict(pid=None,created=None,module_id=spec.module_id,version=spec.version,release_id=release_id,
+               token=secrets.token_hex(32),state='STARTING')
+        if spec.module_id=='market_data':d['source_commit']=_public_environment(self.programs[spec.module_id]).get('UNIFIED_SOURCE_COMMIT')
+        if capability is not None:d['market_data_epoch']=capability['epoch']
+        self._save(operation_id,d,new=True)
+        p=self.programs[spec.module_id]
+        env=os.environ.copy() if self.child_environment is None else self.child_environment(spec.module_id)
+        env=dict(env)  # Providers may return a cached/public mapping; never mutate it.
+        env.update(_public_environment(p))
+        for key in tuple(env):
+            if key.upper()==PRIVATE_DATA_CAPABILITY_ENV or (key.upper() in ('PGPASSWORD','PGPASSFILE') and (spec.module_id!='market_data' or self.child_environment is None)):del env[key]
+        if capability is not None:
+            env[PRIVATE_DATA_CAPABILITY_ENV]=json.dumps(capability,separators=(',',':'),allow_nan=False)
+        cache=tempfile.mkdtemp(prefix=operation_id+'-cache-',dir=self.root)
+        os.chmod(cache,0o700)
+        env.update(PYTHONPYCACHEPREFIX=cache,PYTHONDONTWRITEBYTECODE='1',UNIFIED_PRIVATE_CACHE_ROOT=cache)
+        env.update(UNIFIED_MODULE_ID=spec.module_id,UNIFIED_MODULE_VERSION=spec.version,
+                   UNIFIED_RELEASE_ID=release_id,UNIFIED_INSTANCE_TOKEN=d['token'])
+        # Only a pinned, explicitly disposable LAB program uses the new
+        # atomic Windows Job launch. Never silently change production starts.
+        lab_job = (os.name == 'nt' and
+                   p.get('disposable_lab_windows_job') is True and
+                   spec.module_id == 'market_data' and
+                   release_id == 'disposable-lab')
+        if lab_job:
+            # Do not inherit arbitrary parent credentials or configuration.
+            # A future installed cohort must explicitly qualify every
+            # additional environment key; unknown keys fail before execution.
+            allowed_public = {'PORT', 'UNIFIED_SOURCE_COMMIT',
+                              'JOB_TEST_PID_FILE', 'JOB_TEST_SENTINEL'}
+            public = _public_environment(p)
+            if any(key not in allowed_public for key in public):
+                raise ValueError('restricted LAB environment unqualified')
+            inherited = ('SYSTEMROOT', 'WINDIR', 'PATH', 'PATHEXT',
+                         'COMSPEC', 'TEMP', 'TMP')
+            env = {key: env[key] for key in inherited if key in env}
+            env.update(public)
+            env.update(PYTHONPYCACHEPREFIX=cache, PYTHONDONTWRITEBYTECODE='1',
+                       UNIFIED_PRIVATE_CACHE_ROOT=cache,
+                       UNIFIED_MODULE_ID=spec.module_id,
+                       UNIFIED_MODULE_VERSION=spec.version,
+                       UNIFIED_RELEASE_ID=release_id,
+                       UNIFIED_INSTANCE_TOKEN=d['token'])
+        proc = (_launch_owned_windows_job_process(p['argv'],p['cwd'],env)
+                if lab_job else
+                subprocess.Popen(p['argv'],cwd=p['cwd'],env=env,stdin=subprocess.PIPE,
+                                 stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=False))
+        self.children[operation_id]=proc
+        try:
+            created=_identity(proc.pid)
+            if created is None or (lab_job and
+                    (not isinstance(proc,_OwnedWindowsChild) or
+                     proc._job.active_process_count() < 1)):
+                raise ValueError('owned LAB Windows process identity unverified')
+            d.update(pid=proc.pid,created=created,state='RUNNING')
+            if lab_job:
+                k,w=_win_api()
+                exact=tuple(_win_identity(k,w,proc._handle))
+                if exact!=tuple(created):raise ValueError('retained identity mismatch')
+                proof=proc._job._no_scm_capability_verified
+                if type(proof) is not object:
+                    raise ValueError('restricted LAB launch proof unavailable')
+                self._job_launch_bindings[operation_id]=(proc,release_id,exact,p['executable_sha256'],urlsplit(p['health_url']).port,d['token'],proof)
+                d['windows_job_contained']=True
+            self._save(operation_id,d)
+        except BaseException:
+            # Do not release a newly launched Job without killing its own
+            # private child; no user/foreign process is ever assigned.
+            if lab_job and isinstance(proc,_OwnedWindowsChild):
+                # This child was created exclusively for this LAB operation.
+                # Close the private KILL_ON_JOB_CLOSE handle on failed
+                # publication, never leave an unauthorized descendant.
+                proc.close_owned_handles()
+                self.children.pop(operation_id,None)
+                self._job_launch_bindings.pop(operation_id,None)
+                self._job_receipts.pop(operation_id,None)
+            raise
+        return operation_id
+    def owned_job_stop_state(self, handle):
+        """Exact local Job OS-stop witness, NEVER a Root admission decision.
+
+        EXTINCT means the original retained process object signalled and the
+        exact pre-launch Job has zero active members. It says nothing about
+        independent SCM processes, TCP reservation, leases, PG or SQL.
+        Missing handles, identity mismatch and API failures are UNKNOWN.
+        """
+        try:
+            with self._job_evidence_lock:
+                child = self.children.get(handle)
+                if type(child) is not _OwnedWindowsChild or not child._handle:
+                    return 'UNKNOWN'
+                record = self._load(handle)
+                bound = self._job_launch_bindings.get(handle)
+                if (bound is None or bound[0] is not child
+                        or record.get('pid') != child.pid
+                        or record.get('created') != list(bound[2])
+                        or record.get('release_id') != bound[1]
+                        or record.get('token') != bound[5]
+                        or child._job._handle is None
+                        or child._job._assigned is not True):
+                    return 'UNKNOWN'
+                k, w = _win_api()
+                if _win_creation_time(k, w, child._handle) != bound[2][0]:
+                    return 'UNKNOWN'
+                process_status = k.WaitForSingleObject(child._handle, 0)
+                if process_status == 0x102:
+                    # While still live, independently verify original image
+                    # against launch-time identity, not merely creation time.
+                    if tuple(_win_identity(k, w, child._handle)) != bound[2]:
+                        return 'UNKNOWN'
+                members = child._job.active_process_count()
+                if process_status == 0 and members == 0:
+                    return 'EXTINCT'
+                if process_status == 0x102 or members > 0:
+                    return 'STILL_ALIVE'
+                return 'UNKNOWN'
+        except (ValueError, OSError, KeyError, TypeError, AttributeError):
+            return 'UNKNOWN'
+
+    def owned_process_state(self, handle):
+        """Read-only Root OS witness: EXTINCT, STILL_ALIVE, or UNKNOWN.
+
+        An absent PID lookup by itself is not a historical proof of an exit:
+        only the original retained Popen handle with completed poll, or a
+        trusted durable stop receipt backed by that original handle, can
+        establish EXTINCT here. This does NOT inspect TCP listener ownership,
+        descendants, foreign SCM services, or a PostgreSQL backend and cannot
+        independently authorize a new writer epoch.
+        """
+        try:
+            d = self._load(handle)
+            pid, created = d.get('pid'), d.get('created')
+            if type(pid) is not int or pid <= 1 or not isinstance(created, list) or len(created) != 2:
+                return 'UNKNOWN'
+            child = self.children.get(handle)
+            if child is None or child.pid != pid:
+                # A persisted record with no original process handle is not
+                # sufficient to distinguish PID reuse, access denied and
+                # exited process. Never infer EXTINCT from state='STOPPED'.
+                return 'UNKNOWN'
+            try:
+                exit_code = child.poll()
+                if exit_code is not None:
+                    # The retained Popen handle has observed its own exit.
+                    # An unrelated PID may already have replaced it.
+                    return 'EXTINCT'
+                identity = _identity(pid)
+            except (OSError, ValueError, TypeError, KeyError, subprocess.TimeoutExpired):
+                return 'UNKNOWN'
+            if identity == created:
+                return 'STILL_ALIVE'
+            # Identity mismatch with no recorded exit may be a PID race or
+            # an unavailable observation. Neither grants owner replacement.
+            return 'UNKNOWN'
+        except (OSError, ValueError, TypeError, KeyError):
+            return 'UNKNOWN'
+
+    def alive(self,handle):
+        if handle in self.children and self.children[handle].poll() is not None:
+            if self.children[handle].stdin:self.children[handle].stdin.close()
+            return False
+        try:
+            d=self._load(handle)
+            if d['state']=='STOPPED' and handle in self.children:
+                self.children[handle].wait(timeout=1)
+                if self.children[handle].stdin:self.children[handle].stdin.close()
+            return d['state']=='RUNNING' and d['created'] is not None and _identity(d['pid'])==d['created']
+        except (OSError,ValueError,TypeError,KeyError,subprocess.TimeoutExpired):return False
+    def ready(self,spec,handle,release_id):
+        result={'ready':False}
+        if not self.alive(handle):return result
+        try:
+            self._verify(spec.module_id);d=self._load(handle)
+            if (d['module_id'],d['version'],d['release_id'])!=(spec.module_id,spec.version,release_id):return result
+            url=urlsplit(self.programs[spec.module_id]['health_url'])
+            cls=http.client.HTTPSConnection if url.scheme=='https' else http.client.HTTPConnection
+            timeout=self.programs[spec.module_id].get('health_timeout_seconds',.5)
+            kwargs={'timeout':timeout}
+            if url.scheme=='https':kwargs['context']=ssl.create_default_context(cafile=self.programs[spec.module_id].get('ca_file'))
+            connection=cls(url.hostname,url.port,**kwargs)
+            # Socket inactivity timeouts do not bound trickled headers/body.
+            # Retain the transport even if HTTPConnection detaches its socket.
+            transport=None
+            expired=threading.Event()
+            def expire():
+                expired.set()
+                sock=transport if transport is not None else connection.sock
+                if sock is not None:
+                    try:sock.shutdown(socket.SHUT_RDWR)
+                    except OSError:pass
+            deadline=threading.Timer(timeout,expire);deadline.daemon=True;deadline.start()
+            try:
+                connection.connect();transport=connection.sock
+                if expired.is_set():return result
+                connection.request('GET',url.path or '/',headers={'Authorization':'Bearer '+d['token']})
+                response=connection.getresponse();raw=response.read(16385)
+                if expired.is_set() or response.status!=200 or len(raw)>16384:return result
+                body=json.loads(raw)
+                if (not isinstance(body,dict) or body.get('instance_token')!=d['token']
+                        or body.get('module_id')!=spec.module_id or body.get('version')!=spec.version
+                        or body.get('release_id')!=release_id or body.get('ready') is not True):return result
+                return dict(module_id=spec.module_id,version=spec.version,release_id=release_id,ready=True)
+            finally:
+                deadline.cancel();connection.close();deadline.join()
+        except (OSError,ValueError,TypeError,KeyError,http.client.HTTPException):return result
+    def _observe_job_extinction(self, handle):
+        if os.name!='nt':raise ValueError('native Job evidence unavailable')
+        try:
+            child,release,identity,digest,port,token,proof=self._job_launch_bindings[handle]
+        except (KeyError,ValueError,TypeError):
+            raise ValueError('original Job binding unavailable') from None
+        if (self.children.get(handle) is not child or not child._handle
+                or not child._job._handle or child._job._assigned is not True):
+            raise ValueError('original retained Job evidence unavailable')
+        d=self._load(handle)
+        if (d.get('windows_job_contained') is not True
+                or d.get('pid')!=child.pid or d.get('created')!=list(identity)
+                or d.get('release_id')!=release or d.get('token')!=token):
+            raise ValueError('durable LAB release identity changed')
+        k,w=_win_api()
+        # The creation timestamp is queried again from the ORIGINAL
+        # retained kernel handle, even after exit. Executable identity was
+        # observed from that handle while alive and issuer-bound before resume
+        # / durable publication. Never reconstruct identity from a PID or
+        # stale STOPPED JSON after process shutdown.
+        if _win_creation_time(k,w,child._handle)!=identity[0]:
+            raise ValueError('original process creation identity changed')
+        # Verify the exact retained executable path/hash recorded at launch;
+        # this independently detects subsequent replacement or tampering.
+        if _sha(identity[1])!=digest:
+            raise ValueError('owned executable bytes changed')
+        if k.WaitForSingleObject(child._handle,0)!=0 or child._job.active_process_count()!=0:
+            raise ValueError('original Job not extinct')
+        listeners=tuple(sorted(_windows_tcp_listener_owner_pids(port)))
+        # Require an empty configured endpoint and no SCM association with
+        # the retained root PID. This is a snapshot, not a port reservation.
+        historical = child._job._historical_member_pids | {child.pid}
+        scm=tuple(x for x in _windows_service_process_roster() if x[1] in historical)
+        if listeners or scm:raise ValueError('TCP or SCM ownership unresolved')
+        if not child._job._member_history_complete:
+            # A one-time SCM snapshot never establishes history. The bounded
+            # LAB exception requires the ORIGINAL issuer-held object created
+            # after verification of the restricted suspended child OS token.
+            # A caller-provided boolean, string, or lookalike is NEVER enough.
+            if (type(proof) is not object
+                    or child._job._no_scm_capability_verified is not proof):
+                raise ValueError('historical Windows SCM process membership unproven')
+        if child._job.active_process_count()!=0:
+            raise ValueError('Job membership changed')
+        return WindowsJobExtinctionReceipt(handle,release,token,child.pid,*identity,digest,port,
+                                           child._handle,child._job._handle,0,listeners,scm)
+
+    def job_extinction_receipt(self, handle):
+        """Return only an issuer-retained receipt, never reconstruct from JSON."""
+        with self._job_evidence_lock:
+            receipt=self._job_receipts.get(handle)
+            if receipt is None or self._observe_job_extinction(handle)!=receipt:
+                raise ValueError('Job extinction evidence unavailable')
+            return receipt
+
+    def consume_job_extinction(self, receipt, *, release_id, operation_id):
+        """One-time OS evidence consumption by trusted in-process Root.
+
+        Not a lease or writer grant; Root must separately bind owner/epoch.
+        Python callers in this process are part of the trusted boundary.
+        """
+        with self._job_evidence_lock:
+            if (type(receipt) is not WindowsJobExtinctionReceipt
+                    or self._job_receipts.get(operation_id) is not receipt
+                    or receipt.operation_id!=operation_id
+                    or receipt.release_id!=release_id
+                    or self._observe_job_extinction(operation_id)!=receipt):
+                raise ValueError('Job extinction receipt invalid')
+            self.children[operation_id].close_owned_handles()
+            del self._job_receipts[operation_id]
+            del self._job_launch_bindings[operation_id]
+            return receipt
+
+    def stop(self,handle):
+        path=self._file(handle)
+        if handle in self.prestart_rejections and not path.exists() and handle not in self.children:
+            module,version,release,phase=self.prestart_rejections[handle]
+            self._save(handle,dict(pid=None,created=None,module_id=module,version=version,release_id=release,
+                                   token=secrets.token_hex(32),state='STOPPED',failure_phase=phase),new=True)
+            del self.prestart_rejections[handle]
+            return
+        d=self._load(handle)
+        if d.get('windows_job_contained') is True:
+            child=self.children.get(handle)
+            if (type(child) is not _OwnedWindowsChild
+                    or child.pid != d.get('pid') or child._job._handle is None
+                    or child._job._assigned is not True):
+                raise ValueError('owned Windows Job original handle required')
+        if d['state']=='STOPPED':
+            # Historical STOPPED JSON is not OS extinction; a retained exact
+            # process exit is the only local process-level confirmation.
+            # STARTING/prestart authorization rejection has no child to kill,
+            # but must not be converted to an OS-exit receipt.
+            if d['pid'] is not None:
+                if self.owned_process_state(handle) != 'EXTINCT':
+                    raise ValueError('stopped record OS extinction unverified')
+            if handle in self.children and self.children[handle].stdin:
+                self.children[handle].stdin.close()
+            child=self.children.get(handle)
+            if isinstance(child,_OwnedWindowsChild):
+                if child._job.active_process_count()!=0:
+                    raise ValueError('owned Windows Job descendants still active')
+                self.job_extinction_receipt(handle)
+            return
+        if d['pid'] is None:
+            child=self.children.get(handle)
+            if child is None or child.poll() is None:raise ValueError('ambiguous prior process start')
+        child=self.children.get(handle)
+        if isinstance(child,_OwnedWindowsChild):
+            # Only the original A-owned Job created before this child ran.
+            # Never terminate a PID-only or externally adopted process.
+            state=self.owned_process_state(handle)
+            if state not in ('STILL_ALIVE','EXTINCT'):
+                raise ValueError('owned Windows Job root identity unverified')
+            # A previous bounded attempt may have terminated this Job
+            # before endpoint/SCM verification returned UNKNOWN. Do not
+            # issue a redundant second termination of an empty Job; all
+            # subsequent OS and release checks must still pass.
+            if child._job.active_process_count()!=0:
+                child._job.terminate_owned_tree(child._handle, timeout=5)
+            child.wait(timeout=5)
+            if self.owned_process_state(handle) != 'EXTINCT':
+                raise ValueError('owned Windows Job root exit unverified')
+            if child._job.active_process_count()!=0:
+                raise ValueError('owned Windows Job descendants still active')
+            with self._job_evidence_lock:
+                receipt=self._observe_job_extinction(handle)
+                d['state']='STOPPED';self._save(handle,d)
+                self._job_receipts[handle]=receipt
+            return
+        identity=_identity(d['pid'])
+        if identity is None:
+            # PID disappearance or failed lookup by itself proves nothing.
+            # Only the retained original Popen wait confirms child exit.
+            if self.owned_process_state(handle) != 'EXTINCT':
+                raise ValueError('owned process extinction unverified')
+            if handle in self.children and self.children[handle].stdin:
+                self.children[handle].stdin.close()
+            child=self.children.get(handle)
+            if isinstance(child,_OwnedWindowsChild):
+                if child._job.active_process_count()!=0:
+                    raise ValueError('owned Windows Job descendants still active')
+            d['state']='STOPPED';self._save(handle,d)
+            if isinstance(child,_OwnedWindowsChild):child.close_owned_handles()
+            return
+        if identity!=d['created']:raise ValueError('refuse unrelated process stop')
+        # OS exit evidence belongs to the exact handle opened and identity-
+        # checked before any signal. A second ProcessDriver may legitimately
+        # stop an owned child without holding the original subprocess.Popen.
+        # Never mistake an arbitrary missing numeric PID for this evidence.
+        exit_witness=False
+        if os.name=='nt':
+            k,w=_win_api();h=k.OpenProcess(0x1000|0x100000|1,False,d['pid'])
+            if not h:raise ValueError('owned process unavailable')
+            try:
+                if _win_identity(k,w,h)!=d['created']:raise ValueError('refuse reused process')
+                if not k.TerminateProcess(h,0) or k.WaitForSingleObject(h,5000)!=0:
+                    raise ValueError('owned process stop failed')
+                exit_witness=True  # wait on the SAME verified Windows HANDLE
+            finally:k.CloseHandle(h)
+        else:
+            if not hasattr(os,'pidfd_open') or not hasattr(signal,'pidfd_send_signal'):
+                raise ValueError('safe owned process signalling unavailable')
+            fd=os.pidfd_open(d['pid'])
+            try:
+                if _identity(d['pid'])!=d['created']:raise ValueError('refuse reused process')
+                signal.pidfd_send_signal(fd,signal.SIGTERM)
+                # pidfd readability observes the same kernel process object,
+                # not a potentially reused PID or a deleted pidfile.
+                exit_witness=bool(select.select([fd],[],[],3)[0])
+                if not exit_witness:
+                    signal.pidfd_send_signal(fd,signal.SIGKILL)
+                    exit_witness=bool(select.select([fd],[],[],2)[0])
+                if not exit_witness:raise ValueError('owned process stop unverified')
+            finally:os.close(fd)
+        if handle in self.children:
+            self.children[handle].wait(timeout=5)
+            if self.owned_process_state(handle) != 'EXTINCT':
+                raise ValueError('owned process extinction unverified')
+        if not exit_witness:raise ValueError('owned process extinction unverified')
+        if handle in self.children and self.children[handle].stdin:
+            self.children[handle].stdin.close()
+        child=self.children.get(handle)
+        if isinstance(child,_OwnedWindowsChild):
+            # Query the SAME retained kernel Job, allowing member teardown
+            # bounded time after the root process exit, without trusting an
+            # empty PID/port snapshot. UNKNOWN or timeout must preserve RUNNING.
+            deadline=time.monotonic()+3
+            while child._job.active_process_count()!=0 and time.monotonic()<deadline:
+                time.sleep(.02)
+            if child._job.active_process_count()!=0:
+                raise ValueError('owned Windows Job descendants still active')
+        d['state']='STOPPED';self._save(handle,d)
+        if isinstance(child,_OwnedWindowsChild):
+            child.close_owned_handles()

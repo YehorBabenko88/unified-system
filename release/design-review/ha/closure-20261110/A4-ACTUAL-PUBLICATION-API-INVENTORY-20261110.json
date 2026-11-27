@@ -1,0 +1,89 @@
+{
+  "unified_system/storage/publication.py": {
+    "blob": "32a68e4e77e0b6dfc68948a14c086f3c48540e3a",
+    "bytes": 598,
+    "sha256": "e9a92a2477c07ebbcf520d6e65a93237a723ed067f106bffcd605e3b4c7b4d12",
+    "signatures": [
+      "PublicationAdapter.__init__(self)",
+      "async PublicationAdapter.commit_storage(self, intent_bytes)",
+      "async PublicationAdapter.reconcile_storage(self, original_intent_bytes)"
+    ]
+  },
+  "unified_system/storage/publication_records.py": {
+    "blob": "b6e70b634da595d3b796c7ce59f48582b1fdcc0f",
+    "bytes": 1606,
+    "sha256": "65653bc442091bb935bd69d5873c33dc161083ceff51010f6805736ddbca8257",
+    "signatures": [
+      "publication_identifier(value)",
+      "RetainedPublicationIntent.__post_init__(self)",
+      "RetainedPublicationIntent.sha256(self)",
+      "RetainedPublicationIntent.authority_verified(self)",
+      "PendingPublicationObservation.native_outcome(self)",
+      "PendingPublicationObservation.publication_confirmed(self)",
+      "PendingPublicationObservation.retry_authorized(self)",
+      "PendingPublicationObservation.hold_release_authorized(self)"
+    ]
+  },
+  "unified_system/storage/publication_recovery.py": {
+    "blob": "04f5166c4b4b8dd62c324cae0b45f64106696aa9",
+    "bytes": 7162,
+    "sha256": "7a25a13533f66296d8626859374ebe850860cd825c5e094e6f2b2092ba0b3285",
+    "signatures": [
+      "PendingPublicationJournal.__init__(self, journal, owned_store)",
+      "PendingPublicationJournal._path_check(self)",
+      "PendingPublicationJournal._records(self)",
+      "PendingPublicationJournal._append(self, original, phase, records)",
+      "PendingPublicationJournal.retain(self, original)",
+      "PendingPublicationJournal.mark_attempt_uncertain(self, publication_id)",
+      "PendingPublicationJournal.recover_original(self, publication_id)",
+      "PendingPublicationJournal.verify_staged_original(self, publication_id)",
+      "PendingPublicationJournal.observation(self, publication_id)"
+    ]
+  },
+  "unified_system/storage/replica_evidence.py": {
+    "blob": "55d657da86bea6187191b86e5120cf49f61719b0",
+    "bytes": 3401,
+    "sha256": "23ea42e433f70de35345030bce8fc0a8f30d7097dc022006249a7bd714af1c9d",
+    "signatures": [
+      "LocalReplicaObservation.__post_init__(self)",
+      "LocalReplicaObservation.replica_valid(self)",
+      "LocalReplicaObservation.failure_domain_verified(self)",
+      "LocalReplicaObservation.publication_confirmed(self)",
+      "ReplicaClosureInventory.capture_result_closure(self, original_intent_bytes, *, expected_authority)",
+      "LocalInventoryReadback.__new__(cls, *args, **kwargs)",
+      "LocalInventoryReadback.__setattr__(self, name, value)",
+      "LocalInventoryReadback.__copy__(self)",
+      "LocalInventoryReadback.__deepcopy__(self, memo)",
+      "LocalInventoryReadback.__reduce__(self)",
+      "LocalInventoryReadback.store_id(self)",
+      "LocalInventoryReadback.closure_sha256(self)",
+      "LocalInventoryReadback.objects(self)",
+      "LocalInventoryReadback.native_replica_eligible(self)",
+      "LocalInventoryReadback.failure_domain_qualified(self)",
+      "LocalInventoryReadback.semantic_closure_verified(self)",
+      "LocalInventoryReadback.publication_confirmed(self)",
+      "_issue_local_inventory_readback(store_id, closure_sha256, observations)"
+    ]
+  },
+  "unified_system/storage/result_publication.py": {
+    "blob": "a30b2f0290fa9ca7b3c9e39fa391d7a703559a8e",
+    "bytes": 7267,
+    "sha256": "f6c1833771546134f97c45a4c53aae7fe5c16bb3cb73fff182821f4a0be952ed",
+    "signatures": [
+      "_canonical(value)",
+      "_validate(raw)",
+      "LocalByteClosure.__post_init__(self)",
+      "LocalByteClosure.value(self)",
+      "LocalByteClosure.sha256(self)",
+      "LocalByteClosure.publication_confirmed(self)",
+      "LocalByteClosure.semantic_closure_verified(self)",
+      "build_local_closure(entries)",
+      "_inventory(claim)",
+      "stage_local_closure(store, claim, entries)",
+      "copy_local_closure(source, destination, claim)",
+      "commit_result(original_intent_bytes)",
+      "reconcile_result(original_intent_bytes)",
+      "readback_local_closure(owned_store, claim)"
+    ]
+  }
+}

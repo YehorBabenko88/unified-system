@@ -1,0 +1,323 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "task_id",
+    "mission_id",
+    "requirements",
+    "owner",
+    "repository",
+    "pr_reference",
+    "base_sha",
+    "allowed_files",
+    "dependencies",
+    "acceptance_tests",
+    "evidence_requirements",
+    "completion_criteria",
+    "next_actions",
+    "blockers",
+    "approvals",
+    "evidence",
+    "ci",
+    "axes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "type": "integer"
+    },
+    "task_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "mission_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 1,
+      "maxItems": 128
+    },
+    "owner": {
+      "$ref": "#/$defs/identifier"
+    },
+    "repository": {
+      "type": "string",
+      "maxLength": 201,
+      "pattern": "^[A-Za-z0-9_.-]{1,100}/[A-Za-z0-9_.-]{1,100}(?![\\s\\S])"
+    },
+    "pr_reference": {
+      "type": "string",
+      "maxLength": 212,
+      "pattern": "^[A-Za-z0-9_.-]{1,100}/[A-Za-z0-9_.-]{1,100}#[1-9][0-9]{0,9}(?![\\s\\S])"
+    },
+    "base_sha": {
+      "$ref": "#/$defs/sha40"
+    },
+    "allowed_files": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256,
+        "pattern": "^[^\\\\:\\x00-\\x1f]+(?![\\s\\S])"
+      },
+      "minItems": 1,
+      "maxItems": 128,
+      "uniqueItems": true
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/identifier"
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    },
+    "acceptance_tests": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 1,
+      "maxItems": 128
+    },
+    "evidence_requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 1,
+      "maxItems": 128
+    },
+    "completion_criteria": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 1,
+      "maxItems": 128
+    },
+    "next_actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 0,
+      "maxItems": 128
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 0,
+      "maxItems": 128
+    },
+    "approvals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reference",
+          "approved"
+        ],
+        "properties": {
+          "reference": {
+            "$ref": "#/$defs/text"
+          },
+          "approved": {
+            "type": "boolean"
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 128
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reference",
+          "sha256"
+        ],
+        "properties": {
+          "reference": {
+            "$ref": "#/$defs/text"
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha64"
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 128
+    },
+    "ci": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "workflow_id",
+          "run_id",
+          "attempt",
+          "job_id",
+          "source_sha",
+          "state",
+          "artifact_references",
+          "authorization_state"
+        ],
+        "properties": {
+          "workflow_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "run_id": {
+            "$ref": "#/$defs/positive"
+          },
+          "attempt": {
+            "$ref": "#/$defs/positive"
+          },
+          "job_id": {
+            "$ref": "#/$defs/positive"
+          },
+          "source_sha": {
+            "$ref": "#/$defs/sha40"
+          },
+          "state": {
+            "enum": [
+              "QUEUED",
+              "RUNNING",
+              "SUCCESS",
+              "FAILURE",
+              "CANCELLED",
+              "INFRA_BLOCKED",
+              "UNKNOWN"
+            ]
+          },
+          "artifact_references": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/text"
+            },
+            "minItems": 0,
+            "maxItems": 128
+          },
+          "authorization_state": {
+            "enum": [
+              "UNKNOWN",
+              "RECORDED",
+              "CONSUMED",
+              "REVOKED"
+            ]
+          }
+        }
+      },
+      "minItems": 0,
+      "maxItems": 128
+    },
+    "axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "tested",
+        "integrated",
+        "windows",
+        "physical"
+      ],
+      "properties": {
+        "source": {
+          "enum": [
+            "UNKNOWN",
+            "PASS",
+            "FAIL",
+            "BLOCKED"
+          ]
+        },
+        "tested": {
+          "enum": [
+            "UNKNOWN",
+            "PASS",
+            "FAIL",
+            "BLOCKED"
+          ]
+        },
+        "integrated": {
+          "enum": [
+            "UNKNOWN",
+            "PASS",
+            "FAIL",
+            "BLOCKED"
+          ]
+        },
+        "windows": {
+          "enum": [
+            "UNKNOWN",
+            "PASS",
+            "FAIL",
+            "BLOCKED"
+          ]
+        },
+        "physical": {
+          "enum": [
+            "UNKNOWN",
+            "PASS",
+            "FAIL",
+            "BLOCKED"
+          ]
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:unified:development-task:1",
+  "title": "Development Task (non-authorizing)",
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "pattern": "^[^\\x00-\\x1f]*(?![\\s\\S])",
+      "description": "Runtime additionally rejects surrounding whitespace."
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]*(?![\\s\\S])",
+      "allOf": [
+        {
+          "not": {
+            "pattern": "[^A-Za-z0-9_.:-]"
+          }
+        }
+      ]
+    },
+    "sha40": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 40,
+      "pattern": "^[0-9a-f]{40}(?![\\s\\S])"
+    },
+    "sha64": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+    },
+    "positive": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9223372036854775807
+    }
+  },
+  "description": "Runtime validation is authoritative: 65536 canonical ASCII JSON bytes, exact PR repository match, safe relative file components, DAG, unknown dependency refusal and immutable identity across revisions. Observations and approvals confer no native authority."
+}

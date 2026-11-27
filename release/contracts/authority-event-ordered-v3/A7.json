@@ -1,0 +1,31 @@
+{
+  "schema": "agent7.authority-event-ordered-review.v1",
+  "time_utc": "2026-11-06T18:13:17.150106+00:00",
+  "status": "SCOPED_SEMANTIC_COMPATIBILITY_ACK_NEW_PROFILE_ONLY",
+  "exact_bytes": {
+    "AUTHORITY-EVENT-ORDERED-V3-REVIEW1.md": "d9d02baec67d5efbdb3124626d6e9d017cc9d5a2d19025f9293f4cc9f789a8d5",
+    "AUTHORITY-REQUIREMENT-TRACEABILITY-REVIEW1.md": "66d317091a69817aa6790d0fe3f9d4b9339e2b2c268033ac1990a314883b0880",
+    "AUTHORITY-REQUIREMENT-TRACEABILITY-EVIDENCE.json": "64a83ea87016d756be0eb7b612b11379392763f2522efc29c12d3e02e5484295"
+  },
+  "requirement_trace_scope": "A7 owner instructions in this chat require stale-worker/no-quorum refusal, authority/fencing and preservation of existing gates; no literal wall-clock-at-Raft-commit or exact UTC scalar found here. Read bounded A2 trace and evidence; did not independently search all historical owner messages/attachments.",
+  "ack": [
+    "New versioned event-ordered Consul-only authority profile is semantically compatible with A7 research/paper safety requirements if every publication atomically checks actual leader/lease session+index,generation,grant,worker incarnation,assignment,closure/reservation/budget revisions.",
+    "Committed invalidation-first rejects old owner with no successor; publication-first preserves one immutable historical receipt/debit; local heartbeat/cache/time is never authority.",
+    "Unknown receipt or renewal stays UNKNOWN; no new request ID,re-execution,double debit,collateral release,or successor reuse while old resource writer may act.",
+    "Truthful submitted/observed audit timestamps do not pretend exact commit time. Recovery/replay orders by committed receipt/domain revision,not local UTC.",
+    "Civil-time cutoff,user confirmation expiry and provider policy enforcement remain independent gates. Existing strict drafts/checkpointv1 are immutable; no PASS transfer or reinterpretation."
+  ],
+  "domain_implementation_gates": [
+    "A7 current PaperLedger SQLite is a local idempotent recoverable projection, not a cross-service transaction coordinator. Need exact authority receipt/outbox and canonical paper-event intent/result digest mapping, durable projection replay and lost-response reconciliation.",
+    "Do not replace deterministic strategy/market/funding event time with observed receipt time, or infer historical acceptance from clock display.",
+    "Maintain unknown collateral/send reservations until consistent authority reconciliation and qualified resource fencing/containment; session expiry alone never releases unknown physical effects.",
+    "Exact assignment/session/grant lifecycle and schema/profile adapter ACKs from A2/A4/A5 plus A3 checkpoint migration required before runtime integration.",
+    "Real3-voter publication/revoke/renew races,minority rejection,worker reassignment,all-node recovery and paper-event uniqueness must be demonstrated; A7 boolean callback MODEL tests are not such evidence."
+  ],
+  "source_changed": false,
+  "schema_changed": false,
+  "endpoint_ack": "PENDING",
+  "runtime_admission": "NOT_GRANTED",
+  "native_priority": "Math113 source/model reviewed; provider workflow registrationHTTP404 blocks dispatch; originalnativefailureOPEN",
+  "overall": "NO-GO"
+}

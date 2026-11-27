@@ -1,0 +1,270 @@
+{
+  "schema": "root.legacy-role-inventory.v1",
+  "root_head": "186a723aea60aaeb9eb51a59a66999bc485a06e1",
+  "scope": "STATIC_RAW_GIT_SOURCE_REVIEW_ONLY",
+  "executed_legacy_scripts": false,
+  "source_modified": false,
+  "native": "NOT_RUN",
+  "production": "NO_GO",
+  "bundle": [
+    {
+      "path": "integration/verify_sources.py",
+      "sha256": "b0ac94889516fdaca7c7a3235b7ce2815343ee930d023c1b9120df606501e7a2",
+      "bytes": 24764,
+      "archive": "docs/migration/retired-six-owner/raw/integration__verify_sources.py.txt"
+    },
+    {
+      "path": "integration/verify_runtime_stack.py",
+      "sha256": "e22ff52f41ab05349b3309b19e15d55c8e0b00afe94f6ea92e9d2fe770c4d2ad",
+      "bytes": 22466,
+      "archive": "docs/migration/retired-six-owner/raw/integration__verify_runtime_stack.py.txt"
+    },
+    {
+      "path": "integration/serve_terminan.py",
+      "sha256": "47e23ef31ee955e969a32b6007f4aa73fdd0069c196e1c680f35195583876582",
+      "bytes": 1422,
+      "archive": "docs/migration/retired-six-owner/raw/integration__serve_terminan.py.txt"
+    },
+    {
+      "path": "integration/actual-ui.spec.cjs",
+      "sha256": "988a7fb8a62f9f3a4dd0a9b2987ce5bd5bf04f8029d30e52dadc69d1f3cb5afa",
+      "bytes": 5759,
+      "archive": "docs/migration/retired-six-owner/raw/integration__actual-ui.spec.cjs.txt"
+    },
+    {
+      "path": "integration/playwright.config.cjs",
+      "sha256": "0766579c53ec0e606e4d5c044f4c782b5ac49cfa1ececd71eb0182562265c2e2",
+      "bytes": 482,
+      "archive": "docs/migration/retired-six-owner/raw/integration__playwright.config.cjs.txt"
+    },
+    {
+      "path": "integration/source-pins.json",
+      "sha256": "d8dd280cea45531148f713aa8f49c35c8db297d9d5509d6fd7f3836bd4eb1869",
+      "bytes": 475,
+      "archive": "docs/migration/retired-six-owner/raw/integration__source-pins.json.txt"
+    }
+  ],
+  "reachability": {
+    "verify_sources": "manual executable; no active workflow caller; source-pins is its private legacy pin input",
+    "verify_runtime_stack": "manual executable; no active workflow caller; cloud-runtime-stack-proof documents command",
+    "serve_terminan": "legacy playwright.config.cjs webServer invokes it; config selects actual-ui.spec.cjs; no active workflow caller of this closed browser chain",
+    "active_wrappers": "verify_pipeline/verify_chromium/verify_terminan_runtime delegate canonical four_owner.runtime_gate; mandatory workflow expects BLOCKED and exits failure",
+    "false_positive": "unified_system.lab_runtime.verify_sources function imported by capsule tools is not integration/verify_sources.py"
+  },
+  "source_roles": [
+    {
+      "line": 106,
+      "role": "six-module snapshot independent consumer",
+      "replacements": "tests/test_runtime.py; tests/test_runtime_builtin.py",
+      "status": "PARTIAL",
+      "residual": "Canonical four-owner supervisor/fake-driver behavior remains; independent Term runtime_v2 consumer/display is absent."
+    },
+    {
+      "line": 123,
+      "role": "node-size unknown observations 0/1/5/6/7/10",
+      "replacements": "tests/test_fleet_control.py:test_sizes, test_read_only_adapter_does_not_infer_observations",
+      "status": "PARTIAL",
+      "residual": "Root node/unknown telemetry invariants remain; independent Term infrastructure consumer and exact browser vector 10 not composed."
+    },
+    {
+      "line": 140,
+      "role": "every module availability combination read-only",
+      "replacements": "tests/four_owner/test_sdk_contracts.py; tests/test_runtime.py",
+      "status": "NOT_TRANSFERRED_COMPOSITION",
+      "residual": "Four-owner identity is canonical, but independent UI consumer availability truth-table is not present."
+    },
+    {
+      "line": 151,
+      "role": "resource pressure expiry drain restart",
+      "replacements": "tests/test_fleet_control.py; tests/test_fleet_policy.py",
+      "status": "PARTIAL",
+      "residual": "Root unit roles retained; three literal pressure cases and independent UI after durable restart not composed."
+    },
+    {
+      "line": 172,
+      "role": "quorum leader database loss stale consumer",
+      "replacements": "tests/test_fleet_control.py:test_quorum_splitbrain_expiry_and_db_loss, test_failure_domain_restore_and_diskfull",
+      "status": "PARTIAL",
+      "residual": "Root quorum/restore semantics retained; actual independent Term stale-consumer/restore composition missing."
+    },
+    {
+      "line": 191,
+      "role": "each resource reservation redistribution expiry",
+      "replacements": "tests/test_fleet_control.py:test_cumulative_capacity_idempotence_and_restart, test_telemetry_pressure_and_unknown_nodes",
+      "status": "PARTIAL",
+      "residual": "CPU/memory/disk unit contracts retained; exact separate 4/16/50 reservations vs 8/32/100 capacities plus redistribution must be preserved as fixtures."
+    },
+    {
+      "line": 217,
+      "role": "actual research history sync and incomplete-gap denial",
+      "replacements": "tests/four_owner/test_sdk_contracts.py; tests/causal_offline/test_offline_causal_pipeline.py",
+      "status": "NOT_TRANSFERRED_GENERIC_RESEARCH",
+      "residual": "Causal paper and Data history SDK cover distinct contracts; arbitrary strategy sync/complete-history requirement/gap refusal is not equivalent. Root sum formula must not be copied."
+    },
+    {
+      "line": 232,
+      "role": "unattested export and handoff authority denial",
+      "replacements": "tests/four_owner/test_sdk_contracts.py:test_history_tamper_future_watermark_and_authority_upgrade_refuse, test_canonical_handoff_receiver_and_independent_root_receipt_oracle",
+      "status": "CANONICAL_SOURCE_ROLE",
+      "residual": "Actual canonical Data history tamper/authority refusal plus explicit receipt trust boundary. No live-source claim."
+    },
+    {
+      "line": 237,
+      "role": "latest result schema cannot substitute sealed receipt",
+      "replacements": "tests/four_owner/test_sdk_contracts.py:test_canonical_handoff_receiver_and_independent_root_receipt_oracle",
+      "status": "CANONICAL_SOURCE_ROLE",
+      "residual": "Bare paper schema and forged metrics are denied; old owned_runs implementation is not canonical."
+    },
+    {
+      "line": 251,
+      "role": "actual producer persisted result HTTP to handoff",
+      "replacements": "tests/causal_offline/test_offline_causal_pipeline.py; tests/four_owner/test_sdk_contracts.py",
+      "status": "PARTIAL_DIFFERENT_CONTRACT",
+      "residual": "Actual Data->Term Session->Root Journal/ObjectStore->Term reader is canonical offline paper chain; generic research producer->owned result service HTTP->receiver remains unported."
+    },
+    {
+      "line": 286,
+      "role": "optional Grid export to Meta causal analytics",
+      "replacements": "tests/four_owner/test_sdk_contracts.py:test_actual_data_history_export_to_terminal_causal_analysis",
+      "status": "CANONICAL_SOURCE_ROLE",
+      "residual": "Actual market_data export->Term market_history preserves decision cut, source row IDs/fingerprint, no authority. Old Meta service is not retained."
+    },
+    {
+      "line": 325,
+      "role": "consumer version bool/future rejection",
+      "replacements": "tests/four_owner/test_sdk_contracts.py:test_canonical_handoff_receiver_and_independent_root_receipt_oracle; tests/test_release_boundary.py",
+      "status": "PARTIAL",
+      "residual": "Canonical handoff rejects bool/future major; independent Term lifecycle/runtime consumer negotiation is absent."
+    },
+    {
+      "line": 329,
+      "role": "independent consumer nested forged observations",
+      "replacements": "tests/test_nested_fleet_boundary.py",
+      "status": "PARTIAL",
+      "residual": "Root lifecycle and HTTP boundary reject nested forged observations; independent Term monitor consumer not transferred."
+    },
+    {
+      "line": 336,
+      "role": "actual collection not completeness/order permission",
+      "replacements": "tests/test_release_boundary.py; tests/four_owner/test_sdk_contracts.py:test_actual_data_profile_math_and_sole_terminal_replay_remain_unattested",
+      "status": "PARTIAL",
+      "residual": "Canonical SDK partial/unattested data never grants permission; exact old producer->Root inspect_market stale/completeness composition requires canonical producer contract."
+    }
+  ],
+  "runtime_roles": [
+    {
+      "role": "scope and explicit execution opt-in",
+      "replacement": "Canonical runtime gates refuse absent protected admission; old Linux/cloud/office guards are historical topology, not permission.",
+      "status": "PARTIAL"
+    },
+    {
+      "role": "exact six-source capsules and pre/post origins",
+      "replacement": "scripts/qualify_four_owner.py and integration/four_owner/run_installed.py source/owned-byte/cache custody; four owners replace six.",
+      "status": "CANONICAL_SOURCE_ROLE"
+    },
+    {
+      "role": "absolute executable and dependency binary inventories pre/post",
+      "replacement": "Canonical source/artifact byte binding exists; complete old external executable/dependency tree unchanged proof is not a qualified runtime proof.",
+      "status": "PARTIAL"
+    },
+    {
+      "role": "owned PostgreSQL18 random database provision/readiness",
+      "replacement": "No qualified local native replacement; dedicated read-only credential/provision ownership gates remain mandatory.",
+      "status": "NOT_TRANSFERRED_RUNTIME"
+    },
+    {
+      "role": "actual history and generic owned-result synthetic fixtures",
+      "replacement": "Canonical actual SDK history and offline causal ledger fixtures; generic owned research result HTTP not equivalent.",
+      "status": "PARTIAL"
+    },
+    {
+      "role": "single supervisor real process DAG and all ready",
+      "replacement": "tests/test_runtime.py fake drivers; runtime gate explicitly BLOCKED.",
+      "status": "NOT_TRANSFERRED_RUNTIME"
+    },
+    {
+      "role": "per-child private token matching health + unauthenticated denial",
+      "replacement": "runtime_process and private_data_capability source tests plus Term health tests; actual admitted four-child aggregate not qualified.",
+      "status": "PARTIAL"
+    },
+    {
+      "role": "Term runtime-v2 snapshot and workspace display",
+      "replacement": "Canonical monitor source adapter/result graph display explicitly not connected.",
+      "status": "NOT_TRANSFERRED_RUNTIME"
+    },
+    {
+      "role": "read-only Root HTTP no mutation/tick routes",
+      "replacement": "tests/test_runtime_cli.py and runtime_builtin preserve Root API role. Actual aggregate not run.",
+      "status": "PARTIAL"
+    },
+    {
+      "role": "Math scalar evaluate and graph HTTP actual results/no authority",
+      "replacement": "Same six bounded scientific tests retained by scientific-runtime gate; old aggregate HTTP Math graph endpoint role needs explicit canonical graph API mapping.",
+      "status": "PARTIAL"
+    },
+    {
+      "role": "Meta HTTP decision-cut analysis",
+      "replacement": "Canonical actual Data->Term history SDK; no separate Meta service. Actual managed Term analytics HTTP composition not qualified.",
+      "status": "PARTIAL"
+    },
+    {
+      "role": "Strat results HTTP returns sealed record without DB mutation",
+      "replacement": "Canonical offline paper publication/reader and read-only frozen-results migration exist; generic live results service handoff absent.",
+      "status": "PARTIAL"
+    },
+    {
+      "role": "Postgres INFRA_ONLY and public schema without capture",
+      "replacement": "Read-only managed serve/source gates retained; actual canonical DB schema/bootstrap proof NOT_RUN.",
+      "status": "NOT_TRANSFERRED_RUNTIME"
+    },
+    {
+      "role": "owned stop reverse dependency, quiescence and admin stop",
+      "replacement": "Root supervisor tests retained; admitted real four-child shutdown not qualified.",
+      "status": "PARTIAL"
+    },
+    {
+      "role": "owned database cleanup and private nonce deletion only after confirmed stop",
+      "replacement": "Lifecycle/source tests cover pieces; real PG/nonce cleanup composition pending; never delete on unconfirmed ownership/quiescence.",
+      "status": "NOT_TRANSFERRED_RUNTIME"
+    },
+    {
+      "role": "source/dependency postchecks after cleanup failures",
+      "replacement": "Canonical source gate has post-byte/origin checks; runtime cleanup-sensitive final proof remains pending.",
+      "status": "PARTIAL"
+    }
+  ],
+  "browser_roles": [
+    {
+      "role": "lifecycle file -> actual HTTP -> Chromium all controls",
+      "assertions": "Node vectors0/1/5/6/7/10; 14 controls; search/filter/timeframe; unknown telemetry; stages/read-only modules; screenshots/errors",
+      "status": "NOT_TRANSFERRED"
+    },
+    {
+      "role": "cancelled stale HTTP response cannot replace latest source",
+      "assertions": "Canonical MarketData browser has stale response handling analog, but lifecycle monitor chain missing",
+      "status": "PARTIAL_DIFFERENT_PANEL"
+    },
+    {
+      "role": "missing lifecycle snapshot explicit error and recovery",
+      "assertions": "Canonical MarketData missing-source panel analog only",
+      "status": "PARTIAL_DIFFERENT_PANEL"
+    },
+    {
+      "role": "actual socket disconnect unavailable and recover",
+      "assertions": "Canonical fake/route-abort UI checks do not prove server FaultTransport/socket recovery",
+      "status": "NOT_TRANSFERRED_ACTUAL_SOCKET"
+    }
+  ],
+  "additional_roles": [
+    "Exact source custody/origins before and after; no socket escape in verify_sources",
+    "External six-case Math bounded experiment roster requires exact pass/no skip/fail/cancel/todo; canonical scientific-runtime gate retains roster",
+    "serve_terminan loopback-only fixture configuration, scrubbing legacy data DSNs, source fence, owned server close, lifecycle copy fixture, deliberate disconnect transport",
+    "source-pins exact five upstream+Root-base historical bytes must remain provenance, not active six-owner dependency"
+  ],
+  "cleanup_constraints": [
+    "Archive complete six-file raw bundle and role map before removing executable files/config; parent owns cleanup",
+    "Preserve NOT_TRANSFERRED roles as explicit canonical obligations with source references and fixtures, never count offline SDK checks as managed/browser acceptance",
+    "Retire old owner identities and APIs rather than retaining aliases; six-node fleet counts are valid node vectors, not six owners",
+    "No claim that old scripts execute against current dependencies; Term runtime_v2/infrastructure modules are absent in accepted canonical Term"
+  ]
+}

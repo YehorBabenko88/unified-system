@@ -1,0 +1,71 @@
+name: Integration registry identity and ownership
+on:
+  pull_request:
+    paths:
+      - 'coordination/**'
+      - 'unified_system/integration_registry.py'
+      - 'tests/test_integration_registry.py'
+      - '.github/workflows/integration-registry.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: integration-registry-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  registry:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      GIT_CONFIG_COUNT: '1'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: 'false'
+      EXPECTED_SOURCE: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Required registry negative tests and source receipt
+        shell: python -I -S -B {0}
+        run: |
+          import hashlib,json,os,pathlib,subprocess,sys,unittest
+          sys.dont_write_bytecode=True
+          sys.path.insert(0,'.')
+          def git(*args): return subprocess.check_output(['git',*args]).strip()
+          def source():
+              assert git('rev-parse','HEAD').decode()==os.environ['EXPECTED_SOURCE']
+              assert not git('status','--porcelain','--untracked-files=all')
+              files={name:hashlib.sha256(pathlib.Path(name).read_bytes()).hexdigest() for name in git('ls-files','-z').decode().split('\0') if name}
+              return {'head':git('rev-parse','HEAD').decode(),'tree':git('rev-parse','HEAD^{tree}').decode(),'files':files}
+          before=source()
+          suite=unittest.defaultTestLoader.loadTestsFromName('tests.test_integration_registry')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          after=source()
+          assert before==after
+          report={'schema':'unified.registry-ci.v1','head':before['head'],'tree':before['tree'],'tests':result.testsRun,'failures':len(result.failures),'errors':len(result.errors),'skips':len(result.skipped),'source_unchanged':True,'source_files_sha256':hashlib.sha256(json.dumps(before['files'],sort_keys=True).encode()).hexdigest(),'runtime_admission':'BLOCKED','physical':'NOT_RUN','run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT']}
+          pathlib.Path(os.environ['RUNNER_TEMP'],'registry-evidence.json').write_text(json.dumps(report,indent=2))
+          assert result.testsRun==13 and result.wasSuccessful() and not result.skipped
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        id: evidence
+        with:
+          name: integration-registry-${{ matrix.os }}-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/registry-evidence.json
+          if-no-files-found: error
+      - name: Artifact digest
+        if: always()
+        shell: python
+        env:
+          DIGEST: ${{ steps.evidence.outputs.artifact-digest }}
+        run: |
+          import os
+          print('Registry evidence digest: '+os.environ['DIGEST']+'; runtime BLOCKED; physical NOT_RUN')

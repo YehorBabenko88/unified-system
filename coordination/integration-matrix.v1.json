@@ -1,0 +1,161 @@
+{
+  "schema": "unified.integration-matrix.v1",
+  "repository_states": {
+    "unified-system": {
+      "implementation": "PARTIAL_REQUIRES_SOURCE_AUDIT",
+      "testing": "EXACT_HEAD_COMPONENT_CI_METADATA_ONLY",
+      "acceptance": "BLOCKED",
+      "pin": {
+        "repository": "YehorBabenko88/unified-system",
+        "head": "8aab34342d03900ab28e6f5b78acd7558239630c",
+        "tree": "d491dfa26d31561892232de7425eb75816b842d4",
+        "pr": 13,
+        "pr_url": "https://github.com/YehorBabenko88/unified-system/pull/13",
+        "branch": "mission3/runtime-predeploy-20261031"
+      }
+    },
+    "bybit-cluster-grid": {
+      "implementation": "PARTIAL_REQUIRES_SOURCE_AUDIT",
+      "testing": "EXACT_HEAD_COMPONENT_CI_METADATA_ONLY",
+      "acceptance": "BLOCKED",
+      "pin": {
+        "repository": "YehorBabenko88/bybit-cluster-grid",
+        "head": "9c6113421024777a988ba69bf2dd1f79bd712130",
+        "tree": "fc84a0363f177a2a9a44cacff872e582897f7e4c",
+        "pr": 254,
+        "pr_url": "https://github.com/YehorBabenko88/bybit-cluster-grid/pull/254",
+        "branch": "mission3/cluster-predeploy-20261031"
+      }
+    },
+    "strattester": {
+      "implementation": "PARTIAL_REQUIRES_SOURCE_AUDIT",
+      "testing": "EXACT_HEAD_COMPONENT_CI_METADATA_ONLY",
+      "acceptance": "BLOCKED",
+      "pin": {
+        "repository": "YehorBabenko88/strattester",
+        "head": "25eb939f8a816a80ac7c042ce75ec4d9173cd4ce",
+        "tree": "29c8bf9b4a607291d845e3026904074a33480373",
+        "pr": 70,
+        "pr_url": "https://github.com/YehorBabenko88/strattester/pull/70",
+        "branch": "mission3/ci-diagnostics-20261031"
+      }
+    },
+    "math": {
+      "implementation": "PARTIAL_REQUIRES_SOURCE_AUDIT",
+      "testing": "EXACT_HEAD_COMPONENT_CI_METADATA_ONLY",
+      "acceptance": "BLOCKED",
+      "pin": {
+        "repository": "YehorBabenko88/math",
+        "head": "5721987a15d20c3f9984d52eac4446704566d4b9",
+        "tree": "4dfced3be2ee08fa8a33cead814bb0b92bc5bdcd",
+        "pr": 110,
+        "pr_url": "https://github.com/YehorBabenko88/math/pull/110",
+        "branch": "mission3/pinned-browser-host-20261031"
+      }
+    },
+    "meta_analyse": {
+      "implementation": "PARTIAL_REQUIRES_SOURCE_AUDIT",
+      "testing": "EXACT_HEAD_COMPONENT_CI_METADATA_ONLY",
+      "acceptance": "BLOCKED",
+      "pin": {
+        "repository": "YehorBabenko88/meta_analyse",
+        "head": "2c4db055e56e36384a2661d443f9abc7b2331e90",
+        "tree": "20b1e615f6035b7b4fc83e6115eba2984900f47e",
+        "pr": 76,
+        "pr_url": "https://github.com/YehorBabenko88/meta_analyse/pull/76",
+        "branch": "mission3/meta-ci-evidence-20261031"
+      }
+    },
+    "Terminan": {
+      "implementation": "PARTIAL_REQUIRES_SOURCE_AUDIT",
+      "testing": "EXACT_HEAD_COMPONENT_CI_METADATA_ONLY",
+      "acceptance": "BLOCKED",
+      "pin": {
+        "repository": "YehorBabenko88/Terminan",
+        "head": "7ed3708df53c8850fd11fc8331440bdfee99aa3e",
+        "tree": "96963f7e749e73c8c81e7650bdee4f2a0a05923a",
+        "pr": 68,
+        "pr_url": "https://github.com/YehorBabenko88/Terminan/pull/68",
+        "branch": "mission3/runtime-dashboard-20261031"
+      }
+    }
+  },
+  "phase_gates": {
+    "A_AUDIT_AND_CONTRACTS": {
+      "status": "IN_PROGRESS",
+      "evidence_required": true
+    },
+    "B_COMPONENT_IMPLEMENTATION": {
+      "status": "BLOCKED",
+      "evidence_required": true
+    },
+    "C_CONTRACT_TESTS": {
+      "status": "BLOCKED",
+      "evidence_required": true
+    },
+    "D_OFFLINE_INTEGRATION": {
+      "status": "BLOCKED",
+      "evidence_required": true
+    },
+    "E_WINDOWS_CI": {
+      "status": "BLOCKED",
+      "evidence_required": true
+    },
+    "F_PHYSICAL_ACCEPTANCE": {
+      "status": "BLOCKED",
+      "evidence_required": true
+    },
+    "G_TAILSCALE_INDEPENDENCE": {
+      "status": "BLOCKED",
+      "evidence_required": true
+    },
+    "H_RELEASE_READINESS": {
+      "status": "BLOCKED",
+      "evidence_required": true
+    }
+  },
+  "go": "NO-GO",
+  "tailscale_removal": "BLOCKED",
+  "trusted_release": "BLOCKED_NO_TRUSTED_PUBLISHER",
+  "lab_mode": "LAB_SIMULATION_ONLY",
+  "adminit": "EXCLUDED",
+  "office_network_changes": "NOT_AUTHORIZED",
+  "component_owner_ack": {
+    "A1": "PENDING",
+    "A2": "PENDING",
+    "A3": "PENDING",
+    "A4": "PENDING",
+    "A5": "PENDING",
+    "A6": "PENDING",
+    "A7": "PENDING",
+    "A8": "PENDING"
+  },
+  "known_blockers": [
+    "Windows native Math qualification unresolved; diagnostic assertions not waived",
+    "Local Windows operator identity prototype not a qualified authentication provider",
+    "Network budget local journal/Consul anchors not integrated with every native transport",
+    "LAN admission producer, signed peer registry and source/key/ACL binding not physically qualified",
+    "Windows three-coordinator HA/watchdog/SQL cutover not physically qualified",
+    "Storage replication/backup/restore, global scheduling and all-node Terminan incomplete",
+    "Ten instruments historical/live paper and all failure scenarios need integrated physical evidence"
+  ],
+  "historical_evidence": [
+    {
+      "scope": "Linux three persistent Consul voters only",
+      "head": "55e74863c3c28bf4cbcb4ded4d3359f98bf93f71",
+      "run_id": 42080608047,
+      "artifact_sha256": "9a691dccdfc0d2927c698dc39e13fff895dbe07b4b00bef131f4c6f961625baf",
+      "result": "PASS_LINUX_FIXTURE_ONLY",
+      "does_not_qualify": [
+        "Windows",
+        "real operator auth",
+        "physical office",
+        "snapshot restore"
+      ]
+    }
+  ],
+  "physical_acceptance": "BLOCKED_NO_GO",
+  "physical_fault_injection": "NOT_AUTHORIZED",
+  "isolated_acceptance": "AUTHORIZED_ONLY_DISPOSABLE_DECLARED_RESOURCES",
+  "ownership_validator_F08": "FIX_VERIFIED_INDEPENDENTLY_OFFLINE_AT_c0965c5612227662d3673820865aeee703cb5452"
+}

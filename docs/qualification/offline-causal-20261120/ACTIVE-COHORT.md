@@ -1,0 +1,7 @@
+# One active source cohort
+
+The mandatory causal workflow and scripts/ci_paper_causal.py consume integration/four_owner/cohort.json, the same active source mapping as the common installed SDK qualification. They do not retain an independently editable set of SDK pins. The causal suite still requires all 21 original IDs and all original seven guard methods, plus three added regression methods for the shared cohort, mandatory repository origins and early SDK-only mode refusal.
+
+The causal builder always verifies all four repository origins before and after its work even when the primary manifest has no optional origin flag. It rejects any non-SDK mode before output/factory/source callbacks. All unrelated builder suite/mode semantics are unchanged; installed children continue to run isolated with no site. This is source consistency and synthetic private-SQLite qualification, never admission or authority.
+
+The former active manifest is retained byte-for-byte as original-source/cohort-ad550-retained112.json.txt (SHA256 42d45bbc16e0af6b14295c6796ae29424fdcf9ed3ca6cfb8d878f1af626d0ac1), tied to Root ad5501377dd5be308b2f2d3b6657acf7e942511f and its actually observed 44Data+3Math+65Term SDK112. It is provenance data, not an executable or compatibility configuration. Those old artifacts are not evidence for the current shared cohort. Existing original-source archives and original case inventories are unchanged.

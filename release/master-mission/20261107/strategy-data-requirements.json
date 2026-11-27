@@ -1,0 +1,53 @@
+{
+  "automatic_strategy_implementation": false,
+  "strategies": [
+    {
+      "strategy": "False breakout",
+      "required_data": "trades + causal level definition",
+      "existing_basis": "Trade continuity and replay",
+      "missing_acceptance": "Level/exit validation, costs and OOS"
+    },
+    {
+      "strategy": "Absorption",
+      "required_data": "trades + ordered book",
+      "existing_basis": "Partial tape and book snapshots",
+      "missing_acceptance": "True absorption feature and gap-safe history"
+    },
+    {
+      "strategy": "Flow breakout",
+      "required_data": "trades and explicit flow units",
+      "existing_basis": "CVD/tape partial features",
+      "missing_acceptance": "Definition, latency and OOS mapping"
+    },
+    {
+      "strategy": "Retest",
+      "required_data": "causal levels and trades/bars",
+      "existing_basis": "Existing replay/backtest",
+      "missing_acceptance": "Level causality and intrabar uncertainty"
+    },
+    {
+      "strategy": "VWAP reversion",
+      "required_data": "trades or declared bar proxy",
+      "existing_basis": "Existing aggregate features",
+      "missing_acceptance": "Session/units/regime and costs"
+    },
+    {
+      "strategy": "Book imbalance",
+      "required_data": "ordered valid book",
+      "existing_basis": "Snapshot features; narrow PR268",
+      "missing_acceptance": "Persistent invalidation and historical L3"
+    },
+    {
+      "strategy": "Speed impulse",
+      "required_data": "timestamped trades",
+      "existing_basis": "Existing trade ingestion",
+      "missing_acceptance": "Clock/latency normalization and selection bias"
+    },
+    {
+      "strategy": "Wall reaction",
+      "required_data": "ordered depth + trades",
+      "existing_basis": "No durable L3 replay established",
+      "missing_acceptance": "Wall lifetime/queue/cancellation evidence"
+    }
+  ]
+}

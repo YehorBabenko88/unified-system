@@ -1,0 +1,75 @@
+{
+  "source_head": "917d99672e37db59835a8ab23b03c99826b12d78",
+  "run": 42256450733,
+  "attempt": 1,
+  "windows_cells": 2,
+  "actual_terminal_tests_per_cell": 106,
+  "artifacts": [
+    {
+      "file": "math112-platform-windows-22.zip",
+      "raw_sha256": "92f53f97e04c4efb23b6de98937fbcd5eeec54d2cc4e5f47eb470c23598750be",
+      "members": [
+        {
+          "name": "platform-evidence/events.ndjson",
+          "bytes": 22533,
+          "sha256": "70c7b8a6cb6848e7120bab5ffb4f08fffb4fd03b5f44df1ee88f5cf7b7349d7e"
+        },
+        {
+          "name": "platform-evidence/receipt.json",
+          "bytes": 30948,
+          "sha256": "92b0a65aa4542a600900a0b1352503886b16b68e3774605e59dc80866b49ef76"
+        },
+        {
+          "name": "release-provenance.json",
+          "bytes": 828,
+          "sha256": "000a08740580ed8786f2595513de364d5a23f0fb64b5e9d462d3381d46c1be1a"
+        }
+      ],
+      "tests": 106,
+      "summary_records": 1,
+      "inventory_declared_destination_aliases": 25,
+      "all_terminal_identities_match_primary_inventory": true
+    },
+    {
+      "file": "math112-platform-windows-24.zip",
+      "raw_sha256": "999a621bc1f212838e882f39a68cb25a06a8debd3ea7dcf7c13dcd1e299586b8",
+      "members": [
+        {
+          "name": "platform-evidence/events.ndjson",
+          "bytes": 22533,
+          "sha256": "70c7b8a6cb6848e7120bab5ffb4f08fffb4fd03b5f44df1ee88f5cf7b7349d7e"
+        },
+        {
+          "name": "platform-evidence/receipt.json",
+          "bytes": 30948,
+          "sha256": "c755912046af726949285f2a2501fcb41186addf2d2dc74a78e6479708e85082"
+        },
+        {
+          "name": "release-provenance.json",
+          "bytes": 828,
+          "sha256": "2bab86f9588ef969e085fee5b1ab4c9cf0c709341aaf0134a52cc6864188783a"
+        }
+      ],
+      "tests": 106,
+      "summary_records": 1,
+      "inventory_declared_destination_aliases": 25,
+      "all_terminal_identities_match_primary_inventory": true
+    },
+    {
+      "file": "math112-current-coverage.zip",
+      "raw_sha256": "3e5be31f282998268a57a0ebb868bd61262064f17aa6a8ab8de864bd0602683f",
+      "members": [
+        {
+          "name": "mandatory-platform-coverage.json",
+          "bytes": 206,
+          "sha256": "6e43ecf5526b7b350d66ae8a488d7f5498ea775a5223d8d724488e7bfaf6d151"
+        }
+      ]
+    }
+  ],
+  "reader_corrections": [
+    "NDJSON106terminals+1summary validated separately",
+    "Windows/cross destination names mapped ONLY through exact primary inventory; no regex aliases or source changes"
+  ],
+  "native_acceptance": "NOT_ESTABLISHED"
+}

@@ -1,0 +1,824 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "status",
+    "request_id",
+    "request_sha256",
+    "target_capability",
+    "target_version",
+    "experiment_id",
+    "dataset",
+    "parameters_digest",
+    "execution_mode",
+    "resource_budget",
+    "result",
+    "research_descriptor",
+    "result_artifact_ref",
+    "publication_status",
+    "execution_authority",
+    "scheduler_admission",
+    "authenticated_gateway",
+    "physical_acceptance",
+    "error",
+    "provenance",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "unified.gateway.direct-target-result.v2"
+    },
+    "status": {
+      "type": "string",
+      "const": "DIRECT_TARGET_PASS"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$(?![\\s\\S])"
+    },
+    "request_sha256": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+    },
+    "target_capability": {
+      "type": "string",
+      "const": "terminan.ohlcv.untouched_levels.v1"
+    },
+    "target_version": {
+      "type": "string",
+      "const": "353d16b2126609579018fafe3f76047b465bb289"
+    },
+    "experiment_id": {
+      "type": "string",
+      "const": "fixture.gateway.btc.levels"
+    },
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_id",
+        "revision",
+        "raw_sha256",
+        "kind"
+      ],
+      "properties": {
+        "manifest_id": {
+          "type": "string",
+          "const": "local-sha256:44639dea28a646d2a308655d7adc3f85e24a90bda22971632f88d1dd9760c938"
+        },
+        "revision": {
+          "type": "string",
+          "const": "CANONICAL_FIXTURE_2"
+        },
+        "raw_sha256": {
+          "type": "string",
+          "const": "44639dea28a646d2a308655d7adc3f85e24a90bda22971632f88d1dd9760c938"
+        },
+        "kind": {
+          "type": "string",
+          "const": "FIXED_SYNTHETIC_LOCAL_NOT_QUALIFIED_MARKET_DATA"
+        }
+      }
+    },
+    "parameters_digest": {
+      "type": "string",
+      "const": "4a8b7be2fa7cfbf72399e4abf864287feb8b10a28977aea2970846b8fb97e7e9"
+    },
+    "execution_mode": {
+      "type": "string",
+      "const": "DIRECT_DISPOSABLE_SYNTHETIC"
+    },
+    "resource_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_input_bytes",
+        "max_output_bytes",
+        "max_rows",
+        "max_executions"
+      ],
+      "properties": {
+        "max_input_bytes": {
+          "type": "integer",
+          "const": 16384
+        },
+        "max_output_bytes": {
+          "type": "integer",
+          "const": 16384
+        },
+        "max_rows": {
+          "type": "integer",
+          "const": 3
+        },
+        "max_executions": {
+          "type": "integer",
+          "const": 1
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calculated_at_ms",
+        "clock_assumptions",
+        "coverage_status",
+        "data_available_at_ms",
+        "dataset_id",
+        "decision_ms",
+        "evidence_class",
+        "execution_authority",
+        "h_b_eligible",
+        "levels",
+        "market_type",
+        "missing_capabilities",
+        "mode",
+        "quality_status",
+        "request_digest",
+        "rows",
+        "schema",
+        "snapshot_as_of_ms",
+        "source",
+        "source_authenticity",
+        "symbol",
+        "timeframe",
+        "trading_authorized",
+        "training_authorized",
+        "units",
+        "venue",
+        "window_end_ms",
+        "window_start_ms"
+      ],
+      "properties": {
+        "calculated_at_ms": {
+          "type": "integer",
+          "const": 360000
+        },
+        "clock_assumptions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "analysis_clock",
+            "availability_policy",
+            "bar_clock",
+            "historical_observation_times"
+          ],
+          "properties": {
+            "analysis_clock": {
+              "type": "string",
+              "const": "CALCULATED_NOW_NOT_HISTORICAL_OBSERVATION"
+            },
+            "availability_policy": {
+              "type": "string",
+              "const": "WHOLE_BACKFILL_AVAILABLE_AT_DECLARED_RETRIEVAL"
+            },
+            "bar_clock": {
+              "type": "string",
+              "const": "DECLARED_UTC_MINUTE_BOUNDARIES"
+            },
+            "historical_observation_times": {
+              "type": "string",
+              "const": "NOT_PROVIDED"
+            }
+          }
+        },
+        "coverage_status": {
+          "type": "string",
+          "const": "DECLARED_COMPLETE_UNVERIFIED"
+        },
+        "data_available_at_ms": {
+          "type": "integer",
+          "const": 240000
+        },
+        "dataset_id": {
+          "type": "string",
+          "const": "4cce8c09a40f4b5c231054e48971be6cb912742018f72ea0093009cc024b33d5"
+        },
+        "decision_ms": {
+          "type": "integer",
+          "const": 300000
+        },
+        "evidence_class": {
+          "type": "string",
+          "const": "SYNTHETIC"
+        },
+        "execution_authority": {
+          "type": "boolean",
+          "const": false
+        },
+        "h_b_eligible": {
+          "type": "boolean",
+          "const": false
+        },
+        "levels": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "prefixItems": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "price",
+                "source_start_ms",
+                "timeframe"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "low"
+                },
+                "price": {
+                  "type": "string",
+                  "const": "8"
+                },
+                "source_start_ms": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "timeframe": {
+                  "type": "string",
+                  "const": "1m"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "price",
+                "source_start_ms",
+                "timeframe"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "low"
+                },
+                "price": {
+                  "type": "string",
+                  "const": "9"
+                },
+                "source_start_ms": {
+                  "type": "integer",
+                  "const": 60000
+                },
+                "timeframe": {
+                  "type": "string",
+                  "const": "1m"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "price",
+                "source_start_ms",
+                "timeframe"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "high"
+                },
+                "price": {
+                  "type": "string",
+                  "const": "12"
+                },
+                "source_start_ms": {
+                  "type": "integer",
+                  "const": 120000
+                },
+                "timeframe": {
+                  "type": "string",
+                  "const": "1m"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "price",
+                "source_start_ms",
+                "timeframe"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "low"
+                },
+                "price": {
+                  "type": "string",
+                  "const": "10"
+                },
+                "source_start_ms": {
+                  "type": "integer",
+                  "const": 120000
+                },
+                "timeframe": {
+                  "type": "string",
+                  "const": "1m"
+                }
+              }
+            }
+          ],
+          "items": false
+        },
+        "market_type": {
+          "type": "string",
+          "const": "linear"
+        },
+        "missing_capabilities": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "prefixItems": [
+            {
+              "type": "string",
+              "const": "HISTORICAL_POINT_IN_TIME_AVAILABILITY"
+            },
+            {
+              "type": "string",
+              "const": "RAW_SOURCE_EVENT_BOUNDS"
+            },
+            {
+              "type": "string",
+              "const": "AGGRESSOR_VOLUME"
+            },
+            {
+              "type": "string",
+              "const": "PUBLIC_TRADE_AGGREGATES"
+            },
+            {
+              "type": "string",
+              "const": "OPEN_INTEREST"
+            },
+            {
+              "type": "string",
+              "const": "FUNDING"
+            },
+            {
+              "type": "string",
+              "const": "ORDERBOOK_L2"
+            },
+            {
+              "type": "string",
+              "const": "MARKET_DATA_V1_1_RECEIPTS"
+            },
+            {
+              "type": "string",
+              "const": "H_B_ELIGIBILITY"
+            }
+          ],
+          "items": false
+        },
+        "mode": {
+          "type": "string",
+          "const": "HISTORICAL_RESEARCH"
+        },
+        "quality_status": {
+          "type": "string",
+          "const": "UNKNOWN"
+        },
+        "request_digest": {
+          "type": "string",
+          "const": "23c61409707c0a0275a0308058942efbe44dce7f633145d609bc102553d5040e"
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "prefixItems": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "close",
+                "event_end_ms",
+                "event_start_ms",
+                "high",
+                "low",
+                "open",
+                "volume"
+              ],
+              "properties": {
+                "close": {
+                  "type": "integer",
+                  "const": 11
+                },
+                "event_end_ms": {
+                  "type": "integer",
+                  "const": 60000
+                },
+                "event_start_ms": {
+                  "type": "integer",
+                  "const": 0
+                },
+                "high": {
+                  "type": "integer",
+                  "const": 12
+                },
+                "low": {
+                  "type": "integer",
+                  "const": 8
+                },
+                "open": {
+                  "type": "integer",
+                  "const": 10
+                },
+                "volume": {
+                  "type": "integer",
+                  "const": 3
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "close",
+                "event_end_ms",
+                "event_start_ms",
+                "high",
+                "low",
+                "open",
+                "volume"
+              ],
+              "properties": {
+                "close": {
+                  "type": "integer",
+                  "const": 10
+                },
+                "event_end_ms": {
+                  "type": "integer",
+                  "const": 120000
+                },
+                "event_start_ms": {
+                  "type": "integer",
+                  "const": 60000
+                },
+                "high": {
+                  "type": "integer",
+                  "const": 11
+                },
+                "low": {
+                  "type": "integer",
+                  "const": 9
+                },
+                "open": {
+                  "type": "integer",
+                  "const": 10
+                },
+                "volume": {
+                  "type": "integer",
+                  "const": 2
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "close",
+                "event_end_ms",
+                "event_start_ms",
+                "high",
+                "low",
+                "open",
+                "volume"
+              ],
+              "properties": {
+                "close": {
+                  "type": "integer",
+                  "const": 12
+                },
+                "event_end_ms": {
+                  "type": "integer",
+                  "const": 180000
+                },
+                "event_start_ms": {
+                  "type": "integer",
+                  "const": 120000
+                },
+                "high": {
+                  "type": "integer",
+                  "const": 12
+                },
+                "low": {
+                  "type": "integer",
+                  "const": 10
+                },
+                "open": {
+                  "type": "integer",
+                  "const": 11
+                },
+                "volume": {
+                  "type": "integer",
+                  "const": 4
+                }
+              }
+            }
+          ],
+          "items": false
+        },
+        "schema": {
+          "type": "string",
+          "const": "terminan.ohlcv.research.result.v1"
+        },
+        "snapshot_as_of_ms": {
+          "type": "integer",
+          "const": 300000
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "identity",
+            "kind",
+            "raw_sha256",
+            "retrieval_id",
+            "retrieved_at_ms",
+            "source_revision"
+          ],
+          "properties": {
+            "identity": {
+              "type": "string",
+              "const": "SYNTHETIC_GATEWAY_FIXTURE"
+            },
+            "kind": {
+              "type": "string",
+              "const": "HISTORICAL_BACKFILL"
+            },
+            "raw_sha256": {
+              "type": "string",
+              "const": "82a2c7750f843c97edaf2b1400ef986ccd976ff4eb510a0ea10c5e2fd6ca6ecf"
+            },
+            "retrieval_id": {
+              "type": "string",
+              "const": "fixture_btc_3rows"
+            },
+            "retrieved_at_ms": {
+              "type": "integer",
+              "const": 240000
+            },
+            "source_revision": {
+              "type": "string",
+              "const": "6360a75a428c0cb1538085820381324bc4dd9d6f"
+            }
+          }
+        },
+        "source_authenticity": {
+          "type": "string",
+          "const": "NOT_EVALUATED"
+        },
+        "symbol": {
+          "type": "string",
+          "const": "BTCUSDT"
+        },
+        "timeframe": {
+          "type": "string",
+          "const": "1m"
+        },
+        "trading_authorized": {
+          "type": "boolean",
+          "const": false
+        },
+        "training_authorized": {
+          "type": "boolean",
+          "const": false
+        },
+        "units": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "price",
+            "volume"
+          ],
+          "properties": {
+            "price": {
+              "type": "string",
+              "const": "USDT/BTC"
+            },
+            "volume": {
+              "type": "string",
+              "const": "BTC"
+            }
+          }
+        },
+        "venue": {
+          "type": "string",
+          "const": "bybit"
+        },
+        "window_end_ms": {
+          "type": "integer",
+          "const": 180000
+        },
+        "window_start_ms": {
+          "type": "integer",
+          "const": 0
+        }
+      }
+    },
+    "research_descriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact",
+        "capability",
+        "dataset_sha256",
+        "execution_authority",
+        "financial",
+        "math_revision",
+        "request_sha256",
+        "schema",
+        "scope",
+        "terminan_revision",
+        "trading_authorized",
+        "training_authorized"
+      ],
+      "properties": {
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "byte_count",
+            "raw_sha256"
+          ],
+          "properties": {
+            "byte_count": {
+              "type": "string",
+              "const": "2081"
+            },
+            "raw_sha256": {
+              "type": "string",
+              "const": "c7cdb408d8536fa4db3dcb714ff7ae7d64c562a45189005b23242d7da3991174"
+            }
+          }
+        },
+        "capability": {
+          "type": "string",
+          "const": "terminan.ohlcv.untouched_levels.v1"
+        },
+        "dataset_sha256": {
+          "type": "string",
+          "const": "44639dea28a646d2a308655d7adc3f85e24a90bda22971632f88d1dd9760c938"
+        },
+        "execution_authority": {
+          "type": "boolean",
+          "const": false
+        },
+        "financial": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "net_pnl"
+          ],
+          "properties": {
+            "net_pnl": {
+              "type": "null"
+            }
+          }
+        },
+        "math_revision": {
+          "type": "string",
+          "const": "9e6acbd9e12a91189f57234828e31640983af553"
+        },
+        "request_sha256": {
+          "type": "string",
+          "const": "4a8b7be2fa7cfbf72399e4abf864287feb8b10a28977aea2970846b8fb97e7e9"
+        },
+        "schema": {
+          "type": "string",
+          "const": "unified.gateway.canonical-research-descriptor.v2"
+        },
+        "scope": {
+          "type": "string",
+          "const": "SYNTHETIC_LOCAL_UNATTESTED"
+        },
+        "terminan_revision": {
+          "type": "string",
+          "const": "353d16b2126609579018fafe3f76047b465bb289"
+        },
+        "trading_authorized": {
+          "type": "boolean",
+          "const": false
+        },
+        "training_authorized": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "result_artifact_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "sha256",
+        "byte_count"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "LOCAL_UNATTESTED_SHA256"
+        },
+        "sha256": {
+          "type": "string",
+          "const": "c7cdb408d8536fa4db3dcb714ff7ae7d64c562a45189005b23242d7da3991174"
+        },
+        "byte_count": {
+          "type": "string",
+          "const": "2081"
+        }
+      }
+    },
+    "publication_status": {
+      "type": "string",
+      "const": "LOCAL_UNATTESTED"
+    },
+    "execution_authority": {
+      "type": "boolean",
+      "const": false
+    },
+    "scheduler_admission": {
+      "type": "string",
+      "const": "BLOCKED"
+    },
+    "authenticated_gateway": {
+      "type": "boolean",
+      "const": false
+    },
+    "physical_acceptance": {
+      "type": "boolean",
+      "const": false
+    },
+    "error": {
+      "type": "null"
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "terminan_head",
+        "math_head",
+        "research_input_sha256"
+      ],
+      "properties": {
+        "terminan_head": {
+          "type": "string",
+          "const": "353d16b2126609579018fafe3f76047b465bb289"
+        },
+        "math_head": {
+          "type": "string",
+          "const": "9e6acbd9e12a91189f57234828e31640983af553"
+        },
+        "research_input_sha256": {
+          "type": "string",
+          "const": "4a8b7be2fa7cfbf72399e4abf864287feb8b10a28977aea2970846b8fb97e7e9"
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {
+          "type": "string",
+          "const": "LOCAL_TEST_SCOPE_NOT_AUTHENTICATED"
+        },
+        {
+          "type": "string",
+          "const": "NO_NATIVE_RESOURCE_CONTAINMENT"
+        },
+        {
+          "type": "string",
+          "const": "NO_REPLICA_OR_PUBLICATION_PROOF"
+        },
+        {
+          "type": "string",
+          "const": "NO_ORDERS_NO_LEDGER"
+        },
+        {
+          "type": "string",
+          "const": "WHOLE_WINDOW_NOT_HISTORICAL_SIGNAL"
+        }
+      ],
+      "items": false
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:unified:gateway:canonical-target:success-result:v2"
+}

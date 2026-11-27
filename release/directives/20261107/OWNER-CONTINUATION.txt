@@ -1,0 +1,409 @@
+# CODEX — MASTER MISSION CONTINUATION
+## REVIEW4 → EXECUTABLE RUNTIME → WINDOWS ACCEPTANCE → PHYSICAL COMMISSIONING
+
+### Главная директива
+
+MASTER MISSION остаётся IN_PROGRESS / NO-GO.
+
+Не останавливай работу на публикации документации, design ACK, JSON Schema или модельных тестах.
+
+Цель — получить работающую распределённую систему Unified на шести Windows-компьютерах с прямой LAN-связью, единым authority, управлением через Terminan с любого узла, согласованным хранением market data и безопасным перераспределением задач.
+
+**Начинай реализацию и интеграцию всех доступных компонентов немедленно.** Физические операции выполняй только после выполнения соответствующих обязательных gates.
+
+### 1. Закрепить Review4
+
+Исходный пакет:
+
+`YehorBabenko88/unified-system`
+
+Commit:
+`360c5cdc9dae88416d69f8765f3dff5ab8828945`
+
+Path:
+`release/contracts/control-mux-closed-review4/`
+
+Обязательно:
+
+1. Сверить 27 записей manifest с фактическими файлами, их raw SHA256 и размерами.
+2. Проверить актуальность scoped ACK Agent 1 и Agent 6.
+3. Сохранить неизменными утверждённые Review4 bytes.
+4. Не переносить автоматически ACK на изменённую схему.
+5. Не использовать экспериментальный PR31 в качестве финального ABI без отдельного решения.
+6. Включить Review4 как immutable dependency будущего release manifest.
+
+Разделить четыре статуса:
+
+- SCHEMA_APPROVED
+- PRODUCT_IMPLEMENTED
+- ENDPOINT_INTEGRATED
+- WINDOWS_RUNTIME_ACCEPTED
+
+Первый статус не заменяет остальные.
+
+### 2. Реализовать реальный Control Mux runtime
+
+**Owner: Agent 2 + Integration Owner.**
+
+Реализовать реальные обработчики согласованных операций:
+
+- OPEN_CONNECTION
+- OPEN_SUBSCRIPTION
+- ACK_SNAPSHOT
+- CLOSE_SUBSCRIPTION
+- CLOSE_CONNECTION
+- GET command reconciliation
+
+Обязательные механизмы:
+
+- Проверка identity и RBAC на сервере.
+- CSRF/session admission.
+- Строгая проверка методов, маршрутов и заголовков.
+- Каноническое кодирование C3.
+- Пределы размера и глубины сообщений.
+- Durable command intents.
+- Глобальная уникальность request UUID.
+- Idempotency.
+- Immutable definitive receipts.
+- Согласованная revision.
+- Snapshot и event streams.
+- Cursor/resume.
+- RESYNC_REQUIRED.
+- UNKNOWN reconciliation.
+- No-quorum handling.
+- Fencing и authority verification.
+
+Использовать существующий единый Consul authority, а не создавать второй leader service.
+
+Все операции, требующие согласования, должны использовать реальные atomic transactions и подтверждённый committed state.
+
+Никаких mock authority, локальных boolean PASS или SQLite PLAN_ONLY как замены распределённого согласования.
+
+### 3. Реализовать Control Mux на настоящем LAN Transport
+
+**Owner: Agent 1 + Agent 2.**
+
+Использовать утверждённый Approach A:
+
+- Application mTLS.
+- Проверенная идентичность шести узлов.
+- Pinned peer registry.
+- Отдельные bounded control/data connections.
+- Backpressure.
+- Frame fragmentation/reassembly в рамках согласованных лимитов.
+- Bounded retry.
+- Network Budget Manager.
+- Secure key admission.
+
+Особенно проверить несовпадение размеров:
+
+Control Mux допускает сообщения больше 64 KiB, тогда как один LAN data frame ограничен 64 KiB.
+
+Нужен корректный ограниченный механизм передачи, либо явно согласованный способ перевозки сообщений через несколько frames.
+
+Не увеличивать frame limits неявно.
+
+Проверить end-to-end integrity при фрагментации, неполной передаче и reconnect.
+
+### 4. Закрыть доменные контракты
+
+**Owners: Agents 3, 4, 5, 7.**
+
+Control Mux не должен принимать произвольные доменные данные только потому, что они соответствуют общей JSON Schema.
+
+Зафиксировать exact schema/version/hash для:
+
+- Market ingestion.
+- Instrument identity.
+- Dataset manifests.
+- Storage publication.
+- Historical checkpoints.
+- Assignment v1.
+- Capacity observations.
+- Research jobs.
+- Paper execution.
+- Integrity summaries.
+
+Для числовых значений определить exact units, scale и canonical string representation.
+
+Не конвертировать silently старые числовые форматы.
+
+Неизвестные или несовместимые домены должны возвращать UNAVAILABLE.
+
+### 5. Реализовать реальный Terminan
+
+**Owner: Agent 6.**
+
+Terminan должен запускаться на любом из шести Windows-компьютеров.
+
+Подключить его к реальному Control Mux backend.
+
+Проверить:
+
+1. Operator login.
+2. RBAC.
+3. Согласованный cluster snapshot.
+4. Event streaming.
+5. Cursor resume.
+6. Leader failover reconnect.
+7. Multiple Terminan clients.
+8. Command idempotency.
+9. Job continuity после закрытия UI.
+10. Integrity indicators.
+11. Node/resource dashboards.
+12. Historical progress.
+13. Live-data status.
+14. Research/paper results.
+15. Audit logs.
+
+Никаких фиктивных зелёных показателей или production mock endpoints.
+
+На каждом экране отображать актуальность данных и состояние authority.
+
+### 6. Довести Storage и Scheduler до runtime
+
+**Owners: Agents 4 и 5.**
+
+Storage:
+
+- Atomic publication.
+- Immutable segments.
+- Checkpoint consistency.
+- Replica verification.
+- Backup/restore.
+- Stale writer rejection.
+- Per-instrument integrity.
+- Retention and disk budgets.
+
+Scheduler:
+
+- Assignment v1.
+- Worker placement.
+- Lease/fencing.
+- Resource reservations.
+- Graceful draining.
+- Checkpoint/reassignment.
+- Working schedules.
+- Recovery after restart.
+
+Проверить гонку publication versus assignment supersession.
+
+Не допускать двойной фиксации после переключения worker.
+
+### 7. Закрыть Bybit Provider Budget
+
+**Owners: Agents 1 и 3, authority Agent 2.**
+
+Необходимо реализовать:
+
+- NAT egress identity.
+- Общие IP budgets.
+- Per-operation request costs.
+- Persistent usage/cooldown.
+- Atomic quota reservations.
+- Irreversible consume before potential send.
+- Retry accounting.
+- Paused-sender containment.
+- Provider-time policy.
+- Unknown-attempt reconciliation.
+- Fail-closed recovery.
+
+Существующий запрос `/v5/market/time` не должен обходить общую quota policy.
+
+Пока provider policy и native enforcement не доказаны, выполнять только изолированные тесты без реальных запросов Bybit.
+
+После доказанной provider admission запросить отдельный допуск для контролируемого первого public-data smoke.
+
+### 8. Windows native/security qualification
+
+Обязательно проверить:
+
+- Windows 11 Pro.
+- Python и Node runtime pins.
+- Protected credentials.
+- Certificate validation.
+- Key storage.
+- Named pipe ACL.
+- Process identity.
+- Native Consul.
+- Windows Services.
+- Source/package integrity.
+- Math native security gates.
+- Terminan authentication.
+- Crash/restart recovery.
+
+Запрещено ослаблять существующие security gates ради зелёного CI.
+
+### 9. Подготовить единый release candidate
+
+Не собирать инсталлятор из плавающих branch HEAD.
+
+Создать immutable manifest с:
+
+- Exact HEAD всех шести репозиториев.
+- Exact tree SHA.
+- Artifact SHA256.
+- Contract hashes.
+- Runtime/dependency versions.
+- Migration versions.
+- Node roles.
+- Ports.
+- Service identities.
+- Health checks.
+- Rollback procedure.
+
+Завершить интеграцию Draft PR в отдельные release candidate branches.
+
+Не выполнять merge в main без отдельного разрешения.
+
+### 10. Подготовить физическое развёртывание
+
+Целевые узлы:
+
+| Node | LAN IP | Role |
+|---|---|---|
+| LS5 | 192.168.2.173 | Preferred coordinator |
+| PC4 | 192.168.2.115 | Coordinator / Worker |
+| PC3 | 192.168.2.104 | Coordinator / Worker |
+| PC2 | 192.168.2.12 | Worker |
+| PC1 | 192.168.2.11 | Worker |
+| LS7 | 192.168.2.141 | Worker |
+
+IP необходимо сверять с фактической identity перед применением.
+
+Порядок:
+
+**Stage 0 — read-only inventory**
+
+Разрешено немедленно:
+
+- Проверка LAN SSH.
+- Проверка текущих IP и identities.
+- Инвентаризация CPU, RAM, дисков.
+- Состояние Windows Services.
+- Проверка PostgreSQL.
+- Проверка доступных портов.
+- Проверка ESET/Firewall rules без изменения.
+- Проверка Tailscale как резервного канала.
+- Подготовка node-specific installation plans.
+- Подготовка backup/rollback.
+
+**Stage 1 — LS5 installation**
+
+Разрешать выполнение только после PASS для source/package, security, Windows native, installer, rollback и необходимых single-node контрактов.
+
+Установить только принадлежащие Unified компоненты, без замены чужих служб и удаления данных.
+
+Проверить локальный Terminan и observability.
+
+**Stage 2 — PC4/PC3 coordinators**
+
+Только после подтверждённого LS5 PASS и Windows HA readiness.
+
+Сформировать кластер 2/3, затем 3/3.
+
+Проверить действительный quorum и Consul state.
+
+**Stage 3 — PC2/PC1/LS7 workers**
+
+Только после PASS control plane, storage publication, scheduler fencing и node enrollment.
+
+Добавлять узлы по одному.
+
+Проверять ресурсы и целостность после каждого добавления.
+
+**Stage 4 — controlled market-data admission**
+
+Только после PASS Bybit Egress Budget и provider policy.
+
+История 10 инструментов → live-data → scientific processing → paper simulation.
+
+### 11. Политика физических испытаний
+
+Неразрушительные read-only проверки разрешены.
+
+Физические установки выполняются только после выполнения соответствующего gate и проверки rollback.
+
+Не разрешены без отдельного специального допуска:
+
+- Принудительные выключения координаторов.
+- Network partition.
+- Disk corruption/full.
+- Потеря production replicas.
+- Удаление Tailscale.
+- Изменения Firewall/ESET/маршрутов.
+- Массовые стресс-тесты.
+- Удаление старых баз.
+- Full uninstall.
+
+### 12. Независимая приёмка
+
+**Owner: Agent 8.**
+
+Проверить каждую фазу отдельно:
+
+- Model PASS.
+- Code PASS.
+- Endpoint PASS.
+- Windows PASS.
+- Physical PASS.
+
+Нельзя переносить статус между уровнями.
+
+Обязательные результаты:
+
+- Реальный LAN transport.
+- Реальный Consul authority.
+- Реальный Control API.
+- Авторизация Terminan.
+- Синхронизация нескольких UI.
+- Atomic Storage publication.
+- Scheduler failover.
+- Bybit ingestion.
+- 10-instrument research.
+- Paper execution.
+- Backup/restore.
+- Update/rollback.
+- Tailscale-independent operation.
+
+### 13. Обязательный итоговый отчёт
+
+Предоставлять после каждого этапа:
+
+PHASE:
+RELEASE_MANIFEST:
+EXACT_HEADS:
+CONTRACT_HASHES:
+IMPLEMENTED:
+TESTED:
+WINDOWS_CI:
+RUNTIME_ENDPOINTS:
+PHYSICAL_NODES:
+EVIDENCE:
+OPEN_P0:
+OPEN_P1:
+OPEN_P2:
+BLOCKERS:
+ROLLBACK_READY:
+GO_NO_GO:
+NEXT_ACTION:
+
+### 14. Правило продолжения
+
+Не завершать задачу после очередного согласования схем.
+
+Если контракт утверждён — реализовать соответствующий компонент.
+
+Если endpoint отсутствует — создать его в пределах утверждённого владения.
+
+Если нет исполняемых тестов — написать их.
+
+Если тест падает — определить первопричину и исправить её без ослабления требований.
+
+Если интеграция блокирована — продолжать независимые работы.
+
+Если физический gate не пройден — не выполнять опасные изменения, но завершать подготовку и исправления.
+
+**MASTER MISSION считается завершённой только после фактической сквозной приёмки.**
+
+Не объявлять DONE по результатам модельных тестов или отчётов агентов.

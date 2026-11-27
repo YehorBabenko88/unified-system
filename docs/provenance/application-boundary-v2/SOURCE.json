@@ -1,0 +1,41 @@
+{
+  "schema": "unified.application-boundary.source.v1",
+  "base": "e4cdfd5fa88857936a5b896b9f7742e2913d048d",
+  "contract": "unified.installation-transaction.v2",
+  "field": "application_boundary",
+  "value": "EXISTING_EPHEMERAL_GUARD_UNCHANGED",
+  "oldSchemaAccepted": false,
+  "oldKeyAccepted": false,
+  "scope": "PURE_BREAKING_DTO_NAMING_NO_EFFECTFUL_LIFECYCLE_EXECUTION",
+  "changes": {
+    "unified_system/installation_transaction.py": {
+      "before": "5ca8dfeccd7a5f0a4abef7340c8fa0aef529ca47f02b816ec6e6a58c2bc2a2f6",
+      "after": "da3fda46c137b31e255f68bd61f53b6846bbf241c1db417a4756945d035ae536"
+    },
+    "unified_system/runtime.py": {
+      "before": "cc7acf966324ad07f93c35830bc5e6beab6ebe7f421f50f2fc96d912fbb388a8",
+      "after": "0e140d6c80b72212e4181263e15f9525c47c26248fe1410c5ed6030a22df5155"
+    },
+    "unified_system/control_mux/consul_store.py": {
+      "before": "53b050aebd086a9a28d633c3227f77321f0b1c902ce27cefdddc8f6b1f6176d5",
+      "after": "b76c9df2f8ef63fe8b9d3a2d5c854a49235c7b880ed7ab5ad1aeb8e08d9203f7"
+    },
+    "tests/test_supervisor_deployment.py": {
+      "before": "ac3c872845a245363fef3ceecfd8c3cfae2697db22345de1dd71d0e87053ec8a",
+      "after": "968dbc32346b4f0451ed9a92a8306e7ed5ecfb61f4bbbcc5d60d7d25fff4cbfb"
+    },
+    "tests/test_supervisor_local_integration.py": {
+      "before": "c28d9deda0008f3b0247d3423682b6497e04daec5f4d3fa44c20357263b5a760",
+      "after": "8ca9d5da7151dec540ad2a0d79bdd7dc9e2f7108bf436860993aec9c3e41d282"
+    }
+  },
+  "newTest": "tests/test_application_boundary_contract.py",
+  "fullInstallerTests": "HELD_LOCAL",
+  "nativeHold": "UNCHANGED",
+  "stateRetention": "UNCHANGED",
+  "source802": "UNCHANGED",
+  "role32": "UNCHANGED",
+  "authority": false,
+  "publication": false,
+  "release": "NO_GO"
+}

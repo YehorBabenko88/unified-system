@@ -1,0 +1,361 @@
+{
+  "schema": "unified.physical-acceptance-plan.v1",
+  "status": "BLOCKED_NO_GO",
+  "execution_authorized": false,
+  "physical_fault_injection": "NOT_AUTHORIZED",
+  "tailscale_removal": "BLOCKED",
+  "timezone": "Europe/Berlin",
+  "isolation_first": true,
+  "one_scenario_at_a_time": true,
+  "global_abort_conditions": [
+    "Any office DNS/gateway/HTTPS degradation",
+    "Unexpected ESET/firewall/network/service change",
+    "Lost identity/quorum/fence/source admission",
+    "Unknown process/write outcome",
+    "Memory/disk/network budget violation",
+    "Any real order/private trading credential access"
+  ],
+  "global_recovery_rule": "Stop only the current Unified operation; preserve diagnostics; no auto reset/restart of DNS/firewall/Tailscale/Ethernet/WLAN/router/Reolink. Existing services/data remain intact.",
+  "scenarios": [
+    {
+      "id": "P01",
+      "scenario": "Read-only office baseline and recovery access",
+      "status": "NOT_RUN",
+      "risk": "LOW",
+      "estimated_duration": "5-10 min",
+      "prerequisites": "No configuration writes; pinned identities/DNS/HTTPS/health",
+      "recovery": "Stop test; preserve diagnostics; operator checks normal office service",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P02",
+      "scenario": "Admitted isolated LAB capsule on one selected node",
+      "status": "NOT_RUN",
+      "risk": "MEDIUM",
+      "estimated_duration": "10-20 min",
+      "prerequisites": "Separate nonadmin runtime and exact source/dependency/file pins; owned paths only",
+      "recovery": "Stop only new owned components; retain original code/data/services",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P03",
+      "scenario": "Six-node authenticated endpoints and current registry",
+      "status": "NOT_RUN",
+      "risk": "MEDIUM",
+      "estimated_duration": "10-15 min",
+      "prerequisites": "No new ports/firewall changes without separate plan; all peer identities match",
+      "recovery": "Stop deployment operation; do not reset interfaces, Tailscale or DNS",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P04",
+      "scenario": "Ten-instrument bounded historical pilot",
+      "status": "NOT_RUN",
+      "risk": "MEDIUM",
+      "estimated_duration": "15-30 min pilot; full history ETA from measured bytes/source coverage",
+      "prerequisites": "One bounded bulk stream, quotas and disk reservations; no destructive overwrite",
+      "recovery": "Pause ingestion; preserve immutable bytes and last verified checkpoint",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P05",
+      "scenario": "600-second live public data and paper execution",
+      "status": "NOT_RUN",
+      "risk": "MEDIUM",
+      "estimated_duration": "10 min capture + 5 min verification",
+      "prerequisites": "Ten instrument identities, actual data, fees/slippage/funding; zero real order calls",
+      "recovery": "Stop only live/paper run; save raw data/errors/account ledger",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P06",
+      "scenario": "Terminan relocation and concurrent authorized windows",
+      "status": "NOT_RUN",
+      "risk": "MEDIUM",
+      "estimated_duration": "10-20 min",
+      "prerequisites": "Real native auth qualified; same backend jobs survive all UI closures",
+      "recovery": "Close clients; backend jobs continue or explicitly pause; no fabricated progress",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P07",
+      "scenario": "Owned worker stop/reassign/rejoin",
+      "status": "NOT_RUN",
+      "risk": "HIGH",
+      "estimated_duration": "5-10 min",
+      "prerequisites": "Separate phase approval; target-side fence and verified checkpoint required",
+      "recovery": "Restart exact owned worker; reject old incarnation; reconcile UNKNOWN first",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P08",
+      "scenario": "LS5 owned coordinator process failure",
+      "status": "NOT_RUN",
+      "risk": "HIGH",
+      "estimated_duration": "5-10 min",
+      "prerequisites": "Three persistent voters and independent containment qualified first",
+      "recovery": "Restore exact owned process; confirm majority; no forced failback or DB promotion",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P09",
+      "scenario": "PC4 coordinator process failure after full recovery",
+      "status": "NOT_RUN",
+      "risk": "HIGH",
+      "estimated_duration": "5-10 min",
+      "prerequisites": "Never overlap prior physical scenario; majority before and after",
+      "recovery": "Restore owned process and verify persistent identity/receipts",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P10",
+      "scenario": "PC3 coordinator process failure after full recovery",
+      "status": "NOT_RUN",
+      "risk": "HIGH",
+      "estimated_duration": "5-10 min",
+      "prerequisites": "Same separate approval and quorum/containment prerequisites",
+      "recovery": "Restore owned process; verify no duplicate committed effects",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P11",
+      "scenario": "Loss of two owned voters / no quorum",
+      "status": "NOT_RUN",
+      "risk": "HIGH",
+      "estimated_duration": "5-10 min",
+      "prerequisites": "Explicit approval for exact processes; no network/host shutdown",
+      "recovery": "Restore one voter first, prove quorum, then second; mutations stay closed meanwhile",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P12",
+      "scenario": "Replica corruption on copied disposable fixture only",
+      "status": "NOT_RUN",
+      "risk": "HIGH",
+      "estimated_duration": "10-15 min",
+      "prerequisites": "Never alter existing real dataset; preserve verified independent survivor",
+      "recovery": "Mark corrupt copy invalid; repair from verified source; no silent checkpoint advance",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P13",
+      "scenario": "Disk pressure on separately approved disposable test volume",
+      "status": "NOT_RUN",
+      "risk": "HIGH",
+      "estimated_duration": "10-20 min",
+      "prerequisites": "Never fill C: or shared office volumes; strict test allocation limit",
+      "recovery": "Stop writer, retain uncertainty, release only proven owned test resources",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P14",
+      "scenario": "Actual backup and isolated restore",
+      "status": "NOT_RUN",
+      "risk": "MEDIUM",
+      "estimated_duration": "20-40 min for bounded fixture",
+      "prerequisites": "New isolated restore root/generation, full object/checkpoint closure and hashes",
+      "recovery": "Keep live state untouched; failed restore never overwrites or promotes live data",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P15",
+      "scenario": "Schedule transition including DST / coordinator duty protection",
+      "status": "NOT_RUN",
+      "risk": "MEDIUM",
+      "estimated_duration": "10-20 min plus offline DST vectors",
+      "prerequisites": "PC1 15:00-06:00 Europe/Berlin; do not change Windows clock or power state",
+      "recovery": "Restore prior approved schedule revision; keep HA/control duties active",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P16",
+      "scenario": "Bounded network-degradation simulation",
+      "status": "NOT_RUN",
+      "risk": "MEDIUM",
+      "estimated_duration": "10-20 min",
+      "prerequisites": "Inject only in Unified owned simulator/transport; no office NIC/router changes",
+      "recovery": "Remove owned injection; gradual budget recovery; no networking reset",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P17",
+      "scenario": "Owned update and rollback",
+      "status": "NOT_RUN",
+      "risk": "HIGH",
+      "estimated_duration": "10-20 min per selected node",
+      "prerequisites": "Exact admitted old/new artifacts, preserved data, no destructive migration",
+      "recovery": "Stop only current deployment; re-admit old code with current fences; preserve new data",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P18",
+      "scenario": "Windows restart per separately selected host",
+      "status": "NOT_RUN",
+      "risk": "HIGH",
+      "estimated_duration": "10-25 min per host",
+      "prerequisites": "Owner onsite/recovery access; third-party work/cameras protected; no automatic reboot",
+      "recovery": "Owner restores host; verify boot identity, current grants and data before rejoin",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P19",
+      "scenario": "Controlled Tailscale-independence test",
+      "status": "NOT_RUN",
+      "risk": "HIGH",
+      "estimated_duration": "10-20 min pilot then approved node sequence",
+      "prerequisites": "Separate NETWORK CHANGE approval after all LAN/recovery prerequisites; do not auto-disable",
+      "recovery": "Operator restores pre-approved access if needed; no router reset or ad hoc policies",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    },
+    {
+      "id": "P20",
+      "scenario": "Safe uninstall preparation only",
+      "status": "NOT_RUN",
+      "risk": "LOW",
+      "estimated_duration": "5-10 min",
+      "prerequisites": "Read-only dry-run identifies exact owned files/services/data and dependencies",
+      "recovery": "No uninstall/purge execution; full erase needs separate fresh owner confirmation",
+      "requires_separate_owner_phase_authorization": true,
+      "machine_evidence": [
+        "exact package/source/policy/contract hashes",
+        "phase_id,node,UTC/monotonic duration",
+        "expected scenario assertions and actual counters",
+        "pre/post relevant state and immutable evidence SHA256",
+        "explicit PASS/FAIL/UNKNOWN, no missing/skipped PASS"
+      ]
+    }
+  ]
+}

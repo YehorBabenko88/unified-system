@@ -1,0 +1,764 @@
+python-preflight (3.12)	UNKNOWN STEP	﻿2026-11-05T20:50:53.4409508Z Current runner version: '2.338.2'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4445649Z ##[group]Runner Image Provisioner
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4447061Z Hosted Compute Agent
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4448012Z Version: 20261028.624
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4448936Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4450344Z Build Date: 2026-10-28T21:51:42Z
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4451443Z Worker ID: {b5d000f5-6aa5-4eaa-ba5b-c79777905bc2}
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4452603Z Region: eastus3
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4453483Z Cloud: Azure
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4454273Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4456601Z ##[group]Operating System
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4457582Z Ubuntu
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4458429Z 26.04.1
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4459506Z LTS
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4460316Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4461253Z ##[group]Runner Image
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4462173Z Image: ubuntu-26.04
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4463085Z Version: 20261101.186.1
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4465199Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261101.186/images/ubuntu/Ubuntu2604-Readme.md
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4467691Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261101.186
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4469540Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4471363Z ##[group]GITHUB_TOKEN Permissions
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4474640Z Contents: read
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4475632Z Metadata: read
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4476514Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4479781Z Secret source: Actions
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4481376Z Cache mode: write
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.4482859Z Prepare workflow directory
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.5298523Z Prepare all required actions
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.5351844Z Getting action download info
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.7492157Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:53.8625061Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.0167412Z Complete job name: python-preflight (3.12)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.0805576Z ##[group]Checking docker version
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.0818561Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.1691588Z '1.54'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.1704544Z Docker daemon API version: '1.54'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.1705284Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.1888509Z '1.54'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.1900123Z Docker client API version: '1.54'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.1905988Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.1908481Z ##[group]Clean up resources from previous jobs
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.1914930Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=be300d"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.2082169Z ##[command]/usr/bin/docker network prune --force --filter "label=be300d"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.2228873Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.2229843Z ##[group]Create local container network
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.2240177Z ##[command]/usr/bin/docker network create --label be300d github_network_a805ff17e3c949dc922dd9f5bee106dc
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.2640272Z 2eb7335002627cc38738fbff5fa170a21151b4c15a1243bc5258ae8ee889b375
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.2657499Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.2683756Z ##[group]Starting postgres service container
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.2705825Z ##[command]/usr/bin/docker pull postgres:16
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.6892655Z 16: Pulling from library/postgres
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8325487Z be193f0583fb: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8327199Z a28de24f57c0: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8328595Z 9732cf873eb7: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8330208Z 1244f763be36: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8331366Z c924699dde26: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8332671Z 37fb86c2a767: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8333655Z d9f83a042741: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8334833Z e9dd37612d7b: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8336002Z 6d141360b363: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8337060Z 379ccbe62e26: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8338103Z 369949eb0229: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8339956Z bcc75ab4e010: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8341401Z 7e0f86eb8508: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.8343004Z da434b32d480: Pulling fs layer
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9883400Z be193f0583fb: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9890013Z 1244f763be36: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9893241Z 9732cf873eb7: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9901896Z c924699dde26: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9919947Z e9dd37612d7b: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9921153Z 369949eb0229: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9926585Z 7e0f86eb8508: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9931009Z a28de24f57c0: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9940239Z d9f83a042741: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9945525Z 6d141360b363: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9951222Z bcc75ab4e010: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:54.9971745Z da434b32d480: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:55.0885958Z 37fb86c2a767: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:55.0897266Z aad9f8e2454d: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:55.1871348Z 3e9a8bde18c8: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:55.5863474Z 379ccbe62e26: Download complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:55.8003705Z 37fb86c2a767: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:55.8922743Z e9dd37612d7b: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:55.8939598Z 369949eb0229: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:55.9934640Z 7e0f86eb8508: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:56.0926566Z a28de24f57c0: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:56.0947390Z 6d141360b363: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:56.0960062Z bcc75ab4e010: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:56.0991305Z da434b32d480: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:57.6870075Z be193f0583fb: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:57.6881712Z 1244f763be36: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:57.6893736Z 9732cf873eb7: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:57.6938186Z c924699dde26: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:57.6953730Z d9f83a042741: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:57.6964430Z 379ccbe62e26: Pull complete
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:57.6992876Z Digest: sha256:933463a6c8eba2b9f5cd414138738cd8d5519cd2c471214c222652f547a66a32
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:57.6993705Z Status: Downloaded newer image for postgres:16
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:57.7000072Z docker.io/library/postgres:16
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:57.7084801Z ##[command]/usr/bin/docker create --name 79202114b42a4922b6df1d4eb90ef8b6_postgres16_43ae94 --label be300d --network github_network_a805ff17e3c949dc922dd9f5bee106dc --network-alias postgres -p 5432:5432 --health-cmd "pg_isready -U grid -d grid" --health-interval 5s --health-timeout 5s --health-retries 10 -e "POSTGRES_USER=grid" -e "POSTGRES_PASSWORD=grid" -e "POSTGRES_DB=grid" -e GITHUB_ACTIONS=true -e CI=true postgres:16
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.6820935Z 933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.6843387Z ##[command]/usr/bin/docker start 933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.8775317Z 933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.8791673Z ##[command]/usr/bin/docker ps --all --filter id=933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.9049985Z 933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2 Up Less than a second (health: starting)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.9069727Z ##[command]/usr/bin/docker port 933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.9214838Z 5432/tcp -> 0.0.0.0:5432
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.9215930Z 5432/tcp -> [::]:5432
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.9265592Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.9274591Z ##[group]Waiting for all services to be ready
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.9288085Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.9450393Z starting
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:50:58.9472657Z postgres service is starting, waiting 2 seconds before checking again.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:00.9476983Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:00.9623699Z starting
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:00.9634898Z postgres service is starting, waiting 4 seconds before checking again.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.3578097Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.3727939Z healthy
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.3743126Z postgres service is healthy.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.3743895Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4017598Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4018202Z with:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4018462Z   repository: YehorBabenko88/bybit-cluster-grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4021519Z   token: ***
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4021737Z   ssh-strict: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4021946Z   ssh-user: git
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4022153Z   persist-credentials: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4022406Z   clean: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4022616Z   sparse-checkout-cone-mode: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4022858Z   fetch-depth: 1
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4023049Z   fetch-tags: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4023246Z   show-progress: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4023448Z   lfs: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4023632Z   submodules: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4023833Z   set-safe-directory: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4024071Z   allow-unsafe-pr-checkout: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4024764Z env:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4024960Z   GRID_SHARED_TOKEN: test-token
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4025441Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4025903Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.4026351Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6441110Z Syncing repository: YehorBabenko88/bybit-cluster-grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6443338Z ##[group]Getting Git version info
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6444061Z Working directory is '/home/runner/work/bybit-cluster-grid/bybit-cluster-grid'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6445201Z [command]/usr/bin/git version
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6445551Z git version 2.56.0
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6448271Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6463346Z Temporarily overriding HOME='/home/runner/work/_temp/9b752c3f-db09-4b17-96ca-4665300a67b5' before making global git config changes
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6464754Z Adding repository directory to the temporary git global config as a safe directory
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6469898Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bybit-cluster-grid/bybit-cluster-grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6531632Z Deleting the contents of '/home/runner/work/bybit-cluster-grid/bybit-cluster-grid'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6535503Z ##[group]Initializing the repository
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6540965Z [command]/usr/bin/git init /home/runner/work/bybit-cluster-grid/bybit-cluster-grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6635613Z hint: Using 'master' as the name for the initial branch. This default branch name
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6639657Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6640478Z hint: to use in all of your new repositories, which will suppress this warning,
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6640911Z hint: call:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6641154Z hint:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6641492Z hint: 	git config --global init.defaultBranch <name>
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6642000Z hint:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6642375Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6643005Z hint: 'development'. The just-created branch can be renamed via this command:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6643529Z hint:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6643746Z hint: 	git branch -m <name>
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6644149Z hint:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6644595Z hint: Disable this message with "git config set advice.defaultBranchName false"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6648303Z Initialized empty Git repository in /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/.git/
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6660996Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/bybit-cluster-grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6720122Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6720549Z ##[group]Disabling automatic garbage collection
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6726229Z [command]/usr/bin/git config --local gc.auto 0
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6759751Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6760406Z ##[group]Setting up auth
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6766962Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.6797476Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.7224410Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.7261484Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.7479872Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.7513206Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.7732293Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.7767552Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.7768016Z ##[group]Fetching the repository
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:05.7777099Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +cd878ae27a0c096b5f14b7da4d6c43d10a7cbcac:refs/remotes/pull/261/merge
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2046980Z From https://github.com/YehorBabenko88/bybit-cluster-grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2047863Z  * [new ref]         cd878ae27a0c096b5f14b7da4d6c43d10a7cbcac -> pull/261/merge
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2053075Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2053704Z ##[group]Determining the checkout info
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2057211Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2066004Z [command]/usr/bin/git sparse-checkout disable
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2115532Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2142680Z ##[group]Checking out the ref
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2147728Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/261/merge
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2419634Z Note: switching to 'refs/remotes/pull/261/merge'.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2420047Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2420421Z You are in 'detached HEAD' state. You can look around, make experimental
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2420945Z changes and commit them, and you can discard any commits you make in this
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2421414Z state without impacting any branches by switching back to a branch.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2421677Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2421869Z If you want to create a new branch to retain commits you create, you may
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2422300Z do so (now or later) by using -c with the switch command. Example:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2422552Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2422667Z   git switch -c <new-branch-name>
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2422834Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2422953Z Or undo this operation with:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2423097Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2423206Z   git switch -
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2423326Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2423553Z Turn off this advice by setting config variable advice.detachedHead to false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2423831Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2424180Z HEAD is now at cd878ae Merge 71084a336520187d6e260531a2f5d15555ba0e0c into 55e74863c3c28bf4cbcb4ded4d3359f98bf93f71
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2435044Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2482840Z [command]/usr/bin/git log -1 --format=%H
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2507276Z cd878ae27a0c096b5f14b7da4d6c43d10a7cbcac
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2770729Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2771091Z with:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2771319Z   repository: YehorBabenko88/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2771715Z   ref: e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2772151Z   path: upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2772398Z   persist-credentials: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2774863Z   token: ***
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2775076Z   ssh-strict: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2775271Z   ssh-user: git
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2775468Z   clean: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2775766Z   sparse-checkout-cone-mode: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2776059Z   fetch-depth: 1
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2776256Z   fetch-tags: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2776459Z   show-progress: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2776665Z   lfs: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2776850Z   submodules: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2777058Z   set-safe-directory: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2777300Z   allow-unsafe-pr-checkout: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2777590Z env:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2777823Z   GRID_SHARED_TOKEN: test-token
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2778219Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2778674Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.2779281Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3605740Z Syncing repository: YehorBabenko88/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3609957Z ##[group]Getting Git version info
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3611091Z Working directory is '/home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3650883Z [command]/usr/bin/git version
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3697875Z git version 2.56.0
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3722731Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3738868Z Temporarily overriding HOME='/home/runner/work/_temp/fa794e4d-d6f5-48e0-b1a8-a21ac2387843' before making global git config changes
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3740163Z Adding repository directory to the temporary git global config as a safe directory
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3745340Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3779285Z ##[group]Initializing the repository
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3785004Z [command]/usr/bin/git init /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3821504Z hint: Using 'master' as the name for the initial branch. This default branch name
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3822421Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3823456Z hint: to use in all of your new repositories, which will suppress this warning,
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3824258Z hint: call:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3824717Z hint:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3825309Z hint: 	git config --global init.defaultBranch <name>
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3825953Z hint:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3826581Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3827582Z hint: 'development'. The just-created branch can be renamed via this command:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3828409Z hint:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3828921Z hint: 	git branch -m <name>
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3829633Z hint:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3830383Z hint: Disable this message with "git config set advice.defaultBranchName false"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3831709Z Initialized empty Git repository in /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system/.git/
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3834210Z [command]/usr/bin/git remote add origin https://github.com/YehorBabenko88/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3864896Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3865554Z ##[group]Disabling automatic garbage collection
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3869131Z [command]/usr/bin/git config --local gc.auto 0
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3896940Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3897672Z ##[group]Setting up auth
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3903591Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.3940213Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.4177049Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.4212834Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.4472538Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.4508707Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.4731855Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.4767222Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.4767882Z ##[group]Fetching the repository
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.4777830Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8330350Z From https://github.com/YehorBabenko88/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8331166Z  * branch            e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9 -> FETCH_HEAD
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8341150Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8341721Z ##[group]Determining the checkout info
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8342348Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8342716Z [command]/usr/bin/git sparse-checkout disable
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8402002Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8427302Z ##[group]Checking out the ref
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8432696Z [command]/usr/bin/git checkout --progress --force e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8617807Z Note: switching to 'e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9'.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8618316Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8618626Z You are in 'detached HEAD' state. You can look around, make experimental
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8619562Z changes and commit them, and you can discard any commits you make in this
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8620242Z state without impacting any branches by switching back to a branch.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8620511Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8620694Z If you want to create a new branch to retain commits you create, you may
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8621111Z do so (now or later) by using -c with the switch command. Example:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8621358Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8621469Z   git switch -c <new-branch-name>
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8621645Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8621748Z Or undo this operation with:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8621910Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8621992Z   git switch -
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8622147Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8622344Z Turn off this advice by setting config variable advice.detachedHead to false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8622624Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8623009Z HEAD is now at e0c2ea2 Route DataFirst constructors through protected raw service admission
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8624361Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8661306Z [command]/usr/bin/git log -1 --format=%H
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8683253Z e0c2ea20aa4f1bd9476d1046e7e4b41f1b12d8e9
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8691303Z ##[group]Removing auth
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8695091Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8722593Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8955131Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8976312Z http.https://github.com/.extraheader
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.8982384Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9010188Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9233463Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9261924Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9477213Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9729178Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9729562Z with:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9729766Z   python-version: 3.12
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9729990Z   check-latest: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9732418Z   token: ***
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9732619Z   update-environment: true
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9732850Z   allow-prereleases: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9733073Z   freethreaded: false
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9733279Z env:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9733480Z   GRID_SHARED_TOKEN: test-token
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9733824Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9734274Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:06.9734720Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1063950Z ##[group]Installed versions
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1201547Z (node:3005) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1202635Z (Use `node --trace-deprecation ...` to show where the warning was created)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1203024Z Successfully set up CPython (3.12.16)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1203655Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1330216Z ##[group]Run python -m pip install --upgrade pip
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1331004Z ^[[36;1mpython -m pip install --upgrade pip^[[0m
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1399371Z shell: /usr/bin/bash -e {0}
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1399845Z env:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1400190Z   GRID_SHARED_TOKEN: test-token
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1400994Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1401856Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1402828Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1403600Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1404390Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1405055Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1405734Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1406514Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.1407100Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.7390330Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages (26.2.2)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.8392414Z Collecting pip
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.9061835Z   Downloading pip-26.3-py3-none-any.whl.metadata (4.6 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:07.9279414Z Downloading pip-26.3-py3-none-any.whl (2.0 MB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:08.0195252Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 37.8 MB/s  0:00:00
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:08.0618054Z Installing collected packages: pip
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:08.0618690Z   Attempting uninstall: pip
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:08.0636396Z     Found existing installation: pip 26.2.2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:08.1500581Z     Uninstalling pip-26.2.2:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:08.1551213Z       Successfully uninstalled pip-26.2.2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0385009Z Successfully installed pip-26.3
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0901144Z ##[group]Run pip install -r requirements.txt
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0901500Z ^[[36;1mpip install -r requirements.txt^[[0m
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0932930Z shell: /usr/bin/bash -e {0}
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0933183Z env:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0933394Z   GRID_SHARED_TOKEN: test-token
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0933851Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0934317Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0934839Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0935245Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0935650Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0936187Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0936549Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0936972Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.0937282Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:09.9466720Z Collecting aiohttp>=3.10 (from -r requirements.txt (line 1))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.0118261Z   Downloading aiohttp-3.14.5-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.3 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.1315742Z Collecting websockets>=13.0 (from -r requirements.txt (line 2))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.1502947Z   Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.2010564Z Collecting asyncpg>=0.30 (from -r requirements.txt (line 3))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.2192259Z   Downloading asyncpg-0.32.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (4.4 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.2890231Z Collecting psutil>=6.0 (from -r requirements.txt (line 4))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.3072749Z   Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (22 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.4335189Z Collecting pydantic>=2.8 (from -r requirements.txt (line 5))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.4521765Z   Downloading pydantic-2.14.3-py3-none-any.whl.metadata (141 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.5099245Z Collecting pydantic-settings>=2.4 (from -r requirements.txt (line 6))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.5281239Z   Downloading pydantic_settings-2.16.2-py3-none-any.whl.metadata (4.0 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.5803746Z Collecting fastapi>=0.115 (from -r requirements.txt (line 7))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.5990463Z   Downloading fastapi-0.162.0-py3-none-any.whl.metadata (26 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.6380249Z Collecting uvicorn>=0.30 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.6566337Z   Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.6857485Z Collecting httpx>=0.27 (from -r requirements.txt (line 9))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.7049947Z   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.7329327Z Collecting python-dotenv>=1.0 (from -r requirements.txt (line 10))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.7512369Z   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.7817676Z Collecting psycopg==3.3.6 (from psycopg[binary]==3.3.6->-r requirements.txt (line 12))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.8002158Z   Downloading psycopg-3.3.6-py3-none-any.whl.metadata (4.4 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.8311477Z Collecting typing-extensions>=4.6 (from psycopg==3.3.6->psycopg[binary]==3.3.6->-r requirements.txt (line 12))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.8499568Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:10.9901789Z Collecting psycopg-binary==3.3.6 (from psycopg[binary]==3.3.6->-r requirements.txt (line 12))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.0086790Z   Downloading psycopg_binary-3.3.6-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.7 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.0357952Z Collecting aiohappyeyeballs>=2.5.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.0543236Z   Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl.metadata (5.9 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.0812781Z Collecting aiosignal>=1.4.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.0996348Z   Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.1265181Z Collecting attrs>=17.3.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.1449976Z   Downloading attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.2125527Z Collecting frozenlist>=1.1.1 (from aiohttp>=3.10->-r requirements.txt (line 1))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.2309419Z   Downloading frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (20 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.4639771Z Collecting multidict<8.0,>=4.5 (from aiohttp>=3.10->-r requirements.txt (line 1))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.4827529Z   Downloading multidict-7.2.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (6.1 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.5744340Z Collecting propcache>=0.2.0 (from aiohttp>=3.10->-r requirements.txt (line 1))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.5926886Z   Downloading propcache-0.5.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (25 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.8099158Z Collecting yarl<2.0,>=1.25.1 (from aiohttp>=3.10->-r requirements.txt (line 1))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.8336367Z   Downloading yarl-1.25.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (111 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.8715167Z Collecting idna>=2.0 (from yarl<2.0,>=1.25.1->aiohttp>=3.10->-r requirements.txt (line 1))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.8898151Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.9199229Z Collecting annotated-types>=0.6.0 (from pydantic>=2.8->-r requirements.txt (line 5))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:11.9382376Z   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.5445911Z Collecting pydantic-core==2.50.4 (from pydantic>=2.8->-r requirements.txt (line 5))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.5640811Z   Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.6 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.5888791Z Collecting typing-inspection>=0.4.4 (from pydantic>=2.8->-r requirements.txt (line 5))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.6073103Z   Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.6454921Z Collecting starlette>=0.46.0 (from fastapi>=0.115->-r requirements.txt (line 7))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.6640092Z   Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.6910396Z Collecting annotated-doc>=0.0.2 (from fastapi>=0.115->-r requirements.txt (line 7))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.7091995Z   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.7391223Z Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.115->-r requirements.txt (line 7))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.7575238Z   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.7866050Z Collecting click>=7.0 (from uvicorn>=0.30->uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.8057850Z   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.8298215Z Collecting h11>=0.8 (from uvicorn>=0.30->uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.8480144Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.8790932Z Collecting anyio (from httpx>=0.27->-r requirements.txt (line 9))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.8973403Z   Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.9282040Z Collecting certifi (from httpx>=0.27->-r requirements.txt (line 9))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.9470985Z   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.9748259Z Collecting httpcore==1.* (from httpx>=0.27->-r requirements.txt (line 9))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:12.9938729Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.0523407Z Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.0710356Z   Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.1180887Z Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.1364391Z   Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.1840663Z Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.2025854Z   Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.2794342Z Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.30->-r requirements.txt (line 8))
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.2978181Z   Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.3235226Z Downloading psycopg-3.3.6-py3-none-any.whl (215 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.3506570Z Downloading psycopg_binary-3.3.6-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.2 MB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.4189284Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 79.3 MB/s  0:00:00
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.4374889Z Downloading aiohttp-3.14.5-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.9 MB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.4463556Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 301.6 MB/s  0:00:00
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.4656787Z Downloading multidict-7.2.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (516 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.4880702Z Downloading yarl-1.25.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (117 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.5085907Z Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (226 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.5295050Z Downloading asyncpg-0.32.0-cp312-cp312-manylinux_2_28_x86_64.whl (3.8 MB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.5533012Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 164.9 MB/s  0:00:00
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.5715357Z Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.5920925Z Downloading pydantic-2.14.3-py3-none-any.whl (494 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.6168635Z Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.3 MB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.6252956Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 342.3 MB/s  0:00:00
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.6440596Z Downloading pydantic_settings-2.16.2-py3-none-any.whl (81 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.6642287Z Downloading fastapi-0.162.0-py3-none-any.whl (148 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.6850622Z Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.7062971Z Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.7274235Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.7474435Z Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.7678672Z Downloading aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.7883936Z Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.8085820Z Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.8287807Z Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.8490160Z Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.8697539Z Downloading click-8.5.0-py3-none-any.whl (125 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.8936891Z Downloading frozenlist-1.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (242 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.9147107Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.9349329Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.9555335Z Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.9761524Z Downloading propcache-0.5.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (250 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:13.9971312Z Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.0183973Z Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.0381788Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.0597581Z Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.0794549Z Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (552 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.0837796Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 552.8/552.8 kB 127.9 MB/s  0:00:00
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.1025117Z Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.1075640Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 186.2 MB/s  0:00:00
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.1261421Z Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.1394615Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 394.8 MB/s  0:00:00
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.1587188Z Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.1797352Z Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:14.3743525Z Installing collected packages: websockets, uvloop, typing-extensions, pyyaml, python-dotenv, psycopg-binary, psutil, propcache, multidict, idna, httptools, h11, frozenlist, click, certifi, attrs, asyncpg, annotated-types, annotated-doc, aiohappyeyeballs, yarl, uvicorn, typing-inspection, pydantic-core, psycopg, opentelemetry-api, httpcore, anyio, aiosignal, watchfiles, starlette, pydantic, httpx, aiohttp, pydantic-settings, fastapi
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.4060182Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.4090826Z Successfully installed aiohappyeyeballs-2.7.1 aiohttp-3.14.5 aiosignal-1.4.0 annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.16.0 asyncpg-0.32.0 attrs-26.1.0 certifi-2026.10.23 click-8.5.0 fastapi-0.162.0 frozenlist-1.8.0 h11-0.16.0 httpcore-1.0.9 httptools-0.9.0 httpx-0.28.1 idna-3.20 multidict-7.2.1 opentelemetry-api-1.45.2 propcache-0.5.4 psutil-7.2.2 psycopg-3.3.6 psycopg-binary-3.3.6 pydantic-2.14.3 pydantic-core-2.50.4 pydantic-settings-2.16.2 python-dotenv-1.2.4 pyyaml-6.0.3 starlette-1.10.0 typing-extensions-4.16.0 typing-inspection-0.4.5 uvicorn-0.54.0 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4 yarl-1.25.1
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5752415Z ##[group]Run pip install pytest
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5752713Z ^[[36;1mpip install pytest^[[0m
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5783235Z shell: /usr/bin/bash -e {0}
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5783498Z env:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5783706Z   GRID_SHARED_TOKEN: test-token
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5784388Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5784860Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5785386Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5785797Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5786200Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5786575Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5786934Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5787299Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.5787657Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:16.9886861Z Collecting pytest
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.0509627Z   Downloading pytest-9.2.0-py3-none-any.whl.metadata (7.9 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.0793143Z Collecting iniconfig>=2 (from pytest)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.0976933Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.1282079Z Collecting packaging>=24 (from pytest)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.1455058Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.1738647Z Collecting pluggy<2,>=1.6 (from pytest)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.1913586Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.2242567Z Collecting pygments>=2.15 (from pytest)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.2415266Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.2632398Z Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.3332597Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.3527195Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.3718184Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.3922478Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.4217955Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 40.6 MB/s  0:00:00
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:17.5014437Z Installing collected packages: pygments, pluggy, packaging, iniconfig, pytest
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.4631916Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.4663086Z Successfully installed iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pytest-9.2.0
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5274117Z ##[group]Run python -m compileall -q grid tests run_worker.py run_coordinator.py
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5274990Z ^[[36;1mpython -m compileall -q grid tests run_worker.py run_coordinator.py^[[0m
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5321813Z shell: /usr/bin/bash -e {0}
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5322233Z env:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5322559Z   GRID_SHARED_TOKEN: test-token
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5323293Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5324122Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5325063Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5325791Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5326532Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5327175Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5327875Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5328539Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:18.5329328Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0950950Z ##[group]Run python -c "import grid.config, grid.worker, grid.coordinator, grid.control_plane, grid.enrollment, grid.update_manager"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0951805Z ^[[36;1mpython -c "import grid.config, grid.worker, grid.coordinator, grid.control_plane, grid.enrollment, grid.update_manager"^[[0m
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0981032Z shell: /usr/bin/bash -e {0}
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0981290Z env:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0981492Z   GRID_SHARED_TOKEN: test-token
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0981955Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0982423Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0982962Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0983371Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0983777Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0984189Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0984558Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0984919Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.0985226Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8575727Z ##[group]Run python -m pytest -q --ignore=upstream
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8576114Z ^[[36;1mpython -m pytest -q --ignore=upstream^[[0m
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8605377Z shell: /usr/bin/bash -e {0}
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8605651Z env:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8605859Z   GRID_SHARED_TOKEN: test-token
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8606373Z   POSTGRES_DSN: ***127.0.0.1:5432/grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8606876Z   UNIFIED_SOURCE_ROOT: /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8607419Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8607839Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8608257Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8608647Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8609554Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8609982Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:19.8610292Z ##[endgroup]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:23.9376503Z ........................................................................ [  4%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:24.7786290Z .........................................................s.............. [  8%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:24.8464929Z ..................................................................... [ 13%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:25.3237642Z ................................................................s....... [ 17%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:26.2689874Z ......................ss...............s................................ [ 21%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:30.8576569Z ............................................................... [ 25%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:30.9805804Z ........................................................................ [ 30%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:31.3435831Z ...................................s................ [ 33%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:32.0664246Z ..................................................................ssss.. [ 37%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:32.1947780Z ..........................ss............................................ [ 42%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:33.8744699Z ........................................................................ [ 46%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:34.9747268Z ........................................................................ [ 51%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:40.3691362Z ......................................................ssss.............. [ 55%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:41.0923872Z ......................................s................................. [ 59%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:42.1828408Z ..........E.E.E.E............................................. [ 63%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:42.6661731Z .....................................................s..ss........sss......s..s.......................................................... [ 71%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:42.7798085Z ........................................................................ [ 76%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:42.8375732Z ........................................................................ [ 80%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:51.1569948Z ........................s............................................... [ 85%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:51.3417919Z ............................................................s........... [ 89%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:51.8179957Z ................................s....................................... [ 93%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.1469894Z ...............ssss..................................................... [ 98%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4306064Z ............................                                             [100%]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4306865Z ==================================== ERRORS ====================================
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4307564Z _ ERROR at teardown of test_revocation_before_next_git_and_final_binding_blocks _
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4308109Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4308431Z self = <starlette.datastructures.State object at 0x71abb29ff050>
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4309320Z key = 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4309649Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4310402Z     def __delattr__(self, key: Any) -> None:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4310984Z >       del self._state[key]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4311365Z             ^^^^^^^^^^^^^^^^
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4311649Z E       KeyError: 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4311871Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4312263Z /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/starlette/datastructures.py:702: KeyError
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4312984Z ____ ERROR at teardown of test_revoked_live_health_does_not_probe_database _____
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4313325Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4313525Z self = <starlette.datastructures.State object at 0x71abb29ff050>
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4313944Z key = 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4314118Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4314253Z     def __delattr__(self, key: Any) -> None:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4314569Z >       del self._state[key]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4314832Z             ^^^^^^^^^^^^^^^^
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4315108Z E       KeyError: 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4315323Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4315692Z /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/starlette/datastructures.py:702: KeyError
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4316473Z _ ERROR at teardown of test_bound_admission_cannot_disappear_or_be_revoked_during_health[removed] _
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4316894Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4317103Z self = <starlette.datastructures.State object at 0x71abb29ff050>
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4317640Z key = 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4317816Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4317949Z     def __delattr__(self, key: Any) -> None:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4318265Z >       del self._state[key]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4318525Z             ^^^^^^^^^^^^^^^^
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4318811Z E       KeyError: 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4319233Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4319599Z /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/starlette/datastructures.py:702: KeyError
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4320397Z _ ERROR at teardown of test_bound_admission_cannot_disappear_or_be_revoked_during_health[during-query] _
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4320839Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4321049Z self = <starlette.datastructures.State object at 0x71abb29ff050>
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4321451Z key = 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4321624Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4321752Z     def __delattr__(self, key: Any) -> None:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4322062Z >       del self._state[key]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4322326Z             ^^^^^^^^^^^^^^^^
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4349510Z E       KeyError: 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4350040Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4350639Z /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/starlette/datastructures.py:702: KeyError
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4351438Z =============================== warnings summary ===============================
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4352016Z grid/coordinator.py:928
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4352816Z   /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/grid/coordinator.py:928: DeprecationWarning: 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4353504Z           on_event is deprecated, use lifespan event handlers instead.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4353891Z   
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4354125Z           Read more about it in the
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4354622Z           [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4355099Z           
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4355340Z     @app.on_event("startup")
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4355529Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4355897Z ../../../../../opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/fastapi/applications.py:4723
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4356684Z ../../../../../opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/fastapi/applications.py:4723
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4357519Z   /opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/fastapi/applications.py:4723: DeprecationWarning: 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4358214Z           on_event is deprecated, use lifespan event handlers instead.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4358590Z   
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4358820Z           Read more about it in the
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4359921Z           [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4360395Z           
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4360739Z     return self.router.on_event(event_type)  # ty: ignore[deprecated]
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4361045Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4361169Z grid/coordinator.py:1046
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4361701Z   /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/grid/coordinator.py:1046: DeprecationWarning: 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4362357Z           on_event is deprecated, use lifespan event handlers instead.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4362735Z   
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4362964Z           Read more about it in the
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4363451Z           [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4363906Z           
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4364143Z     @app.on_event("shutdown")
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4364322Z 
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4364563Z -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4365064Z =========================== short test summary info ============================
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4365766Z ERROR tests/test_owned_control_source.py::test_revocation_before_next_git_and_final_binding_blocks - KeyError: 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4366575Z ERROR tests/test_owned_control_source.py::test_revoked_live_health_does_not_probe_database - KeyError: 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4367552Z ERROR tests/test_owned_control_source.py::test_bound_admission_cannot_disappear_or_be_revoked_during_health[removed] - KeyError: 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4368626Z ERROR tests/test_owned_control_source.py::test_bound_admission_cannot_disappear_or_be_revoked_during_health[during-query] - KeyError: 'owned_source_admission'
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.4369495Z 1599 passed, 32 skipped, 4 warnings, 4 errors, 49 subtests passed in 31.83s
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.7006971Z ##[error]Process completed with exit code 1.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.7128507Z Post job cleanup.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.7968601Z [command]/usr/bin/git version
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.8015108Z git version 2.56.0
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.8059852Z Temporarily overriding HOME='/home/runner/work/_temp/7ad7d422-a44a-40ad-bf3c-7695856a10b7' before making global git config changes
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.8061123Z Adding repository directory to the temporary git global config as a safe directory
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.8067054Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bybit-cluster-grid/bybit-cluster-grid/upstream/unified-system
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.8108659Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.8143137Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.8393165Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.8427775Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.8696202Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.8732954Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:52.9126204Z Post job cleanup.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0009483Z [command]/usr/bin/git version
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0052077Z git version 2.56.0
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0088598Z Temporarily overriding HOME='/home/runner/work/_temp/f0e983d1-dfb7-45da-9816-6ca8ab8bf8a3' before making global git config changes
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0090052Z Adding repository directory to the temporary git global config as a safe directory
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0094161Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/bybit-cluster-grid/bybit-cluster-grid
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0138787Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0169403Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0406609Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0429812Z http.https://github.com/.extraheader
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0440599Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0477259Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0744058Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.0782979Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1133567Z Print service container logs: 79202114b42a4922b6df1d4eb90ef8b6_postgres16_43ae94
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1138278Z ##[command]/usr/bin/docker logs --details 933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1271919Z  The files belonging to this database system will be owned by user "postgres".
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1274019Z  initdb: warning: enabling "trust" authentication for local connections
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1274927Z  initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1275800Z  2026-11-05 20:50:59.667 UTC [1] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1276467Z  2026-11-05 20:50:59.667 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1276966Z  2026-11-05 20:50:59.667 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1277445Z  2026-11-05 20:50:59.668 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1277876Z  This user must also own the server process.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1278288Z  2026-11-05 20:50:59.671 UTC [64] LOG:  database system was shut down at 2026-11-05 20:50:59 UTC
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1278769Z  2026-11-05 20:50:59.675 UTC [1] LOG:  database system is ready to accept connections
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1279622Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1280476Z  The database cluster will be initialized with locale "en_US.utf8".
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1281151Z  The default database encoding has accordingly been set to "UTF8".
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1281555Z  The default text search configuration will be set to "english".
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1281863Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1282058Z  Data page checksums are disabled.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1282289Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1282573Z  fixing permissions on existing directory /var/lib/postgresql/data ... ok
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1282957Z  creating subdirectories ... ok
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1283286Z  selecting dynamic shared memory implementation ... posix
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1283610Z  selecting default max_connections ... 100
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1283900Z  selecting default shared_buffers ... 128MB
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1284170Z  selecting default time zone ... Etc/UTC
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1284437Z  creating configuration files ... ok
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1284694Z  running bootstrap script ... ok
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1285006Z  performing post-bootstrap initialization ... ok
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1285308Z  syncing data to disk ... ok
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1285527Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1285694Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1285919Z  Success. You can now start the database server using:
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1286205Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1286441Z      pg_ctl -D /var/lib/postgresql/data -l logfile start
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1286729Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1287332Z  waiting for server to start....2026-11-05 20:50:59.380 UTC [48] LOG:  starting PostgreSQL 16.15 (Debian 16.15-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1288608Z  2026-11-05 20:50:59.380 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1289698Z  2026-11-05 20:50:59.383 UTC [51] LOG:  database system was shut down at 2026-11-05 20:50:59 UTC
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1290306Z  2026-11-05 20:50:59.386 UTC [48] LOG:  database system is ready to accept connections
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1290651Z   done
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1290833Z  server started
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1291028Z  CREATE DATABASE
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1291214Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1291376Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1291686Z  /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1292048Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1292377Z  waiting for server to shut down...2026-11-05 20:50:59.548 UTC [48] LOG:  received fast shutdown request
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1293114Z  .2026-11-05 20:50:59.549 UTC [48] LOG:  aborting any active transactions
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1293649Z  2026-11-05 20:50:59.551 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1294238Z  2026-11-05 20:50:59.551 UTC [49] LOG:  shutting down
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1294609Z  2026-11-05 20:50:59.552 UTC [49] LOG:  checkpoint starting: shutdown immediate
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1295592Z  2026-11-05 20:50:59.564 UTC [49] LOG:  checkpoint complete: wrote 926 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.010 s, sync=0.002 s, total=0.013 s; sync files=301, longest=0.001 s, average=0.001 s; distance=4273 kB, estimate=4273 kB; lsn=0/191F0E0, redo lsn=0/191F0E0
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1296553Z  2026-11-05 20:50:59.568 UTC [48] LOG:  database system is shut down
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1296855Z   done
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1297031Z  server stopped
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1297220Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1297444Z  PostgreSQL init process complete; ready for start up.
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1297725Z  
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1303690Z Stop and remove container: 79202114b42a4922b6df1d4eb90ef8b6_postgres16_43ae94
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.1308243Z ##[command]/usr/bin/docker rm --force 933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.2685942Z 933c10ab9094db9485809b410560f4dbfc12861cfa572018a84b860d05deead2
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.2713332Z Remove container network: github_network_a805ff17e3c949dc922dd9f5bee106dc
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.2717784Z ##[command]/usr/bin/docker network rm github_network_a805ff17e3c949dc922dd9f5bee106dc
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.3269221Z github_network_a805ff17e3c949dc922dd9f5bee106dc
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.3353911Z Cleaning up orphan processes
+python-preflight (3.12)	UNKNOWN STEP	2026-11-05T20:51:53.3651413Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

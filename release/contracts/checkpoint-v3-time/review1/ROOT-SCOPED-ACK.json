@@ -1,0 +1,29 @@
+{
+  "schema": "unified.checkpoint-v3-root-design-review.v1",
+  "decision": "ACK_FOR_INDEPENDENT_UNTRUSTED_CLAIM_CODEC_ONLY",
+  "source_raw_sha256": {
+    "schema.json": "4de720d9391e5a89c0577b5298c283e742fbfe490c4454c184e31c2348589ea4",
+    "PROTOCOL.md": "79efbcb70d1ed9204fbd8295a4990650d99582196712097280d2483298ad4f8e",
+    "golden-vectors.json": "69ef7786400030ae1bb9dbf4bd1fb30c6b6e50ac9690437536aa669a7c18b0d4"
+  },
+  "owner_decision_sha256": "aa84f7acbe7632f8d534c96f529c7a39b9b1b26c1a49cf7a69a9366e5c04670e",
+  "checks": [
+    "SCHEMA_DRAFT202012_VALID",
+    "confirmed-unknown-time.canonical.json",
+    "confirmed-observed.canonical.json",
+    "unconfirmed.canonical.json"
+  ],
+  "interpretation": "COMMITTED_IS_UNTRUSTED_INPUT_CLAIM_NO_PRODUCTION_PROMOTION_WITHOUT_REAL_ADMITTED_PROOF_ADAPTER",
+  "backwards_compatibility": "OLD_BYTES_AND_SEMANTICS_UNCHANGED_ACTUAL_LEGACY_READER_DISPATCH_REQUIRES_SEPARATE_EVIDENCE",
+  "scope_not_covered": [
+    "real publication confirmation",
+    "native fencing producer",
+    "trusted audit clock",
+    "legacy runtime compatibility",
+    "shared wiring",
+    "full feature",
+    "runtime or physical admission"
+  ],
+  "fixtures": "SYNTHETIC_NOT_REAL_AUTHORITY_EVIDENCE",
+  "full_wire_ack": "PENDING_EXACT_PRODUCER_TAG_MAPPING_AND_DOMAIN_RECORDS"
+}

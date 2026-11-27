@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Assignment v1 — proposed, integration pending",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "assignment_id",
+    "scope",
+    "assignment_revision",
+    "lease_epoch",
+    "authority_term",
+    "grant_revision",
+    "worker_id",
+    "worker_incarnation_id",
+    "state",
+    "issued_at_ms",
+    "expires_at_ms",
+    "fencing_token",
+    "storage",
+    "capacity",
+    "checkpoint",
+    "drain"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "assignment.v1"
+    },
+    "assignment_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "job_id",
+        "dataset_id",
+        "source_id",
+        "partition_id"
+      ],
+      "properties": {
+        "job_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "dataset_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "partition_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      }
+    },
+    "assignment_revision": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "lease_epoch": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "authority_term": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "grant_revision": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "worker_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "worker_incarnation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "state": {
+      "enum": [
+        "ACTIVE",
+        "DRAINING"
+      ]
+    },
+    "issued_at_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "expires_at_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "fencing_token": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 16384
+    },
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "storage_reservation_id",
+        "storage_budget_revision",
+        "scope",
+        "expires_at_ms",
+        "byte_limit"
+      ],
+      "properties": {
+        "storage_reservation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "storage_budget_revision": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "job_id",
+            "dataset_id",
+            "source_id",
+            "partition_id"
+          ],
+          "properties": {
+            "job_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "dataset_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "source_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "partition_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            }
+          }
+        },
+        "expires_at_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "byte_limit": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        }
+      }
+    },
+    "capacity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "observation_revision",
+        "observed_at_ms",
+        "fresh_until_ms"
+      ],
+      "properties": {
+        "node_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "observation_revision": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        },
+        "observed_at_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "fresh_until_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "checkpoint": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ref",
+            "revision",
+            "sha256"
+          ],
+          "properties": {
+            "ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "revision": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]*$"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        }
+      ]
+    },
+    "drain": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "deadline_ms",
+            "permitted_batch_ids",
+            "max_remaining_bytes"
+          ],
+          "properties": {
+            "deadline_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "permitted_batch_ids": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "max_remaining_bytes": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "DRAINING"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "drain": {
+            "type": "object"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "drain": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ],
+  "$comment": "Structural grant schema only. Scope equality, time inequalities, token authentication and all authority/storage predicates require semantic validation inside the ordered operation; JSON validation alone cannot authorize commit."
+}

@@ -1,0 +1,222 @@
+{
+  "schema": "unified.point-in-time-direct-lan-route-observation.v1",
+  "source_report_sha256": "976cdb8944456cdfbadd62ff83bf752859413a2718f9f16cc31cbe16d2fbe899",
+  "executed_observer_sha256": "1072994ec3b242f56d0917b8956113b253729f0ff7ebb77b19c1b7f04782bbb8",
+  "scope": "READ_ONLY_NO_CONFIGURATION_MUTATION_NO_TAILSCALE_REMOVAL_NO_BYBIT_HTTP",
+  "observed_nodes": 6,
+  "nodes": [
+    {
+      "node": "LS5",
+      "observed_utc": "2026-11-06T18:54:11.2489749Z",
+      "routes": [
+        {
+          "destination": "192.168.2.11",
+          "source": "192.168.2.173",
+          "interface_index": 12,
+          "interface_alias": "Ethernet",
+          "destination_prefix": "192.168.2.0/24",
+          "next_hop": "0.0.0.0",
+          "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+          "adapter_status": "Up",
+          "hardware_interface": true,
+          "virtual": false
+        },
+        {
+          "destination": "192.168.2.12",
+          "source": "192.168.2.173",
+          "interface_index": 12,
+          "interface_alias": "Ethernet",
+          "destination_prefix": "192.168.2.0/24",
+          "next_hop": "0.0.0.0",
+          "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+          "adapter_status": "Up",
+          "hardware_interface": true,
+          "virtual": false
+        },
+        {
+          "destination": "192.168.2.104",
+          "source": "192.168.2.173",
+          "interface_index": 12,
+          "interface_alias": "Ethernet",
+          "destination_prefix": "192.168.2.0/24",
+          "next_hop": "0.0.0.0",
+          "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+          "adapter_status": "Up",
+          "hardware_interface": true,
+          "virtual": false
+        },
+        {
+          "destination": "192.168.2.115",
+          "source": "192.168.2.173",
+          "interface_index": 12,
+          "interface_alias": "Ethernet",
+          "destination_prefix": "192.168.2.0/24",
+          "next_hop": "0.0.0.0",
+          "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+          "adapter_status": "Up",
+          "hardware_interface": true,
+          "virtual": false
+        },
+        {
+          "destination": "192.168.2.141",
+          "source": "192.168.2.173",
+          "interface_index": 12,
+          "interface_alias": "Ethernet",
+          "destination_prefix": "192.168.2.0/24",
+          "next_hop": "0.0.0.0",
+          "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+          "adapter_status": "Up",
+          "hardware_interface": true,
+          "virtual": false
+        }
+      ],
+      "dns": {
+        "name": "www.microsoft.com",
+        "latency_ms": 705,
+        "answers": [
+          "23.37.194.81"
+        ]
+      },
+      "pinned_ssh_observation": "LOCAL",
+      "scope": "POINT_IN_TIME_SELECTION_AND_BOUNDED_DNS_NOT_APPLICATION_MTLS_OR_FAILOVER_ACCEPTANCE"
+    },
+    {
+      "node": "PC1",
+      "observed_utc": "2026-11-06T18:54:13.5956237Z",
+      "routes": [
+        {
+          "destination": "192.168.2.173",
+          "source": "192.168.2.11",
+          "interface_index": 17,
+          "interface_alias": "Ethernet",
+          "destination_prefix": "192.168.2.0/24",
+          "next_hop": "0.0.0.0",
+          "adapter_description": "Realtek PCIe GbE Family Controller",
+          "adapter_status": "Up",
+          "hardware_interface": true,
+          "virtual": false
+        }
+      ],
+      "dns": {
+        "name": "www.microsoft.com",
+        "latency_ms": 658,
+        "answers": [
+          "23.37.194.81"
+        ]
+      },
+      "pinned_ssh_observation": "AUTHENTICATED_EXACT_HOST_PIN",
+      "scope": "POINT_IN_TIME_SELECTION_AND_BOUNDED_DNS_NOT_APPLICATION_MTLS_OR_FAILOVER_ACCEPTANCE"
+    },
+    {
+      "node": "PC2",
+      "observed_utc": "2026-11-06T18:54:16.3343214Z",
+      "routes": [
+        {
+          "destination": "192.168.2.173",
+          "source": "192.168.2.12",
+          "interface_index": 9,
+          "interface_alias": "Ethernet",
+          "destination_prefix": "192.168.2.0/24",
+          "next_hop": "0.0.0.0",
+          "adapter_description": "Intel(R) Ethernet Connection (11) I219-LM",
+          "adapter_status": "Up",
+          "hardware_interface": true,
+          "virtual": false
+        }
+      ],
+      "dns": {
+        "name": "www.microsoft.com",
+        "latency_ms": 419,
+        "answers": [
+          "23.37.194.81"
+        ]
+      },
+      "pinned_ssh_observation": "AUTHENTICATED_EXACT_HOST_PIN",
+      "scope": "POINT_IN_TIME_SELECTION_AND_BOUNDED_DNS_NOT_APPLICATION_MTLS_OR_FAILOVER_ACCEPTANCE"
+    },
+    {
+      "node": "PC3",
+      "observed_utc": "2026-11-06T18:54:19.0518199Z",
+      "routes": [
+        {
+          "destination": "192.168.2.173",
+          "source": "192.168.2.104",
+          "interface_index": 7,
+          "interface_alias": "Ethernet",
+          "destination_prefix": "192.168.2.0/24",
+          "next_hop": "0.0.0.0",
+          "adapter_description": "Intel(R) Ethernet Connection (7) I219-LM",
+          "adapter_status": "Up",
+          "hardware_interface": true,
+          "virtual": false
+        }
+      ],
+      "dns": {
+        "name": "www.microsoft.com",
+        "latency_ms": 398,
+        "answers": [
+          "23.37.194.81"
+        ]
+      },
+      "pinned_ssh_observation": "AUTHENTICATED_EXACT_HOST_PIN",
+      "scope": "POINT_IN_TIME_SELECTION_AND_BOUNDED_DNS_NOT_APPLICATION_MTLS_OR_FAILOVER_ACCEPTANCE"
+    },
+    {
+      "node": "PC4",
+      "observed_utc": "2026-11-06T18:54:20.2992258Z",
+      "routes": [
+        {
+          "destination": "192.168.2.173",
+          "source": "192.168.2.115",
+          "interface_index": 22,
+          "interface_alias": "Ethernet",
+          "destination_prefix": "192.168.2.0/24",
+          "next_hop": "0.0.0.0",
+          "adapter_description": "Realtek Gaming 2.5GbE Family Controller",
+          "adapter_status": "Up",
+          "hardware_interface": true,
+          "virtual": false
+        }
+      ],
+      "dns": {
+        "name": "www.microsoft.com",
+        "latency_ms": 234,
+        "answers": [
+          "23.37.194.81"
+        ]
+      },
+      "pinned_ssh_observation": "AUTHENTICATED_EXACT_HOST_PIN",
+      "scope": "POINT_IN_TIME_SELECTION_AND_BOUNDED_DNS_NOT_APPLICATION_MTLS_OR_FAILOVER_ACCEPTANCE"
+    },
+    {
+      "node": "LS7",
+      "observed_utc": "2026-11-06T18:54:22.4543854Z",
+      "routes": [
+        {
+          "destination": "192.168.2.173",
+          "source": "192.168.2.141",
+          "interface_index": 18,
+          "interface_alias": "WLAN",
+          "destination_prefix": "192.168.2.0/24",
+          "next_hop": "0.0.0.0",
+          "adapter_description": "Intel(R) Wi-Fi 6E AX211 160MHz",
+          "adapter_status": "Up",
+          "hardware_interface": true,
+          "virtual": false
+        }
+      ],
+      "dns": {
+        "name": "www.microsoft.com",
+        "latency_ms": 356,
+        "answers": [
+          "23.37.194.81"
+        ]
+      },
+      "pinned_ssh_observation": "AUTHENTICATED_EXACT_HOST_PIN",
+      "scope": "POINT_IN_TIME_SELECTION_AND_BOUNDED_DNS_NOT_APPLICATION_MTLS_OR_FAILOVER_ACCEPTANCE"
+    }
+  ],
+  "direct_lan_application_acceptance": "BLOCKED_MTLS_REGISTRY_RUNTIME_BUDGET_AND_RECONNECT_UNQUALIFIED",
+  "tailscale_removal": "BLOCKED",
+  "bybit_route_equivalence": "NOT_PROVEN"
+}
