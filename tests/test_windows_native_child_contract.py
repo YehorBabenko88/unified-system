@@ -883,8 +883,8 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
     def test_native_detached_file_access_matches_low_token(self):
         """Pinned file read from same restricted child; no filesystem mutation.
 
-        A failing file open reports 75; a child that can read the exact bytes
-        exits 71. The low-IL token and original owner handles are retained.
+        A child that can read the exact bytes exits 71; failures retain their
+        original non-71 status. Original LOW token and Job remain unchanged.
         """
         import hashlib
 
