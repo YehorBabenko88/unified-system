@@ -157,7 +157,7 @@ def _final_path_matches(dll, handle, expected):
     if not actual.startswith("\\\\?\\"):
         raise ValueError("Windows non-DOS handle path refused")
     actual = actual[4:]
-    if (not re.match(r"^[A-Za-z]:\\", actual)
+    if (not re.match(r"^[A-Za-z]:\\\\", actual)
             or ntpath.normcase(actual) != ntpath.normcase(expected)):
         raise ValueError("Windows path alias or reparse resolution refused")
 
