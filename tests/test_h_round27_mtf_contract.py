@@ -44,6 +44,8 @@ def check_source_minutes(starts, *, interval_minutes, first_start, cutoff_ms):
         raise ValueError("SOURCE_PAGE_BOUND")
     if len(starts) % interval_minutes:
         raise ValueError("UNCLOSED_BUCKET")
+    if len(starts) // interval_minutes > 5:
+        raise ValueError("OUTPUT_BAR_BOUND")
     if any(type(start) is not int or start < 0 or start % 60000
            for start in starts):
         raise ValueError("MINUTE_CLOCK")
@@ -118,6 +120,9 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "SOURCE_PAGE_BOUND"):
             check_source_minutes([i*60000 for i in range(80)],
                                  interval_minutes=5, first_start=0, cutoff_ms=60300000)
+        with self.assertRaisesRegex(ValueError, "OUTPUT_BAR_BOUND"):
+            check_source_minutes([i*60000 for i in range(30)],
+                                 interval_minutes=5, first_start=0, cutoff_ms=1800000)
         with self.assertRaisesRegex(ValueError, "UNALIGNED_START"):
             check_source_minutes([60000+i*60000 for i in range(5)],
                                  interval_minutes=5, first_start=60000, cutoff_ms=360000)
