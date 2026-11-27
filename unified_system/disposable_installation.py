@@ -9,13 +9,14 @@ workspace. Unknown outcomes remain retained and unadopted. Never use this
 module to claim a trusted release, physical acceptance or production GO.
 """
 import copy
+import tempfile
 from pathlib import Path
 
 from .installation_transaction import InstallationTransaction, source_plan
 
 
 SCHEMA = "unified.disposable-installation.v1"
-OPERATIONS = frozenset(("PREVIEW", "STAGE", "OBSERVE", "ROLLBACK", "UNINSTALL_PREVIEW"))
+OPERATIONS = frozenset(("PREVIEW", "STAGE", "OBSERVE", "ROLLBACK", "UNINSTALL_PREVIEW", "DISPOSE_INACTIVE"))
 
 
 def _need(ok):
@@ -118,6 +119,19 @@ class DisposableInstallation:
             "execution_authority": False,
         }
 
+    def dispose_inactive(self, *, disposable_approval=False, fail_after_members=None):
+        """Test-workspace-only removal of verified inactive code, never state.
+
+        Preserves the original installation ownership journal and application
+        state; ambiguous disposal blocks retries pending manual inspection.
+        """
+        _need(disposable_approval is True)
+        result = self._open().dispose_inactive(
+            approved_disposable=True, fail_after_members=fail_after_members)
+        _need(result["activation"] == "BLOCKED")
+        _need(result["execution_authority"] is False)
+        return result
+
     def execute(self, operation, *, disposable_approval=False):
         _need(type(operation) is str and operation in OPERATIONS)
         if operation == "PREVIEW":
@@ -128,4 +142,6 @@ class DisposableInstallation:
             return self.observe()
         if operation == "ROLLBACK":
             return self.rollback(disposable_approval=disposable_approval)
+        if operation == "DISPOSE_INACTIVE":
+            return self.dispose_inactive(disposable_approval=disposable_approval)
         return self.uninstall_preview()

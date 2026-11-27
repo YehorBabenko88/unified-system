@@ -1,5 +1,6 @@
 """Agent I disposable inactive staging regression; no SCM/PG/Consul use."""
 import copy
+import hashlib
 import os
 from pathlib import Path
 import tempfile
@@ -13,12 +14,15 @@ from unified_system.disposable_installation import DisposableInstallation
 
 class DisposableInstallationTests(unittest.TestCase):
     def setUp(self):
-        self.tmp = tempfile.TemporaryDirectory()
+        self.tmp = tempfile.TemporaryDirectory(prefix="unified-agent-i-")
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
         self.capsule = self.root / "capsule"
         self.capsule.mkdir()
-        self.pin = fixture(self.capsule)
+        manifest = fixture(self.capsule)
+        raw = lab_release.canonical(manifest)
+        (self.capsule / "lab-release.json").write_bytes(raw)
+        self.pin = hashlib.sha256(raw).hexdigest()
         self.install = self.root / "install"
         self.state = self.root / "state"
 
@@ -116,6 +120,80 @@ class DisposableInstallationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             tx.stage(disposable_approval=True)
         self.assertEqual(partial.read_bytes(), b"RETAIN")
+
+
+    def test_dispose_inactive_removes_only_closed_code_and_preserves_state(self):
+        tx = self.subject()
+        tx.stage(disposable_approval=True)
+        marker = self.state / "user-data"
+        marker.write_bytes(b"KEEP_DATA")
+        out = tx.dispose_inactive(disposable_approval=True)
+        self.assertEqual(out["status"], "DISPOSED_INACTIVE")
+        self.assertEqual(list((self.install / "release").iterdir()), [])
+        self.assertEqual(marker.read_bytes(), b"KEEP_DATA")
+        self.assertTrue((self.state / "transaction.sqlite").is_file())
+        self.assertEqual(tx.observe()["status"], "DISPOSED_INACTIVE")
+        self.assertEqual(tx.dispose_inactive(disposable_approval=True), out)
+        with self.assertRaises(ValueError):
+            tx.rollback(disposable_approval=True)
+
+    def test_dispose_denies_foreign_files_before_any_unlink(self):
+        tx = self.subject()
+        tx.stage(disposable_approval=True)
+        foreign = self.install / "release" / "foreign.bin"
+        foreign.write_bytes(b"DO_NOT_TOUCH")
+        legit = self.install / "release" / "runtime.json"
+        original = legit.read_bytes()
+        with self.assertRaises(ValueError):
+            tx.dispose_inactive(disposable_approval=True)
+        self.assertEqual(foreign.read_bytes(), b"DO_NOT_TOUCH")
+        self.assertEqual(legit.read_bytes(), original)
+        with self.assertRaises(ValueError):
+            tx.observe()  # a foreign member must also block snapshot certification
+
+    def test_dispose_requires_explicit_boolean_and_temp_workspace(self):
+        tx = self.subject()
+        tx.stage(disposable_approval=True)
+        with self.assertRaises(ValueError):
+            tx.dispose_inactive()
+        with self.assertRaises(ValueError):
+            tx.dispose_inactive(disposable_approval=1)
+        self.assertEqual(tx.observe()["status"], "STAGED_INACTIVE")
+
+    def test_dispose_failpoint_retains_audit_and_requires_manual_review(self):
+        tx = self.subject()
+        tx.stage(disposable_approval=True)
+        marker = self.state / "userdata.bin"
+        marker.write_bytes(b"USER")
+        with self.assertRaisesRegex(OSError, "DISPOSABLE_INJECTED_INTERRUPTION"):
+            tx.dispose_inactive(disposable_approval=True, fail_after_members=1)
+        snapshot = tx.observe()
+        self.assertEqual(snapshot["status"], "DISPOSE_INTENT")
+        self.assertEqual(snapshot["rollback"], "DISPOSAL_UNCERTAIN_REVIEW_REQUIRED")
+        self.assertEqual(marker.read_bytes(), b"USER")
+        self.assertTrue((self.state / "transaction.sqlite").exists())
+        with self.assertRaises(ValueError):
+            tx.dispose_inactive(disposable_approval=True)
+        with self.assertRaises(ValueError):
+            tx.stage(disposable_approval=True)
+
+    def test_dispose_refuses_modified_manifest_member(self):
+        tx = self.subject()
+        tx.stage(disposable_approval=True)
+        item = self.install / "release" / "runtime.json"
+        item.write_bytes(b"CHANGED")
+        with self.assertRaises(ValueError):
+            tx.dispose_inactive(disposable_approval=True)
+        self.assertEqual(item.read_bytes(), b"CHANGED")
+
+    def test_dispose_refuses_foreign_workspace_name(self):
+        tx = self.subject()
+        tx.stage(disposable_approval=True)
+        with patch("unified_system.installation_transaction.tempfile.gettempdir",
+                   return_value=str(self.root.parent / "different-temp")):
+            with self.assertRaises(ValueError):
+                tx.dispose_inactive(disposable_approval=True)
+        self.assertTrue((self.install / "release" / "runtime.json").exists())
 
     def test_no_runtime_executor_in_wrapper(self):
         import inspect
