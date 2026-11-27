@@ -22,10 +22,11 @@
     }
   ],
   "current_candidates": {
-    "Grid_epoch": "eee29d8fae7c52d5b489a86a5a9ec08718265f18",
-    "Terminan_D": "fe4316d7c1580b9799903b57d8471034b5281996",
-    "Strattester_G": "5ff4f10d068bbed08db816e6e4ffdeb2b81ac338",
-    "Math": "9e6acbd9e12a91189f57234828e31640983af553"
+    "Grid_epoch": "dfbfb657002275b7dd87cdcbb675014b7b3bf788",
+    "Terminan_D": "d71b29b194b40f32a2de8a4cfd0100041489fd94",
+    "Strattester_G": "fa9e0ff2235b35466a03c78781a80d42dbe1c4af",
+    "Math": "9e6acbd9e12a91189f57234828e31640983af553",
+    "MathWallTracker_candidate": "0c3a97aa3f76908c464298c345108bd355af4854"
   },
   "family_count": 17,
   "all_unique_functions_preserved": true,
@@ -178,7 +179,9 @@
       "external_consumer_cutover": "NOT_PROVEN",
       "owner_acceptance": "NOT_PROVEN",
       "rollback_and_original_data_preserved": "NOT_PROVEN",
-      "source_removal_allowed": false
+      "source_removal_allowed": false,
+      "first_subfeature_candidate": "python/market_math_wall_tracker.py",
+      "partial_scope_note": "A Math-owned candidate exists with exact-source local class differential only; remaining tape/book/signal subfeatures not migrated"
     },
     {
       "id": "meta.stage6.08",
@@ -380,5 +383,29 @@
       "rollback_and_original_data_preserved": "NOT_PROVEN",
       "source_removal_allowed": false
     }
-  ]
+  ],
+  "first_concrete_migration": {
+    "family_id": "meta.stage6.07",
+    "subfeature": "Order-book wall lifecycle observer",
+    "original_meta_ref": "b1a4d6a41054f0040a88dc80b585380fb6b4f323",
+    "original_module": "src/meta_analyse/wall_tracker.py",
+    "original_blob": "faae6e3539c8b33e9d933fce4fd2a92b518c4ac5",
+    "candidate_owner": "Math",
+    "candidate_draft_pr": "https://github.com/YehorBabenko88/math/pull/168",
+    "candidate_head": "0c3a97aa3f76908c464298c345108bd355af4854",
+    "candidate_base": "9e6acbd9e12a91189f57234828e31640983af553",
+    "candidate_file": "python/market_math_wall_tracker.py",
+    "candidate_blob": "0e22810943294a8cf8163660b08b44a4cc54f9ed",
+    "candidate_package_manifest_blob": "fb944447361b17cd2011732d843bc2f9f78be0bd",
+    "original_parity_test": "tests/test_h_round35_meta_wall_tracker_original.py",
+    "original_parity_test_blob": "3c7deedd97b7533a5a1f6ad198e8d7c54a9acc67",
+    "local_execution_scope": "EXACT_META_AND_MATH_WALL_CLASS_BYTES_WITH_CONTROLLED_WALL_NOTIONAL_STUB",
+    "local_executed_tests": 8,
+    "local_result": "8_PASS_0_FAIL_0_ERROR_0_SKIP",
+    "github_original_e2e": "NOT_RUN",
+    "canonical_math_full_sdk_test": "NOT_RUN",
+    "original_consumer_cutover": "NOT_PROVEN",
+    "source_retirement_allowed": false,
+    "requirement": "Use real canonical Math installed source, owned Terminan/Meta consumer, original same-input event logs, original rollback receipt before retiring the old Meta module"
+  }
 }
