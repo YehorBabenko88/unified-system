@@ -84,8 +84,11 @@ class RevocationStateTests(unittest.IsolatedAsyncioTestCase):
         events = []
         executor = LabOwnerExecutor()
         class Guard:
-            _identity = SimpleNamespace(instance_id="test")
-            def revoke(self):
+            _identity = SimpleNamespace(
+                owner="root", namespace="isolated", token=100,
+                instance_id="test", session_id="session", node_incarnation_id="node",
+                source_sha256="a"*64, schema_sha256="b"*64)
+            def block_transfer(self):
                 events.append("local")
         class Driver:
             def stop(self, handle):
@@ -95,13 +98,26 @@ class RevocationStateTests(unittest.IsolatedAsyncioTestCase):
                 return False
         class SQL:
             LabAdmissionRejected = SimulatedCStaleFence
-            def revoke_lab_fence(self, pg, *, generation, token):
+            def revoke_lab_fence(self, pg, *, owner, namespace, generation, token,
+                                 backend_pid, backend_start, timeout=120):
                 events.append("sql")
                 if sql_fault:
                     raise RuntimeError("database unavailable")
                 return sql_ok
+            revoke_lab_fence.__module__ = "unified_system.lab_pg_fence"
             def revalidate_lab_fence(self, pg, *, identity, generation, backend_pid):
                 events.append("revalidate")
+                if "stop" not in events:
+                    return dict(
+                        schema="lab-postgres-fence-revalidation.v1", scope="ISOLATED_LAB_ONLY",
+                        resource_id="grid-market-data-primary", owner=identity.owner,
+                        namespace=identity.namespace, generation=generation, token=identity.token,
+                        backend_pid=backend_pid, backend_start="2026-11-26T21:00:00+00:00",
+                        session_id=identity.session_id, instance_id=identity.instance_id,
+                        node_incarnation_id=identity.node_incarnation_id,
+                        source_sha256=identity.source_sha256, schema_sha256=identity.schema_sha256,
+                        db_backend_observed=True, db_fence_current_at_read=True,
+                        native_writer_admitted=False, trading_authorized=False)
                 if stale_code:
                     raise SimulatedCStaleFence("LAB_FENCE_REVALIDATION_DENIED")
                 return {"db_fence_current_at_read": True}
@@ -144,14 +160,14 @@ class RevocationStateTests(unittest.IsolatedAsyncioTestCase):
             self.assertFalse(result.child_extinct)
             self.assertFalse(result.consul_released)
             self.assertEqual(events,
-                             ["local", "stop", "sql", "alive", "revalidate"])
+                             ["local", "revalidate", "stop", "sql", "alive", "revalidate"])
             self.assertFalse(result.native_admitted)
             self.assertFalse(result.trading_authorized)
             self.assertIs(await owner.revoke(), result)
         finally:
             executor.close()
 
-    async def test_sql_failure_preserves_partial_and_still_releases_consul(self):
+    async def test_sql_failure_preserves_partial_without_releasing_consul(self):
         owner, events, executor = self.make_revoker(sql_fault=True)
         try:
             result = await owner.revoke(blocking_timeout=1)

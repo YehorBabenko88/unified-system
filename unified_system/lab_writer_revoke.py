@@ -199,24 +199,27 @@ class LabWriterRevoker:
                 and observation.listener_owner_verified is True)
         except BaseException:
             pass
-        try:
-            # Current generation must not be revalidated after revocation.
-            # A live receipt is a failure; exceptions count as refusal only
-            # when SQL revocation itself returned successfully.
-            await blocked(lambda: self._c.revalidate_lab_fence(
-                self._pg, identity=self._guard._identity,
-                generation=self._generation, backend_pid=self._backend_pid))
-        except BaseException as exc:
-            # Bind the exception class to the exact injected C canonical
-            # module. E standalone intentionally does NOT import C sources.
-            # Only a C stale-fence denial (not network/timeout/cancellation)
-            # after successful SQL revocation can be considered evidence.
-            c_rejected = getattr(self._c, "LabAdmissionRejected", None)
-            stages["old_backend_rejected"] = (
-                stages["sql_fence_revoked"]
-                and type(c_rejected) is type
-                and type(exc) is c_rejected
-                and str(exc) == "LAB_FENCE_REVALIDATION_DENIED")
+        # A post-revoke denial is evidence only after exact durable revoke.
+        # Do not dispatch SQL for an unsupported ABI or an uncertain revoke.
+        if stages["sql_fence_revoked"]:
+            try:
+                # Current generation must not be revalidated after revocation.
+                # A live receipt is a failure; exceptions count as refusal only
+                # when SQL revocation itself returned successfully.
+                await blocked(lambda: self._c.revalidate_lab_fence(
+                    self._pg, identity=self._guard._identity,
+                    generation=self._generation, backend_pid=self._backend_pid))
+            except BaseException as exc:
+                # Bind the exception class to the exact injected C canonical
+                # module. E standalone intentionally does NOT import C sources.
+                # Only a C stale-fence denial (not network/timeout/cancellation)
+                # after successful SQL revocation can be considered evidence.
+                c_rejected = getattr(self._c, "LabAdmissionRejected", None)
+                stages["old_backend_rejected"] = (
+                    stages["sql_fence_revoked"]
+                    and type(c_rejected) is type
+                    and type(exc) is c_rejected
+                    and str(exc) == "LAB_FENCE_REVALIDATION_DENIED")
         # No RootBackendExtinction/RootProcessExtinction can currently be
         # issued. No positive full cleanup status or voluntary lease release.
         valid = all(stages.values())
