@@ -23,7 +23,10 @@
     "meta_feature_inventory": "56c239415eae9ee0445e624431140de188d59faf",
     "meta_file_inventory": "31a1387707f7b88d22d9c8a2b2fde84e77cdc7d8",
     "h_existing_27_family_ledger": "b2c1e78b1a78d4f293394cb5e01f26d2d7717b0b",
-    "meta_stage6_actual_85_crosswalk": "aad4b095bb1fd619dc633889e7011dff6455edf7"
+    "meta_stage6_actual_85_crosswalk": "aad4b095bb1fd619dc633889e7011dff6455edf7",
+    "strattester_round34_instruments": "64d44102978fe4cfb766b5a6c579c8ebd4e1e9a0",
+    "strattester_round34_smoke": "74356fe3fd49a30dd3d58f2d307985c84c4aa1f3",
+    "strattester_round34_universe": "04b28a6936f2c7b7bc2a1cd8c8fdeacc6e02fb5a"
   },
   "inventory_scope": {
     "original_h_ledger_families": 27,
@@ -206,5 +209,22 @@
     "user_data_backup_restore_proven": false,
     "reversible_rollback_tested": false,
     "deletion_allowed": false
+  },
+  "round34_original_g123_source": {
+    "source_sha": "97e5e48c867370741e8349c422399384aef977ae",
+    "evidence_path": "docs/functional-coverage/round34-g123-source-sqlite-evidence.json",
+    "original_sqlite_py_source_pass": 10,
+    "original_numeric_source_function_pass": 13,
+    "original_pytest_run": 45999989212,
+    "original_pytest_ubuntu311": {
+      "PASS": 566,
+      "FAIL": 1,
+      "ERROR": 0,
+      "SKIP": 1
+    },
+    "original_pytest_fix_needed": true,
+    "original_full_ci_pass": false,
+    "g006_retirement_allowed": false,
+    "note": "P0 fixed source executes locally with exact original class blobs, but hosted full G test fails on misaligned fixture and other platform jobs cancelled. Latest G head is a separate pin from historical R33 records."
   }
 }
