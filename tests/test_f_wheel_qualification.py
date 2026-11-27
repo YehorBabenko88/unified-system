@@ -83,9 +83,95 @@ class QualificationTests(unittest.TestCase):
     def test_changed_source_hash(self): self.deny(source_files={MOD: "a"*64})
     def test_source_hash_malformed(self): self.deny(source_files={MOD: "g"*64})
     def test_missing_source_pin(self): self.deny(source_files={})
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX wheel hardlink only")
+    def test_wheel_hardlink_alias_denied_even_with_pinned_digest(self):
+        """The hashed archive must not have a second writable file name."""
+        import os
+        alias = self.base / "wheel-hardlink-alias.whl"
+        os.link(self.wheel, alias)
+        self.assertEqual(self.wheel.stat().st_nlink, 2)
+        self.deny()
+        self.assertEqual(alias.read_bytes(), self.wheel.read_bytes())
+
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX wheel pathname custody only")
+    def test_wheel_same_bytes_leaf_swap_after_final_fstat_denied(self):
+        """A retained old archive FD cannot authenticate a new live pathname."""
+        import os
+        from unittest.mock import patch
+        import f_wheel_qualification as owner
+        detached = self.base / "detached-original-wheel.whl"
+        original_inode = self.wheel.stat().st_ino
+        original_bytes = self.wheel.read_bytes()
+        real_fstat = os.fstat
+        observed = []
+        def replace_after_final(fd):
+            info = real_fstat(fd)
+            if info.st_ino == original_inode:
+                observed.append(info.st_ino)
+                if len(observed) == 2:
+                    self.wheel.rename(detached)
+                    self.wheel.write_bytes(original_bytes)
+            return info
+        with patch.object(owner.os, "fstat", side_effect=replace_after_final):
+            self.deny()
+        self.assertEqual(len(observed), 2)
+        self.assertEqual(detached.read_bytes(), original_bytes)
+        self.assertEqual(self.wheel.read_bytes(), original_bytes)
+        self.assertNotEqual(self.wheel.stat().st_ino, original_inode)
+
     def test_installed_module_tamper(self):
         (self.install / MOD).write_bytes(b"tampered")
         self.deny()
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX retained inode check only")
+    def test_same_bytes_leaf_swap_after_final_fstat_denied(self):
+        """Identical bytes at a replacement pathname cannot inherit old inode custody."""
+        import os
+        from unittest.mock import patch
+        import f_wheel_qualification as owner
+        member = self.install / MOD
+        detached = self.base / "detached-original.py"
+        original_inode = member.stat().st_ino
+        real_fstat = os.fstat
+        seen = []
+        def swap_after_final(fd):
+            info = real_fstat(fd)
+            if info.st_ino == original_inode:
+                seen.append(info.st_ino)
+                if len(seen) == 2:
+                    member.rename(detached)
+                    member.write_bytes(SRC)
+            return info
+        with patch.object(owner.os, "fstat", side_effect=swap_after_final):
+            self.deny()
+        self.assertEqual(len(seen), 2)
+        self.assertEqual(detached.read_bytes(), SRC)
+        self.assertEqual(member.read_bytes(), SRC)
+        self.assertNotEqual(member.stat().st_ino, original_inode)
+
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX hardlink identity only")
+    def test_installed_hardlink_alias_denied_even_when_bytes_match(self):
+        """One externally writable inode must not authenticate as one owned installed path."""
+        import os
+        member = self.install / MOD
+        alias = self.base / "foreign-hardlink-alias.py"
+        os.link(member, alias)
+        self.assertEqual(member.stat().st_nlink, 2)
+        self.deny()
+        self.assertEqual(alias.read_bytes(), SRC)
+        self.assertEqual(member.read_bytes(), SRC)
+
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX installed closure hardlink only")
+    def test_closure_rejects_unrecorded_hardlinked_archive_member(self):
+        """A new inode alias in the installed tree must fail closure even before RECORD."""
+        import os
+        foreign = self.base / "other-file"
+        foreign.write_bytes(b"outside controlled install")
+        alias = self.install / "foreign-link.txt"
+        os.link(foreign, alias)
+        self.assertEqual(alias.stat().st_nlink, 2)
+        self.deny()
+        self.assertEqual(foreign.read_bytes(), b"outside controlled install")
+
     def test_missing_installed_record(self):
         (self.install / RECORD).unlink()
         self.deny()

@@ -13,6 +13,8 @@ import hashlib
 import io
 import os
 import contextlib
+import functools
+import importlib.util
 import pathlib
 import re
 import stat
@@ -28,6 +30,23 @@ _WINDOWS_RESERVED = re.compile(r"(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?\
 
 def _digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+@functools.lru_cache(maxsize=1)
+def _win_backend():
+    """Load only our exact sibling module, never an ambient sys.path shadow.
+
+    This pin is a source-location guard, not a signed-release or ACL proof.
+    """
+    source = pathlib.Path(__file__).with_name("f_windows_handle.py")
+    if not source.is_file() or source.is_symlink():
+        raise ValueError("F Windows handle backend source unavailable")
+    spec = importlib.util.spec_from_file_location("_f_owned_windows_handle", source)
+    if spec is None or spec.loader is None:
+        raise ValueError("F Windows handle backend loader unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def _safe_member(name: str) -> tuple[str, ...]:
@@ -48,9 +67,15 @@ def _safe_member(name: str) -> tuple[str, ...]:
 def _root_fd(installed_root):
     """Retain the original directory inode for every installed-file open.
 
-    This is POSIX-only forensic inspection, NOT a protected runtime install.
-    A Windows protected-handle implementation must be separately reviewed.
+    Windows uses the reviewed F-only original Win32 handle snapshot backend.
+    Neither backend is an authenticated or protected runtime installation.
     """
+    if os.name == "nt":
+        # Same central wheel/RECORD/source validation; only the OS-backed
+        # retained-handle reader differs. It does NOT issue runtime authority.
+        with _win_backend().WindowsInstalledRoot(installed_root) as owned:
+            yield owned
+        return
     if os.name != "posix" or not hasattr(os, "O_NOFOLLOW") or not hasattr(os, "O_DIRECTORY"):
         raise ValueError("protected directory-fd inspection unsupported")
     path = pathlib.Path(installed_root)
@@ -71,6 +96,8 @@ def _installed_bytes(root_fd: int, parts: tuple[str, ...]) -> bytes:
     """Read through retained directory FDs; reject symlink replacement races."""
     if not parts or any('/' in part or part in ('', '.', '..') for part in parts):
         raise ValueError("invalid installed file path")
+    if os.name == "nt":
+        return root_fd.read(parts)
     fd = os.dup(root_fd)
     try:
         for part in parts[:-1]:
@@ -80,8 +107,9 @@ def _installed_bytes(root_fd: int, parts: tuple[str, ...]) -> bytes:
         file_fd = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=fd)
         try:
             original = os.fstat(file_fd)
-            if not stat.S_ISREG(original.st_mode) or original.st_size > _MAX_ARCHIVE_BYTES:
-                raise ValueError("installed member is not a bounded regular file")
+            if (not stat.S_ISREG(original.st_mode) or original.st_nlink != 1
+                    or original.st_size > _MAX_ARCHIVE_BYTES):
+                raise ValueError("installed member is not a bounded single-link regular file")
             chunks = []
             remaining = _MAX_ARCHIVE_BYTES + 1
             while remaining:
@@ -96,6 +124,13 @@ def _installed_bytes(root_fd: int, parts: tuple[str, ...]) -> bytes:
             fields = lambda x: (x.st_dev, x.st_ino, x.st_size, x.st_mtime_ns, x.st_ctime_ns)
             if fields(original) != fields(final):
                 raise ValueError("installed member modified during inspection")
+            # An attacker may swap a leaf name after final fstat while this
+            # original, readable inode is retained. Recheck the live name
+            # against the original inode before recording the bytes. This is
+            # a bounded diagnostic check, not atomic hostile-writer custody.
+            live = os.stat(parts[-1], dir_fd=fd, follow_symlinks=False)
+            if not stat.S_ISREG(live.st_mode) or fields(live) != fields(original):
+                raise ValueError("installed pathname no longer identifies original member")
             return b''.join(chunks)
         finally:
             os.close(file_fd)
@@ -107,6 +142,8 @@ def _installed_bytes(root_fd: int, parts: tuple[str, ...]) -> bytes:
 
 def _installed_closure(root_fd: int) -> set[str]:
     """Reject unrecorded import-shadowing files and all untrusted bytecode."""
+    if os.name == "nt":
+        return root_fd.closure()
     discovered = set()
     def walk(parent_fd, prefix):
         with os.scandir(parent_fd) as iterator:
@@ -126,6 +163,12 @@ def _installed_closure(root_fd: int) -> set[str]:
             elif entry.is_file(follow_symlinks=False):
                 if name.endswith(('.pyc', '.pyo', '.pth', '.egg-link')) or name in ('sitecustomize.py', 'usercustomize.py'):
                     raise ValueError("untrusted installed import or bytecode")
+                # Enumeration must not merely collect a suspicious name: an
+                # external hardlink alias can mutate the same inode between
+                # scan and later per-member read. Reject it here as well.
+                info = entry.stat(follow_symlinks=False)
+                if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+                    raise ValueError("installed closure contains hardlinked or substituted member")
                 discovered.add('/'.join(current))
             else:
                 raise ValueError("unsupported installed closure node")
@@ -135,6 +178,8 @@ def _installed_closure(root_fd: int) -> set[str]:
 
 def _wheel_bytes_snapshot(wheel) -> bytes:
     """Hash and ZipFile must inspect precisely this ONE immutable bytes object."""
+    if os.name == "nt":
+        return _win_backend().wheel_snapshot(wheel)
     if not hasattr(os, "O_NOFOLLOW"):
         raise ValueError("safe wheel descriptor inspection unsupported")
     try:
@@ -143,8 +188,9 @@ def _wheel_bytes_snapshot(wheel) -> bytes:
         raise ValueError("wheel inaccessible or symlink") from exc
     try:
         first = os.fstat(fd)
-        if not stat.S_ISREG(first.st_mode) or first.st_size > _MAX_ARCHIVE_BYTES + 1024 * 1024:
-            raise ValueError("wheel is not a bounded regular file")
+        if (not stat.S_ISREG(first.st_mode) or first.st_nlink != 1
+                or first.st_size > _MAX_ARCHIVE_BYTES + 1024 * 1024):
+            raise ValueError("wheel is not a bounded single-link regular file")
         chunks = []
         remaining = _MAX_ARCHIVE_BYTES + 1024 * 1024 + 1
         while remaining:
@@ -159,6 +205,16 @@ def _wheel_bytes_snapshot(wheel) -> bytes:
         fields = lambda x: (x.st_dev, x.st_ino, x.st_size, x.st_mtime_ns, x.st_ctime_ns)
         if fields(first) != fields(end):
             raise ValueError("wheel changed while reading")
+        # Retaining a readable archive FD does not prove that the present
+        # wheel pathname still points to the file whose bytes we just read.
+        # This is a bounded diagnostic recheck, not hostile-writer custody.
+        try:
+            live = os.stat(wheel, follow_symlinks=False)
+        except OSError as exc:
+            raise ValueError("wheel pathname no longer exists") from exc
+        if (not stat.S_ISREG(live.st_mode) or live.st_nlink != 1
+                or fields(live) != fields(first)):
+            raise ValueError("wheel pathname no longer identifies original archive")
         return b''.join(chunks)
     finally:
         os.close(fd)
