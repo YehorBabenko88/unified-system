@@ -225,3 +225,17 @@ Owner F/A must verify native FILE_ID_INFO/Python fstat cross-representation, ret
 References: https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew ; https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfileinformationbyhandle .
 
 No main merge, force push, frozen #166 change, ADMINIT, real service/host operations, user DB/data, trades, or security weakening. CODE NO_GO / PRODUCTION NO_GO.
+
+## ROUND33 — retained-parent and full 128-bit native file identity candidate
+
+F independent R32 review (#174 comments 7217336245 and 7217362080) identified two practical omissions: original candidate compared only CRT st_dev/st_ino and used a path-based directory emptiness read. This existing canonical Uninstaller native helper is now amended as source candidate:
+
+- `_win_handle_dispose_member(path, owned, kind, parent_identity)` takes the original sealed MEMBER_INTENT parent identity, validates it before any Win32 call and opens the original parent as a retained HANDLE with share READ (not write/delete). Unsupported/renamed/foreign/reparse parent refuses.
+- `GetFileInformationByHandleEx(FileIdInfo=18)` records exact 64-bit volume serial and 16-byte native FileId of both held parent and member, and rechecks both before disposition. Original CRT identity and sealed member receipt still checked for FILE; the native 128-bit FileId is compared across the retained HANDLE lifetime but is NOT YET bound into a trusted installation-time journal. That missing installation-time full-identity binding is a **release blocker**, not an implied proof.
+- Empty-directory inspection uses `GetFileInformationByHandleEx(FileIdBothDirectoryRestartInfo=11 / FileIdBothDirectoryInfo=10)` on the SAME original directory HANDLE, allowing only '.'/'..' entries. No `Path.iterdir()` is used for native directory validation, and no CRT `open_osfhandle()` is invoked on a directory HANDLE. Unsupported enumeration, nonempty directory or any unexpected Win32 error is DENIED.
+- Files still use original HANDLE through CRT `os.fstat/read`, sha256 rehash, link-count=1, identical original member identity and refreshed 128-bit native member/parent identity before `SetFileInformationByHandle(FileDispositionInfoEx=21)`; no name-delete fallback. The paired original native Windows test file now passes exact parent identity and includes foreign parent-identity mismatch and hardlink negative cases.
+- Both canonical `_exclusive_code_removal_proven()` checks (entry and direct helper) are STILL hardcoded False; `InstallationTransaction._exclusive_namespace_proven()` is separately False. No native effects are reachable through normal public invocation. No same-privilege test monkeypatch is an authority mechanism.
+
+**QUALIFICATION LIMITATIONS**: no native Windows2022/2025 execution of latest helper, no original full-suite APP_ONLY test PASS, no installation-time FileIdInfo seal, no attested user-PC ownership, no hostile concurrent writer/rename or restart/SCM/SQL exercised, no native directory emptiness proof PASS. Even with full held HANDLE checks, don't change either release gate until F/A independently approve the original Windows disposable matrix and source/identity binding. Exact R33 native candidate is NOT production installation/uninstall readiness.
+
+Runtime scope unchanged: no real host/Windows SCM, admin elevation, user PostgreSQL, trades, data deletion, main/force or frozen PR #166 changes. CODE NO_GO / PRODUCTION NO_GO.

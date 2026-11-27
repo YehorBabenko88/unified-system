@@ -103,7 +103,7 @@ def _exclusive_code_removal_proven():
 
 
 
-def _win_handle_dispose_member(path, owned, kind):
+def _win_handle_dispose_member(path, owned, kind, parent_identity):
  """Candidate OS-object-bound removal; default APP_ONLY guard still DENIES.
 
  No late Path.unlink/rmdir, no legacy fallback, no real-PC permission.
@@ -112,10 +112,12 @@ def _win_handle_dispose_member(path, owned, kind):
  # Direct callers cannot bypass the disabled APP_ONLY production entrypoint.
  need(_exclusive_code_removal_proven())
  need(os.name=='nt' and kind in ('FILE','DIRECTORY') and type(owned) is dict)
+ fingerprint(parent_identity)
  import ctypes
  from ctypes import wintypes as w
  import msvcrt
  path=_safe(path)
+ need(identity(path.parent)==parent_identity)
  initial=path.lstat()
  need((stat.S_ISREG(initial.st_mode) if kind=='FILE' else stat.S_ISDIR(initial.st_mode))
       and initial.st_dev>0 and initial.st_ino>0)
@@ -135,48 +137,120 @@ def _win_handle_dispose_member(path, owned, kind):
  k.SetFileInformationByHandle.restype=w.BOOL
  k.CloseHandle.argtypes=(w.HANDLE,)
  k.CloseHandle.restype=w.BOOL
- # GENERIC_READ|DELETE; no sharing of writes/deletes; reparse point opened,
- # not traversed. Preexisting incompatible handles cause a denied open.
- flags=0x00200000|(0x02000000 if kind=='DIRECTORY' else 0)
- handle=k.CreateFileW(str(path),0x80000000|0x00010000,0x00000001,None,3,flags,None)
- need(handle not in (None,0,ctypes.c_void_p(-1).value))
- responsible=True
+ def _file_id(h):
+  # FILE_ID_INFO (class 18) retains full volume serial and 128-bit FileId;
+  # CRT st_ino is NOT itself this OS identity proof.
+  class FILE_ID_INFO(ctypes.Structure):
+   _fields_=[('volume_serial',ctypes.c_ulonglong),('file_id',ctypes.c_ubyte*16)]
+  info=FILE_ID_INFO()
+  need(k.GetFileInformationByHandleEx(h,18,ctypes.byref(info),ctypes.sizeof(info)))
+  need(info.volume_serial!=0 and any(info.file_id))
+  return (int(info.volume_serial),bytes(info.file_id))
+ def _empty_by_handle(h):
+  # FILE_ID_BOTH_DIR_INFO 10/11: use the SAME opened directory HANDLE,
+  # never Path.iterdir(), which is a second pathname lookup.
+  class DIR_ENTRY(ctypes.Structure):
+   _fields_=[('next_offset',w.DWORD),('index',w.DWORD),
+    ('created',ctypes.c_longlong),('accessed',ctypes.c_longlong),
+    ('written',ctypes.c_longlong),('changed',ctypes.c_longlong),
+    ('size',ctypes.c_longlong),('allocated',ctypes.c_longlong),
+    ('attributes',w.DWORD),('name_length',w.DWORD),('ea_size',w.DWORD),
+    ('short_name_length',ctypes.c_ubyte),('short_name',ctypes.c_wchar*12),
+    ('file_id',ctypes.c_longlong),('name',ctypes.c_wchar*1)]
+  first=True
+  for _ in range(16):
+   data=ctypes.create_string_buffer(65536)
+   ctypes.set_last_error(0)
+   ok=k.GetFileInformationByHandleEx(h,11 if first else 10,data,len(data))
+   first=False
+   if not ok:
+    need(ctypes.get_last_error()==18)  # ERROR_NO_MORE_FILES ONLY
+    return
+   offset=0
+   for _ in range(2048):
+    need(offset+ctypes.sizeof(DIR_ENTRY)<=len(data))
+    entry=DIR_ENTRY.from_buffer(data,offset)
+    need(0<entry.name_length<=len(data)-offset-DIR_ENTRY.name.offset
+         and entry.name_length%2==0)
+    name=ctypes.wstring_at(ctypes.addressof(data)+offset+
+                           DIR_ENTRY.name.offset,entry.name_length//2)
+    need(name in ('.','..'))  # any other entry: owned dir NOT empty
+    if entry.next_offset==0:break
+    need(entry.next_offset>0 and entry.next_offset%4==0)
+    offset+=entry.next_offset
+   else:need(False)
+  need(False)  # more than 16 buffers: refuse, never assume emptiness
+ # Pin the parent directory OS object BEFORE opening the leaf. A hostile
+ # rename of a retained directory requires DELETE sharing, which is denied.
+ # This is still a candidate: full ownership at creation is NOT attested.
+ parent=path.parent
+ parent_h=k.CreateFileW(str(parent),0x00000081,0x00000001,None,3,
+                        0x00200000|0x02000000,None)
+ need(parent_h not in (None,0,ctypes.c_void_p(-1).value))
  try:
-  class AttributeTagInfo(ctypes.Structure):
+  class TAG(ctypes.Structure):
    _fields_=[('attributes',w.DWORD),('reparse_tag',w.DWORD)]
-  tag=AttributeTagInfo()
-  need(k.GetFileInformationByHandleEx(handle,9,ctypes.byref(tag),ctypes.sizeof(tag)))
-  need(not tag.attributes&0x400 and bool(tag.attributes&0x10)==(kind=='DIRECTORY'))
-  final=ctypes.create_unicode_buffer(32768)
-  n=k.GetFinalPathNameByHandleW(handle,final,len(final),0)
-  need(0<n<len(final) and final.value.startswith('\\\\?\\')
-       and final.value[4:].casefold()==str(path).casefold())
-  # CRT inherits ownership of the same original HANDLE, not a second name open.
-  fd=msvcrt.open_osfhandle(int(handle),os.O_RDONLY|getattr(os,'O_BINARY',0))
-  responsible=False
+  parent_tag=TAG()
+  need(k.GetFileInformationByHandleEx(parent_h,9,ctypes.byref(parent_tag),
+                                      ctypes.sizeof(parent_tag)))
+  need(bool(parent_tag.attributes&0x10) and not parent_tag.attributes&0x400)
+  parent_id=_file_id(parent_h)
+  need(identity(parent)==parent_identity)
+  # GENERIC_READ|DELETE, share READ only; incompatible foreign writers or
+  # open DELETE handles cause a safe failure, no pathname fallback.
+  flags=0x00200000|(0x02000000 if kind=='DIRECTORY' else 0)
+  handle=k.CreateFileW(str(path),0x80000000|0x00010000,0x00000001,
+                       None,3,flags,None)
+  need(handle not in (None,0,ctypes.c_void_p(-1).value))
+  responsible=True
   try:
-   before=os.fstat(fd)
-   fields=lambda s:(s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_nlink)
-   need(before.st_dev==owned['device'] and before.st_ino==owned['inode'])
+   tag=TAG()
+   need(k.GetFileInformationByHandleEx(handle,9,ctypes.byref(tag),
+                                       ctypes.sizeof(tag)))
+   need(not tag.attributes&0x400 and bool(tag.attributes&0x10)==(kind=='DIRECTORY'))
+   opened_id=_file_id(handle)
+   # GetFinalPathNameByHandleW returns a local DOS \\?\C:\... form.
+   # UNC, alias, device or changed parent paths are DENIED.
+   final=ctypes.create_unicode_buffer(32768)
+   n=k.GetFinalPathNameByHandleW(handle,final,len(final),0)
+   need(0<n<len(final) and final.value.startswith('\\\\?\\')
+        and final.value[4:].casefold()==str(path).casefold())
    if kind=='FILE':
-    need(stat.S_ISREG(before.st_mode) and before.st_nlink==1 and
-         before.st_size==owned['bytes'] and before.st_mtime_ns==owned['mtime_ns'])
-    digest=hashlib.sha256();size=0
-    while True:
-     chunk=os.read(fd,1024*1024)
-     if not chunk:break
-     size+=len(chunk);need(size<=owned['bytes']);digest.update(chunk)
-    need(size==owned['bytes'] and digest.hexdigest()==owned['sha256'])
+    fd=msvcrt.open_osfhandle(int(handle),os.O_RDONLY|getattr(os,'O_BINARY',0))
+    responsible=False
+    try:
+     before=os.fstat(fd)
+     fields=lambda s:(s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_nlink)
+     need(before.st_dev==owned['device'] and before.st_ino==owned['inode'])
+     need(stat.S_ISREG(before.st_mode) and before.st_nlink==1 and
+          before.st_size==owned['bytes'] and before.st_mtime_ns==owned['mtime_ns'])
+     digest=hashlib.sha256();size=0
+     while True:
+      chunk=os.read(fd,1024*1024)
+      if not chunk:break
+      size+=len(chunk);need(size<=owned['bytes']);digest.update(chunk)
+     need(size==owned['bytes'] and digest.hexdigest()==owned['sha256'])
+     need(fields(os.fstat(fd))==fields(before))
+     need(_file_id(handle)==opened_id and _file_id(parent_h)==parent_id)
+     need(identity(parent)==parent_identity)
+     # FileDispositionInfoEx=21, DELETE|POSIX_SEMANTICS. No downgrade.
+     disposition=w.DWORD(3)
+     need(k.SetFileInformationByHandle(handle,21,ctypes.byref(disposition),
+                                       ctypes.sizeof(disposition)))
+    finally:os.close(fd)  # CRT owns original HANDLE exactly once
    else:
-    need(stat.S_ISDIR(before.st_mode) and not any(path.iterdir()))
-   need(fields(os.fstat(fd))==fields(before))
-   # FileDispositionInfoEx=21, DELETE=0x1, POSIX_SEMANTICS=0x2.
-   # Unsupported Windows/filesystem returns DENIED, never Path.unlink fallback.
-   flags=w.DWORD(3)
-   need(k.SetFileInformationByHandle(handle,21,ctypes.byref(flags),ctypes.sizeof(flags)))
-  finally:os.close(fd)
- finally:
-  if responsible:k.CloseHandle(handle)
+    # A directory HANDLE is NOT a CRT file descriptor; don't call
+    # msvcrt.open_osfhandle or os.fstat on it.
+    _empty_by_handle(handle)
+    need(_file_id(handle)==opened_id and _file_id(parent_h)==parent_id)
+    need(identity(parent)==parent_identity)
+    disposition=w.DWORD(3)
+    need(k.SetFileInformationByHandle(handle,21,ctypes.byref(disposition),
+                                      ctypes.sizeof(disposition)))
+  finally:
+   if responsible:k.CloseHandle(handle)
+ finally:k.CloseHandle(parent_h)
+
  # A new foreign leaf or pending deletion is NOT evidence of success.
  need(not path.exists() and not path.is_symlink())
 
@@ -343,7 +417,7 @@ class Uninstaller:
      need(self._observe(record,plan,guard)=='ABSENT');self._roots(plan,record)
      need(identity(path.parent)==data['parent_identity'] and (image(path) if kind=='FILE' else identity(path))==data['identity'])
      if os.name=='nt' and isinstance(self.boundary,WindowsRemovalBoundary):
-      _win_handle_dispose_member(path,data['identity'],kind)
+      _win_handle_dispose_member(path,data['identity'],kind,data['parent_identity'])
      elif kind=='FILE':path.unlink()  # disposable FakeRemoval fixture only
      else:need(not any(path.iterdir()));path.rmdir()
    self._append(plan,'COMPLETE','OBSERVED_OWNED_ABSENCE_STATE_RETAINED',guard);self._verify_final()
