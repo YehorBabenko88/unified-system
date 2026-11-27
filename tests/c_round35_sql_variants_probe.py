@@ -87,22 +87,31 @@ def exercise_two_pinned_sql_sources(test, *, identity, stream, start_ms,
             ("076980d", current, CURRENT_BLOB),
         ):
             raw = _NativeRawSql(test.pg, connection)
-            if tag == "cad4ccf":
-                with test.assertRaises(test.psycopg.errors.SyntaxError) as caught:
-                    module.verify_existing_lab_checkpoint(raw, **kwargs)
-                test.assertEqual(caught.exception.sqlstate, "42601")
-                verdict = "EXPECTED_SQLSTATE_42601"
-            else:
-                observed = module.verify_existing_lab_checkpoint(raw, **kwargs)
-                test.assertEqual(observed["state"],
-                                 "EXACT_ALREADY_ACKNOWLEDGED")
-                test.assertIs(observed["execution_authority"], False)
-                verdict = observed["state"]
-            test.assertEqual(len(raw.queries), 1)
-            original_sql = raw.queries[0]
-            test.assertIn("FOR SHARE OF f", original_sql)
-            test.assertIn("relevant_pending AS (", original_sql)
-            digest = hashlib.sha256(original_sql.encode("utf-8")).hexdigest()
-            print("C35_NATIVE_PG18_SQL_VARIANT "
-                  f"source={expected_blob} sql_sha256={digest} "
-                  f"chars={len(original_sql)} outcome={verdict}", flush=True)
+            outcome = "NOT_EXECUTED"
+            try:
+                if tag == "cad4ccf":
+                    # A genuine original old-SQL parser failure is an
+                    # expected negative result, not a native PASS claim for
+                    # the corrected candidate. Preserve the exact SQLSTATE.
+                    with test.assertRaises(test.psycopg.errors.SyntaxError) as caught:
+                        module.verify_existing_lab_checkpoint(raw, **kwargs)
+                    test.assertEqual(caught.exception.sqlstate, "42601")
+                    outcome = "EXPECTED_SQLSTATE_42601"
+                else:
+                    observed = module.verify_existing_lab_checkpoint(raw, **kwargs)
+                    test.assertEqual(observed["state"],
+                                     "EXACT_ALREADY_ACKNOWLEDGED")
+                    test.assertIs(observed["execution_authority"], False)
+                    outcome = observed["state"]
+            finally:
+                # Even unexpected SQLSTATE, fixture failure and readback
+                # mismatch retain the emitted original SQL hash in CI logs.
+                if raw.queries:
+                    test.assertEqual(len(raw.queries), 1)
+                    original_sql = raw.queries[0]
+                    test.assertIn("FOR SHARE OF f", original_sql)
+                    test.assertIn("relevant_pending AS (", original_sql)
+                    digest = hashlib.sha256(original_sql.encode("utf-8")).hexdigest()
+                    print("C35_NATIVE_PG18_SQL_VARIANT "
+                          f"source={expected_blob} sql_sha256={digest} "
+                          f"chars={len(original_sql)} outcome={outcome}", flush=True)
