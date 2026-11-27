@@ -410,3 +410,34 @@ outcome for an oversized real candidate is safe pre-BEGIN rejection.
 Current exact-HEAD original tests are not executed by this document;
 GitHub source checks and synthetic method-count bounds are evidence
 only for static logic. **PRODUCTION NO_GO**.
+
+## ROUND35 P0 native directory-open correction (2026-11-27)
+
+Independent F review found that the retained Win32 custody opened **directories**
+without `FILE_FLAG_BACKUP_SEMANTICS`, which Microsoft requires for a
+`CreateFileW` directory HANDLE. The canonical owner code now chooses flags
+from the exact roster role, not an untrusted leaf-attribute probe:
+
+- `root`, `code`, `ownership`, `state`, `ancestor:*`,
+  `directory:*`, `parent:*`: `OPEN_REPARSE_POINT | BACKUP_SEMANTICS`
+  (`0x02200000`).
+- `file:*`, `ownership:service.sqlite`: `OPEN_REPARSE_POINT`
+  (`0x00200000`).
+- Unknown and empty role qualifiers are **rejected** before native open.
+
+For all roles the only share mode is `FILE_SHARE_READ|FILE_SHARE_WRITE`
+(`0x3`), **never** `FILE_SHARE_DELETE`. The original native
+`FILE_ID_INFO`, reparse, FileStandardInfo and receipt rules are unchanged.
+The held-handle path still runs across ACL/SCM receipt transitions, and
+releases each handle on failed acquisition, failure and normal exit.
+
+Original `tests/test_installation_service.py` includes executable
+role-to-flags cases and two fake-kernel tests of the **production**
+`_NativeReceiptCustody.__enter__` / `__exit__`: per-role Win32 flags,
+write/no-delete sharing, retained lifetime and reverse-order cleanup on
+partial handle failure. The fake Win32 tests **do not imply** that a native
+Windows2022/2025 handle open, SQLite sharing, ACL, SCM or crash has passed.
+All such original native cases and real release inventory sizing require
+independent F/J qualification at the exact commit. No physical deletion,
+no main merge or force push, no automatic promotion. Both gates are FALSE.
+**CODE NO_GO / PRODUCTION NO_GO.**
