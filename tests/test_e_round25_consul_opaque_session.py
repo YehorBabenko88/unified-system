@@ -1020,6 +1020,60 @@ class OpaqueSessionTests(unittest.TestCase):
                 self.assertFalse(state["held"])
         asyncio.run(exercise())
 
+    def test_control_read_rejects_forged_kv_metadata_and_shape(self):
+        # This is historical state data, not lease/Root authority. Consul
+        # must not silently return a scalar or a row for a foreign key.
+        async def exercise(case):
+            state_key = "isolated/round25/state/probe"
+            original = {
+                "owner": "owner", "token": 41, "session_id": OBSERVED,
+                "payload": {"value": 17},
+            }
+            row = {
+                "Key": state_key, "ModifyIndex": 42,
+                "Value": base64.b64encode(json.dumps(original).encode()).decode(),
+            }
+            if case == "foreign-key":
+                row["Key"] = "isolated/foreign/state/probe"
+            elif case == "missing-index":
+                row.pop("ModifyIndex")
+            elif case == "boolean-index":
+                row["ModifyIndex"] = True
+            elif case == "missing-owner":
+                row["Value"] = base64.b64encode(b'{"payload":17}').decode()
+            elif case == "scalar":
+                row["Value"] = base64.b64encode(b'17').decode()
+            elif case == "non-finite":
+                row["Value"] = base64.b64encode(
+                    b'{"owner":"owner","token":41,'
+                    b'"session_id":"' + OBSERVED.encode() +
+                    b'","payload":NaN}').decode()
+            elif case == "oversized":
+                row["Value"] = base64.b64encode(
+                    b' ' * 32769 + json.dumps(original).encode()).decode()
+            rows = {"unexpected": "mapping"} if case == "mapping" else [row]
+            def handler(req):
+                self.assertEqual(req.method, "GET")
+                self.assertEqual(req.url.path, "/v1/kv/" + state_key)
+                self.assertIn("consistent", req.url.params)
+                return httpx.Response(200, json=rows)
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                if case == "valid":
+                    self.assertEqual(await authority.read_control("probe"), original)
+                else:
+                    with self.assertRaises(CoordinationUnavailable):
+                        await authority.read_control("probe")
+        for case in ("valid", "foreign-key", "missing-index",
+                     "boolean-index", "missing-owner", "scalar",
+                     "non-finite", "oversized", "mapping"):
+            with self.subTest(case=case):
+                asyncio.run(exercise(case))
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
