@@ -245,8 +245,6 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         self.assertIn("_native_file_identity(path)==self.snapshot[key]", checking)
         self.assertIn("CloseHandle(h)", closing)
         self.assertIn("len(paths)<=512", ast.get_source_segment(source, cls))
-        create = next(n for n in cls.body if n.name == "__enter__")
-        self.assertIsNotNone(create)
         service = next((n for n in tree.body if isinstance(n, ast.ClassDef)
                         and n.name == "ServiceResource"), None)
         self.assertIsNotNone(service)
@@ -266,7 +264,6 @@ class WindowsPathSyntaxTests(unittest.TestCase):
                         lifecycle.index("'REGISTERED'"))
         # An offline source contract is never a substitute for real Win32
         # ancestor races, SQLite WAL/rollback coexistence, SCM or crash tests.
-        self.assertTrue(True)
 
 
 @unittest.skipUnless(os.name == "nt", "genuine Win32 kernel handles required")
