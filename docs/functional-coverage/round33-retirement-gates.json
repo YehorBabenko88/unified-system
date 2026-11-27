@@ -22,7 +22,8 @@
     "strattester_universe_tests": "260cb681ec6d342f89fefd518b18eb1ac6e5c2dd",
     "meta_feature_inventory": "56c239415eae9ee0445e624431140de188d59faf",
     "meta_file_inventory": "31a1387707f7b88d22d9c8a2b2fde84e77cdc7d8",
-    "h_existing_27_family_ledger": "b2c1e78b1a78d4f293394cb5e01f26d2d7717b0b"
+    "h_existing_27_family_ledger": "b2c1e78b1a78d4f293394cb5e01f26d2d7717b0b",
+    "meta_stage6_actual_85_crosswalk": "aad4b095bb1fd619dc633889e7011dff6455edf7"
   },
   "inventory_scope": {
     "original_h_ledger_families": 27,
@@ -31,7 +32,15 @@
     "overlap_not_additive": true,
     "full_six_repo_symbol_inventory_verified": false,
     "meta_source_may_have_newer_heads": true,
-    "note": "Meta file count is the original stage6 CSV snapshot, not the complete repository at current HEAD; static import analysis and all branch histories are not exhausted."
+    "note": "Meta file count is the original stage6 CSV snapshot, not the complete repository at current HEAD; static import analysis and all branch histories are not exhausted.",
+    "meta_stage6_actual_python_file_count": 85,
+    "meta_stage6_old_blob_changed_count": 8,
+    "meta_stage6_unlisted_python_file_count": 2,
+    "meta_stage6_semantic_diff_tests_passed": false,
+    "meta_stage6_unlisted_source_paths": [
+      "src/meta_analyse/offline_paper_delivery.py",
+      "src/meta_analyse/retirement_receipt.py"
+    ]
   },
   "evidence": {
     "original_strattester_ci_prior_head": {
@@ -169,7 +178,9 @@
         "replay and exact UTC/Decimal orderflow",
         "resumable archive and old SQL reader",
         "UI styling and monitor",
-        "service and recovery semantics"
+        "service and recovery semantics",
+        "offline_paper_delivery digest-verified idempotent PaperJournal replay and readback",
+        "retirement_receipt read-only paper_fills/level_map/checkpoints digest transfer"
       ],
       "consumers": "Meta source CSV marks USED and UNKNOWN; full external imports NOT_EXHAUSTIVELY_VERIFIED",
       "required_tests": [
@@ -177,7 +188,9 @@
         "original same-input numerical/parity and 100k bounded stream",
         "external runtime consumer cutover",
         "single Grid writer and Terminan UI",
-        "stateful native rollback and archive preservation"
+        "stateful native rollback and archive preservation",
+        "Original 85-file current-tree crosswalk: 8 changed SHA drift and 2 newly unlisted source files require symbol-level owner/consumer parity",
+        "Paper replay source digest, acknowledgement/checkpoint/fills and read-only persisted state receipt to Terminan differential E2E"
       ],
       "retirement_allowed": false
     }
