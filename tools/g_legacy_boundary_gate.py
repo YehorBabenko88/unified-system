@@ -45,8 +45,8 @@ def _calls(tree: ast.AST, function: str) -> bool:
     return any(
         isinstance(node, ast.Call)
         and (
-            isinstance(node.func, ast.Name) and node.func.id == function
-            or isinstance(node.func, ast.Attribute) and node.func.attr == function
+            (isinstance(node.func, ast.Name) and node.func.id == function)
+            or (isinstance(node.func, ast.Attribute) and node.func.attr == function)
         )
         for node in ast.walk(tree)
     )
