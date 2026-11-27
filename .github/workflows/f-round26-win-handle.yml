@@ -81,6 +81,52 @@ jobs:
           git rev-parse HEAD
           git status --porcelain
           python --version
+      - name: CI-only original Win32 final-path evidence (no admission change)
+        shell: pwsh
+        run: |
+          @'
+          import ctypes, ntpath, tempfile
+          from pathlib import Path
+          from f_windows_handle import (_api, _segments, _FILE_READ_ATTRIBUTES,
+              _FILE_LIST_DIRECTORY, _FILE_SHARE_READ, _OPEN_EXISTING,
+              _FILE_FLAG_OPEN_REPARSE_POINT, _FILE_FLAG_BACKUP_SEMANTICS,
+              _INVALID_HANDLE)
+          with tempfile.TemporaryDirectory(prefix='f-win32-path-proof-') as tmp:
+              dll = _api()
+              drive, parts = _segments(str(Path(tmp)))
+              current = drive
+              paths = [current]
+              for part in parts:
+                  current = ntpath.join(current, part)
+                  paths.append(current)
+              for expected in paths:
+                  h = dll.CreateFileW(expected,
+                      _FILE_READ_ATTRIBUTES | _FILE_LIST_DIRECTORY,
+                      _FILE_SHARE_READ, None, _OPEN_EXISTING,
+                      _FILE_FLAG_OPEN_REPARSE_POINT | _FILE_FLAG_BACKUP_SEMANTICS,
+                      None)
+                  if h in (None, _INVALID_HANDLE):
+                      print('WIN32_PATH_OBSERVATION_OPEN_FAILED', repr(expected),
+                            ctypes.get_last_error())
+                      continue
+                  try:
+                      buf = ctypes.create_unicode_buffer(32768)
+                      n = dll.GetFinalPathNameByHandleW(h, buf, len(buf), 0)
+                      actual = buf.value
+                      prefix = chr(92) * 2 + '?' + chr(92)
+                      folded = (actual.startswith(prefix) and
+                          ntpath.normcase(actual[4:]) == ntpath.normcase(expected))
+                      root_equivalent = (len(expected) == 3 and
+                          expected.endswith(chr(92)) and
+                          actual.startswith(prefix) and
+                          ntpath.normcase(actual[4:] + chr(92)) ==
+                          ntpath.normcase(expected))
+                      print('WIN32_PATH_OBSERVATION', repr(expected),
+                            repr(actual), 'chars', n,
+                            'exact_dos', folded, 'root_spelling', root_equivalent)
+                  finally:
+                      dll.CloseHandle(h)
+          '@ | python -B -
       - name: Original F central qualifier synthetic negative regression
         run: python -B -m unittest discover -s tests -p test_f_wheel_qualification.py -v
       - name: Native Win32 retained-handle and junction gates
