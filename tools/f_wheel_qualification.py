@@ -163,6 +163,12 @@ def _installed_closure(root_fd: int) -> set[str]:
             elif entry.is_file(follow_symlinks=False):
                 if name.endswith(('.pyc', '.pyo', '.pth', '.egg-link')) or name in ('sitecustomize.py', 'usercustomize.py'):
                     raise ValueError("untrusted installed import or bytecode")
+                # Enumeration must not merely collect a suspicious name: an
+                # external hardlink alias can mutate the same inode between
+                # scan and later per-member read. Reject it here as well.
+                info = entry.stat(follow_symlinks=False)
+                if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+                    raise ValueError("installed closure contains hardlinked or substituted member")
                 discovered.add('/'.join(current))
             else:
                 raise ValueError("unsupported installed closure node")
