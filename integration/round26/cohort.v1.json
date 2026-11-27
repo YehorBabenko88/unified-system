@@ -16,29 +16,29 @@
       "role": "A",
       "repo": "YehorBabenko88/unified-system",
       "pr": 162,
-      "sha": "74fc782da27980626bc3721ca1db6684d12559ff",
-      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE"
+      "sha": "1dc93a20509c4c842203db0f73539ee0d8641ae6",
+      "disposition": "PINNED_OWNER_SOURCE_SELECTIVELY_IMPORTED_NO_NATIVE_AUTHORITY"
     },
     {
       "role": "B",
       "repo": "YehorBabenko88/bybit-cluster-grid",
-      "pr": 308,
-      "sha": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
-      "disposition": "EXTERNAL_SOURCE_PIN_ONLY_CROSS_REPO_NATIVE_NOT_RUN"
+      "pr": 309,
+      "sha": "b2e3f9a77384080ecbb834b32d51d8816ed1aa2a",
+      "disposition": "EXTERNAL_TEST_COHORT_PIN_ONLY_PRODUCTION_B308_D133"
     },
     {
       "role": "C",
       "repo": "YehorBabenko88/unified-system",
       "pr": 170,
-      "sha": "a54e2914e741197399d39c14263966ffddc83dc4",
-      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE"
+      "sha": "6b33cac858529c21d51acfe098447f3715d0c9af",
+      "disposition": "PINNED_OWNER_SOURCE_SELECTIVELY_IMPORTED_NO_NATIVE_AUTHORITY"
     },
     {
       "role": "D",
       "repo": "YehorBabenko88/Terminan",
-      "pr": 133,
-      "sha": "bcdf3287a47e60f6c50022adce7651bcb51e587f",
-      "disposition": "EXTERNAL_SOURCE_PIN_ONLY_CROSS_REPO_NATIVE_NOT_RUN"
+      "pr": 134,
+      "sha": "3608e41b90b2dbf7a80d7daa86582a2440e11330",
+      "disposition": "EXTERNAL_TEST_COHORT_PIN_ONLY_PRODUCTION_B308_D133"
     },
     {
       "role": "Math",
@@ -50,38 +50,38 @@
       "role": "E",
       "repo": "YehorBabenko88/unified-system",
       "pr": 171,
-      "sha": "5cd9b6a42e64679b762043dc7547d88ad35a84bb",
-      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE"
+      "sha": "4e9d6d457f971188884111f60fd34c5b5231bf0f",
+      "disposition": "PINNED_OWNER_SOURCE_SELECTIVELY_IMPORTED_NO_NATIVE_AUTHORITY"
     },
     {
       "role": "F",
       "repo": "YehorBabenko88/unified-system",
       "pr": 180,
-      "sha": "cacc3c4c28da260462696243ed39ed4f9e5cf861",
-      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE"
+      "sha": "701321a8fb30e36f02970c9367b5b13e3156f615",
+      "disposition": "PINNED_OWNER_SOURCE_SELECTIVELY_IMPORTED_NO_NATIVE_AUTHORITY"
     },
     {
       "role": "G",
       "repo": "YehorBabenko88/unified-system",
       "issue": 172,
-      "sha": "6dc7e1a186385080bbbd3950c8c6280cc82ed67b",
-      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE",
+      "sha": "be77a6a592fc2196db9ed041e83e77a122c02614",
+      "disposition": "PINNED_OWNER_SOURCE_SELECTIVELY_IMPORTED_NO_NATIVE_AUTHORITY",
       "pr": 183
     },
     {
       "role": "H",
       "repo": "YehorBabenko88/unified-system",
       "issue": 173,
-      "sha": "d4a48420f2807602f12d6ffab793fc7f0510d8cf",
-      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE",
+      "sha": "a30f0ddbf2ce7974b01e2ac1248a6ab9e5a99558",
+      "disposition": "PINNED_OWNER_SOURCE_SELECTIVELY_IMPORTED_NO_NATIVE_AUTHORITY",
       "pr": 181
     },
     {
       "role": "I",
       "repo": "YehorBabenko88/unified-system",
       "issue": 174,
-      "sha": "2db8430347ba7440823c174f0a1a0b3685f3e080",
-      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE",
+      "sha": "e786095d3007ec907c6dfeb1acb0addcf08f268d",
+      "disposition": "PINNED_OWNER_SOURCE_SELECTIVELY_IMPORTED_NO_NATIVE_AUTHORITY",
       "pr": 182
     },
     {
@@ -117,14 +117,14 @@
   "acceptance": {
     "source_revision": "A_C_E_H_I_ORIGINAL_BLOBS_PRESENT_AND_PINNED",
     "original_package_hashes": "NOT_VERIFIED",
-    "native_windows": "NOT_RUN_CURRENT_INTEGRATION",
-    "native_consul_pg": "NOT_RUN_CURRENT_INTEGRATION",
+    "native_windows": "NOT_RUN_CURRENT_J",
+    "native_consul_pg": "NOT_RUN_CURRENT_J",
     "native_c_wal_reply_loss": "NOT_RUN",
     "grid306_d130_schema_source": "PASS_26_OF_26",
     "grid306_d130_original_consumer_e2e": "NOT_RUN",
     "mtf_precision_fidelity": "SOURCE_CANDIDATE_EXACT_OVER_STORED_JSON_ONLY_NOT_PROVIDER_RAW",
     "full_market_completeness": "NOT_PROVEN",
-    "installer_recovery": "APP_ONLY_AND_DISPOSAL_PHYSICAL_DELETION_DENIED",
+    "installer_recovery": "WIN32_HANDLE_CANDIDATE_GATES_DENIED",
     "disposable_toctou": "NOT_QUALIFIED_DIRFD_FINAL_PATH_RACE",
     "protected_root": "DENIED",
     "release": "NO_GO",
@@ -140,27 +140,29 @@
     "source_file_hash_checks": "DIRECT_GITHUB_BLOB_COMPARE_FOR_COHORT_SOURCE",
     "b308_d133_contract_execution": "NOT_RUN_AT_J",
     "immutable_source_file_blob_parity": "14_PASS_0_FAIL_0_ERROR_PLUS_F_TEST_CORRECTED_FROM_PINNED_SHA",
-    "integration_runtime_tests": "NOT_RUN_NO_REPO_CHECKOUT_OR_FINISHED_CURRENT_HEAD_CI",
-    "manual_host_acceptance": "NOT_RUN_NO_ADMINIT_ACCESS"
+    "integration_runtime_tests": "NOT_RUN_CURRENT_J",
+    "manual_host_acceptance": "NOT_RUN_NO_ADMINIT_ACCESS",
+    "grid309_d134": "CI_COHORT_ONLY_NO_ORIGINAL_INSTALLED_E2E",
+    "strattester123": "PARTIAL_MIGRATION_NOT_IMPORTED"
   },
-  "round": 32,
-  "integration_status": "ROUND31_SOURCE_IMPORT_COMPLETE_ROUND32_B308_D133_PINNED_NOT_RUNTIME_QUALIFIED",
+  "round": 33,
+  "integration_status": "ROUND33_OWNER_SOURCE_REFRESH_AND_COHORT_PINS_NATIVE_NOT_RUN",
   "protected_admission": "DENIED",
   "integration_source_evidence": {
     "C": {
       "owner_pr": 170,
-      "sha": "a54e2914e741197399d39c14263966ffddc83dc4",
+      "sha": "6b33cac858529c21d51acfe098447f3715d0c9af",
       "pg_fence_blob": "bf015508b1306b4a89ad9735868bdc1768048c4c",
       "pg_recovery_blob": "c574e15352f14a6e26b44de0bb960710d451aa98",
-      "pg_checkpoint_blob": "7648f2120b2b361cf288f4cdabb63ac009d5028b",
-      "native_wire_test_blob": "58b46dfb4acd8cf48312d6f284d7313aa1c27030",
+      "pg_checkpoint_blob": "cad4ccf970470eb86a487c484cee9be15ea9614d",
+      "native_wire_test_blob": "87f93ea3c0da5b9dc30c735c6e576b37860226a1",
       "native_pg18": "NOT_RUN_CURRENT_J_COHORT"
     },
     "E": {
       "owner_pr": 171,
-      "sha": "5cd9b6a42e64679b762043dc7547d88ad35a84bb",
-      "consul_runtime_blob": "cb520e784324484ce86c80576d6bc35c6722cec1",
-      "consul_test_blob": "bc2d9a9fdefa84186672fc1dd2ac1019b0990b19",
+      "sha": "4e9d6d457f971188884111f60fd34c5b5231bf0f",
+      "consul_runtime_blob": "0bc10560caa378cc09d1a88e4a97efef7071be63",
+      "consul_test_blob": "39e6c7090df0cea217cc2949319553f70299f5ab",
       "native_consul_ttl": "NOT_RUN"
     },
     "B": {
@@ -204,9 +206,9 @@
     },
     "H": {
       "owner_pr": 181,
-      "sha": "d4a48420f2807602f12d6ffab793fc7f0510d8cf",
-      "source_contract_blob": "1998f6f970eb4a586dbe53647a1830318a0ec76d",
-      "source_test_blob": "8f334cfbafe0a6a25b81f5ae940f065b637c63f1",
+      "sha": "a30f0ddbf2ce7974b01e2ac1248a6ab9e5a99558",
+      "source_contract_blob": "7444ae143017c59ff26597e8491bfff4de0bb3aa",
+      "source_test_blob": "fbe8a589b130284270c66bd53511013295af35e5",
       "original_byte_exact_python_cases": {
         "pass": 10,
         "fail": 0,
@@ -256,24 +258,24 @@
     },
     "A": {
       "owner_pr": 162,
-      "sha": "74fc782da27980626bc3721ca1db6684d12559ff",
+      "sha": "1dc93a20509c4c842203db0f73539ee0d8641ae6",
       "runtime_path": "unified_system/runtime_process.py",
-      "runtime_blob": "9015b2062c1a5c33c78daf04bbad5fc3580e2807",
+      "runtime_blob": "a735bd1e0e19d70e1069350f1e61cb6827fe3223",
       "retained_os_process_wait": "PRESENT_SOURCE_ONLY",
       "native_windows": "FAIL_PRIOR_NATIVE_CURRENT_NOT_RUN",
       "test_blob": "213b1ccba0e40094c1e1abea8f9d7261a1ee2e4a"
     },
     "I": {
       "owner_pr": 182,
-      "sha": "2db8430347ba7440823c174f0a1a0b3685f3e080",
-      "original_transaction_blob": "4b71af13b839fed2eeb07fdcaafe947e726103ba",
-      "original_disposable_test_blob": "1050fb2e8767bc6100d0b1908e8bb8e8a76346a0",
+      "sha": "e786095d3007ec907c6dfeb1acb0addcf08f268d",
+      "original_transaction_blob": "4b266fbfdeaf1a902b95d2ea554f34fa46c9de7d",
+      "original_disposable_test_blob": "7b9813dc86c396baf14709b26ae068dd88d4bdc7",
       "exclusive_namespace_guard": "ALWAYS_FALSE_DEFAULT_NO_DESTRUCTIVE_OPERATION",
-      "real_windows_uninstall": "APP_ONLY_AND_DISPOSAL_DENIED"
+      "real_windows_uninstall": "DENIED"
     },
     "G": {
       "owner_pr": 183,
-      "sha": "6dc7e1a186385080bbbd3950c8c6280cc82ed67b",
+      "sha": "be77a6a592fc2196db9ed041e83e77a122c02614",
       "pr_state": "CLOSED_UNMERGED",
       "source_checker_blob": "d7678b906b9668df75ed56b99c739de3dfce1f12",
       "source_test_blob": "80ea89bf911e83a61e438586b9336b10fa145117",
@@ -283,14 +285,14 @@
         "error": 0,
         "skip": 0
       },
-      "numeric_dedup_acceptance": "RETIREMENT_BLOCKED"
+      "numeric_dedup_acceptance": "NOT_RETIRED"
     },
     "F": {
       "owner_pr": 180,
-      "sha": "cacc3c4c28da260462696243ed39ed4f9e5cf861",
+      "sha": "701321a8fb30e36f02970c9367b5b13e3156f615",
       "windows_handle_blob": "c4ed804d7963047cdb2a123291054cacd95798b7",
-      "original_wheel_qualifier_blob": "e96ae238cd8450a7ccfe50852c10daace8b416e5",
-      "original_wheel_test_blob": "4bb6d3df9b4277b1b2ee1ce45596cd040f8283ef",
+      "original_wheel_qualifier_blob": "7a9fa9cff5e566106f4a54b43f88178053dfc38a",
+      "original_wheel_test_blob": "6ade644cbfaec32ff08847db494421059cafc906",
       "native_windows_handle": "NOT_RUN_AT_CURRENT_J"
     },
     "round32": {
@@ -312,6 +314,37 @@
       "physical_destructive_uninstall": "DENIED",
       "scope": "A_C_E_F_G_H_I_SELECTIVE_IMPORT_AND_B_D_EXTERNAL_PINS_NO_SHIPPING_AUTHORITY",
       "immutable_owner_blob_pin_validation": "15_FILES_MATCH_AFTER_C_F_CORRECTION"
+    },
+    "round33": {
+      "owner_commits": {
+        "A": "1dc93a20509c4c842203db0f73539ee0d8641ae6",
+        "B": "b2e3f9a77384080ecbb834b32d51d8816ed1aa2a",
+        "C": "6b33cac858529c21d51acfe098447f3715d0c9af",
+        "D": "3608e41b90b2dbf7a80d7daa86582a2440e11330",
+        "E": "4e9d6d457f971188884111f60fd34c5b5231bf0f",
+        "F": "701321a8fb30e36f02970c9367b5b13e3156f615",
+        "G": "be77a6a592fc2196db9ed041e83e77a122c02614",
+        "H": "a30f0ddbf2ce7974b01e2ac1248a6ab9e5a99558",
+        "I": "e786095d3007ec907c6dfeb1acb0addcf08f268d"
+      },
+      "external_strattester": {
+        "repo": "YehorBabenko88/strattester",
+        "pr": 123,
+        "head": "c95ced815575ab3fe25f619f97e9bf040d58f3da",
+        "copied_into_unified": false,
+        "migration": "PARTIAL_MANAGED_READER_REQUIRED_G006_G012_NOT_RETIRED"
+      },
+      "external_grid_runtime": {
+        "pr": 308,
+        "sha": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f"
+      },
+      "external_terminan_runtime": {
+        "pr": 133,
+        "sha": "bcdf3287a47e60f6c50022adce7651bcb51e587f"
+      },
+      "canonical_math": "9e6acbd9e12a91189f57234828e31640983af553",
+      "native_execution": "NOT_RUN",
+      "physical_uninstall": "DENIED_BOTH_GATES"
     }
   },
   "g_h_i_status": "G_CUTOVER_ONLY_NO_LEGACY_FEATURE_RETIREMENT_I_DISPOSABLE_SOURCE_ONLY_H_CURRENT_SOURCE_COHORT"
