@@ -11,9 +11,10 @@ import re
 import ssl
 import time
 from urllib.parse import quote, urlsplit
-import uuid
 
 import httpx
+
+from .grid_writer_fence_model import _consul_session_id
 
 
 class CoordinationUnavailable(RuntimeError):
@@ -150,10 +151,12 @@ class ConsulSessionAuthority:
         created = await self._request('PUT', '/v1/session/create', json={
             'Name': 'unified-control-' + owner, 'TTL': str(self.config.ttl_seconds) + 's',
             'Behavior': 'release', 'LockDelay': '0s', 'NodeChecks': []})
-        try:
-            session = str(uuid.UUID(created['ID']))
-        except (ValueError, TypeError, KeyError):
-            raise CoordinationUnavailable('Consul session identity invalid') from None
+        # Session ID is an opaque value supplied by Consul, not an RFC4122
+        # UUID4/UUID5 credential. Never normalize or mint a replacement.
+        # The acquired KV lock + exact local lease is the authority witness.
+        session = created.get('ID') if type(created) is dict else None
+        if not _consul_session_id(session):
+            raise CoordinationUnavailable('Consul session identity invalid')
         try:
             value = canonical({'owner': owner, 'session_id': session, 'namespace': self.config.namespace})
             won = await self._request('PUT', '/v1/kv/' + quote(self.key, safe='/'),
