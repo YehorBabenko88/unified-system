@@ -60,4 +60,8 @@ jobs:
       - name: Original F central qualifier synthetic negative regression
         run: python -B -m unittest discover -s tests -p test_f_wheel_qualification.py -v
       - name: Native Win32 retained-handle and junction gates
+        # Run the independent original native security suite even when the
+        # preceding wheel qualifier fails; neither suite is allowed to turn
+        # the overall Windows job green if either one fails.
+        if: ${{ success() || failure() }}
         run: python -B -m unittest discover -s tests -p test_f_windows_handle.py -v
