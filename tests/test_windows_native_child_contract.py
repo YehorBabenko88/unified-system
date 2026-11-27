@@ -651,7 +651,14 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         import socket
         import sys
         from unified_system.runtime_process import ProcessDriver
-        self.tmp = tempfile.TemporaryDirectory(prefix='a-round17-job-')
+        # The hosted runner's user-private TEMP root denies file reads to
+        # the original restricted LOW token (observed Win2022 Py3.12/3.13).
+        # Use a disposable private fixture under the checked-out workspace,
+        # whose access must still pass the original LOW-token SHA preflight.
+        # No ACL, integrity label, privileges, or child-token change.
+        workspace = Path(__file__).resolve().parent.parent
+        self.tmp = tempfile.TemporaryDirectory(
+            prefix='a-round33-job-', dir=str(workspace))
         self.addCleanup(self.tmp.cleanup)
         root = Path(self.tmp.name)
         self.worker = root / 'job_worker.py'
