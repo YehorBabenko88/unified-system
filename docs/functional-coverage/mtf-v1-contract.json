@@ -1,6 +1,20 @@
 {
   "schema": "unified.h.mtf-acceptance.v1",
   "status": "CANDIDATE_NOT_RELEASE",
+  "round30_gate": {
+    "status": "BLOCKED_INCOMPATIBLE_OWNER_PAIR",
+    "producer_candidate": "b55b03fdbaa6749d6b41bafb238ce98dfebd85e0",
+    "consumer_candidate": "c40740b8ac8104efff9bf9ca9e3e3b6db37a4ddd",
+    "canonical_math": "9e6acbd9e12a91189f57234828e31640983af553",
+    "paired_approved_sha": null,
+    "lossless_decimal_verified": false,
+    "historical_consumer_verified": false,
+    "source_e2e_verified": false,
+    "versioned_schema": "PENDING_OWNER_AGREEMENT",
+    "required_exact_values": ["directional_buy", "directional_sell", "total_volume", "signed_delta"],
+    "source_provenance_required": true,
+    "trading_authority_allowed": false
+  },
   "pins": {
     "Grid": "b55b03fdbaa6749d6b41bafb238ce98dfebd85e0",
     "Math": "9e6acbd9e12a91189f57234828e31640983af553",
