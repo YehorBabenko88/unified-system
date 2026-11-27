@@ -56,6 +56,51 @@ class NativeWindowsRetainedHandleTests(unittest.TestCase):
         self.file = self.install / "module.py"
         self.file.write_bytes(b"secure = False\n")
 
+    def test_directory_member_path_substitution_is_denied_by_fileid(self):
+        # Verify the target security check is reached, without trying to
+        # replace a live protected Windows handle on the runner.
+        from unittest.mock import patch
+        import f_windows_handle
+        with WindowsInstalledRoot(self.install) as root:
+            original_open = f_windows_handle._open
+            count = {"n": 0}
+
+            def forged_reopen(dll, path, *, directory):
+                handle, ident = original_open(dll, path, directory=directory)
+                if path == str(self.file) and not directory:
+                    count["n"] += 1
+                    if count["n"] == 2:
+                        ident = (ident[0], b"Z" * 16, ident[2], ident[3])
+                return handle, ident
+
+            with patch.object(f_windows_handle, "_open", side_effect=forged_reopen):
+                with self.assertRaisesRegex(ValueError, "path substituted"):
+                    root.read(("module.py",))
+            self.assertEqual(count["n"], 2)
+
+    def test_nested_directory_path_substitution_is_denied_by_fileid(self):
+        from unittest.mock import patch
+        import f_windows_handle
+        folder = self.install / "nested"
+        folder.mkdir()
+        (folder / "file.py").write_bytes(b"nested=True\\n")
+        with WindowsInstalledRoot(self.install) as root:
+            original_open = f_windows_handle._open
+            count = {"n": 0}
+
+            def forged_reopen(dll, path, *, directory):
+                handle, ident = original_open(dll, path, directory=directory)
+                if path == str(folder) and directory:
+                    count["n"] += 1
+                    if count["n"] == 2:
+                        ident = (ident[0], b"Q" * 16, ident[2], ident[3])
+                return handle, ident
+
+            with patch.object(f_windows_handle, "_open", side_effect=forged_reopen):
+                with self.assertRaisesRegex(ValueError, "parent directory path substituted"):
+                    root.read(("nested", "file.py"))
+            self.assertEqual(count["n"], 2)
+
     def test_real_win32_read_and_closure_retains_original_id(self):
         with WindowsInstalledRoot(self.install) as root:
             self.assertEqual(root.read(("module.py",)), b"secure = False\n")
