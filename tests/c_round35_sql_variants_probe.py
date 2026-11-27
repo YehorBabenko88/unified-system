@@ -136,3 +136,54 @@ def exercise_two_pinned_sql_sources(test, *, identity, stream, start_ms,
                       f"chars={len(original_sql)} outcome={outcome}", flush=True)
         test.assertEqual(len(raw.queries), 1)
         test.assertIn("FOR SHARE OF f", raw.queries[0])
+
+        # A *real* second immutable provenance row for the SAME minute
+        # must invalidate an otherwise matching checkpoint. The conflicting
+        # row is deliberately never committed: original production immutability
+        # prohibits later deletion, and the single C native test must leave
+        # the positive pending-clear fixture intact for the original assertions.
+        # PostgreSQL enforces this against the actual original C schema/DDL,
+        # not J's simplified fixture or a mocked SELECT result.
+        competing_fp, competing_cid = "9" * 64, "8" * 64
+        with connection.cursor() as cursor:
+            cursor.execute("BEGIN")
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO public.provenance_minutes("
+                    "fingerprint,content_id,symbol,start_ms,record)"
+                    " VALUES (%s,%s,%s,%s,%s::jsonb)",
+                    (competing_fp, competing_cid, "BTCUSDT", start_ms,
+                     '{"dataset_fingerprint":"' + competing_fp + '"}'))
+            raw = _NativeRawSql(test.pg, connection)
+            outcome = "NOT_EXECUTED"
+            try:
+                observed = current.verify_existing_lab_checkpoint(raw, **kwargs)
+                test.assertEqual(observed["state"], "UNRESOLVED")
+                test.assertIs(observed["execution_authority"], False)
+                outcome = "CONFLICTING_MINUTE_UNRESOLVED"
+            finally:
+                for statement in raw.queries:
+                    print("C35_NATIVE_PG18_CONFLICT "
+                          f"source={CURRENT_BLOB} "
+                          f"sql_sha256={hashlib.sha256(statement.encode('utf-8')).hexdigest()} "
+                          f"chars={len(statement)} outcome={outcome}", flush=True)
+            test.assertEqual(len(raw.queries), 1)
+        finally:
+            # Even on a test assertion/SQL exception, do not persist
+            # synthetic competing provenance or remove immutable real rows.
+            with connection.cursor() as cursor:
+                cursor.execute("ROLLBACK")
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT count(*) FROM public.provenance_minutes"
+                " WHERE fingerprint=%s AND content_id=%s"
+                " AND symbol=%s AND start_ms=%s",
+                (competing_fp, competing_cid, "BTCUSDT", start_ms))
+            test.assertEqual(cursor.fetchone()[0], 0,
+                             "C35_CONFLICT_ROW_SURVIVED_ROLLBACK")
+        raw = _NativeRawSql(test.pg, connection)
+        restored = current.verify_existing_lab_checkpoint(raw, **kwargs)
+        test.assertEqual(restored["state"], "EXACT_ALREADY_ACKNOWLEDGED",
+                         "C35_ORIGINAL_CHECKPOINT_NOT_RESTORED")
