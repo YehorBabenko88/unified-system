@@ -1247,7 +1247,7 @@ class OpaqueSessionTests(unittest.TestCase):
 
         async def exercise(bad_value):
             key = "isolated/round25/leader"
-            state = {"value": b"", "txn": 0, "destroy": 0}
+            state = {"value": b"", "txn": 0, "destroy": 0, "tampered": False}
 
             def handler(req):
                 if req.url.path == "/v1/session/create":
@@ -1256,7 +1256,8 @@ class OpaqueSessionTests(unittest.TestCase):
                     if req.method == "PUT":
                         state["value"] = req.content
                         return httpx.Response(200, json=True)
-                    raw = state["value"] if bad_value is None else bad_value
+                    raw = (bad_value if state["tampered"]
+                           else state["value"])
                     return httpx.Response(200, json=[{
                         "Key": key, "Session": OBSERVED,
                         "ModifyIndex": 41,
@@ -1283,6 +1284,10 @@ class OpaqueSessionTests(unittest.TestCase):
                 self.assertTrue(await authority.validate(lease))
                 if bad_value is None:
                     return
+                # Acquire a valid Consul lease first. A bad witness injected
+                # before acquire would abort acquisition and never exercise
+                # the claimed stale-writer validate/renew/txn denial path.
+                state["tampered"] = True
                 self.assertFalse(await authority.validate(lease))
                 self.assertFalse(await authority.renew(lease))
                 with self.assertRaises(CoordinationLost):
