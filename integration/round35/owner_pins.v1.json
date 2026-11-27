@@ -91,7 +91,7 @@
     "windows_installer": "NOT_RUN",
     "ui_e2e": "NOT_RUN",
     "ci_scheduler": "J_PREJOB_0_JOBS_BUT_F_WORKFLOW_LATER_MATERIALIZED_JOBS_CAUSE_UNPROVEN",
-    "consul_compatibility": "UNQUALIFIED_VERSION_E_OWNER_CONSUL_RUNTIME_VERSION_NOT_YET_EXACTLY_VERIFIED"
+    "consul_compatibility": "J_DISPOSABLE_CONSUL_1_20_9_VS_E_TARGET_2_1_NOT_EQUIVALENT_NOT_RUN"
   },
   "integration_policy": {
     "owner_blob_import": "REVIEWED_EXACT_ONLY",
@@ -111,7 +111,7 @@
     "H": "e23c3785c0ed8ec68d4a9993941d4c04dc5fdddc",
     "I": "da42b3e7d047f65f0ef78a18f1b8c2bf2d38f52f"
   },
-  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity.",
+  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity. E exact 2 owner blobs imported only as candidate, no transfer of native acceptance.",
   "qualified_source_pins": {
     "A": {
       "tested_head": "89b78cc4075a2fcb845b3494cceda20dec0cc64c",
@@ -127,6 +127,14 @@
       "owner_candidate_head": "5ff4f10d068bbed08db816e6e4ffdeb2b81ac338",
       "ci": "2278_PASS_2_SKIP_4_JOBS_TESTED_HEAD_ONLY",
       "integration": "EXTERNAL_STRATTESTER_PIN_ONLY_NO_GRID_PARITY"
+    },
+    "E": {
+      "owner_sha": "1aef1d8b5138d7aa132c404d1d66f92cf958b017",
+      "production_blob": "6d4e82b08cc6583f3ba479275fdb537aa20d584d",
+      "test_blob": "16dadf8149bc6e2d0fde2c4bedee1547177b268a",
+      "integration": "SELECTIVE_IMPORTED_SOURCE_PARITY_ONLY",
+      "original_runtime": "NOT_RUN",
+      "scope": "STRICT_HTTP_JSON_DUPLICATE_AND_NONFINITE_REJECTION_INCLUDING_TXN_QUARANTINE_NO_LEASE_GRANT"
     }
   },
   "latest_owner_observations": {
