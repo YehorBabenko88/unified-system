@@ -356,3 +356,36 @@ not a production-ready scalability feature. A static assertion confirms
 SQLite write sharing remains enabled while delete sharing is denied.
 The owner source and native retention tests remain subject to independent
 F and J acceptance and must not be counted as native PASS by this text.
+
+## ROUND35 follow-up — bounded original V2 roster preflight
+
+The last source iteration adds `_native_receipt_roster_budget(paths)`
+immediately before Windows `_NativeReceiptCustody` opens any handle.
+It enforces at most **512 identities**, each key at most **300 UTF-8
+characters**, and a conservative `sum(112 + len(key UTF-8)) <= 56000`
+estimate. The existing exact canonical V2 row limit of **60000 bytes**
+remains separately mandatory. No roster is shortened, sampled, chunked,
+silently upgraded, or permitted to bypass native identity verification.
+This is a **denial policy**, not a throughput qualification.
+
+Because `lab_release.stage_capsule()` precedes these checks,
+a large but valid capsule may be **staged** and then left in an
+incomplete retained forensic state. That is intentionally NOT auto-deleted,
+NOT adopted, and NOT safe for a real-machine installation. The admission
+point may need to move to an independently reviewed earlier plan-only
+preflight once exact real release inventory is available.
+
+The repo fixture is small; no real assembled release manifest /
+file-and-directory inventory was independently available in this cycle.
+Thus a numeric claim that the present 512-handles/56000-byte limit
+fits the actual full unified release is **NOT_ATTESTED**. J must obtain
+the immutable release manifest and report exact required handle count,
+canonical receipt byte count, and Windows2022/2025 resources before
+any installer qualification. F must independently review root ancestor
+path/retained-handle semantics, journal sharing and cleanup on exceptions.
+
+New original tests cover a bounded small synthetic roster, count overflow,
+path-key overflow and preflight byte-estimate overflow. All current-HEAD
+original native Windows tests remain **NOT_RUN**, not PASS. The two
+physical deletion predicates remain unconditional `False`.
+**CODE NO_GO / PRODUCTION NO_GO.**
