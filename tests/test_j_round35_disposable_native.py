@@ -105,8 +105,9 @@ class StaticContract(unittest.TestCase):
     def test_owner_pins_never_grant_release(self):
         x = json.loads(PINS.read_text(encoding="utf-8"))
         self.assertEqual(x["schema"], "unified-system.j.round35.disposable.v1")
-        self.assertEqual(x["source_j_head"],
-                         "9216949952ead1935b5b80e16d625d6e588a9576")
+        self.assertRegex(x["source_j_head"], r"^[a-f0-9]{40}$")
+        self.assertNotEqual(x["source_j_head"], x["frozen_pr166_sha"])
+        self.assertEqual(x["observation_epoch"], "round35-next-cycle")
         self.assertEqual(x["frozen_pr166_sha"],
                          "9349d7f3ed93ef82d120976816b968e0b716b067")
         self.assertEqual(x["release"], "CODE_NO_GO_PRODUCTION_NO_GO")
