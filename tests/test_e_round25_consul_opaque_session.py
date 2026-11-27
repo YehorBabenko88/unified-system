@@ -678,6 +678,50 @@ class OpaqueSessionTests(unittest.TestCase):
                 with self.subTest(failure=failure, method=method):
                     asyncio.run(exercise(method, failure))
 
+    def test_failed_acquire_unknown_destroy_does_not_auto_replay(self):
+        # If KV acquire returns false, unacquired session cleanup MUST NOT
+        # execute destroy twice when the first destroy reply is lost.
+        async def exercise(destroy_reply):
+            state = {"create": 0, "acquire": 0, "destroy": 0}
+
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    state["create"] += 1
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == "/v1/kv/isolated/round25/leader":
+                    self.assertEqual(req.method, "PUT")
+                    self.assertEqual(req.url.params.get("acquire"), OBSERVED)
+                    state["acquire"] += 1
+                    return httpx.Response(200, json=False)
+                if path == "/v1/session/destroy/" + OBSERVED:
+                    state["destroy"] += 1
+                    if destroy_reply == "timeout":
+                        raise httpx.ReadTimeout("destroy may have committed")
+                    return httpx.Response(
+                        200, json=(destroy_reply == "confirmed"))
+                raise AssertionError("unexpected Consul path")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                if destroy_reply == "confirmed":
+                    self.assertIsNone(await authority.acquire("owner"))
+                else:
+                    with self.assertRaises(CoordinationUnavailable):
+                        await authority.acquire("owner")
+                self.assertEqual(state, {
+                    "create": 1, "acquire": 1, "destroy": 1})
+                self.assertEqual(authority._sessions, {})
+                self.assertEqual(authority._deadlines, {})
+
+        for reply in ("confirmed", "false", "timeout"):
+            with self.subTest(reply=reply):
+                asyncio.run(exercise(reply))
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
