@@ -641,6 +641,43 @@ class OpaqueSessionTests(unittest.TestCase):
             with self.subTest(loss=loss):
                 asyncio.run(exercise(loss))
 
+    def test_mutating_consul_requests_never_retry_ambiguous_failover(self):
+        # First leader may commit, then lose the reply. A second PUT against
+        # another Consul endpoint would be a duplicate unknown mutation.
+        async def exercise(method, failure):
+            seen = []
+
+            def handler(req):
+                seen.append((req.method, req.url.host, req.url.path))
+                if req.url.host == "first.example":
+                    if failure == "timeout":
+                        raise httpx.ReadTimeout("possibly committed; no reply")
+                    return httpx.Response(503, json={"error": "unknown"})
+                return httpx.Response(200, json={"second": True})
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://first.example:8500", "http://second.example:8500"),
+                "isolated/round25", isolated_lab=True,
+            ), client=client)
+            async with client:
+                if method == "GET":
+                    result = await authority._request(
+                        "GET", "/v1/kv/isolated/round25/leader")
+                    self.assertEqual(result, {"second": True})
+                    self.assertEqual(len(seen), 2)
+                    self.assertEqual(seen[1][1], "second.example")
+                else:
+                    with self.assertRaises(CoordinationUnavailable):
+                        await authority._request(method, "/v1/session/create")
+                    self.assertEqual(seen, [
+                        (method, "first.example", "/v1/session/create")])
+
+        for failure in ("timeout", "server_error"):
+            for method in ("PUT", "POST", "DELETE", "GET"):
+                with self.subTest(failure=failure, method=method):
+                    asyncio.run(exercise(method, failure))
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
