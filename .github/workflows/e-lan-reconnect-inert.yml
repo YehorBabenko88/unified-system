@@ -4,6 +4,8 @@ on:
     paths:
       - 'unified_system/lan_transport.py'
       - 'unified_system/grid_writer_fence_model.py'
+      - 'unified_system/consul_authority.py'
+      - 'tests/test_e_round25_consul_opaque_session.py'
       - 'unified_system/grid_writer_lab_bridge.py'
       - 'unified_system/lab_writer_authority.py'
       - 'unified_system/lab_writer_revoke.py'
@@ -58,6 +60,8 @@ jobs:
         run: python -B -m unittest discover -s tests -p 'test_lan_*_inert.py' -v
       - name: Run Grid writer-fence model regressions (no database or runtime grant)
         run: python -B -m unittest discover -s tests -p test_grid_writer_fence_model.py -v
+      - name: Run Consul opaque session mock regressions (no real Consul)
+        run: python -B -m unittest discover -s tests -p test_e_round25_consul_opaque_session.py -v
       - name: Verify LAB-only Grid v2 entrypoint and private read-capability negatives
         run: python -B -m unittest discover -s tests -p 'test_e_*_inert.py' -v
       - name: Validate exact E Root writer and process observation contracts (no native admission)
