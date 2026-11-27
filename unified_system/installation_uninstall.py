@@ -85,6 +85,23 @@ class WindowsRemovalBoundary:
   need(status==0);value=json.loads(raw);need(type(value) is dict and set(value)=={'service'} and value['service'] in ('ABSENT','MARKED_PENDING','PRESENT_REVIEW_REQUIRED'));return value
 
 
+
+def _exclusive_code_removal_proven():
+ """No production-capable leaf-identity-safe file disposal exists yet.
+
+ The original APP_ONLY remover checks an owned file by path then calls
+ Path.unlink/rmdir with a second path lookup. Its last-component name
+ can change concurrently, even if service removal and journal are honest.
+ A caller guard, disposable directory, signed manifest or stopped SCM
+ receipt does not provide OS-held exclusive namespace. Return False for
+ all boundaries and platforms until independently reviewed native
+ F/A file-handle or exclusive namespace proof replaces the path deletion.
+ Controlled test fixtures patch this private predicate and must not
+ create a production authorization path.
+ """
+ return False
+
+
 class Uninstaller:
  def __init__(self,resource,boundary):
   self.resource=resource;self.boundary=boundary;self.audit=Journal(resource.root/'ownership/uninstall.sqlite')
@@ -198,7 +215,11 @@ class Uninstaller:
  def _result(self,status,plan):return dict(schema=SCHEMA,status=status,mode='APP_ONLY',plan_sha256=plan['plan_sha256'],state='PRESERVED_NO_CONTENT_ASSERTION',ownership='PRESERVED',absence_evidence='OBSERVATION_NOT_ACTOR_ATTRIBUTION',execution_authority=False,physical_acceptance='NOT_RUN',public_progress_projection='NOT_CONNECTED',remove_config='BLOCKED_UNCLASSIFIED',full='BLOCKED_CLASSIFICATION_AND_SEPARATE_APPROVAL_REQUIRED')
  def _run(self,mode='APP_ONLY',guard=None):
   if mode in ('REMOVE_CONFIG','FULL'):raise ValueError('UNINSTALL_MODE_BLOCKED_UNCLASSIFIED_CONFIG_DATABASE_BACKUPS_AND_SEPARATE_FULL_APPROVAL')
-  need(mode=='APP_ONLY');record,files,dirs=self._members();plan=self._plan(record,files);self._roots(plan,record)
+  need(mode=='APP_ONLY')
+  # Default fail-closed BEFORE any audit, SCM action or file unlink.
+  # APP_ONLY physical removal is not approved by a test-double boundary.
+  need(_exclusive_code_removal_proven())
+  record,files,dirs=self._members();plan=self._plan(record,files);self._roots(plan,record)
   self._permit('WRITE_RECEIPT',plan,guard)
   if hasattr(self.boundary,'admit'):self.boundary.admit(copy.deepcopy(plan),copy.deepcopy(record),guard)
   if not self.audit.path.exists():
