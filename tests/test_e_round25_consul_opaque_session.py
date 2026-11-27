@@ -1109,6 +1109,60 @@ class OpaqueSessionTests(unittest.TestCase):
                     await asyncio.wait_for(pending, timeout=1)
         asyncio.run(exercise())
 
+    def test_original_write_control_read_control_roundtrip(self):
+        # The existing writer and reader must share one control data shape,
+        # preserving exact string decimals without a second implementation.
+        async def exercise():
+            leader = "isolated/round25/leader"
+            control = "isolated/round25/state/probe"
+            state = {"leader": None, "payload": None, "writes": 0}
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == "/v1/kv/" + leader:
+                    if req.method == "PUT":
+                        state["leader"] = req.content
+                        return httpx.Response(200, json=True)
+                    return httpx.Response(200, json=[{
+                        "Key": leader, "ModifyIndex": 41, "Session": OBSERVED,
+                        "Value": base64.b64encode(state["leader"]).decode(),
+                    }])
+                if path == "/v1/txn":
+                    operations = json.loads(req.content)
+                    self.assertEqual(
+                        [row["KV"]["Verb"] for row in operations],
+                        ["check-session", "check-index", "set"])
+                    self.assertEqual(operations[2]["KV"]["Key"], control)
+                    state["payload"] = operations[2]["KV"]["Value"]
+                    state["writes"] += 1
+                    return httpx.Response(200, json={
+                        "Results": [{"KV": {"Key": control, "ModifyIndex": 42}}],
+                    })
+                if path == "/v1/kv/" + control:
+                    self.assertIn("consistent", req.url.params)
+                    return httpx.Response(200, json=[{
+                        "Key": control, "ModifyIndex": 42,
+                        "Value": state["payload"],
+                    }])
+                raise AssertionError("unexpected Consul path")
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                lease = await authority.acquire("owner")
+                payload = {"volume": "0.10000000000000001"}
+                self.assertIsNone(await authority.write_control(
+                    lease, "probe", payload))
+                self.assertEqual(await authority.read_control("probe"), {
+                    "owner": "owner", "token": lease.token,
+                    "session_id": OBSERVED, "payload": payload,
+                })
+                self.assertEqual(state["writes"], 1)
+        asyncio.run(exercise())
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
