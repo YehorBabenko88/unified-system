@@ -195,6 +195,8 @@ class ServiceResourceTests(unittest.TestCase):
   import inspect
   source=inspect.getsource(service._NativeReceiptCustody.__enter__)
   self.assertIn("h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,0x00200000,None)",source)
+  identity_source=inspect.getsource(service._native_file_identity)
+  self.assertIn("h=k.CreateFileW(str(root),0x80,0x1|0x2,None,3,0x00200000|0x02000000,None)",identity_source)
   self.assertNotIn("0x1|0x2|0x4",source)
   self.assertIn("self.handles[key]=h",source)
   self.assertIn("self.close()",source)
