@@ -38,9 +38,9 @@
     {
       "role": "D",
       "repo": "YehorBabenko88/Terminan",
-      "pr": 130,
-      "sha": "78da418ac31acad0f750b98e3b89ea511cefad51",
-      "disposition": "PINNED_SOURCE_CANDIDATE_NOT_NATIVE_RELEASE"
+      "pr": 131,
+      "sha": "c40740b8ac8104efff9bf9ca9e3e3b6db37a4ddd",
+      "disposition": "EXTERNAL_UNMERGED_CONTRACT_INCOMPATIBLE_WITH_GRID306"
     },
     {
       "role": "Math",
@@ -92,8 +92,8 @@
       "role": "J",
       "repo": "YehorBabenko88/unified-system",
       "issue": 175,
-      "sha": "9375d2710c64ef9a6962eccf98ce6eae77eb75a0",
-      "disposition": "J_PRE_MANIFEST_HEAD_ONLY_NOT_ATTESTED"
+      "sha": "34c0758212958e21018161fd852bab36c141137c",
+      "disposition": "PRE_MANIFEST_HEAD_FOR_SOURCE_TRACING_ONLY"
     }
   ],
   "canonical_owners": {
@@ -121,7 +121,7 @@
   "acceptance": {
     "source_revision": "A_C_E_H_I_ORIGINAL_BLOBS_PRESENT_AND_PINNED",
     "original_package_hashes": "NOT_VERIFIED",
-    "native_windows": "FAIL_PRIOR_A_EXACT_RUN",
+    "native_windows": "FAIL_PRIOR_NATIVE_CURRENT_NOT_RUN",
     "native_consul_pg": "NOT_RUN",
     "native_c_wal_reply_loss": "NOT_RUN",
     "grid306_d130_schema_source": "PASS_26_OF_26",
@@ -131,10 +131,11 @@
     "installer_recovery": "SOURCE_ONLY_FAKE_SERVICE_TESTS_AUTHORED_NOT_EXECUTED_J",
     "disposable_toctou": "NOT_QUALIFIED_DIRFD_FINAL_PATH_RACE",
     "protected_root": "DENIED",
-    "release": "NO_GO"
+    "release": "NO_GO",
+    "grid306_d131_original_consumer_e2e": "BLOCKED_INCOMPATIBLE_ABI"
   },
-  "round": 29,
-  "integration_status": "ROUND29_FOCUSED_OWNER_SOURCE_COHORT_A_C_E_G_H_I_PINS_B306_D130_MATH_BASE_NO_GO",
+  "round": 30,
+  "integration_status": "ROUND30_F_ORIGINAL_HANDLE_QUALIFIER_SOURCE_IMPORTED_B306_D131_INCOMPATIBLE",
   "protected_admission": "DENIED",
   "integration_source_evidence": {
     "C": {
@@ -167,13 +168,14 @@
     },
     "D": {
       "repo": "YehorBabenko88/Terminan",
-      "pr": 130,
-      "sha": "78da418ac31acad0f750b98e3b89ea511cefad51",
+      "pr": 131,
+      "sha": "c40740b8ac8104efff9bf9ca9e3e3b6db37a4ddd",
       "external_repo": true,
       "no_copy": true,
-      "deleted_duplicate_aggregation_lines": 68,
-      "retirement_source_status": "SOURCE_MIGRATED",
-      "functional_parity": "NOT_ACCEPTED_NATIVE_AND_DECIMAL_COVERAGE_REQUIRED"
+      "grid_expected_from_D": "00ac898ba658a546c308087db06cda78a108fd38",
+      "J_grid_pinned": "b55b03fdbaa6749d6b41bafb238ce98dfebd85e0",
+      "abi": "INCOMPATIBLE",
+      "exact_decimal_sidecar": "NOT_IMPLEMENTED"
     },
     "Math": {
       "repo": "YehorBabenko88/math",
@@ -254,6 +256,22 @@
       },
       "legacy_unique_capabilities": "RETAINED_NO_DELETION",
       "numeric_parity": "NOT_ACCEPTED"
+    },
+    "F": {
+      "owner_pr": 180,
+      "owner_sha": "7c6eb64aa84663fde7a21359f245378acc772c39",
+      "source_files": {
+        "tools/f_windows_handle.py": "c4ed804d7963047cdb2a123291054cacd95798b7",
+        "tests/test_f_windows_handle.py": "f968c4eede2081bf94b51a5f5ab168e326998eb6"
+      },
+      "native_win32_acceptance": "NOT_RUN_AT_J_HEAD",
+      "prior_original_windows_2022": {
+        "pass": 31,
+        "error": 3,
+        "fail": 0,
+        "skip": 0,
+        "qualification": "FAIL_AT_PRE_FIX_SHA"
+      }
     }
   },
   "g_h_i_status": "G_CUTOVER_ONLY_NO_LEGACY_FEATURE_RETIREMENT_I_DISPOSABLE_SOURCE_ONLY_H_CURRENT_SOURCE_COHORT"
