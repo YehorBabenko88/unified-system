@@ -194,13 +194,35 @@ class ServiceResourceTests(unittest.TestCase):
   from unified_system import installation_service as service
   import inspect
   source=inspect.getsource(service._NativeReceiptCustody.__enter__)
-  self.assertIn("h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,0x00200000,None)",source)
+  self.assertIn("flags=_native_roster_open_flags(key)",source)
+  self.assertIn("h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,flags,None)",source)
   identity_source=inspect.getsource(service._native_file_identity)
   self.assertIn("h=k.CreateFileW(str(root),0x80,0x1|0x2,None,3,0x00200000|0x02000000,None)",identity_source)
   self.assertNotIn("0x1|0x2|0x4",source)
   self.assertIn("self.handles[key]=h",source)
   self.assertIn("self.close()",source)
   # This is a static source contract, not a Win32 share-mode experiment.
+
+ def test_r35_native_win32_directory_backup_flags_and_unknown_roles(self):
+  from unified_system import installation_service as service
+  # Actual production flag-decider executed; independent of Windows/SCM.
+  for name in ('root','code','ownership','state','ancestor:0',
+               'directory:runtime','parent:runtime'):
+   with self.subTest(directory=name):
+    self.assertIs(service._native_roster_is_file(name),False)
+    self.assertEqual(service._native_roster_open_flags(name),0x02200000)
+  for name in ('ownership:service.sqlite','file:lab-release.json',
+               'file:runtime/runner.py'):
+   with self.subTest(file=name):
+    self.assertIs(service._native_roster_is_file(name),True)
+    self.assertEqual(service._native_roster_open_flags(name),0x00200000)
+  for name in ('','FILE:foreign','file:','directory:','parent:','ancestor:',
+               'foreign','ownership:forged.sqlite',None,True):
+   with self.subTest(invalid=name),self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._native_roster_open_flags(name)
+  for name in ('root','file:run.py'):
+   self.assertEqual(service._native_roster_open_flags(name)&0x00000004,0)
+   self.assertEqual(service._native_roster_open_flags(name)&0x04000000,0)
 
  def test_r35_roster_capacity_checked_before_root_creation(self):
   from unified_system import installation_service as service
