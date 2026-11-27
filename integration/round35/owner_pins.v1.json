@@ -111,7 +111,7 @@
     "H": "e23c3785c0ed8ec68d4a9993941d4c04dc5fdddc",
     "I": "da42b3e7d047f65f0ef78a18f1b8c2bf2d38f52f"
   },
-  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity. E exact 2 owner blobs imported only as candidate, no transfer of native acceptance. New cycle source snapshots and isolated local capacity tests are not fleet/package acceptance. D four original hosted jobs independently inspected at tested HEAD; no current moving-SHA equivalence. C exact original owner native workflow selectively added because missing J branch; no C full owner ancestry merged. R35 MASTER 7223403929: A actual Win2022 3.11/3.12 regression gates J native; H Math168 pin-only; duplicate J estimator deleted after actual count mismatch; I single canonical source, real manifest missing.",
+  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity. E exact 2 owner blobs imported only as candidate, no transfer of native acceptance. New cycle source snapshots and isolated local capacity tests are not fleet/package acceptance. D four original hosted jobs independently inspected at tested HEAD; no current moving-SHA equivalence. C exact original owner native workflow selectively added because missing J branch; no C full owner ancestry merged. R35 MASTER 7223403929: A actual Win2022 3.11/3.12 regression gates J native; H Math168 pin-only; duplicate J estimator deleted after actual count mismatch; I single canonical source, real manifest missing. New A native 5fa7b3b original Win2022 3 jobs 558 tested/552PASS/6SKIP but narrower autoload negative means no J/F release promotion.",
   "qualified_source_pins": {
     "A": {
       "tested_head": "89b78cc4075a2fcb845b3494cceda20dec0cc64c",
@@ -144,7 +144,45 @@
         "latest_A_candidate_head": "5fa7b3bfb1af26cbd5843ac3c1f8fb31960176e4",
         "latest_A_test_blob": "ae6b497d545ec36257eb848ec36897ada0ef3077",
         "candidate_test_narrowed_imported_command_check": "NOT_NATIVE_OR_SECURITY_QUALIFIED",
-        "J_integrated_A_promotion": "DENIED_UNTIL_A_REGRESSION_CLOSED_AND_F_REVIEW"
+        "J_integrated_A_promotion": "DENIED_UNTIL_A_REGRESSION_CLOSED_AND_F_REVIEW",
+        "new_owner_source_candidates_fixed": "NEW_SHA_HAS_3_GREEN_WIN2022_BUT_NEGATIVE_AUTLOAD_COVERAGE_NARROWED"
+      },
+      "new_candidate_evidence": {
+        "tested_head": "5fa7b3bfb1af26cbd5843ac3c1f8fb31960176e4",
+        "run": "https://github.com/YehorBabenko88/unified-system/actions/runs/46035064521",
+        "native_windows2022": {
+          "python311": {
+            "job_id": 140628264466,
+            "tests": 188,
+            "passed": 186,
+            "skipped": 2,
+            "fail": 0,
+            "error": 0
+          },
+          "python312": {
+            "job_id": 140628263960,
+            "tests": 188,
+            "passed": 186,
+            "skipped": 2,
+            "fail": 0,
+            "error": 0
+          },
+          "python313": {
+            "job_id": 140628264264,
+            "tests": 188,
+            "passed": 186,
+            "skipped": 2,
+            "fail": 0,
+            "error": 0
+          }
+        },
+        "raw_original_logs_verified": true,
+        "new_negative_test_scope": "Get-Command_ListImported_replaces_direct_Get-NetIPAddress_invocation_for_cold_module_autoload_negative",
+        "security_equivalence": "NOT_ATTESTED_F_REVIEW_REQUIRED",
+        "windows2025": "QUEUED_NOT_RUN",
+        "J_integrated_A_test_blob": "47ea8c0a101fbf752e68fec5a4d292a9ae31a63f",
+        "latest_owner_A_test_blob": "ae6b497d545ec36257eb848ec36897ada0ef3077",
+        "promotion_to_J": "DENIED_PENDING_F_INDEPENDENT_NEGATIVE_COVERAGE_REVIEW_AND_INTEGRATED_J_NATIVE"
       }
     },
     "G": {
