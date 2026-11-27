@@ -161,3 +161,52 @@ destructive real-PC or user-state operations, no native service deletion,
 no validated full uninstall or real rollback, no main merge or frozen
 #166 changes. Do not accept the fact that test-only `unlink` scenarios
 PASS as permission for a real uninstall.
+
+## ROUND31 — canonical APP_ONLY uninstaller native deletion denial
+
+A distinct critical path was found in original `unified_system/installation_uninstall.py`:
+`Uninstaller._run(APP_ONLY)` stages one durable `MEMBER_INTENT`, then
+rechecks `image(path)` / directory identity inside a SQLite critical section
+and **deletes by a later `Path.unlink()` / `Path.rmdir()` pathname**.
+SQLite ownership receipts and a stopped Windows service do NOT atomically pin
+the last filesystem name. A hostile actor could replace the last-component
+leaf after the check and before deletion. This is NOT the previously fixed
+disposable transaction: the original APP_ONLY owner had a second path.
+
+ROUND31 closes the production entrypoint **by refusing physical deletion
+before any service/audit/file mutation**. In canonical `Uninstaller._run`,
+the internal predicate `_exclusive_code_removal_proven()` always returns
+`False` and `need(...)` is required immediately after validating APP_ONLY
+mode, BEFORE `_members`, private audit creation, SCM removal, or `unlink`.
+No external caller option, old ownership receipt, test mock, local temp prefix,
+ACL setting or signed manifest can authorize this unresolved native mechanism.
+The lower-level path-based deletion is NOT claimed secure and remains
+reachable ONLY through deliberately patched fixture tests; do not ship a
+patched policy or change the default without independent F/A review.
+
+For coverage of existing unique `APP_ONLY` behavior without real host access,
+the original `UninstallTests.setUp()` and I's scoped service fixture
+temporarily patch this **private predicate** to True inside original inert
+`FakeWindows`/`FakeRemoval` and Python `TemporaryDirectory` only.
+This preserves the original useful stopped-service, CAS, interrupted
+state preservation, foreign-file refusal, and ownership journal test
+scenarios while normal runtime calls deny destructive effects.
+A new `test_default_owned_app_only_denied_before_audit_or_service_effect`
+temporarily restores the unqualified default inside that fixture and asserts
+no audit, service change or member deletion. This does NOT prove native
+Windows installed release admission or protection against intentional code
+tampering by same-privilege Python processes.
+
+Execution status: I original 20-test disposable suite re-executed in
+the prior source-bound Linux partial checkout: **20 PASS / 0 FAIL /
+0 ERROR / 0 SKIP / exit 0** (original byte-identical I core/test files).
+The updated APP_ONLY test files have not been run in a full checkout
+because the isolated source-bound checkout still lacks the original
+`installation_service` and `scripts/prepare_lab_capsule.py` fixture.
+Those updated original APP_ONLY tests are **NOT_RUN** and must be
+executed by J/A/F on a genuine full isolated checkout. Native Windows
+service lifecycle, file-handle custody, installed wheel, Consul/PG18
+and real host removal remain **DENIED / NOT_RUN**.
+
+No actual service, user DB/PG5432, caller data or installed folder was
+modified. **CODE NO_GO / PRODUCTION NO_GO**.

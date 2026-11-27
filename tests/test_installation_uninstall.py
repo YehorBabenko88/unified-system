@@ -19,6 +19,10 @@ class FakeRemoval:
 
 class UninstallTests(unittest.TestCase):
  def setUp(self):
+  # All destructive effects below belong only to this owned TemporaryDirectory.
+  # The private production gate remains DENIED; no user-facing approval exists.
+  self._fixture_guard=patch('unified_system.installation_uninstall._exclusive_code_removal_proven',return_value=True)
+  self._fixture_guard.start();self.addCleanup(self._fixture_guard.stop)
   service_fixtures.ServiceResourceTests.setUp(self);self.service_plan=service_fixtures.ServiceResourceTests.plan(self)
   self.resource=ServiceResource.create(self.service_plan,self.backend,self.guard)
   self.removal=FakeRemoval(self.backend);self.uninstall=Uninstaller(self.resource,self.removal)
@@ -31,6 +35,17 @@ class UninstallTests(unittest.TestCase):
   self.assertIsNone(self.backend.service);self.assertFalse(Path(self.service_plan['code']).exists())
   self.assertEqual((self.state/'user-data').read_bytes(),b'PRESERVE_DATA');self.assertEqual((self.state/'config').read_bytes(),b'PRESERVE_CONFIG');self.assertEqual(self.ownership.read_bytes(),self.ownership_before)
   self.assertEqual(self.uninstall.run(guard=self.guard)['status'],'APP_ONLY_REMOVED')
+ def test_default_owned_app_only_denied_before_audit_or_service_effect(self):
+  code=Path(self.service_plan['code']);member=code/'runtime.json'
+  raw=member.read_bytes();service_before=copy.deepcopy(self.backend.service)
+  with patch('unified_system.installation_uninstall._exclusive_code_removal_proven',return_value=False):
+   with self.assertRaisesRegex(ValueError,'APP_ONLY_UNINSTALL_REJECTED'):
+    self.uninstall.run(guard=self.guard)
+  self.assertEqual(member.read_bytes(),raw)
+  self.assertEqual(self.backend.service,service_before)
+  self.assertFalse(self.uninstall.audit.path.exists())
+  self.assertEqual(self.removal.calls,[])
+
  def test_default_denial_and_unclassified_modes_have_no_effect(self):
   for mode in ('REMOVE_CONFIG','FULL'):
    with self.assertRaisesRegex(ValueError,'BLOCKED'):self.uninstall.run(mode=mode,guard=self.guard)

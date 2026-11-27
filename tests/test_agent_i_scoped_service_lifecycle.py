@@ -14,6 +14,12 @@ from unified_system.installation_uninstall import Uninstaller
 
 class AgentIScopedServiceLifecycle(unittest.TestCase):
     def setUp(self):
+        from unittest.mock import patch
+        # Scoped FakeWindows runs are disposable tests only. Never grants
+        # actual WindowsRemovalBoundary or caller-driven runtime uninstall.
+        sandbox_gate = patch('unified_system.installation_uninstall._exclusive_code_removal_proven', return_value=True)
+        sandbox_gate.start()
+        self.addCleanup(sandbox_gate.stop)
         self.fixture = service_fixtures.ServiceResourceTests(
             "test_registered_command_uses_only_reviewed_protected_entry")
         self.fixture.setUp()
