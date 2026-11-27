@@ -41,7 +41,9 @@ class UninstallTests(unittest.TestCase):
   with tempfile.TemporaryDirectory(prefix='unified-i-win32-fixture-') as base:
    path=Path(base)/'owned.bin';path.write_bytes(b'PRIVATE_DISPOSABLE_BYTES')
    proof=image(path)
-   _win_handle_dispose_member(path,proof,'FILE',identity(path.parent))
+   from unified_system.installation_service import _native_file_identity
+   _win_handle_dispose_member(path,proof,'FILE',identity(path.parent),
+                              _native_file_identity(path),_native_file_identity(path.parent))
    self.assertFalse(path.exists())
    self.assertFalse(path.is_symlink())
 
@@ -54,7 +56,9 @@ class UninstallTests(unittest.TestCase):
    path.rename(root/'original-retained.bin')
    path.write_bytes(payload)
    with self.assertRaises(ValueError):
-    _win_handle_dispose_member(path,old,'FILE',identity(path.parent))
+    from unified_system.installation_service import _native_file_identity
+    _win_handle_dispose_member(path,old,'FILE',identity(path.parent),
+                               _native_file_identity(path),_native_file_identity(path.parent))
    self.assertEqual(path.read_bytes(),payload)
    self.assertEqual((root/'original-retained.bin').read_bytes(),payload)
 
@@ -63,7 +67,9 @@ class UninstallTests(unittest.TestCase):
   from unified_system.installation_uninstall import identity,_win_handle_dispose_member
   with tempfile.TemporaryDirectory(prefix='unified-i-win32-fixture-') as base:
    path=Path(base)/'empty';path.mkdir();pin=identity(path)
-   _win_handle_dispose_member(path,pin,'DIRECTORY',identity(path.parent))
+   from unified_system.installation_service import _native_file_identity
+   _win_handle_dispose_member(path,pin,'DIRECTORY',identity(path.parent),
+                              _native_file_identity(path),_native_file_identity(path.parent))
    self.assertFalse(path.exists())
 
  @unittest.skipUnless(os.name=='nt','Win32 original HANDLE refuses nonempty directory')
@@ -72,7 +78,10 @@ class UninstallTests(unittest.TestCase):
   with tempfile.TemporaryDirectory(prefix='unified-i-win32-fixture-') as base:
    path=Path(base)/'nonempty';path.mkdir();foreign=path/'foreign.bin'
    foreign.write_bytes(b'MUST_PRESERVE');pin=identity(path)
-   with self.assertRaises(ValueError):_win_handle_dispose_member(path,pin,'DIRECTORY',identity(path.parent))
+   from unified_system.installation_service import _native_file_identity
+   with self.assertRaises(ValueError):
+    _win_handle_dispose_member(path,pin,'DIRECTORY',identity(path.parent),
+                               _native_file_identity(path),_native_file_identity(path.parent))
    self.assertEqual(foreign.read_bytes(),b'MUST_PRESERVE')
 
  @unittest.skipUnless(os.name=='nt','Windows parent FileId retained handle negative')
@@ -85,7 +94,9 @@ class UninstallTests(unittest.TestCase):
    pin=image(path);wrong_parent=identity(foreign)
    self.assertNotEqual(identity(owned),wrong_parent)
    with self.assertRaisesRegex(ValueError,'APP_ONLY_UNINSTALL_REJECTED'):
-    _win_handle_dispose_member(path,pin,'FILE',wrong_parent)
+    from unified_system.installation_service import _native_file_identity
+    _win_handle_dispose_member(path,pin,'FILE',wrong_parent,
+                               _native_file_identity(path),_native_file_identity(foreign))
    self.assertEqual(path.read_bytes(),b'FOREIGN_SURVIVES')
 
  @unittest.skipUnless(os.name=='nt','Windows native retained HANDLE refuses hardlinks')
@@ -101,6 +112,32 @@ class UninstallTests(unittest.TestCase):
    self.assertEqual(path.read_bytes(),b'HARDLINK_RETENTION')
    self.assertEqual(other.read_bytes(),b'HARDLINK_RETENTION')
 
+ @unittest.skipUnless(os.name=='nt','original native FileId receipt binding requires Windows')
+ def test_win_native_diff_install_time_fileid_denied_without_delete(self):
+  from unified_system.installation_uninstall import image,identity,_win_handle_dispose_member
+  from unified_system.installation_service import _native_file_identity
+  with tempfile.TemporaryDirectory(prefix='unified-i-native-fileid-') as base:
+   root=Path(base);target=root/'target';target.write_bytes(b'PRESERVE')
+   original=image(target);real=_native_file_identity(target)
+   forged=dict(real,file_id_128='f'*32 if real['file_id_128']!='f'*32 else 'e'*32)
+   with self.assertRaisesRegex(ValueError,'APP_ONLY_UNINSTALL_REJECTED'):
+    _win_handle_dispose_member(target,original,'FILE',identity(root),
+                               forged,_native_file_identity(root))
+   self.assertEqual(target.read_bytes(),b'PRESERVE')
+
+ @unittest.skipUnless(os.name=='nt','original native Volume receipt binding requires Windows')
+ def test_win_native_diff_install_time_volume_denied_without_delete(self):
+  from unified_system.installation_uninstall import image,identity,_win_handle_dispose_member
+  from unified_system.installation_service import _native_file_identity
+  with tempfile.TemporaryDirectory(prefix='unified-i-native-volume-') as base:
+   root=Path(base);target=root/'target';target.write_bytes(b'PRESERVE')
+   original=image(target);real=_native_file_identity(target)
+   forged=dict(real,volume_serial=real['volume_serial']+1)
+   with self.assertRaisesRegex(ValueError,'APP_ONLY_UNINSTALL_REJECTED'):
+    _win_handle_dispose_member(target,original,'FILE',identity(root),
+                               forged,_native_file_identity(root))
+   self.assertEqual(target.read_bytes(),b'PRESERVE')
+
  def test_native_handle_primitive_direct_call_without_os_proof_is_denied(self):
   from unified_system.installation_uninstall import _win_handle_dispose_member,image,identity
   with tempfile.TemporaryDirectory(prefix='unified-i-no-native-permit-') as base:
@@ -108,7 +145,7 @@ class UninstallTests(unittest.TestCase):
    original=image(path)
    with patch('unified_system.installation_uninstall._exclusive_code_removal_proven',return_value=False):
     with self.assertRaisesRegex(ValueError,'APP_ONLY_UNINSTALL_REJECTED'):
-     _win_handle_dispose_member(path,original,'FILE',identity(path.parent))
+     _win_handle_dispose_member(path,original,'FILE',identity(path.parent),None,None)
    self.assertEqual(path.read_bytes(),b'PRESERVE')
 
  def test_non_windows_handle_disposer_denied_without_effect(self):
@@ -117,7 +154,7 @@ class UninstallTests(unittest.TestCase):
   with tempfile.TemporaryDirectory(prefix='unified-i-posix-fixture-') as base:
    path=Path(base)/'protected';path.write_bytes(b'KEEP')
    with self.assertRaises(ValueError):
-    _win_handle_dispose_member(path,{'device':1,'inode':1},'FILE',identity(path.parent))
+    _win_handle_dispose_member(path,{'device':1,'inode':1},'FILE',identity(path.parent),None,None)
    self.assertEqual(path.read_bytes(),b'KEEP')
 
  def test_default_owned_app_only_denied_before_audit_or_service_effect(self):

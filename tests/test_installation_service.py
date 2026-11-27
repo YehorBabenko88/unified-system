@@ -144,6 +144,88 @@ class ServiceResourceTests(unittest.TestCase):
   self.assertEqual(ServiceResource.open(plan,self.backend).inspect(self.guard),snapshot)
   self.assertEqual(self.backend.service['state'],1);self.assertFalse(any(x in self.backend.calls for x in ('START','STOP','DELETE')))
   self.assertTrue(all(pin==plan['plan_sha256'] for _,pin in self.grants))
+ def test_v2_native_installation_receipt_or_explicit_non_windows_denial(self):
+  from unified_system.installation_service import NATIVE_RECEIPT_SCHEMA,_check_native_installation_receipt
+  plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+  self.assertEqual(len(resource._read()),7)
+  entry=resource._read()[3]['receipt']
+  self.assertEqual(entry['kind'],'NATIVE_FILE_IDS')
+  if os.name=='nt':
+   proof=entry['proof'];self.assertEqual(proof['schema'],NATIVE_RECEIPT_SCHEMA)
+   self.assertEqual(_check_native_installation_receipt(proof,plan),proof)
+   self.assertEqual(resource.recorded()['native_file_identity'],proof)
+   self.assertIn('file:lab-release.json',proof['entries'])
+  else:
+   self.assertEqual(entry['proof'],{'schema':NATIVE_RECEIPT_SCHEMA,'status':'NOT_RUN'})
+   self.assertIsNone(resource.recorded()['native_file_identity'])
+  self.assertEqual(ServiceResource.open(plan,self.backend).recorded(),resource.recorded())
+  self.assertFalse(resource.inspect(self.guard)['execution_authority'])
+
+ def test_crash_after_v2_native_receipt_before_acl_does_not_adopt_partial_service(self):
+  plan=self.plan();self.backend.fault='SEAL'
+  with self.assertRaisesRegex(OSError,'INJECTED_PRIVATE_FAULT'):
+   ServiceResource.create(plan,self.backend,self.guard)
+  self.assertTrue(Path(plan['code']).is_dir())
+  incomplete=ServiceResource.open(plan,self.backend)
+  receipts=incomplete._read()
+  self.assertEqual([r['receipt']['kind'] for r in receipts],
+                   ['ROOTS','STAGE_INTENT','CODE_STAGED','NATIVE_FILE_IDS'])
+  with self.assertRaises(ValueError):incomplete.recorded()
+  with self.assertRaises(ValueError):incomplete.inspect(self.guard)
+  self.backend.fault=None
+  with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,self.guard)
+  self.assertEqual(self.backend.service,None)
+  self.assertTrue(Path(plan['code']).is_dir())
+
+ def test_v1_unqualified_receipt_remains_readable_but_denied_for_native_uninstall(self):
+  from unified_system.installation_uninstall import Uninstaller,WindowsRemovalBoundary
+  from unified_system.journal import Journal
+  plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+  # Rebuild a legacy V1 chain INSIDE this temporary fake-service fixture only.
+  old=resource.journal.read();self.assertEqual(len(old),7)
+  retained=[x['receipt'] for i,x in enumerate(old) if i!=3]
+  resource.journal.path.unlink()
+  restored=Journal(resource.journal.path);restored.initialize()
+  for i,receipt in enumerate(retained):restored.append('OBSERVING',receipt,expected_sequence=i)
+  legacy=ServiceResource.open(plan,self.backend)
+  self.assertEqual(len(legacy._read()),6)
+  self.assertIsNone(legacy.recorded()['native_file_identity'])
+  before=(Path(plan['code'])/'lab-release.json').read_bytes()
+  with self.assertRaises(ValueError):
+   Uninstaller(legacy,WindowsRemovalBoundary())._members()
+  self.assertEqual((Path(plan['code'])/'lab-release.json').read_bytes(),before)
+  self.assertIsNotNone(self.backend.service)
+
+ def test_native_receipt_rejects_corrupt_version_extra_member_and_bad_volume(self):
+  from unified_system.installation_service import _check_native_installation_receipt,NATIVE_RECEIPT_SCHEMA
+  from unified_system.contracts import seal
+  plan=self.plan()
+  from unified_system import lab_release
+  m=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])['manifest']
+  names={'root','code','file:lab-release.json'}|{'file:'+p for p in m['files']}|{'directory:'+p for p in m['directories']}
+  identity={'volume_serial':23,'file_id_128':'01'+'00'*15}
+  body={'schema':NATIVE_RECEIPT_SCHEMA,'manifest_sha256':plan['manifest_sha256'],
+        'entries':{key:dict(identity) for key in names}}
+  good=dict(body,receipt_sha256=seal(body))
+  self.assertEqual(_check_native_installation_receipt(good,plan),good)
+  for invalid in (
+    dict(good,schema='unified.installed-file-identity.v1'),
+    dict(good,receipt_sha256='0'*64),
+    dict(good,entries={k:v for k,v in good['entries'].items() if k!='file:lab-release.json'}),
+  ):
+   with self.assertRaises(ValueError):_check_native_installation_receipt(invalid,plan)
+  forged={k:dict(v) for k,v in good['entries'].items()}
+  # A whole installed code tree must not claim a foreign volume.
+  cross={k:dict(v) for k,v in good['entries'].items()}
+  cross['code']['volume_serial']=24
+  cross_receipt=dict(body,entries=cross)
+  cross_receipt['receipt_sha256']=seal({k:v for k,v in cross_receipt.items() if k!='receipt_sha256'})
+  with self.assertRaises(ValueError):
+   _check_native_installation_receipt(cross_receipt,plan)
+  forged['root']['volume_serial']=True
+  bad=dict(body,entries=forged);bad['receipt_sha256']=seal({k:v for k,v in bad.items() if k!='receipt_sha256'})
+  with self.assertRaises(ValueError):_check_native_installation_receipt(bad,plan)
+
  def test_wrong_phase_grant_and_existing_service_never_adopted(self):
   plan=self.plan()
   with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,lambda a,p:p=='wrong')

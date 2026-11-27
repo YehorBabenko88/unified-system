@@ -103,7 +103,7 @@ def _exclusive_code_removal_proven():
 
 
 
-def _win_handle_dispose_member(path, owned, kind, parent_identity):
+def _win_handle_dispose_member(path, owned, kind, parent_identity, native_leaf, native_parent):
  """Candidate OS-object-bound removal; default APP_ONLY guard still DENIES.
 
  No late Path.unlink/rmdir, no legacy fallback, no real-PC permission.
@@ -113,6 +113,15 @@ def _win_handle_dispose_member(path, owned, kind, parent_identity):
  need(_exclusive_code_removal_proven())
  need(os.name=='nt' and kind in ('FILE','DIRECTORY') and type(owned) is dict)
  fingerprint(parent_identity)
+ # Original install-time V2 native provenance, not a read-after-the-fact ID.
+ def native_proof(value):
+  need(type(value) is dict and set(value)=={'volume_serial','file_id_128'})
+  need(type(value['volume_serial']) is int and value['volume_serial']>0)
+  need(type(value['file_id_128']) is str and len(value['file_id_128'])==32)
+  need(all(ch in '0123456789abcdef' for ch in value['file_id_128']))
+  need(int(value['file_id_128'],16)>0)
+  return (value['volume_serial'],bytes.fromhex(value['file_id_128']))
+ leaf_pin=native_proof(native_leaf);parent_pin=native_proof(native_parent)
  import ctypes
  from ctypes import wintypes as w
  import msvcrt
@@ -195,7 +204,7 @@ def _win_handle_dispose_member(path, owned, kind, parent_identity):
                                       ctypes.sizeof(parent_tag)))
   need(bool(parent_tag.attributes&0x10) and not parent_tag.attributes&0x400)
   parent_id=_file_id(parent_h)
-  need(identity(parent)==parent_identity)
+  need(parent_id==parent_pin and identity(parent)==parent_identity)
   # GENERIC_READ|DELETE, share READ only; incompatible foreign writers or
   # open DELETE handles cause a safe failure, no pathname fallback.
   flags=0x00200000|(0x02000000 if kind=='DIRECTORY' else 0)
@@ -209,6 +218,7 @@ def _win_handle_dispose_member(path, owned, kind, parent_identity):
                                        ctypes.sizeof(tag)))
    need(not tag.attributes&0x400 and bool(tag.attributes&0x10)==(kind=='DIRECTORY'))
    opened_id=_file_id(handle)
+   need(opened_id==leaf_pin)
    # GetFinalPathNameByHandleW returns a local DOS \\?\C:\... form.
    # UNC, alias, device or changed parent paths are DENIED.
    final=ctypes.create_unicode_buffer(32768)
@@ -262,6 +272,12 @@ class Uninstaller:
  def _record(self):return self.resource.recorded()
  def _members(self):
   r=self._record();p=r['plan'];m=lab_release.verify_capsule(p['capsule_root'],p['manifest_sha256'])['manifest']
+  # A V1 or partial V2 service receipt is never native-file qualified.
+  # Preview may inspect legacy receipts; physical deletion remains DENIED.
+  native=r.get('native_file_identity')
+  if isinstance(self.boundary,WindowsRemovalBoundary):
+   service.need(native is not None)
+   service._check_native_installation_receipt(native,p)
   files={k:dict(v) for k,v in m['files'].items()};raw=(Path(p['capsule_root'])/'lab-release.json').read_bytes();files['lab-release.json']={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}
   dirs=set(m['directories'])|{'.'};need(len(files)+len(dirs)<=MAX_MEMBERS)
   return r,files,dirs
@@ -417,7 +433,17 @@ class Uninstaller:
      need(self._observe(record,plan,guard)=='ABSENT');self._roots(plan,record)
      need(identity(path.parent)==data['parent_identity'] and (image(path) if kind=='FILE' else identity(path))==data['identity'])
      if os.name=='nt' and isinstance(self.boundary,WindowsRemovalBoundary):
-      _win_handle_dispose_member(path,data['identity'],kind,data['parent_identity'])
+      proof=record['native_file_identity'];service._check_native_installation_receipt(proof,record['plan'])
+      native=proof['entries']
+      if relative=='.':
+       leaf_key='code';parent_key='root'
+      else:
+       leaf_key=('file:' if kind=='FILE' else 'directory:')+relative
+       ancestor=Path(relative).parent.as_posix()
+       parent_key='code' if ancestor=='.' else 'directory:'+ancestor
+      need(leaf_key in native and parent_key in native)
+      _win_handle_dispose_member(path,data['identity'],kind,data['parent_identity'],
+                                 native[leaf_key],native[parent_key])
      elif kind=='FILE':path.unlink()  # disposable FakeRemoval fixture only
      else:need(not any(path.iterdir()));path.rmdir()
    self._append(plan,'COMPLETE','OBSERVED_OWNED_ABSENCE_STATE_RETAINED',guard);self._verify_final()
