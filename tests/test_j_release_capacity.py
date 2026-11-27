@@ -13,7 +13,7 @@ class BudgetTests(unittest.TestCase):
         # 6 base + 4 install ancestors + 2 files + 2 directories + 2 parents.
         self.assertEqual(r["identity_count"], 16)
         self.assertTrue(r["admissible_by_conservative_preflight"])
-        self.assertIsNone(r.get("actual_canonical_receipt_bytes"))
+        self.assertNotIn("actual_canonical_receipt_bytes", r)
     
     def test_512_boundary_not_guarantee_of_canonical_receipt(self):
         m = {"files": {f"leaf{i:04d}.py": {} for i in range(506)}, "directories": []}
