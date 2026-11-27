@@ -309,3 +309,37 @@ the exact current HEAD and reviewing test evidence:
 Do NOT import the whole PR #182 (inherited 2239-file diff),
 merge main, touch frozen #166, use live SCM/user data/PG, or
 enable any physical deletion gate.
+
+
+## ROUND 35 later cycle — retained native handle custody source candidate
+
+Follow-up to F security review: `_NativeReceiptCustody` now opens every
+observed namespace member and ancestor using `CreateFileW` with only
+`FILE_SHARE_READ`, captures native FileIdInfo/FileStandardInfo from the
+**same retained handles**, compares fresh native path observations, and keeps
+the original handles open through `NATIVE_FILE_IDS`, `ACL_SEALED`,
+`REGISTER_INTENT` and `REGISTERED` journal transitions. No delete sharing
+is granted by custody acquisition. A context manager closes every retained
+handle, including on the exception path; OS termination also closes process
+handles. Reopening after a crash never reuses these handles as proof.
+
+This is an **unqualified candidate**, not a completed hostile-writer proof:
+some Windows filesystem/SMB configurations may reject the new share mode;
+large manifests can exceed OS handle budgets; a malicious administrator,
+ACL modification, concurrent log/SQLite writes or an unsupported native API
+may prevent capture. Any such case must fail closed, not trigger a fallback
+or permission relaxation. A crash during SCM native registration may leave
+a stopped but incompletely receipted service, which must not be adopted.
+No previously installed V2 or V1 receipt is upgraded.
+
+Native Windows2022/2025 genuine tests, reboot/restart, hostile ancestor
+junction/swap, FileId drift, independent F acceptance, J selective
+integration and raw CI logs remain required. Scoped tests in the original
+service test file validate fake handle close order, exception cleanup,
+readback mismatch refusal, and static nesting of the registered transition
+inside the custody scope. Fake/static tests do not prove genuine Win32.
+
+**Both physical deletion gates remain unconditional FALSE**.
+No physical deletion, user data, real SCM deployment, ADMINIT, production
+PG, live trades, main merge, force push or frozen PR #166 changes. No
+code-retirement authorization is implied. **CODE NO_GO / PRODUCTION NO_GO.**
