@@ -284,6 +284,9 @@ class WindowsInstalledRoot:
                     self._retain_dir(path)
                     walk(path, rel)
                 elif matches[0].is_file(follow_symlinks=False):
+                    if (name.lower().endswith((".pyc", ".pyo", ".pth", ".egg-link"))
+                            or name.lower() in ("sitecustomize.py", "usercustomize.py")):
+                        raise ValueError("untrusted Windows import hook or bytecode")
                     self.read(rel)
                     discovered.add("/".join(rel))
                     if len(discovered) > _MAX_FILES:
