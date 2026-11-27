@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "agent": "G",
   "snapshot_date": "2026-11-27",
-  "status": "INVENTORY_IN_PROGRESS",
+  "status": "ROUND29_B305_D130_MTF_PARITY_BLOCKED",
   "release_gate": "CODE_NO_GO / PRODUCTION_NO_GO",
   "provenance": "GitHub REST commits and recursive trees; tree results for working refs were not truncated",
   "main_heads": {
@@ -17,19 +17,21 @@
     "unified-system": {
       "agent_A": "ad7efedb0cae0893ca1c6ba1c76c9335b507bb6b",
       "agent_C": "98ef352a6acf527fda831f94fb04dd92b906443c",
-      "agent_E_candidate": "98e301ea05ee86606616a5e8bacfe52c3d0f1dfd",
+      "agent_E_candidate": "c9eee6d392772a798ed86431f5f48b61cda0ad0d",
       "agent_F": "255b2a9868591aafe3e0e8519949b626908daf81",
-      "candidate_C": "a43ca6c2fc9ee3cd319d71df04c15e7ceb7b72b6",
+      "candidate_C": "17cd46915ef1e142217dd636fb8926908c258016",
       "frozen_F_PR166": "9349d7f3ed93ef82d120976816b968e0b716b067"
     },
     "bybit-cluster-grid": {
-      "agent_B": "52d81298a3acbf1ff49ae9d84eb1d803333da922"
+      "agent_B": "165aa614cf6f79d451eac2faa48d6084fbd03d31",
+      "agent_B_mtf_historical": "00ac898ba658a546c308087db06cda78a108fd38"
     },
     "math": {
       "agent_D": "9e6acbd9e12a91189f57234828e31640983af553"
     },
     "Terminan": {
-      "agent_D": "380c9af8a4da5feb5d7adf26dd8e1d54316409cc"
+      "agent_D": "cb11788144a9827d5ea7a2e1342c31520c7145dc",
+      "agent_D_mtf_consumer": "78da418ac31acad0f750b98e3b89ea511cefad51"
     },
     "strattester": {
       "main": "37ff7e9d12a4d2dccd788fc493c28557dbe8bcea",
@@ -144,28 +146,34 @@
     },
     {
       "id": "G-004",
-      "status": "MIGRATE",
+      "status": "BLOCKED",
       "repo": "bybit-cluster-grid",
       "path": "grid/strategy_runtime.py",
       "owner": "Terminan",
       "consumers": [
-        "UNKNOWN, AST/dynamic/CI scan pending"
+        "grid/strategy_runner.py imports execute_job_subprocess",
+        "grid/strategy_executor.py invokes python -m grid.strategy_runtime",
+        "grid/strategy_executor.py imports grid.ml_process_supervisor",
+        "grid/strategy_jobs.py owns strategy_jobs/results SQL",
+        "grid/strategy_plugins.py owns plugin source retrieval"
       ],
-      "replacement": "Terminan canonical strategy engine pending D contract",
-      "tests": "NOT_RUN; deletion BLOCKED",
-      "rollback": "preserve until parity + revert proposed deletion PR"
+      "replacement": "Terminan canonical engine, NOT_YET_CUTOVER. Specific Grid SQL job/plugin and process/resource contracts require D/H/B equivalence.",
+      "tests": "G synthetic negative gate AUTHORED, runnable tests NOT_RUN; exact Grid source consumer inspection PASS",
+      "rollback": "retain Grid original source; eventual isolated Grid owner PR revert with unchanged input/job/result records"
     },
     {
       "id": "G-005",
-      "status": "MIGRATE",
+      "status": "BLOCKED",
       "repo": "bybit-cluster-grid",
       "path": "grid/ml_process_supervisor.py",
       "owner": "Unified System",
       "consumers": [
-        "UNKNOWN"
+        "grid/strategy_executor.py run_supervised_process",
+        "tests/test_ml_process_supervisor.py",
+        "Grid ML workers; exact complete consumers not enumerated"
       ],
-      "replacement": "Unified supervisor pending E/I review",
-      "tests": "NOT_RUN; deletion BLOCKED",
+      "replacement": "Unified Job/Windows process supervision only after native parity including child/descendant shutdown, RAM/time bounds and bounded pipe draining",
+      "tests": "Grid original source inspected; synthetic G gate authored; native NOT_RUN",
       "rollback": "preserve until parity"
     },
     {
@@ -249,6 +257,19 @@
       "replacement": "Terminan read-only paper delivery subject to D/H acceptance",
       "tests": "NOT_RUN; unique file present in stage10 source",
       "rollback": "retain original until proven migrated"
+    },
+    {
+      "id": "G-012",
+      "status": "MIGRATED_SOURCE_ONLY_PARITY_BLOCKED",
+      "repo": "Terminan",
+      "path": "terminan/qualified_partial.py::qualified_timeframe_rows",
+      "owner": "D",
+      "consumers": [
+        "previous D #129 terminan/data.py::qualified_market_data_timeframe_chart; switched to B qualified-rollup in D #130"
+      ],
+      "replacement": "B Grid #305 qualified_rollup producer + D #130 terminan/qualified_rollup.py consumer",
+      "tests": "D #130 -68 duplicate source lines CONFIRMED; B #305 DTO source_declared_quality field missing D #130 _TOP; D recomputes delta from rounded binary64 operands; byte-pinned G negative guard 6 PASS local; original cross-repo runtime NOT_RUN; functional parity BLOCKED",
+      "rollback": "keep D #129 parent branch and original Math intact; revert D #130 scoped deletion if accepted positive/negative parity fails; no legacy Grid strategy/Meta retirement authorized"
     }
   ],
   "deletion_gate": {
@@ -269,7 +290,8 @@
     "runtime_regression": "NOT_RUN",
     "windows": "NOT_RUN",
     "linux": "NOT_RUN",
-    "real_host": "NOT_RUN"
+    "real_host": "NOT_RUN",
+    "G_round29_source_contract": "PASS 6 local exact GitHub code tests (synthetic fixtures), source cross-owner DTO FAIL; native E2E NOT_RUN"
   },
   "restrictions": [
     "no main merge",
@@ -279,5 +301,64 @@
     "no security bypass",
     "no Codex/Claude",
     "no manual CI reruns"
-  ]
+  ],
+  "round27_execution": {
+    "source_pin": "165aa614cf6f79d451eac2faa48d6084fbd03d31",
+    "gate": "tools/g_legacy_boundary_gate.py",
+    "synthetic_tests": "tests/test_g_legacy_boundary_gate.py",
+    "assessment": "BLOCKED: existing executable strategy/ML chain is live in source and owner replacement remains unproven",
+    "test_status": {
+      "authored": "PASS",
+      "github_source_inspection": "PASS",
+      "synthetic_execution": "NOT_RUN",
+      "original_grid_import_regressions": "NOT_RUN",
+      "installed_package_record": "NOT_RUN",
+      "windows_linux": "NOT_RUN",
+      "production": "NOT_RUN"
+    },
+    "mandatory_followups": [
+      "B+H identify Grid consumer cutover and historical data retention",
+      "D implement canonical Terminan strategy job/plugin records equivalence",
+      "I installer and source entrypoint inventory",
+      "F negative import/package/source provenance independent review",
+      "J confirm integrated cohort pin"
+    ],
+    "deletion_count": 0,
+    "rollback": "No runtime source changed; G gate can be removed by reverting isolated Draft PR commits."
+  },
+  "round29_execution": {
+    "grid_head": "00ac898ba658a546c308087db06cda78a108fd38",
+    "terminan_head": "78da418ac31acad0f750b98e3b89ea511cefad51",
+    "math_head": "9e6acbd9e12a91189f57234828e31640983af553",
+    "source_verification": {
+      "grid_rollup_blob": "a584aa19e8b46064fe10dfe88506386bbe93ce5e",
+      "terminan_consumer_blob": "6a89a67352319179036a09b6d6e5c7fc975e150d",
+      "github_compare": "PASS",
+      "contract_compatibility": "FAIL"
+    },
+    "diff_control": {
+      "terminan_removed_lines": 68,
+      "approved_for_retirement": false
+    },
+    "new_code": [
+      "tools/g_mtf_source_compat.py",
+      "tests/test_g_mtf_source_compat.py"
+    ],
+    "local_tests": {
+      "suite": "test_g_mtf_source_compat.py",
+      "source_and_test_exact_git_blob_match": true,
+      "pass": 6,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    },
+    "original_B_D_E2E": "NOT_RUN",
+    "new_ci_workflows": 0,
+    "blocker": [
+      "B305 adds source_declared_quality: ['GOOD'] but D130 rejects unknown key",
+      "B305 calculates Decimal delta before binary64 directional DTO; D130 reconstructs from rounded DTO and can incorrectly reject valid cancellation case"
+    ],
+    "release_authorized": false,
+    "production_authorized": false
+  }
 }
