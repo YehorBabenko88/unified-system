@@ -61,10 +61,35 @@
       "skipped": 0
     },
     "current_strattester_ci": "NOT_RUN_VERIFIED_AT_EXACT_HEAD",
-    "current_terminan_d135_browser_ci": "NOT_RUN_VERIFIED_AT_EXACT_HEAD",
+    "current_terminan_d135_browser_ci": "BROWSER_PASS_EXACT_SHA",
     "current_h_grid_original_ci": "NOT_RUN_VERIFIED_AT_EXACT_HEAD",
     "native_installed_e2e": "NOT_RUN",
-    "independent_full_six_repo_equivalence": "NOT_RUN"
+    "independent_full_six_repo_equivalence": "NOT_RUN",
+    "current_terminan_d135_browser_proof": {
+      "sha": "fd6a3f1dfa8ee832a51180410cb9920b8766c0a8",
+      "run_id": 45996794337,
+      "job_id": 140498081944,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "runtime": "Ubuntu GitHub hosted actual Chrome/Chromium via playwright-core, source-quality UI; NOT installed fleet"
+    },
+    "current_terminan_d135_http_proof": {
+      "sha": "fd6a3f1dfa8ee832a51180410cb9920b8766c0a8",
+      "workflow_run_id": 45996794071,
+      "pinned_grid": "b2e3f9a77384080ecbb834b32d51d8816ed1aa2a",
+      "pinned_math": "9e6acbd9e12a91189f57234828e31640983af553",
+      "windows_python311": 18,
+      "windows_python312": 18,
+      "ubuntu_python311": 18,
+      "ubuntu_python312": 18,
+      "passed": 72,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "source-pinned managed HTTP loopback only; source-qualified synthetic fixture, no actual provider or installed PG18/Consul"
+    }
   },
   "groups": [
     {
