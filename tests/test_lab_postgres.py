@@ -245,8 +245,13 @@ class LabPostgresLifecycle(unittest.TestCase):
         report = pg.integrity(['provenance_minutes'])
         self.assertEqual(report['provenance_minutes']['rows'], 11)
         self.assertIn('database system was interrupted', pg.log.read_text())
-        pg.stop()
-        self.assertFalse((pg.data / 'postmaster.pid').exists())
+        # Recovery retained C ownership; a direct standalone stop is not
+        # a supported way to terminate this postmaster. C fixture disposal
+        # in tearDown retains A's process witness and checks exact extinction.
+        with self.assertRaisesRegex(LabAdmissionRejected,
+                                    'C_OWNED_LIFECYCLE_REQUIRED'):
+            pg.stop()
+        self.assertTrue(pg.started)
 
     @unittest.skipUnless(os.environ.get('LAB_GRID_ROOT') and os.environ.get('LAB_MATH_ROOT'),
                          'needs pinned Grid and Math source trees')
