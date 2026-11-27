@@ -178,19 +178,20 @@
     },
     {
       "id": "G-006",
-      "status": "BLOCKED_UNIQUE_CONSUMERS_NOT_MIGRATED",
+      "status": "PARTIAL_CONSUMER_CUTOVER_DRAFT_REMAINDER_BLOCKED",
       "repo": "strattester",
       "path": "strattester/marketdata/bybit_client.py",
       "owner": "Grid",
       "consumers": [
+        "strattester/marketdata/download_smoke.py old implicit BybitClient consumer: cut over to injected source / unique temporary SQLite in isolated Strattester Draft PR #123; CLI fail-closed pending Root/Grid read capability",
         "strattester/marketdata/sync_engine.py::_sync_rows (klines/mark/index/premium/OI/funding/long-short) blob 8e9cae734f54ebdcbda25659b8f68c9690e13e5e",
         "strattester/marketdata/universe_sync.py::sync fetch_linear_symbols blob 579cee4dcd336d7741645c6915e7423860347e57",
         "tests/marketdata/test_bybit_client.py blob 015c109f672686352d949c36aa04cefec2184e2e",
         "other dynamic/CI/installer consumers not fully enumerated"
       ],
-      "replacement": "Grid owner B sole Bybit client/qualified source with exact seven dataset DTOs + universe, B/H consumer parity ACK pending; do not replace unique OI/funding/index/mark/premium/long-short without coverage",
-      "tests": "Source verified on strattester HEAD 37ff7e9d12a4d2dccd788fc493c28557dbe8bcea, BybitClient blob a158962f2234538da02f5dd9d7f85fbff8eb4452; source imports/uses PASS; actual migration E2E NOT_RUN; deletion BLOCKED",
-      "rollback": "retain legacy BybitClient/SyncEngine/UniverseSynchronizer until B provides equivalent versioned Read API, D/H inventory and original negative regressions"
+      "replacement": "FIRST PRACTICAL consumer source migration: Strattester Draft PR123 HEAD 8cf29408edfea6d59388a042604fcec352a0dd0e removes auto BybitClient and fixed-name DB unlink from download_smoke only. B/Root/J must supply provenance-qualified Grid reader injection for CLI; ALL OTHER original SyncEngine/Universe/BybitClient unique datasets retained pending parity and consent",
+      "tests": "Exact GitHub original main smoke blob 4876bafaef666ce22e3b82df464681fb8b8ad622 reproduced deletion of existing named user sentinel after sqlite3.DatabaseError in disposable fixture. Fixed source blob 13a21d3a357385dd3621f255ee09aa642f9b80e0 and new tests blob d16db22eaeb0a54e09627432d5aca98a2452d1a6 byte-exact local; 10 pytest PASS 0 FAIL 0 ERROR 0 SKIP with minimal sqlite3-backed harness; full original SQLiteMarketStore/Root Grid read CI NOT_RUN",
+      "rollback": "PR123 Draft unmerged; baseline main and old BybitClient intact for unique dataset consumers; never use fixed user DB path; require B/H/J authorized managed source before enabling CLI"
     },
     {
       "id": "G-007",
@@ -269,8 +270,8 @@
       "consumers": [
         "previous D #129 terminan/data.py::qualified_market_data_timeframe_chart; switched to B qualified-rollup in D #130"
       ],
-      "replacement": "Grid B307 36883fbf3d02e84822638aa87d0f307972852dbc market_data_v2/qualified_rollup.py blob 2f27598a2fd0f7a561e350996894cabcabd40050 LIVE + historical source exact Decimal2.1; Terminan D132 f4ffbe2913dee0a9987f8b9ad68f2b7df5ad360f terminan/qualified_rollup.py blob 77c6855c52030d5d9b0e839e0c9245b947db41b5 + chart UI; canonical Math 9e6acbd9",
-      "tests": "GitHub source G v2 AST static checker updated; 12/12 exact original G Python tests PASS after two initial fixture failures corrected, all 0 fail/error/skip at final head. D/B source DTO 29/29 top and 15/15 rows per D/H/J; original B307→D132 imported Python/real HTTP/installed wheel E2E NOT_RUN by G, H/F independent full differential outstanding. Historic source_only not exchange attested. Retire 68 lines NOT ACCEPTED until native regression.",
+      "replacement": "Current Grid B308 4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f modifies LIVE/historical exact UTC cursor in read_api.py blob 7ccf9ad288db4c803f253f77dfcf44b581c631d5; unchanged producer Grid blob 2f27598a2fd0f7a561e350996894cabcabd40050. Current Terminan D133 bcdf3287a47e60f6c50022adce7651bcb51e587f adds historical end-user UI index.html blob 0b5784b20b278931b47ead1c5b7d1ca752f87ec3; unchanged consumer blob 77c6855c52030d5d9b0e839e0c9245b947db41b5; workflow D still pins B307, not yet B308. Original Math9e6...",
+      "tests": "B308/D133 current source pair identified; v2 producer/consumer unchanged 29/29 top 15/15 row source-candidate only, B308 cursor full timeframe alignment and D133 new UI not original integrated E2E proven by G. D CI workflow still pinned B307. G012 deletion/functional parity acceptance BLOCKED until H/F/J original roundtrip and installer/native.",
       "rollback": "D #129 previous independent aggregation must remain recoverable; do not delete legacy Grid strategy or Meta code; preserve full original 1m and research"
     }
   ],
@@ -294,7 +295,8 @@
     "linux": "NOT_RUN",
     "real_host": "NOT_RUN",
     "G_round29_source_contract": "PASS 6 local exact GitHub code tests (synthetic fixtures), source cross-owner DTO FAIL; native E2E NOT_RUN",
-    "G_R31_versioned_api21_source": "PASS 12 original G synthetic unittest exact GitHub SHA, initial 2 fixture failures fixed; original B307/D132 runtime NOT_RUN"
+    "G_R31_versioned_api21_source": "PASS 12 original G synthetic unittest exact GitHub SHA, initial 2 fixture failures fixed; original B307/D132 runtime NOT_RUN",
+    "G_R32_smoke_migration": "Original changed smoke source byte-exact to GitHub and exact existing smoke tests 2 + new tests 8 = 10 PASS under local SQLite backed harness (not full original store); original vulnerability reproduced on byte-exact old source disposable data only; full integration NOT_RUN"
   },
   "restrictions": [
     "no main merge",
@@ -419,6 +421,43 @@
     "g012_retirement": false,
     "g006_retirement": false,
     "actual_deleted_legacy_files": 0,
+    "release_authorized": false,
+    "production_authorized": false
+  },
+  "round32_execution": {
+    "g_root_draft_pr": 183,
+    "g_root_previous_sha": "6dc7e1a186385080bbbd3950c8c6280cc82ed67b",
+    "grid_pr": 308,
+    "grid_sha": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+    "terminan_pr": 133,
+    "terminan_sha": "bcdf3287a47e60f6c50022adce7651bcb51e587f",
+    "math_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+    "source_pair_status": "B308/D133 candidate not installed/native certified; D workflow still pinned B307",
+    "independent_migration": {
+      "repository": "YehorBabenko88/strattester",
+      "draft_pr": 123,
+      "head": "8cf29408edfea6d59388a042604fcec352a0dd0e",
+      "old_smoke_git_blob": "4876bafaef666ce22e3b82df464681fb8b8ad622",
+      "new_smoke_git_blob": "13a21d3a357385dd3621f255ee09aa642f9b80e0",
+      "new_test_git_blob": "d16db22eaeb0a54e09627432d5aca98a2452d1a6",
+      "changed_paths": [
+        "strattester/marketdata/download_smoke.py",
+        "tests/marketdata/test_download_smoke_g32.py"
+      ],
+      "original_data_loss_repro": "PASS: exact original Git blob deleted disposable pre-existing marker file after SQLite error; NO user file touched",
+      "fixed_test": {
+        "pass": 10,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "log_sha256": "455baf9ce4a936386e5cf814ca5dfe965b88b26a323dad97d4bfdd8cf56b8829"
+      },
+      "test_limit": "partial repo; minimal sqlite3-backed test harness; full original sqlite_store CI NOT_RUN",
+      "managed_grid_capability": "NOT_INSTALLED; missing Root/B owner-admitted provider",
+      "g006_complete": false,
+      "g012_retirement_approved": false,
+      "user_data_deleted": false
+    },
     "release_authorized": false,
     "production_authorized": false
   }
