@@ -84,17 +84,17 @@ class WindowsPathSyntaxTests(unittest.TestCase):
                 self.closed.append(handle)
                 return True
         kernel = FakeKernel()
-        root = WindowsInstalledRoot(r"C:\\disposable")
+        root = WindowsInstalledRoot(r"C:\disposable")
         root.dll = kernel
         directory_info = (7, bytes.fromhex("11" * 16), 0, 44)
         state = {"file_id": bytes.fromhex("22" * 16)}
-        root._parent = lambda parts: r"C:\\disposable"
+        root._parent = lambda parts: r"C:\disposable"
         root._retain_dir = lambda path: ("dir-handle", directory_info)
         def file_info():
             return (7, state["file_id"], 10, 55)
         def fake_open(dll, path, *, directory):
             self.assertFalse(directory)
-            self.assertEqual(path, r"C:\\disposable\\module.py")
+            self.assertEqual(path, r"C:\disposable\module.py")
             return "file-handle", file_info()
         def fake_info(dll, handle, *, directory):
             return directory_info if directory else file_info()
