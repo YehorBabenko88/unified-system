@@ -437,6 +437,71 @@ class OpaqueSessionTests(unittest.TestCase):
             with self.subTest(first_reply=first_reply):
                 asyncio.run(exercise(first_reply))
 
+    def test_copied_equal_lease_cannot_validate_renew_release_or_write(self):
+        # The canonical server identity and token are observable in the
+        # Consul KV record; equality of three dataclass fields is not proof
+        # that Root itself issued this exact in-memory session capability.
+        from unified_system.consul_authority import CoordinationLost
+
+        async def exercise():
+            state = {"held": False, "value": b"", "destroy": 0,
+                     "txn": 0, "renew": 0}
+            key = "isolated/round25/leader"
+
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == "/v1/kv/" + key:
+                    if req.method == "PUT":
+                        state["held"] = True
+                        state["value"] = req.content
+                        return httpx.Response(200, json=True)
+                    return httpx.Response(200, json=[{
+                        "Key": key,
+                        "Session": OBSERVED if state["held"] else "",
+                        "ModifyIndex": 41,
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if path == "/v1/session/renew/" + OBSERVED:
+                    state["renew"] += 1
+                    return httpx.Response(200, json=[{"ID": OBSERVED}])
+                if path == "/v1/session/destroy/" + OBSERVED:
+                    state["destroy"] += 1
+                    state["held"] = False
+                    return httpx.Response(200, json=True)
+                if path == "/v1/txn":
+                    state["txn"] += 1
+                    return httpx.Response(200, json={"Results": []})
+                raise AssertionError("unexpected Consul request")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                original = await authority.acquire("owner")
+                forged = ConsulLease(original.owner, original.session_id,
+                                     original.token)
+                self.assertEqual(forged, original)
+                self.assertIsNot(forged, original)
+                self.assertFalse(await authority.validate(forged))
+                self.assertFalse(await authority.renew(forged))
+                await authority.release(forged)
+                with self.assertRaises(CoordinationLost):
+                    await authority.write_control(forged, "state", {"x": 1})
+                self.assertEqual(
+                    (state["destroy"], state["txn"], state["renew"]), (0, 0, 0))
+                self.assertIs(authority._sessions[OBSERVED], original)
+                self.assertTrue(await authority.validate(original))
+                self.assertTrue(await authority.renew(original))
+                await authority.release(original)
+                self.assertEqual(state["destroy"], 1)
+                self.assertNotIn(OBSERVED, authority._sessions)
+
+        asyncio.run(exercise())
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
