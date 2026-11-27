@@ -926,6 +926,100 @@ class OpaqueSessionTests(unittest.TestCase):
             with self.subTest(cancel_step=cancel_step):
                 asyncio.run(exercise(cancel_step))
 
+    def test_close_revokes_local_lease_without_remote_destroy(self):
+        # Shutdown cannot leave a trusted locally issued lease active, even
+        # when the caller owns an injected isolated HTTP client.
+        async def exercise():
+            state = {"held": False, "value": b"", "txn": 0, "destroy": 0}
+            key = "/v1/kv/isolated/round25/leader"
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == key:
+                    if req.method == "PUT":
+                        state["held"], state["value"] = True, req.content
+                        return httpx.Response(200, json=True)
+                    return httpx.Response(200, json=[{
+                        "Key": "isolated/round25/leader",
+                        "Session": OBSERVED if state["held"] else "",
+                        "ModifyIndex": 41,
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if path == "/v1/txn":
+                    state["txn"] += 1
+                    return httpx.Response(200, json={"Results": []})
+                if path == "/v1/session/destroy/" + OBSERVED:
+                    state["destroy"] += 1
+                    return httpx.Response(200, json=True)
+                raise AssertionError("unexpected Consul path")
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                lease = await authority.acquire("owner")
+                self.assertTrue(await authority.validate(lease))
+                await authority.close()
+                await authority.close()  # shutdown is idempotent
+                self.assertEqual(authority._deadlines[OBSERVED], 0)
+                self.assertIs(authority._sessions[OBSERVED], lease)
+                self.assertFalse(await authority.validate(lease))
+                self.assertFalse(await authority.renew(lease))
+                with self.assertRaises(CoordinationUnavailable):
+                    await authority.write_control(lease, "probe", {"n": 1})
+                with self.assertRaises(CoordinationUnavailable):
+                    await authority.acquire("new-owner")
+                self.assertEqual((state["txn"], state["destroy"]), (0, 0))
+        asyncio.run(exercise())
+
+    def test_close_while_acquiring_cannot_mint_late_lease(self):
+        # A concurrent shutdown while the original KV acquire is in flight
+        # must not deliver a locally trusted capability after close() returns.
+        async def exercise():
+            entered, release = asyncio.Event(), asyncio.Event()
+            state = {"held": False, "value": b"", "destroy": 0}
+            key = "/v1/kv/isolated/round25/leader"
+            async def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == key:
+                    if req.method == "PUT":
+                        entered.set()
+                        await release.wait()
+                        state["held"], state["value"] = True, req.content
+                        return httpx.Response(200, json=True)
+                    return httpx.Response(200, json=[{
+                        "Key": "isolated/round25/leader",
+                        "Session": OBSERVED if state["held"] else "",
+                        "ModifyIndex": 41,
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if path == "/v1/session/destroy/" + OBSERVED:
+                    state["destroy"] += 1
+                    state["held"] = False
+                    return httpx.Response(200, json=True)
+                raise AssertionError("unexpected Consul path")
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                pending = asyncio.create_task(authority.acquire("owner"))
+                await asyncio.wait_for(entered.wait(), 1)
+                await authority.close()
+                release.set()
+                with self.assertRaises(CoordinationUnavailable):
+                    await asyncio.wait_for(pending, 1)
+                self.assertEqual(authority._sessions, {})
+                self.assertEqual(authority._deadlines, {})
+                self.assertEqual(state["destroy"], 1)
+                self.assertFalse(state["held"])
+        asyncio.run(exercise())
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
