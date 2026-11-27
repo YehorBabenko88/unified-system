@@ -86,7 +86,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
                 self.closed.append(h)
                 return True
 
-        root = WindowsInstalledRoot(r"C:\\disposable\\install")
+        root = WindowsInstalledRoot(r"C:\disposable\install")
         kernel = FakeKernel()
         baseline = (7, bytes.fromhex("11" * 16), 0, 40)
         changed = (7, bytes.fromhex("22" * 16), 0, 40)
@@ -97,9 +97,9 @@ class WindowsPathSyntaxTests(unittest.TestCase):
             self.assertTrue(directory)
             probes.append(path)
             count = sum(item == path for item in probes)
-            # C:\\disposable is a retained ancestor: second open is a
+            # C:\disposable is a retained ancestor: second open is a
             # different kernel FileId even though the pathname is unchanged.
-            ident = changed if path == r"C:\\disposable" and count == 2 else baseline
+            ident = changed if path == r"C:\disposable" and count == 2 else baseline
             return object(), ident
 
         def retain(path):
@@ -108,11 +108,11 @@ class WindowsPathSyntaxTests(unittest.TestCase):
             return retained[path]
 
         root._retain_dir = retain
-        with patch("f_windows_handle._api", return_value=kernel), \\
+        with patch("f_windows_handle._api", return_value=kernel), \
                 patch("f_windows_handle._open", side_effect=open_directory):
             with self.assertRaisesRegex(ValueError, "root ancestor path substituted"):
                 root.__enter__()
-        self.assertIn(r"C:\\disposable", probes)
+        self.assertIn(r"C:\disposable", probes)
         self.assertIsNone(root.dll)
         self.assertEqual(root._dirs, {})
 
@@ -120,14 +120,14 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         """The F receipt remains an observation, regardless of 128-bit IDs."""
         from unittest.mock import patch
         state = {"id": bytes.fromhex("21" * 16)}
-        root = WindowsInstalledRoot(r"C:\\disposable")
+        root = WindowsInstalledRoot(r"C:\disposable")
         root.dll = type("FakeKernel", (), {"CloseHandle": lambda self, h: True})()
         parent = (9, bytes.fromhex("31" * 16), 0, 10)
-        root._parent = lambda parts: r"C:\\disposable"
+        root._parent = lambda parts: r"C:\disposable"
         root._retain_dir = lambda path: ("parent", parent)
         with patch("f_windows_handle._open",
                    side_effect=lambda dll, path, *, directory:
-                   ("file", (9, state["id"], 12, 20))), \\
+                   ("file", (9, state["id"], 12, 20))), \
                 patch("f_windows_handle._info",
                       side_effect=lambda dll, handle, *, directory:
                       parent if directory else (9, state["id"], 12, 20)):
