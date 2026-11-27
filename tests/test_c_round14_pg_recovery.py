@@ -300,6 +300,46 @@ class NativeCRecoveryTests(unittest.TestCase):
             "SELECT generation,token,session_id,active "
             "FROM public.lab_writer_fence"), before)
 
+    def test_sql_commit_after_simulated_external_lease_loss_is_not_root_proof(self):
+        """Native PostgreSQL commit; EXTERNAL lease loss is SIMULATED only.
+
+        An external Consul TTL does not participate in PostgreSQL's SQL
+        transaction. Do not treat this experiment as actual Consul expiry or
+        wire-level COMMIT reply loss. No Root admission is granted.
+        """
+        import json
+        params = (self.old["owner"], self.old["namespace"], 1, 100,
+                  *self.ids, self.source, self.schema,
+                  "8" * 64, "9" * 64, "BTCUSDT", 1320000,
+                  json.dumps({"dataset_fingerprint": "8" * 64}))
+        sql = ("SELECT public.lab_fenced_insert("
+               "%s::text,%s::text,%s::bigint,%s::bigint,"
+               "%s::uuid,%s::uuid,%s::uuid,"
+               "%s::text,%s::text,%s::text,%s::text,%s::text,"
+               "%s::bigint,%s::jsonb)")
+        with self.writer.transaction():
+            with self.writer.cursor() as cur:
+                cur.execute(sql, params)
+            # The only synthetic step: E's remote Consul lease is considered
+            # expired while C's original SQL row is still held FOR UPDATE.
+            simulated_consul_lease_current = False
+            self.assertFalse(simulated_consul_lease_current)
+            self.assertEqual(self.pg.sql(
+                "SELECT count(*) FROM public.provenance_minutes "
+                "WHERE fingerprint='" + "8" * 64 + "'"), "0")
+        # SQL can still COMMIT after this simulated external event. Thus C's
+        # row lock is never a substitute for E's independent Root transfer
+        # block, backend extinction and durable exact revocation.
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*) FROM public.provenance_minutes "
+            "WHERE fingerprint='" + "8" * 64 + "'"), "1")
+        self.assertEqual(self.pg.sql(
+            "SELECT generation,token,active FROM public.lab_writer_fence"),
+            "1|100|t")
+        self.assertFalse(simulated_consul_lease_current)
+        self.assertEqual(observe_old_lab_backend(
+            self.pg, **self.old), "STILL_ALIVE")
+
     def test_owner_process_death_releases_advisory_lock_but_not_root_admission(self):
         # A dedicated throw-away child dies AFTER C's original lock and
         # marker, but BEFORE initdb/start. No PostgreSQL process is created.
