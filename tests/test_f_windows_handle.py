@@ -74,6 +74,45 @@ class WindowsPathSyntaxTests(unittest.TestCase):
                     _final_path_matches(RecordedKernel32(alien), None, expected)
 
 
+    def test_readonly_file_id_receipt_synthetic_denies_substituted_identity(self):
+        """Run the original receipt logic, not any claimed native Win32 API."""
+        from unittest.mock import patch
+        class FakeKernel:
+            def __init__(self):
+                self.closed = []
+            def CloseHandle(self, handle):
+                self.closed.append(handle)
+                return True
+        kernel = FakeKernel()
+        root = WindowsInstalledRoot(r"C:\\disposable")
+        root.dll = kernel
+        directory_info = (7, bytes.fromhex("11" * 16), 0, 44)
+        state = {"file_id": bytes.fromhex("22" * 16)}
+        root._parent = lambda parts: r"C:\\disposable"
+        root._retain_dir = lambda path: ("dir-handle", directory_info)
+        def file_info():
+            return (7, state["file_id"], 10, 55)
+        def fake_open(dll, path, *, directory):
+            self.assertFalse(directory)
+            self.assertEqual(path, r"C:\\disposable\\module.py")
+            return "file-handle", file_info()
+        def fake_info(dll, handle, *, directory):
+            return directory_info if directory else file_info()
+        with patch("f_windows_handle._open", side_effect=fake_open), \
+                patch("f_windows_handle._info", side_effect=fake_info):
+            receipt = root.readonly_identity_receipt(("module.py",))
+            self.assertEqual(receipt["schema"], "f-win32-file-identity-observation.v1")
+            self.assertEqual(receipt["file_id128"], "22" * 16)
+            self.assertEqual(receipt["parent_file_id128"], "11" * 16)
+            self.assertEqual(receipt["root_file_id128"], "11" * 16)
+            self.assertFalse(receipt["installation_ownership_attested"])
+            self.assertFalse(receipt["physical_delete_authorized"])
+            self.assertEqual(root.verify_readonly_identity_receipt(("module.py",), receipt), receipt)
+            state["file_id"] = bytes.fromhex("33" * 16)
+            with self.assertRaisesRegex(ValueError, "identity mismatch"):
+                root.verify_readonly_identity_receipt(("module.py",), receipt)
+        self.assertEqual(kernel.closed, ["file-handle", "file-handle", "file-handle"])
+
 @unittest.skipUnless(os.name == "nt", "genuine Win32 kernel handles required")
 class NativeWindowsRetainedHandleTests(unittest.TestCase):
     def setUp(self):
