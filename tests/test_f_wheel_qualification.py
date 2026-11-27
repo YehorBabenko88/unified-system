@@ -93,6 +93,32 @@ class QualificationTests(unittest.TestCase):
         self.deny()
         self.assertEqual(alias.read_bytes(), self.wheel.read_bytes())
 
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX wheel pathname custody only")
+    def test_wheel_same_bytes_leaf_swap_after_final_fstat_denied(self):
+        """A retained old archive FD cannot authenticate a new live pathname."""
+        import os
+        from unittest.mock import patch
+        import f_wheel_qualification as owner
+        detached = self.base / "detached-original-wheel.whl"
+        original_inode = self.wheel.stat().st_ino
+        original_bytes = self.wheel.read_bytes()
+        real_fstat = os.fstat
+        observed = []
+        def replace_after_final(fd):
+            info = real_fstat(fd)
+            if info.st_ino == original_inode:
+                observed.append(info.st_ino)
+                if len(observed) == 2:
+                    self.wheel.rename(detached)
+                    self.wheel.write_bytes(original_bytes)
+            return info
+        with patch.object(owner.os, "fstat", side_effect=replace_after_final):
+            self.deny()
+        self.assertEqual(len(observed), 2)
+        self.assertEqual(detached.read_bytes(), original_bytes)
+        self.assertEqual(self.wheel.read_bytes(), original_bytes)
+        self.assertNotEqual(self.wheel.stat().st_ino, original_inode)
+
     def test_installed_module_tamper(self):
         (self.install / MOD).write_bytes(b"tampered")
         self.deny()
