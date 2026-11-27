@@ -15,13 +15,17 @@ _RESOURCE = "grid-market-data-primary"
 _OWNER_PATTERN = re.compile(r"[A-Za-z0-9_.:-]{1,128}\Z")
 _NAMESPACE_PATTERN = re.compile(r"[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*\Z")
 
-def _id(value):
+def _id(value, *, consul_session=False):
     need(type(value) is str, "LAB_FENCE_ID_INVALID")
     try:
         parsed = uuid.UUID(value)
     except (ValueError, AttributeError) as exc:
         raise LabAdmissionRejected("LAB_FENCE_ID_INVALID") from exc
-    need(str(parsed) == value and parsed.version == 4, "LAB_FENCE_ID_INVALID")
+    # Consul 2.1 emits canonical RFC4122 UUID5 session IDs. This is identity
+    # syntax only; exact SQL binding and independent lease checks still apply.
+    versions = (4, 5) if consul_session else (4,)
+    need(str(parsed) == value and parsed.variant == uuid.RFC_4122
+         and parsed.version in versions, "LAB_FENCE_ID_INVALID")
     return value
 
 def _scope(owner, namespace):
@@ -126,7 +130,8 @@ def claim_lab_fence(pg, *, owner, namespace, generation, token,
     need(type(backend_pid) is int and 0 < backend_pid < 2**31,
          "LAB_FENCE_BACKEND_INVALID")
     owner, namespace = _scope(owner, namespace)
-    ids = tuple(map(_id, (session_id, instance_id, node_incarnation_id)))
+    ids = (_id(session_id, consul_session=True), _id(instance_id),
+           _id(node_incarnation_id))
     sha1, sha2 = _sha(source_sha256), _sha(schema_sha256)
     # A claimed PID must be an existing lab_writer DB connection. A current
     # backend_start is stored by PostgreSQL, not asserted in any client JSON.
@@ -304,7 +309,7 @@ def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
     from .grid_writer_fence_model import WriterLeaseIdentity
     need(type(identity) is WriterLeaseIdentity, "LAB_FENCE_IDENTITY_REQUIRED")
     owner, namespace = _scope(identity.owner, identity.namespace)
-    sess = _id(identity.session_id)
+    sess = _id(identity.session_id, consul_session=True)
     inst = _id(identity.instance_id)
     node = _id(identity.node_incarnation_id)
     source = _sha(identity.source_sha256)
