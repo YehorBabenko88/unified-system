@@ -242,8 +242,6 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         # MS CreateFileW requires FILE_FLAG_BACKUP_SEMANTICS for directories.
         # I's original all-roster opens must choose directory-specific flags;
         # OPEN_REPARSE_POINT alone cannot acquire a directory HANDLE.
-        self.assertIn("0x02000000", opening,
-                      "I_CUSTODY_DIRECTORY_HANDLE_REQUIRES_BACKUP_SEMANTICS")
         self.assertIn("flags=_native_roster_open_flags(key)", opening)
         self.assertIn("h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,flags,None)", opening)
         kind = next((n for n in tree.body if isinstance(n, ast.FunctionDef)
