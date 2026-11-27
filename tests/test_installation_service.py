@@ -317,6 +317,13 @@ class ServiceResourceTests(unittest.TestCase):
   lengthy={'root':self.root,'file:'+'x'*301:self.root/'x'}
   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
    service._native_receipt_roster_budget(lengthy)
+  # 200 Unicode code points, but 400 UTF-8 bytes. The previous len(str)
+  # gate admitted this path despite its per-key encoded-byte violation.
+  multibyte={'root':self.root,'file:'+'é'*200:self.root/'unicode'}
+  self.assertLess(len('file:'+'é'*200),300)
+  self.assertGreater(len(('file:'+'é'*200).encode('utf-8')),300)
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(multibyte)
   large={'root':self.root}
   large.update({'file:'+str(i).zfill(5)+'x'*225:self.root/str(i)
                 for i in range(320)})
