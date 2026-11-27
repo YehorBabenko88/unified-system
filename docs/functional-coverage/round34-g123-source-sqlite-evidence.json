@@ -1,0 +1,86 @@
+{
+  "schema": "unified.h.round34-g123-original-source-verification.v1",
+  "role": "H Functional Coverage / Independent Verification",
+  "source_repo": "YehorBabenko88/strattester",
+  "source_sha": "97e5e48c867370741e8349c422399384aef977ae",
+  "source_blobs": {
+    "strattester/marketdata/instruments.py": "64d44102978fe4cfb766b5a6c579c8ebd4e1e9a0",
+    "strattester/marketdata/universe_sync.py": "04b28a6936f2c7b7bc2a1cd8c8fdeacc6e02fb5a",
+    "strattester/marketdata/download_smoke.py": "74356fe3fd49a30dd3d58f2d307985c84c4aa1f3",
+    "tests/marketdata/test_download_smoke_g32.py": "b8c743fbd8597ba64c1fa2391036aeb2c2d65522",
+    "tests/marketdata/test_universe_sync_g33.py": "30e688d04faba809e797cb686aedb038a856d7d0"
+  },
+  "local_original_source_execution": {
+    "python": "3.13.5",
+    "sqlite": "3.46.1",
+    "sqlite_source_files_byte_exact_gitblob": true,
+    "sqlite_actual_original_classes": [
+      "InstrumentRegistry",
+      "UniverseSynchronizer"
+    ],
+    "original_sqlite_tests": {
+      "PASS": 10,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0,
+      "scenarios": [
+        "initial two active symbols",
+        "three repeated disjoint equal-size snapshot attempts all refused",
+        "after each rejected attempt instruments, instrument_intervals, instrument_registry_meta tables entirely unchanged",
+        "valid half retained snapshot allowed",
+        "MISSING then DELISTED after two confirmed misses"
+      ]
+    },
+    "numeric_validation_original_extracted_body": {
+      "symbol": "_checked_smoke_candles",
+      "source_characters": 1931,
+      "fnv32": "31d072e8",
+      "parent_gitblob": "74356fe3fd49a30dd3d58f2d307985c84c4aa1f3",
+      "PASS": 13,
+      "FAIL": 0,
+      "ERROR": 0,
+      "SKIP": 0,
+      "scope": "Original byte-exact function body executed with isolated stub Candle dataclass; whole download_smoke/SQLiteMarketStore NOT imported",
+      "scenarios": [
+        "valid candle",
+        "zero open/high/low/close rejected",
+        "negative zero volume/turnover rejected",
+        "nonzero 1e-10000 underflow volume/turnover/open rejected",
+        "non-finite rejected",
+        "positive literal zero volume/turnover retained"
+      ]
+    },
+    "proof_json_sha256": "833eee161ffabf8279648f99a5574be1f00c3cbff786ccff10a1530ad9d91a70",
+    "source_is_offline_public_candidate": true,
+    "live_exchange_attestation": false
+  },
+  "hosted_original_ci": {
+    "run_id": 45999989212,
+    "url": "https://github.com/YehorBabenko88/strattester/actions/runs/45999989212",
+    "exact_source_sha": "97e5e48c867370741e8349c422399384aef977ae",
+    "ubuntu_python311_job": 140508864335,
+    "ubuntu_python311": {
+      "PASS": 566,
+      "FAIL": 1,
+      "ERROR": 0,
+      "SKIP": 1
+    },
+    "other_matrix_jobs": "THREE CANCELLED",
+    "overall": "FAIL",
+    "failed_test": "tests/marketdata/test_download_smoke_g32.py::test_g34_valid_zero_volume_and_turnover_retained",
+    "cause": "Test fixture source timestamps 600000,660000,720000 inconsistent with now=900000 minutes=3 => expected start=660000,end=780000",
+    "fix_owner": "G",
+    "required_test_correction": "Use rows at 660000,720000,780000 derived from requested source window; do not relax validator"
+  },
+  "incomplete": {
+    "full_hosted_original_ci_pass": false,
+    "original_complete_sqlite_market_store_readback": false,
+    "root_managed_grid_reader_binding": false,
+    "source_qualified_universe_real_provider": false,
+    "historical_datasets_parity": false,
+    "G006_retirement_allowed": false,
+    "native_pg18_consul_windows_installer_e2e": false
+  },
+  "status": "P0_SOURCE_GUARDS_LOCAL_PASS_HOSTED_FULL_CI_FAIL",
+  "release": "CODE_NO_GO_PRODUCTION_NO_GO"
+}

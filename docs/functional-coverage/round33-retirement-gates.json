@@ -1,0 +1,230 @@
+{
+  "schema": "unified.functional-retirement-gate.v1",
+  "owner": "H",
+  "date": "2026-11-27",
+  "status": "INDEPENDENT_REVIEW_BLOCKED",
+  "release": "CODE_NO_GO_PRODUCTION_NO_GO",
+  "ancestry": {
+    "h_root": "d47ef9e06b381f41108cff16016e133677b9697e",
+    "h_grid": "9e4fb1bfffe8bd34bfc2ebc0cfcb94d1ee4af52c",
+    "grid_producer": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+    "grid_test_cohort": "e5864a933dc407b2ccc10a91cb2520e21ebfc447",
+    "math": "9e6acbd9e12a91189f57234828e31640983af553",
+    "terminan_producer": "bcdf3287a47e60f6c50022adce7651bcb51e587f",
+    "terminan_browser_fix": "fd6a3f1dfa8ee832a51180410cb9920b8766c0a8",
+    "strattester": "529ebb548159948c66976884f3b8e57454e90ed1",
+    "meta_source": "b1a4d6a41054f0040a88dc80b585380fb6b4f323"
+  },
+  "source_blobs": {
+    "strattester_smoke": "f049c1f00df32fefabd60ebb6f1836d1fdb73c43",
+    "strattester_universe": "4afa8336c9ef00402f9d19ae4f4bf941d06d2557",
+    "strattester_smoke_tests": "7ef3e393d9d09e9dfd4c1999179e5cdeba7c6e58",
+    "strattester_universe_tests": "260cb681ec6d342f89fefd518b18eb1ac6e5c2dd",
+    "meta_feature_inventory": "56c239415eae9ee0445e624431140de188d59faf",
+    "meta_file_inventory": "31a1387707f7b88d22d9c8a2b2fde84e77cdc7d8",
+    "h_existing_27_family_ledger": "b2c1e78b1a78d4f293394cb5e01f26d2d7717b0b",
+    "meta_stage6_actual_85_crosswalk": "aad4b095bb1fd619dc633889e7011dff6455edf7",
+    "strattester_round34_instruments": "64d44102978fe4cfb766b5a6c579c8ebd4e1e9a0",
+    "strattester_round34_smoke": "74356fe3fd49a30dd3d58f2d307985c84c4aa1f3",
+    "strattester_round34_universe": "04b28a6936f2c7b7bc2a1cd8c8fdeacc6e02fb5a"
+  },
+  "inventory_scope": {
+    "original_h_ledger_families": 27,
+    "meta_inventory_feature_families": 17,
+    "meta_inventory_python_file_rows": 83,
+    "overlap_not_additive": true,
+    "full_six_repo_symbol_inventory_verified": false,
+    "meta_source_may_have_newer_heads": true,
+    "note": "Meta file count is the original stage6 CSV snapshot, not the complete repository at current HEAD; static import analysis and all branch histories are not exhausted.",
+    "meta_stage6_actual_python_file_count": 85,
+    "meta_stage6_old_blob_changed_count": 8,
+    "meta_stage6_unlisted_python_file_count": 2,
+    "meta_stage6_semantic_diff_tests_passed": false,
+    "meta_stage6_unlisted_source_paths": [
+      "src/meta_analyse/offline_paper_delivery.py",
+      "src/meta_analyse/retirement_receipt.py"
+    ]
+  },
+  "evidence": {
+    "original_strattester_ci_prior_head": {
+      "sha": "c95ced815575ab3fe25f619f97e9bf040d58f3da",
+      "run_id": 45995842410,
+      "passed": 2154,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 2,
+      "applies_to_current_head": false
+    },
+    "original_terminan_http": {
+      "sha": "3608e41b90b2dbf7a80d7daa86582a2440e11330",
+      "run_id": 45991815725,
+      "passed": 72,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "managed synthetic HTTP on four matrix cells"
+    },
+    "original_terminan_browser_prior": {
+      "sha": "3608e41b90b2dbf7a80d7daa86582a2440e11330",
+      "run_id": 45991815731,
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "current_strattester_ci": "NOT_RUN_VERIFIED_AT_EXACT_HEAD",
+    "current_terminan_d135_browser_ci": "BROWSER_PASS_EXACT_SHA",
+    "current_h_grid_original_ci": "NOT_RUN_VERIFIED_AT_EXACT_HEAD",
+    "native_installed_e2e": "NOT_RUN",
+    "independent_full_six_repo_equivalence": "NOT_RUN",
+    "current_terminan_d135_browser_proof": {
+      "sha": "fd6a3f1dfa8ee832a51180410cb9920b8766c0a8",
+      "run_id": 45996794337,
+      "job_id": 140498081944,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "runtime": "Ubuntu GitHub hosted actual Chrome/Chromium via playwright-core, source-quality UI; NOT installed fleet"
+    },
+    "current_terminan_d135_http_proof": {
+      "sha": "fd6a3f1dfa8ee832a51180410cb9920b8766c0a8",
+      "workflow_run_id": 45996794071,
+      "pinned_grid": "b2e3f9a77384080ecbb834b32d51d8816ed1aa2a",
+      "pinned_math": "9e6acbd9e12a91189f57234828e31640983af553",
+      "windows_python311": 18,
+      "windows_python312": 18,
+      "ubuntu_python311": 18,
+      "ubuntu_python312": 18,
+      "passed": 72,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "scope": "source-pinned managed HTTP loopback only; source-qualified synthetic fixture, no actual provider or installed PG18/Consul"
+    }
+  },
+  "groups": [
+    {
+      "id": "G006",
+      "origin": "Strattester",
+      "candidate_owner": "Grid",
+      "state": "PARTIAL_READER_MIGRATION_BLOCKED",
+      "original_paths": [
+        "strattester/marketdata/download_smoke.py",
+        "strattester/marketdata/sqlite_store.py",
+        "strattester/marketdata/universe_sync.py"
+      ],
+      "unique_retained": [
+        "SQLiteMarketStore",
+        "SyncEngine",
+        "Universe",
+        "OHLCV",
+        "trades",
+        "ticks",
+        "OI",
+        "funding",
+        "mark/index/premium",
+        "long-short"
+      ],
+      "consumers": "NOT_EXHAUSTIVELY_VERIFIED",
+      "required_tests": [
+        "nonzero Decimal turnover underflow refuses without false zero",
+        "strict positive OHLC",
+        "negative-zero volume/turnover denial",
+        "disjoint equal-size universe replacement refuses before reconcile and remains unchanged after repeated snapshots",
+        "managed Grid source identity and actual consumer read",
+        "full dataset matrix and immutable SQLite differential",
+        "recovery/source gaps and no hidden Bybit client"
+      ],
+      "retirement_allowed": false
+    },
+    {
+      "id": "G012",
+      "origin": "Terminan",
+      "candidate_owner": "Grid+Math+Terminan",
+      "state": "PARITY_NOT_PROVEN",
+      "original_paths": [
+        "Terminan legacy 68-line 1m-to-5m/15m aggregation candidate"
+      ],
+      "unique_retained": [
+        "5m/15m bucket semantics",
+        "exact Decimal",
+        "historical as-of",
+        "LIVE 120s freshness",
+        "no generic unqualified candle fallback"
+      ],
+      "consumers": "Terminan UI and strategy research require independent confirmation",
+      "required_tests": [
+        "original legacy vs canonical same-source golden differential",
+        "5m/15m strict source receipt in Chromium",
+        "historical before/as_of and no-lookahead",
+        "missing/mixed/duplicate minute fail-closed",
+        "real Grid Math Terminan source consumer graph"
+      ],
+      "retirement_allowed": false
+    },
+    {
+      "id": "META_STAGE6",
+      "origin": "MetaAnalyse",
+      "candidate_owner": "Grid+Math+Terminan+Unified",
+      "state": "17_FAMILIES_83_PY_FILES_NOT_SYMBOL_COMPLETE",
+      "original_paths": [
+        "docs/meta-stage6-feature-migration.csv",
+        "docs/meta-stage6-file-inventory.csv"
+      ],
+      "unique_retained": [
+        "tape velocity and wall tracking",
+        "untouched higher-timeframe levels",
+        "trade-vs-footprint POC tie semantics",
+        "MetaScalp foreign-level ownership",
+        "paper PnL fees stops and guards",
+        "replay and exact UTC/Decimal orderflow",
+        "resumable archive and old SQL reader",
+        "UI styling and monitor",
+        "service and recovery semantics",
+        "offline_paper_delivery digest-verified idempotent PaperJournal replay and readback",
+        "retirement_receipt read-only paper_fills/level_map/checkpoints digest transfer"
+      ],
+      "consumers": "Meta source CSV marks USED and UNKNOWN; full external imports NOT_EXHAUSTIVELY_VERIFIED",
+      "required_tests": [
+        "symbol-level provenance/destination and original blob map",
+        "original same-input numerical/parity and 100k bounded stream",
+        "external runtime consumer cutover",
+        "single Grid writer and Terminan UI",
+        "stateful native rollback and archive preservation",
+        "Original 85-file current-tree crosswalk: 8 changed SHA drift and 2 newly unlisted source files require symbol-level owner/consumer parity",
+        "Paper replay source digest, acknowledgement/checkpoint/fills and read-only persisted state receipt to Terminan differential E2E"
+      ],
+      "retirement_allowed": false
+    }
+  ],
+  "global_deletion_gate": {
+    "owner_ack": false,
+    "complete_original_symbol_inventory": false,
+    "dynamic_external_consumers_checked": false,
+    "original_git_blobs_preserved": true,
+    "same_input_differential_parity": false,
+    "exact_head_automated_ci_complete": false,
+    "installed_native_browser_e2e": false,
+    "user_data_backup_restore_proven": false,
+    "reversible_rollback_tested": false,
+    "deletion_allowed": false
+  },
+  "round34_original_g123_source": {
+    "source_sha": "97e5e48c867370741e8349c422399384aef977ae",
+    "evidence_path": "docs/functional-coverage/round34-g123-source-sqlite-evidence.json",
+    "original_sqlite_py_source_pass": 10,
+    "original_numeric_source_function_pass": 13,
+    "original_pytest_run": 45999989212,
+    "original_pytest_ubuntu311": {
+      "PASS": 566,
+      "FAIL": 1,
+      "ERROR": 0,
+      "SKIP": 1
+    },
+    "original_pytest_fix_needed": true,
+    "original_full_ci_pass": false,
+    "g006_retirement_allowed": false,
+    "note": "P0 fixed source executes locally with exact original class blobs, but hosted full G test fails on misaligned fixture and other platform jobs cancelled. Latest G head is a separate pin from historical R33 records."
+  }
+}

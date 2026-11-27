@@ -1,0 +1,249 @@
+{
+  "schema": "unified.h.market-dataset-retention-gates.v1",
+  "owner": "H",
+  "round": 35,
+  "release": "CODE_NO_GO_PRODUCTION_NO_GO",
+  "global_retirement_allowed": false,
+  "g012_original_legacy": "D129_68_LINE",
+  "g012_retirement_allowed": false,
+  "meta_85_file_retirement_allowed": false,
+  "meta_source_file_count": 85,
+  "producer_grid_ref": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+  "candidate_math_ref": "9e6acbd9e12a91189f57234828e31640983af553",
+  "meta_original_ref": "b1a4d6a41054f0040a88dc80b585380fb6b4f323",
+  "strattester_g_latest": "9cfa91eaa9dce4553625c3d61dc34607dbe7aca2",
+  "datasets": [
+    {
+      "id": "ohlcv",
+      "candidate_owner": "Grid",
+      "original_source": "G006 + G012 legacy 1m and HTF",
+      "original_retained": true,
+      "source_completeness_proven": false,
+      "same_input_parity_proven": false,
+      "consumer_cutover_proven": false,
+      "retirement_allowed": false,
+      "acceptance_checks": [
+        "source lineage",
+        "gap and ordering",
+        "exact timestamps and decimals",
+        "no replacement without equivalent consumer",
+        "closed 1m/5m/15m equivalence",
+        "no future candles"
+      ],
+      "acceptance_status": "NOT_RUN",
+      "acceptance_command": "python -m pytest -v tests/market_data/test_h_round35_ohlcv_parity.py",
+      "planned_owner_review": "B + H, J native CI, G if Strattester consumer"
+    },
+    {
+      "id": "trades",
+      "candidate_owner": "Grid",
+      "original_source": "Meta raw_trades and G006",
+      "original_retained": true,
+      "source_completeness_proven": false,
+      "same_input_parity_proven": false,
+      "consumer_cutover_proven": false,
+      "retirement_allowed": false,
+      "acceptance_checks": [
+        "source lineage",
+        "gap and ordering",
+        "exact timestamps and decimals",
+        "no replacement without equivalent consumer",
+        "trade identity and dedupe",
+        "side normalization"
+      ],
+      "acceptance_status": "NOT_RUN",
+      "acceptance_command": "python -m pytest -v tests/market_data/test_h_round35_trades_parity.py",
+      "planned_owner_review": "B + H, J native CI, G if Strattester consumer"
+    },
+    {
+      "id": "ticks",
+      "candidate_owner": "Grid",
+      "original_source": "Meta archive ticks and G006",
+      "original_retained": true,
+      "source_completeness_proven": false,
+      "same_input_parity_proven": false,
+      "consumer_cutover_proven": false,
+      "retirement_allowed": false,
+      "acceptance_checks": [
+        "source lineage",
+        "gap and ordering",
+        "exact timestamps and decimals",
+        "no replacement without equivalent consumer",
+        "trade ordering",
+        "raw tick fidelity"
+      ],
+      "acceptance_status": "NOT_RUN",
+      "acceptance_command": "python -m pytest -v tests/market_data/test_h_round35_ticks_parity.py",
+      "planned_owner_review": "B + H, J native CI, G if Strattester consumer"
+    },
+    {
+      "id": "delta",
+      "candidate_owner": "Grid+Math",
+      "original_source": "Meta orderflow and G012",
+      "original_retained": true,
+      "source_completeness_proven": false,
+      "same_input_parity_proven": false,
+      "consumer_cutover_proven": false,
+      "retirement_allowed": false,
+      "acceptance_checks": [
+        "source lineage",
+        "gap and ordering",
+        "exact timestamps and decimals",
+        "no replacement without equivalent consumer",
+        "unknown-side retention",
+        "exact signed delta"
+      ],
+      "acceptance_status": "NOT_RUN",
+      "acceptance_command": "python -m pytest -v tests/market_data/test_h_round35_delta_parity.py",
+      "planned_owner_review": "B + H, J native CI, G if Strattester consumer"
+    },
+    {
+      "id": "oi",
+      "candidate_owner": "Grid",
+      "original_source": "Meta market_store open_interest and G006",
+      "original_retained": true,
+      "source_completeness_proven": false,
+      "same_input_parity_proven": false,
+      "consumer_cutover_proven": false,
+      "retirement_allowed": false,
+      "acceptance_checks": [
+        "source lineage",
+        "gap and ordering",
+        "exact timestamps and decimals",
+        "no replacement without equivalent consumer",
+        "no fabricated delisting",
+        "period continuity"
+      ],
+      "acceptance_status": "NOT_RUN",
+      "acceptance_command": "python -m pytest -v tests/market_data/test_h_round35_oi_parity.py",
+      "planned_owner_review": "B + H, J native CI, G if Strattester consumer"
+    },
+    {
+      "id": "funding",
+      "candidate_owner": "Grid",
+      "original_source": "Meta collector funding and G006",
+      "original_retained": true,
+      "source_completeness_proven": false,
+      "same_input_parity_proven": false,
+      "consumer_cutover_proven": false,
+      "retirement_allowed": false,
+      "acceptance_checks": [
+        "source lineage",
+        "gap and ordering",
+        "exact timestamps and decimals",
+        "no replacement without equivalent consumer",
+        "funding event ordering",
+        "rate precision"
+      ],
+      "acceptance_status": "NOT_RUN",
+      "acceptance_command": "python -m pytest -v tests/market_data/test_h_round35_funding_parity.py",
+      "planned_owner_review": "B + H, J native CI, G if Strattester consumer"
+    },
+    {
+      "id": "mark",
+      "candidate_owner": "Grid",
+      "original_source": "Meta/Strattester mark candles",
+      "original_retained": true,
+      "source_completeness_proven": false,
+      "same_input_parity_proven": false,
+      "consumer_cutover_proven": false,
+      "retirement_allowed": false,
+      "acceptance_checks": [
+        "source lineage",
+        "gap and ordering",
+        "exact timestamps and decimals",
+        "no replacement without equivalent consumer",
+        "mark family isolation",
+        "interval continuity"
+      ],
+      "acceptance_status": "NOT_RUN",
+      "acceptance_command": "python -m pytest -v tests/market_data/test_h_round35_mark_parity.py",
+      "planned_owner_review": "B + H, J native CI, G if Strattester consumer"
+    },
+    {
+      "id": "index",
+      "candidate_owner": "Grid",
+      "original_source": "Meta/Strattester index candles",
+      "original_retained": true,
+      "source_completeness_proven": false,
+      "same_input_parity_proven": false,
+      "consumer_cutover_proven": false,
+      "retirement_allowed": false,
+      "acceptance_checks": [
+        "source lineage",
+        "gap and ordering",
+        "exact timestamps and decimals",
+        "no replacement without equivalent consumer",
+        "index family isolation",
+        "interval continuity"
+      ],
+      "acceptance_status": "NOT_RUN",
+      "acceptance_command": "python -m pytest -v tests/market_data/test_h_round35_index_parity.py",
+      "planned_owner_review": "B + H, J native CI, G if Strattester consumer"
+    },
+    {
+      "id": "premium",
+      "candidate_owner": "Grid",
+      "original_source": "Meta/Strattester premium candles",
+      "original_retained": true,
+      "source_completeness_proven": false,
+      "same_input_parity_proven": false,
+      "consumer_cutover_proven": false,
+      "retirement_allowed": false,
+      "acceptance_checks": [
+        "source lineage",
+        "gap and ordering",
+        "exact timestamps and decimals",
+        "no replacement without equivalent consumer",
+        "premium family isolation",
+        "interval continuity"
+      ],
+      "acceptance_status": "NOT_RUN",
+      "acceptance_command": "python -m pytest -v tests/market_data/test_h_round35_premium_parity.py",
+      "planned_owner_review": "B + H, J native CI, G if Strattester consumer"
+    },
+    {
+      "id": "long_short",
+      "candidate_owner": "Grid",
+      "original_source": "Strattester long-short market dataset",
+      "original_retained": true,
+      "source_completeness_proven": false,
+      "same_input_parity_proven": false,
+      "consumer_cutover_proven": false,
+      "retirement_allowed": false,
+      "acceptance_checks": [
+        "source lineage",
+        "gap and ordering",
+        "exact timestamps and decimals",
+        "no replacement without equivalent consumer",
+        "ratio semantics",
+        "symbol market identity"
+      ],
+      "acceptance_status": "NOT_RUN",
+      "acceptance_command": "python -m pytest -v tests/market_data/test_h_round35_long_short_parity.py",
+      "planned_owner_review": "B + H, J native CI, G if Strattester consumer"
+    },
+    {
+      "id": "archives",
+      "candidate_owner": "Grid",
+      "original_source": "Meta bybit_archive_download/trade_archive",
+      "original_retained": true,
+      "source_completeness_proven": false,
+      "same_input_parity_proven": false,
+      "consumer_cutover_proven": false,
+      "retirement_allowed": false,
+      "acceptance_checks": [
+        "source lineage",
+        "gap and ordering",
+        "exact timestamps and decimals",
+        "no replacement without equivalent consumer",
+        "SHA256 archive integrity",
+        "checkpoint/resume",
+        "replay identical content"
+      ],
+      "acceptance_status": "NOT_RUN",
+      "acceptance_command": "python -m pytest -v tests/market_data/test_h_round35_archives_parity.py",
+      "planned_owner_review": "B + H, J native CI, G if Strattester consumer"
+    }
+  ]
+}

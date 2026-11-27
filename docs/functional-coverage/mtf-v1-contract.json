@@ -1,0 +1,213 @@
+{
+  "schema": "unified.h.mtf-acceptance.v1",
+  "status": "CANDIDATE_NOT_RELEASE",
+  "pins": {
+    "Grid": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+    "Math": "9e6acbd9e12a91189f57234828e31640983af553",
+    "Terminan": "bcdf3287a47e60f6c50022adce7651bcb51e587f"
+  },
+  "source_record": "market_data.qualified-read-envelope.v1",
+  "proposed_response": "market_data.qualified-mtf-envelope.v2",
+  "producer_owner": "Grid",
+  "consumer_owner": "Terminan",
+  "numerical_owner": "Math",
+  "supported_intervals": [
+    "5m",
+    "15m"
+  ],
+  "base_interval": "1m",
+  "max_source_rows": 75,
+  "max_output_bars": 5,
+  "status_only": [
+    "PARTIAL"
+  ],
+  "source_preconditions": [
+    "Grid v2 existing managed loopback source and startup identity",
+    "original 1m closed source records validated via Grid qualify_records",
+    "exact single producer identity/source revision/epoch and same symbol",
+    "source window has exactly width * bars consecutive unique 1m starts, aligned and fully closed",
+    "all source event end clocks <= cutoff; no cross future bar, no partial current bar",
+    "source 1m may be PARTIAL only, never GAP/STALE/UNAVAILABLE for data output"
+  ],
+  "numeric_policy": "Canonical Math 9e6 exact_sum and executed_volume_delta only. Grid B308 API 2.1 preserves exact Decimal strings buy_volume_decimal/sell_volume_decimal/volume_decimal/delta_decimal over ALREADY_STORED_1M_JSON_NUMBERS; binary64 numeric fields are display-only and cannot prove original source totals.",
+  "output_policy": "derived observation only, exchange_completeness NOT_ATTESTED, quality and source_authenticity NOT_INDEPENDENTLY_ATTESTED, paper_admitted false and execution_authority false",
+  "negative_cases": [
+    "interior_missing_minute",
+    "duplicate_minute",
+    "wrong_symbol",
+    "mixed_epoch",
+    "mixed_revision",
+    "unavailable",
+    "stale",
+    "unclosed_bucket",
+    "non_aligned_start",
+    "invalid_numeric",
+    "too_many_minutes",
+    "future_event",
+    "unsupported_interval",
+    "false_ready",
+    "false_trading_permission"
+  ],
+  "handoff": "Grid B308 exact production / Terminan D133 exact production source base; B309 and D134 are test-only cohorts. Original D134 GitHub Actions 4-cell B308+Math HTTP integration 72/72 method invocations PASSED, Playwright legacy 5m expectation FAILED. Historical UI source implemented, real browser/native Root/PG18/Consul/installer/unique Strattester migration release acceptance still blocked. No removal of G012/G006.",
+  "rejection": {
+    "non_partial_source": "HTTP_503_NO_ROWS",
+    "invalid_request": "HTTP_400_NO_ROWS",
+    "historical_asof": "SOURCE_ONLY_CANDIDATE_UNATTESTED",
+    "original_stale_threshold_ms": 120000
+  },
+  "quality_limit": {
+    "max_source_minutes": 75,
+    "max_output_bars": 5
+  },
+  "historical_asof": {
+    "schema": "market_data.historical-as-of-mtf-envelope.v2",
+    "route": "/internal/v2/candles/historical-as-of-exact",
+    "freshness_mode": "HISTORICAL_AS_OF",
+    "reason": "HISTORICAL_AS_OF_SOURCE_ONLY",
+    "status": "PARTIAL",
+    "historical_source_trust": "NOT_INDEPENDENTLY_ATTESTED",
+    "live_freshness": "NOT_APPLICABLE",
+    "source_requirements": [
+      "Explicit before_ms aligned to full 5m/15m UTC bucket and as_of_ms aligned to minute, 0 < before_ms <= as_of_ms <= now_ms, separation <=30 days",
+      "Every source_event_end_ms and ingestion_ms <= as_of_ms and each closed 1m row before before_ms",
+      "All 1m rows GOOD, unique, continuous, one epoch/revision/identity, no missing 5m/15m bucket",
+      "No stored point-in-time snapshot, no provider source authentication or completeness attestation",
+      "Never downgrade old LIVE STALE to PARTIAL without distinct explicit historical-as-of endpoint",
+      "All execution_authority, trading_authorized, paper_admitted false and immutable false",
+      "B308 exact historical before_ms must align full 5m/15m UTC bucket and reject malformed cursor before source/SQL read"
+    ],
+    "negative_cases": [
+      "ingested_after_asof",
+      "event_after_asof",
+      "mixed_epoch",
+      "mixed_revision",
+      "degraded_quality",
+      "unaligned_cursor",
+      "missing_minute",
+      "future_asof",
+      "false_authority",
+      "false_provider_truth"
+    ],
+    "consumer": "Terminan PR132 historical read-only backend IMPLEMENTED; historical end-user UI IMPLEMENTED (explicit UTC before/as_of only; real browser NOT_RUN)"
+  },
+  "delta_presentation": "Terminan D133 uses exact Decimal strings, verifies canonical Math sum and signed delta, and displays exact volume/delta as text without JS Number/parseFloat. Stored 1m JSON precision is NOT proof of original raw provider trade precision.",
+  "round32_gate": {
+    "status": "SOURCE_PAIR_MATCHED_NOT_RELEASE",
+    "grid_producer_sha": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+    "terminan_consumer_sha": "bcdf3287a47e60f6c50022adce7651bcb51e587f",
+    "canonical_math_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+    "api_version": {
+      "major": 2,
+      "minor": 1
+    },
+    "live_schema": "market_data.qualified-mtf-envelope.v2",
+    "historical_schema": "market_data.historical-as-of-mtf-envelope.v2",
+    "decimal_fields": [
+      "buy_volume_decimal",
+      "sell_volume_decimal",
+      "volume_decimal",
+      "delta_decimal"
+    ],
+    "source_precision": "STORED_1M_JSON_NUMBERS_NOT_PROVIDER_RAW",
+    "source_schema_keys": {
+      "top": 29,
+      "row": 15
+    },
+    "historical_source_only": true,
+    "live_5m_15m_ui_implemented": true,
+    "historical_backend_implemented": true,
+    "historical_ui_implemented": true,
+    "historical_ui_e2e_pass": false,
+    "exact_live_cursor_alignment_implemented": true,
+    "historical_full_period_cursor_alignment_implemented": true,
+    "original_cross_repo_runtime_pass": false,
+    "native_e2e_pass": false,
+    "deduplicated_68_lines_equivalence_pass": false,
+    "production_release_admitted": false,
+    "trading_authority_allowed": false
+  },
+  "round33_gate": {
+    "status": "ORIGINAL_FOUR_CELL_HTTP_PASS_BROWSER_FAIL_NOT_RELEASE",
+    "grid_producer_sha": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+    "terminan_consumer_sha": "bcdf3287a47e60f6c50022adce7651bcb51e587f",
+    "canonical_math_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+    "api_version": {
+      "major": 2,
+      "minor": 1
+    },
+    "live_schema": "market_data.qualified-mtf-envelope.v2",
+    "historical_schema": "market_data.historical-as-of-mtf-envelope.v2",
+    "decimal_fields": [
+      "buy_volume_decimal",
+      "sell_volume_decimal",
+      "volume_decimal",
+      "delta_decimal"
+    ],
+    "source_precision": "STORED_1M_JSON_NUMBERS_NOT_PROVIDER_RAW",
+    "source_schema_keys": {
+      "top": 29,
+      "row": 15
+    },
+    "historical_source_only": true,
+    "live_5m_15m_ui_implemented": true,
+    "historical_backend_implemented": true,
+    "historical_ui_implemented": true,
+    "historical_ui_e2e_pass": false,
+    "exact_live_cursor_alignment_implemented": true,
+    "historical_full_period_cursor_alignment_implemented": true,
+    "original_cross_repo_runtime_pass": true,
+    "native_e2e_pass": false,
+    "deduplicated_68_lines_equivalence_pass": false,
+    "production_release_admitted": false,
+    "trading_authority_allowed": false,
+    "original_cross_repo_runtime_scope": "GitHub Actions D134 integration/test_b_v2_roundtrip.py pinned B308/Math/D134, 18 tests each Windows/Linux Python 3.11/3.12; 72/72 original source HTTP test-method invocations PASS. Synthetic source/managed handler, NOT native installed full system.",
+    "original_cross_repo_http_tests": {
+      "workflow_run_id": 45991815725,
+      "producer_sha": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+      "consumer_sha": "3608e41b90b2dbf7a80d7daa86582a2440e11330",
+      "canonical_math_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+      "windows_python311": 18,
+      "windows_python312": 18,
+      "ubuntu_python311": 18,
+      "ubuntu_python312": 18,
+      "passed": 72,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "browser_full_e2e_pass": false,
+    "browser_test_failure": {
+      "workflow_run_id": 45991815731,
+      "job_id": 140481243214,
+      "original_test_file": "tests/browser/test_market_data_source.cjs",
+      "original_test_git_blob": "b9509cfc2be29bef01dede03ab301f791edf5c53",
+      "failing_line": 87,
+      "observed": "Playwright locator #chartmsg with text 2 свечей timeout 4000ms; obsolete 5m generic-candles expectation, while production exact Grid qualified 5m contract requires 5 source-qualified rows and refuses unsafe fallback",
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "fail_closed_behavior_expected": "On 5m selection, generic /api/candles?timeframe=5m response is NOT a valid source-qualified MTF receipt. If exact /api/market-data/qualified/timeframe returns [] or lacks a five-bar validated receipt, chart MUST remain empty and the receipt text must indicate UNAVAILABLE.",
+      "required_owner_fix": "Fix Playwright test expectation and wait for exact receipt refusal; do NOT let generic 2-candle 5m mock bypass managed Grid source qualification."
+    },
+    "strattester_guard_ci": {
+      "head_sha": "c95ced815575ab3fe25f619f97e9bf040d58f3da",
+      "run_id": 45995842410,
+      "windows311_pass": 539,
+      "windows313_pass": 539,
+      "ubuntu311_pass": 538,
+      "ubuntu311_skip": 1,
+      "ubuntu313_pass": 538,
+      "ubuntu313_skip": 1,
+      "release_admitted": false,
+      "managed_root_capability_verified": false
+    },
+    "new_ci_owner_heads": {
+      "grid_test_workflow_sha": "b2e3f9a77384080ecbb834b32d51d8816ed1aa2a",
+      "terminan_test_workflow_sha": "3608e41b90b2dbf7a80d7daa86582a2440e11330"
+    },
+    "native_pg18_consul_windows_installer_pass": false,
+    "full_strattester_unique_function_migration_pass": false,
+    "source_browser_test_not_release": true
+  }
+}
