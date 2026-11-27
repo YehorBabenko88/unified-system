@@ -186,7 +186,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         self.assertNotIn("SetFileInformationByHandle", source)
 
     def test_install_receipt_requires_uninterrupted_ancestor_identity(self):
-        """Document the owner's fail-closed gate, not a simulated OS race."""
+        """Block qualification of exact I V2 source with only closed snapshots."""
         import ast
         import hashlib
         from pathlib import Path
@@ -210,8 +210,12 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         helper = ast.get_source_segment(source, names["_native_file_identity"])
         self.assertIn("first==second", capture)
         self.assertIn("CloseHandle(h)", helper)
-        # Two sequential observations cannot prove retained ancestor handles.
-        self.assertNotIn("retained_ancestor_handles", capture)
+        # This is a P0 negative source gate, NOT a simulated Windows race.
+        # A green result would incorrectly accept two snapshots as custody.
+        if "CloseHandle(h)" in helper and "retained_ancestor_handles" not in capture:
+            self.fail("I_V2_ANCESTOR_HANDLE_CUSTODY_NOT_PROVEN: sequential FileId "
+                      "snapshots close each native handle before seal/register; "
+                      "native hostile Windows qualification is still required")
 
 @unittest.skipUnless(os.name == "nt", "genuine Win32 kernel handles required")
 class NativeWindowsRetainedHandleTests(unittest.TestCase):
