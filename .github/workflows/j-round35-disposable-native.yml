@@ -5,6 +5,8 @@ on:
       - '.github/workflows/j-round35-disposable-native.yml'
       - 'tests/test_j_round35_disposable_native.py'
       - 'integration/round35/owner_pins.v1.json'
+      - 'unified_system/j_release_capacity.py'
+      - 'tests/test_j_release_capacity.py'
 permissions:
   contents: read
 
@@ -32,7 +34,9 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          python -B -m unittest -v tests.test_j_round35_disposable_native.StaticContract
+          python -B -m unittest -v \
+            tests.test_j_round35_disposable_native.StaticContract \
+            tests.test_j_release_capacity
 
   native-pg18-consul:
     needs: scheduling-probe
