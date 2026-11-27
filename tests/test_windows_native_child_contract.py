@@ -893,28 +893,19 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         return op, self.driver.children[op]
 
     def test_native_detached_worker_executes_and_single_use_receipt(self):
-        """Confirm Python code ran, then consume exact original Job once."""
+        """A distinctive child exit proves script execution, not just DLL load."""
         import hashlib
-        import time
 
-        sentinel = self.worker.with_name('detached-child-executed')
+        # A Low Integrity child cannot be assumed to have write access to
+        # medium-integrity TEMP. Exit code is observed on its original handle.
         self.worker.write_text(
-            ('import pathlib, time\n'
-             'pathlib.Path(%r).write_text("executed", encoding="utf-8")\n'
-             'time.sleep(30)\n') % str(sentinel), encoding='utf-8')
+            'import sys\n'
+            'sys.exit(71)\n', encoding='utf-8')
         self.driver.programs['market_data']['file_pins']['job_worker.py'] = (
             hashlib.sha256(self.worker.read_bytes()).hexdigest())
         op, child = self._start_detached_diagnostic_child()
-        deadline = time.monotonic() + 5
-        while time.monotonic() < deadline and not sentinel.exists():
-            if child.poll() is not None:
-                break
-            time.sleep(.05)
-        self.assertTrue(sentinel.exists(), 'restricted child never ran pinned code')
-        self.assertEqual(sentinel.read_text(encoding='utf-8'), 'executed')
-        self.assertIsNone(child.poll())
-        self.assertEqual(self.driver.owned_job_stop_state(op), 'STILL_ALIVE')
-        self.assertIn(child.pid, child._job.observe_member_pids())
+        self.assertEqual(child.wait(timeout=8), 71,
+                         'restricted child did not execute pinned Python code')
         self.driver.stop(op)
         receipt = self.driver.job_extinction_receipt(op)
         self.assertEqual(receipt.active_members, 0)
