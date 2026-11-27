@@ -722,6 +722,114 @@ class OpaqueSessionTests(unittest.TestCase):
             with self.subTest(reply=reply):
                 asyncio.run(exercise(reply))
 
+    def test_unknown_control_txn_poison_blocks_further_writes(self):
+        # Original single Consul authority, MockTransport only. A network
+        # timeout may hide COMMIT; no second mutation under that lease.
+        async def exercise(outcome):
+            state = {
+                "held": False, "value": b"", "index": 41,
+                "calls": 0, "destroy": 0, "reads": 0,
+            }
+            leader = "/v1/kv/isolated/round25/leader"
+            target = "isolated/round25/state/probe"
+
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == leader:
+                    if req.method == "PUT":
+                        state["held"] = True
+                        state["value"] = req.content
+                        return httpx.Response(200, json=True)
+                    state["reads"] += 1
+                    return httpx.Response(200, json=[{
+                        "Key": "isolated/round25/leader",
+                        "Session": OBSERVED if state["held"] else "",
+                        "ModifyIndex": state["index"],
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if path == "/v1/txn":
+                    state["calls"] += 1
+                    self.assertEqual(len(json.loads(req.content)), 3)
+                    if outcome == "timeout":
+                        raise httpx.ReadTimeout("possibly committed before reply")
+                    if outcome == "500":
+                        return httpx.Response(503, json={"error": "unknown"})
+                    if outcome == "409":
+                        return httpx.Response(409, json={"Errors": []})
+                    if outcome == "false-reply":
+                        return httpx.Response(200, json={"Results": []})
+                    if outcome == "lost-session":
+                        state["held"] = False
+                    if outcome == "new-modify-index":
+                        state["index"] += 1
+                    return httpx.Response(200, json={
+                        "Results": [{"KV": {"Key": target, "ModifyIndex": 43}}],
+                    })
+                if path == "/v1/session/destroy/" + OBSERVED:
+                    state["destroy"] += 1
+                    return httpx.Response(200, json=True)
+                raise AssertionError("unexpected Consul request")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                lease = await authority.acquire("owner")
+                self.assertTrue(await authority.validate(lease))
+                with self.assertRaises(CoordinationUnavailable):
+                    await authority.write_control(lease, "probe", {"k": 1})
+                self.assertEqual(authority._deadlines[OBSERVED], 0)
+                self.assertIs(authority._sessions[OBSERVED], lease)
+                before = state["calls"]
+                before_reads = state["reads"]
+                self.assertFalse(await authority.validate(lease))
+                self.assertFalse(await authority.renew(lease))
+                with self.assertRaises(CoordinationUnavailable):
+                    await authority.write_control(lease, "probe", {"k": 2})
+                self.assertEqual(state["calls"], before)
+                self.assertEqual(state["reads"], before_reads)
+                self.assertEqual(state["destroy"], 0)
+
+        for outcome in ("timeout", "500", "409", "false-reply",
+                        "lost-session", "new-modify-index"):
+            with self.subTest(outcome=outcome):
+                asyncio.run(exercise(outcome))
+
+    def test_mutation_uses_full_deadline_read_failover_divides_budget(self):
+        # Mutations are single-attempt; shortening their timeout by the
+        # number of configured backup endpoints causes false UNKNOWN results.
+        async def exercise(method):
+            calls = []
+            def handler(req):
+                calls.append((req.url.host, req.extensions["timeout"]["read"]))
+                if req.url.host == "first.example":
+                    raise httpx.ReadTimeout("first leader outcome unknown")
+                return httpx.Response(200, json={"second": True})
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://first.example:8500", "http://second.example:8500"),
+                "isolated/round25", isolated_lab=True,
+                request_timeout=2.0,
+            ), client=client)
+            async with client:
+                if method == "GET":
+                    self.assertEqual(
+                        await authority._request("GET", "/v1/kv/test"),
+                        {"second": True})
+                    self.assertEqual(calls, [
+                        ("first.example", 1.0), ("second.example", 1.0)])
+                else:
+                    with self.assertRaises(CoordinationUnavailable):
+                        await authority._request("PUT", "/v1/session/create")
+                    self.assertEqual(calls, [("first.example", 2.0)])
+        for method in ("GET", "PUT"):
+            with self.subTest(method=method):
+                asyncio.run(exercise(method))
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []

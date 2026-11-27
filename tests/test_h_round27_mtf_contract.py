@@ -157,5 +157,34 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
 
 
 
+    def test_round30_unapproved_pair_cannot_be_admitted(self):
+        gate = _load_contract()["round30_gate"]
+        self.assertEqual(gate["status"], "BLOCKED_INCOMPATIBLE_OWNER_PAIR")
+        self.assertEqual(gate["producer_candidate"], "b55b03fdbaa6749d6b41bafb238ce98dfebd85e0")
+        self.assertEqual(gate["consumer_candidate"], "c40740b8ac8104efff9bf9ca9e3e3b6db37a4ddd")
+        self.assertEqual(gate["canonical_math"], "9e6acbd9e12a91189f57234828e31640983af553")
+        self.assertIsNone(gate["paired_approved_sha"])
+        for field in ("lossless_decimal_verified", "historical_consumer_verified",
+                      "source_e2e_verified", "trading_authority_allowed"):
+            self.assertIs(gate[field], False)
+        self.assertEqual(gate["versioned_schema"], "PENDING_OWNER_AGREEMENT")
+        self.assertEqual(set(gate["required_exact_values"]),
+                         {"directional_buy", "directional_sell", "total_volume", "signed_delta"})
+
+    def test_round30_exact_volume_loss_is_a_real_blocker(self):
+        from decimal import Decimal
+        buy = Decimal("10000000000000004.01")
+        sell = Decimal("10000000000000004")
+        exact_total = buy + sell
+        exact_delta = buy - sell
+        # Independent acceptance counterexample only; canonical Math SDK owns
+        # all production sums and deltas. Binary64 is presentation, not proof.
+        self.assertEqual(str(exact_total), "20000000000000008.01")
+        self.assertEqual(str(exact_delta), "0.01")
+        self.assertEqual(float(buy), float(sell))
+        self.assertNotEqual(Decimal(str(float(buy))) + Decimal(str(float(sell))),
+                            exact_total)
+
+
 if __name__ == "__main__":
     unittest.main()

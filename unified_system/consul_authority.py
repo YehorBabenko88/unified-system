@@ -99,7 +99,11 @@ class ConsulSessionAuthority:
     async def _request(self, method, path, *, missing_ok=False, **kwargs):
         headers = {'X-Consul-Token': self.config.acl_token} if self.config.acl_token else {}
         async def attempt():
-            budget = self.config.request_timeout / len(self.config.endpoints)
+            # Writes deliberately target one endpoint (no uncertain replay),
+            # so retain the full request deadline. Divide only GET failover
+            # budgets among the configured independent read endpoints.
+            budget = (self.config.request_timeout if method != 'GET'
+                      else self.config.request_timeout / len(self.config.endpoints))
             for endpoint in self.config.endpoints:
                 try:
                     response = await asyncio.wait_for(
@@ -280,7 +284,14 @@ class ConsulSessionAuthority:
             {'KV': {'Verb': 'check-index', 'Key': self.key, 'Index': lease.token}},
             {'KV': {'Verb': 'set', 'Key': self._state_key(name), 'Value': base64.b64encode(value).decode()}},
         ]
-        result = await self._request('PUT', '/v1/txn', json=operations)
+        # A lost /txn reply may conceal a committed state mutation. Block
+        # further writes by this original local lease until external Root/C
+        # reconciliation; the caller must not replay or mint a new owner.
+        try:
+            result = await self._request('PUT', '/v1/txn', json=operations)
+        except CoordinationUnavailable:
+            self._deadlines[lease.session_id] = 0
+            raise
         # HTTP 200 without transaction Results is not a verifiable commit.
         # A successful set operation returns its KV key and ModifyIndex;
         # check-session/check-index are still enforced by Consul atomically.
@@ -298,6 +309,7 @@ class ConsulSessionAuthority:
                     and entry['KV']['ModifyIndex'] > 0
                     for entry in result['Results']
                 )):
+            self._deadlines[lease.session_id] = 0
             raise CoordinationLost('Consul fencing transaction unconfirmed')
         # A syntactically successful Consul write may finish only after the
         # original local lease deadline (or after a concurrent release).
@@ -305,6 +317,7 @@ class ConsulSessionAuthority:
         # Re-read the original lease and consistent leader KV *after* the
         # network transaction, rejecting both timeout and changed owner.
         if not await self.validate(lease):
+            self._deadlines[lease.session_id] = 0
             raise CoordinationLost('Consul lease lost after control transaction')
 
     async def read_control(self, name):
