@@ -48,7 +48,7 @@
     "false_ready",
     "false_trading_permission"
   ],
-  "handoff": "One source-compatible candidate pair Grid B308 / Terminan D133 on original Math 9e6, 29 top and 15 row keys; LIVE 5m/15m UI and historical source-only backend exist. Original source cross-repository runtime, installed wheel, PG/Consul/Windows remain NOT_ATTESTED; historical UI now IMPLEMENTED but native browser NOT_RUN. No merging G012 retired code before independent exact source differential.",
+  "handoff": "Grid B308 exact production / Terminan D133 exact production source base; B309 and D134 are test-only cohorts. Original D134 GitHub Actions 4-cell B308+Math HTTP integration 72/72 method invocations PASSED, Playwright legacy 5m expectation FAILED. Historical UI source implemented, real browser/native Root/PG18/Consul/installer/unique Strattester migration release acceptance still blocked. No removal of G012/G006.",
   "rejection": {
     "non_partial_source": "HTTP_503_NO_ROWS",
     "invalid_request": "HTTP_400_NO_ROWS",
@@ -125,5 +125,89 @@
     "deduplicated_68_lines_equivalence_pass": false,
     "production_release_admitted": false,
     "trading_authority_allowed": false
+  },
+  "round33_gate": {
+    "status": "ORIGINAL_FOUR_CELL_HTTP_PASS_BROWSER_FAIL_NOT_RELEASE",
+    "grid_producer_sha": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+    "terminan_consumer_sha": "bcdf3287a47e60f6c50022adce7651bcb51e587f",
+    "canonical_math_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+    "api_version": {
+      "major": 2,
+      "minor": 1
+    },
+    "live_schema": "market_data.qualified-mtf-envelope.v2",
+    "historical_schema": "market_data.historical-as-of-mtf-envelope.v2",
+    "decimal_fields": [
+      "buy_volume_decimal",
+      "sell_volume_decimal",
+      "volume_decimal",
+      "delta_decimal"
+    ],
+    "source_precision": "STORED_1M_JSON_NUMBERS_NOT_PROVIDER_RAW",
+    "source_schema_keys": {
+      "top": 29,
+      "row": 15
+    },
+    "historical_source_only": true,
+    "live_5m_15m_ui_implemented": true,
+    "historical_backend_implemented": true,
+    "historical_ui_implemented": true,
+    "historical_ui_e2e_pass": false,
+    "exact_live_cursor_alignment_implemented": true,
+    "historical_full_period_cursor_alignment_implemented": true,
+    "original_cross_repo_runtime_pass": true,
+    "native_e2e_pass": false,
+    "deduplicated_68_lines_equivalence_pass": false,
+    "production_release_admitted": false,
+    "trading_authority_allowed": false,
+    "original_cross_repo_runtime_scope": "GitHub Actions D134 integration/test_b_v2_roundtrip.py pinned B308/Math/D134, 18 tests each Windows/Linux Python 3.11/3.12; 72/72 original source HTTP test-method invocations PASS. Synthetic source/managed handler, NOT native installed full system.",
+    "original_cross_repo_http_tests": {
+      "workflow_run_id": 45991815725,
+      "producer_sha": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+      "consumer_sha": "3608e41b90b2dbf7a80d7daa86582a2440e11330",
+      "canonical_math_sha": "9e6acbd9e12a91189f57234828e31640983af553",
+      "windows_python311": 18,
+      "windows_python312": 18,
+      "ubuntu_python311": 18,
+      "ubuntu_python312": 18,
+      "passed": 72,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "browser_full_e2e_pass": false,
+    "browser_test_failure": {
+      "workflow_run_id": 45991815731,
+      "job_id": 140481243214,
+      "original_test_file": "tests/browser/test_market_data_source.cjs",
+      "original_test_git_blob": "b9509cfc2be29bef01dede03ab301f791edf5c53",
+      "failing_line": 87,
+      "observed": "Playwright locator #chartmsg with text 2 свечей timeout 4000ms; obsolete 5m generic-candles expectation, while production exact Grid qualified 5m contract requires 5 source-qualified rows and refuses unsafe fallback",
+      "passed": 0,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "fail_closed_behavior_expected": "On 5m selection, generic /api/candles?timeframe=5m response is NOT a valid source-qualified MTF receipt. If exact /api/market-data/qualified/timeframe returns [] or lacks a five-bar validated receipt, chart MUST remain empty and the receipt text must indicate UNAVAILABLE.",
+      "required_owner_fix": "Fix Playwright test expectation and wait for exact receipt refusal; do NOT let generic 2-candle 5m mock bypass managed Grid source qualification."
+    },
+    "strattester_guard_ci": {
+      "head_sha": "c95ced815575ab3fe25f619f97e9bf040d58f3da",
+      "run_id": 45995842410,
+      "windows311_pass": 539,
+      "windows313_pass": 539,
+      "ubuntu311_pass": 538,
+      "ubuntu311_skip": 1,
+      "ubuntu313_pass": 538,
+      "ubuntu313_skip": 1,
+      "release_admitted": false,
+      "managed_root_capability_verified": false
+    },
+    "new_ci_owner_heads": {
+      "grid_test_workflow_sha": "b2e3f9a77384080ecbb834b32d51d8816ed1aa2a",
+      "terminan_test_workflow_sha": "3608e41b90b2dbf7a80d7daa86582a2440e11330"
+    },
+    "native_pg18_consul_windows_installer_pass": false,
+    "full_strattester_unique_function_migration_pass": false,
+    "source_browser_test_not_release": true
   }
 }
