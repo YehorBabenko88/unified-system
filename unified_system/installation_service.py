@@ -122,7 +122,7 @@ class _NativeReceiptCustody:
   need(os.name=='nt' and type(paths) is dict and 'root' in paths)
   # Restrict native HANDLE quota; oversized roster refuses rather than
   # exhausting SCM/host resources or adopting a partial receipt.
-  need(0<len(paths)<=512)
+  _native_receipt_roster_budget(paths)
   self.paths=dict(paths);self.handles={};self.kernel=None;self.closed=False
  def __enter__(self):
   import ctypes
@@ -218,6 +218,14 @@ def _bounded_native_receipt(receipt):
  need(type(receipt) is dict)
  need(len(canonical({'kind':'NATIVE_FILE_IDS','plan_sha256':'0'*64,'proof':receipt}))<=60000)
  return receipt
+
+def _native_receipt_roster_budget(paths):
+ """Deny oversized V2 receipts BEFORE any native HANDLE or SCM action."""
+ need(type(paths) is dict and 'root' in paths and 0<len(paths)<=512)
+ need(all(type(k) is str and 0<len(k)<=300 for k in paths))
+ # Conservative preflight; the exact 60K canonical row limit still applies.
+ need(sum(112+len(k.encode('utf-8')) for k in paths)<=56000)
+ return paths
 
 def _check_native_installation_receipt(receipt,plan):
  need(type(receipt) is dict and set(receipt)=={'schema','entries','manifest_sha256','receipt_sha256'})
@@ -512,6 +520,7 @@ class ServiceResource:
    lab_release.verify_capsule(plan['code'],plan['manifest_sha256'])
    manifest=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])['manifest']
    paths=_native_roster_paths(Path(plan['root']),Path(plan['code']),manifest)
+   _native_receipt_roster_budget(paths)  # fail before opening retained Win32 handles
    # Retain the full member+ancestor handle roster until REGISTER is receipted.
    with _NativeReceiptCustody(paths) as custody:
     native=_native_installation_receipt(plan['root'],plan['code'],manifest,plan['manifest_sha256'],custody=custody)
