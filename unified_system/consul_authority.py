@@ -377,8 +377,22 @@ class ConsulSessionAuthority:
             raw = base64.b64decode(row['Value'], validate=True)
             if len(raw) > 32768:
                 raise ValueError('control data exceeds byte budget')
-            record = json.loads(raw, parse_constant=lambda _: (_ for _ in ()).throw(
-                ValueError('non-finite control data')))
+            # The canonical writer emits unique JSON members. Duplicate
+            # keys in a Consul readback are ambiguous (Python's default
+            # decoder silently takes the last value), including nested
+            # payload objects. Refuse the historical record entirely.
+            def unique_members(pairs):
+                result = {}
+                for key, value in pairs:
+                    if key in result:
+                        raise ValueError('duplicate control JSON member')
+                    result[key] = value
+                return result
+
+            record = json.loads(
+                raw, object_pairs_hook=unique_members,
+                parse_constant=lambda _: (_ for _ in ()).throw(
+                    ValueError('non-finite control data')))
             if (type(record) is not dict
                     or set(record) != {'owner', 'token', 'session_id', 'payload'}
                     or type(record['owner']) is not str
