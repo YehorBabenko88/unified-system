@@ -180,6 +180,28 @@ class NativeWindowsRetainedHandleTests(unittest.TestCase):
         wheel.write_bytes(b"original-frozen-source")
         self.assertEqual(wheel_snapshot(wheel), b"original-frozen-source")
 
+    def test_real_win32_readonly_file_id_receipt_denies_same_bytes_replacement(self):
+        """Original OS 128-bit FileId readback, still NO install-time authority."""
+        with WindowsInstalledRoot(str(self.install)) as root:
+            proof = root.readonly_identity_receipt(("module.py",))
+            self.assertEqual(len(proof["file_id128"]), 32)
+            self.assertEqual(len(proof["parent_file_id128"]), 32)
+            self.assertEqual(len(proof["root_file_id128"]), 32)
+            self.assertFalse(proof["installation_ownership_attested"])
+            self.assertFalse(proof["physical_delete_authorized"])
+            self.assertEqual(
+                root.verify_readonly_identity_receipt(("module.py",), proof),
+                proof)
+        previous = self.install / "detached-original.py"
+        self.file.rename(previous)
+        original = previous.read_bytes()
+        self.file.write_bytes(original)
+        with WindowsInstalledRoot(str(self.install)) as root:
+            with self.assertRaisesRegex(ValueError, "identity mismatch"):
+                root.verify_readonly_identity_receipt(("module.py",), proof)
+        self.assertEqual(previous.read_bytes(), original)
+        self.assertEqual(self.file.read_bytes(), original)
+
     def test_hardlink_is_denied_at_win32_file_information_gate(self):
         alias = self.install / "alias.py"
         os.link(self.file, alias)
