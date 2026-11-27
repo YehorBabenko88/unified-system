@@ -13,6 +13,8 @@ jobs:
     env:
       LAB_POSTGRES_BIN: /usr/lib/postgresql/18/bin
       LAB_C_PG18_NATIVE_TEST: '1'
+      LAB_GRID_ROOT: upstream/grid-migration47
+      LAB_GRID_SHA: eee29d8fae7c52d5b489a86a5a9ec08718265f18
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
       - name: Checkout exact PR HEAD
@@ -20,38 +22,76 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Checkout exact Grid original migration 47 for real PG18 DDL
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/bybit-cluster-grid
+          ref: eee29d8fae7c52d5b489a86a5a9ec08718265f18
+          path: upstream/grid-migration47
+          persist-credentials: false
+      - name: Fail closed unless original Grid migration 47 is byte-pinned
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C "$LAB_GRID_ROOT" rev-parse HEAD)" = "$LAB_GRID_SHA"
+          test "$(git hash-object "$LAB_GRID_ROOT/grid/migrations.py")" = "51be4e432109d640c5c09f576d0e0c71f60ba49c"
+          test "$(git hash-object "$LAB_GRID_ROOT/grid/telegram_ingress_migration.py")" = "d6ae4764f954be0d29edf97de58646187f5cbcd9"
+          test "$(git hash-object "$LAB_GRID_ROOT/grid/__init__.py")" = "3dc1f76bc69e3f559bee6253b24fc93acee9e1f9"
+          python - <<'PY'
+          import os,sys
+          sys.path.insert(0,os.environ['LAB_GRID_ROOT'])
+          from grid.migrations import MIGRATIONS
+          selected=[(name,sqls) for ver,name,sqls in MIGRATIONS if ver==47]
+          assert len(selected)==1 and selected[0][0]=='source_owned_immutable_minutes'
+          assert len(selected[0][1])==4
+          print('C_NATIVE_CANONICAL_GRID_MIGRATION47_PINNED')
+          PY
       - name: Checkout exact A-owned OS evidence source for isolated native cohort
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: YehorBabenko88/unified-system
-          ref: 743329b1161e8967335d5c6d6e1ea8bd669251ee
+          ref: 5331f0fb4e684d94d2229bdca00596bd9f018fe9
           path: upstream/a-retained-os
           persist-credentials: false
       - name: Verify A source Git blob before test-only overlay
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git -C upstream/a-retained-os rev-parse HEAD)" = "743329b1161e8967335d5c6d6e1ea8bd669251ee"
-          test "$(git hash-object upstream/a-retained-os/unified_system/runtime_process.py)" = "06e9389d4d53b62ffe72c81d0a12f4eda5b63b50"
+          test "$(git -C upstream/a-retained-os rev-parse HEAD)" = "5331f0fb4e684d94d2229bdca00596bd9f018fe9"
+          test "$(git hash-object upstream/a-retained-os/unified_system/runtime_process.py)" = "33de1ee10f30c7cf57567e029808f7991db2c1aa"
           # Test checkout only: A owns this source. C never commits an
           # alternative process observer or copies A into the PR branch.
           cp upstream/a-retained-os/unified_system/runtime_process.py unified_system/runtime_process.py
-          test "$(git hash-object unified_system/runtime_process.py)" = "06e9389d4d53b62ffe72c81d0a12f4eda5b63b50"
+          test "$(git hash-object unified_system/runtime_process.py)" = "33de1ee10f30c7cf57567e029808f7991db2c1aa"
       - name: Checkout E-owned exact fenced identity model for C SQL binding
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: YehorBabenko88/unified-system
-          ref: 1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18
+          ref: cc180dae986d72c774c3654acaa0fc10be1d4652
           path: upstream/e-identity
           persist-credentials: false
       - name: Verify E model source blob in test-only workspace
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git -C upstream/e-identity rev-parse HEAD)" = "1c2edb2564c48a1348d3ad4ee94fe8fa0b425b18"
-          test "$(git hash-object upstream/e-identity/unified_system/grid_writer_fence_model.py)" = "71c74a2c0d8c1c0120412124ef1d12d53b691581"
+          test "$(git -C upstream/e-identity rev-parse HEAD)" = "cc180dae986d72c774c3654acaa0fc10be1d4652"
+          test "$(git hash-object upstream/e-identity/unified_system/grid_writer_fence_model.py)" = "86a284b4b505e0d96f147afb8be08eb79e10b07b"
           cp upstream/e-identity/unified_system/grid_writer_fence_model.py unified_system/grid_writer_fence_model.py
-          test "$(git hash-object unified_system/grid_writer_fence_model.py)" = "71c74a2c0d8c1c0120412124ef1d12d53b691581"
+          test "$(git hash-object unified_system/grid_writer_fence_model.py)" = "86a284b4b505e0d96f147afb8be08eb79e10b07b"
+      - name: Checkout immutable legacy checkpoint SQL source for original C35 A/B
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: YehorBabenko88/unified-system
+          ref: a4d8b66904b2a70c55799aa16e204f7df953692f
+          path: upstream/c-legacy-checkpoint
+          persist-credentials: false
+      - name: Verify both original checkpoint SQL source blobs (not adapted SQL)
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C upstream/c-legacy-checkpoint rev-parse HEAD)" = "a4d8b66904b2a70c55799aa16e204f7df953692f"
+          test "$(git hash-object upstream/c-legacy-checkpoint/unified_system/lab_pg_checkpoint.py)" = "cad4ccf970470eb86a487c484cee9be15ea9614d"
+          test "$(git hash-object unified_system/lab_pg_checkpoint.py)" = "076980d9556bf3a685091f16129ef321cb1372be"
       - name: Python 3.12
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
@@ -73,8 +113,8 @@ jobs:
           python -m pip install "psycopg[binary]==3.3.6"
       - name: Compile exact C recovery sources and test module
         run: |
-          python -m py_compile unified_system/grid_writer_fence_model.py unified_system/runtime_process.py unified_system/lab_postgres.py unified_system/lab_pg_fence.py unified_system/lab_pg_checkpoint.py unified_system/lab_pg_recovery.py tests/test_c_round14_pg_recovery.py
-      - name: Run exactly 25 native PostgreSQL18 recovery cases (zero skip)
+          python -m py_compile unified_system/grid_writer_fence_model.py unified_system/runtime_process.py unified_system/lab_postgres.py unified_system/lab_pg_fence.py unified_system/lab_pg_checkpoint.py unified_system/lab_pg_recovery.py tests/test_c_round14_pg_recovery.py tests/c_round35_sql_variants_probe.py
+      - name: Run exactly 29 native PostgreSQL18 recovery cases (zero skip)
         shell: bash
         run: |
           set -euo pipefail
@@ -83,7 +123,7 @@ jobs:
           from tests import test_c_round14_pg_recovery
           suite=unittest.defaultTestLoader.loadTestsFromModule(test_c_round14_pg_recovery)
           count=suite.countTestCases()
-          if count != 25:
+          if count != 29:
               raise SystemExit(f"C_R14_RECOVERY_ROSTER_UNEXPECTED:{count}")
           outcome=unittest.TextTestRunner(verbosity=2).run(suite)
           if outcome.testsRun!=count or outcome.skipped or not outcome.wasSuccessful():

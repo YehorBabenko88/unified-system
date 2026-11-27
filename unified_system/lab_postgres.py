@@ -340,7 +340,10 @@ class LabPostgres:
         options = [f'-c listen_addresses=127.0.0.1', f'-c port={self.port}', '-c fsync=on',
                    '-c full_page_writes=on', '-c max_connections=40']
         if os.name == 'nt':
-            options.append("-c unix_socket_directories=''")
+            # pg_ctl on Windows passes options without a POSIX shell. Single
+            # quotes become a literal directory named '' instead of an empty
+            # value, making PostgreSQL fail while creating its socket lock.
+            options.append('-c unix_socket_directories=')
         else:
             options.append(f"-c unix_socket_directories='{self.socket_dir}'")
         return ' '.join(options)
@@ -411,9 +414,16 @@ class LabPostgres:
             need(not self.started, 'LAB_PG_ALREADY_STARTED')
             self._verify_stale_after_crash()
         self._initial_start_attempted = True
-        result = subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-l', str(self.log),
-                                 '-o', self._options(), '-w', '-t', str(max(1, min(120, int(timeout)-1))), 'start'],
-                                capture_output=True, timeout=timeout, env=self._env('lab_owner'))
+        # A Windows postmaster can inherit pg_ctl's stdout/stderr handles.
+        # Pipes make communicate() wait for the long-lived server to close
+        # them, even after pg_ctl exits successfully. Keep startup diagnostics
+        # in an owned file instead; the original timeout/identity gates remain.
+        startup_path = self.root / ('pg_ctl-start-' + secrets.token_hex(16) + '.log')
+        with startup_path.open('xb') as startup_log:
+            result = subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-l', str(self.log),
+                                     '-o', self._options(), '-w', '-t', str(max(1, min(120, int(timeout)-1))), 'start'],
+                                    stdout=startup_log, stderr=subprocess.STDOUT,
+                                    timeout=timeout, env=self._env('lab_owner'))
         need(result.returncode == 0, 'LAB_PG_START_FAILED')
         pid = self._verify_postmaster()
         self._owned_pid = pid

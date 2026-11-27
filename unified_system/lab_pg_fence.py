@@ -15,13 +15,22 @@ _RESOURCE = "grid-market-data-primary"
 _OWNER_PATTERN = re.compile(r"[A-Za-z0-9_.:-]{1,128}\Z")
 _NAMESPACE_PATTERN = re.compile(r"[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*\Z")
 
-def _id(value):
+def _id(value, *, consul_session=False):
     need(type(value) is str, "LAB_FENCE_ID_INVALID")
     try:
         parsed = uuid.UUID(value)
     except (ValueError, AttributeError) as exc:
         raise LabAdmissionRejected("LAB_FENCE_ID_INVALID") from exc
-    need(str(parsed) == value and parsed.version == 4, "LAB_FENCE_ID_INVALID")
+    # A Consul session identifier is an opaque server-issued UUID-shaped
+    # value, not an application UUID4/5 identity. Do not infer lease
+    # authority from its version or variant. Keep exact canonical bytes for
+    # PostgreSQL uuid binding, and prove the actual lease independently.
+    # Instance and node incarnation identities remain strict RFC4122 UUID4.
+    if consul_session:
+        need(str(parsed) == value, "LAB_FENCE_ID_INVALID")
+    else:
+        need(str(parsed) == value and parsed.variant == uuid.RFC_4122
+             and parsed.version == 4, "LAB_FENCE_ID_INVALID")
     return value
 
 def _scope(owner, namespace):
@@ -126,7 +135,8 @@ def claim_lab_fence(pg, *, owner, namespace, generation, token,
     need(type(backend_pid) is int and 0 < backend_pid < 2**31,
          "LAB_FENCE_BACKEND_INVALID")
     owner, namespace = _scope(owner, namespace)
-    ids = tuple(map(_id, (session_id, instance_id, node_incarnation_id)))
+    ids = (_id(session_id, consul_session=True), _id(instance_id),
+           _id(node_incarnation_id))
     sha1, sha2 = _sha(source_sha256), _sha(schema_sha256)
     # A claimed PID must be an existing lab_writer DB connection. A current
     # backend_start is stored by PostgreSQL, not asserted in any client JSON.
@@ -140,6 +150,8 @@ def claim_lab_fence(pg, *, owner, namespace, generation, token,
         f"'{ids[2]}'::uuid,'{sha1}','{sha2}',pid,backend_start,true"
         " FROM pg_catalog.pg_stat_activity"
         f" WHERE pid={backend_pid} AND usename='lab_writer'"
+        " AND datname=current_database()"
+        " AND backend_type='client backend'"
         " ON CONFLICT(resource_id) DO UPDATE SET"
         " owner=EXCLUDED.owner,namespace=EXCLUDED.namespace,"
         " generation=EXCLUDED.generation,token=EXCLUDED.token,"
@@ -304,7 +316,7 @@ def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
     from .grid_writer_fence_model import WriterLeaseIdentity
     need(type(identity) is WriterLeaseIdentity, "LAB_FENCE_IDENTITY_REQUIRED")
     owner, namespace = _scope(identity.owner, identity.namespace)
-    sess = _id(identity.session_id)
+    sess = _id(identity.session_id, consul_session=True)
     inst = _id(identity.instance_id)
     node = _id(identity.node_incarnation_id)
     source = _sha(identity.source_sha256)

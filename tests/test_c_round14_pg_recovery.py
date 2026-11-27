@@ -52,6 +52,12 @@ class NativeCRecoveryTests(unittest.TestCase):
         self.writer = self.psycopg.connect(
             self.pg.dsn("lab_writer"), autocommit=True)
         self.ids = tuple(str(uuid.uuid4()) for _ in range(3))
+        # A real Consul 2.1 ID enters the original native C-owned claim
+        # during this one focused test; no second lifecycle or owner is made.
+        if self._testMethodName == (
+                "test_native_consul_210_exact_session_sql_write_revoke_and_denial"):
+            self.ids = ("4a91bb79-c488-1086-0664-30ccbc028eda",
+                        self.ids[1], self.ids[2])
         self.source = "a" * 64
         self.schema = "b" * 64
         with self.writer.cursor() as cursor:
@@ -211,6 +217,394 @@ class NativeCRecoveryTests(unittest.TestCase):
         self.assertEqual(self.pg.sql(
             "SELECT count(*) FROM public.provenance_minutes "
             f"WHERE symbol='{symbol}'"),"1")
+
+    def test_native_consul_210_exact_session_sql_write_revoke_and_denial(self):
+        """Native C-owned PostgreSQL 18: real NCS session + 14-arg SQL + revoke.
+
+        No Consul lease is created or claimed here. This only proves the
+        resource-side SQL accepts an exact server-observed ID, and an owned
+        recovery can durably revoke it after the original backend is extinct.
+        """
+        import json
+        from unified_system.lab_pg_fence import _id
+
+        actual = "4a91bb79-c488-1086-0664-30ccbc028eda"
+        self.assertEqual(self.ids[0], actual)
+        self.assertEqual(_id(actual, consul_session=True), actual)
+        self.assertEqual(self.pg.sql(
+            "SELECT session_id::text,active FROM public.lab_writer_fence"),
+            actual + "|t")
+        params = (self.old["owner"], self.old["namespace"], 1, 100,
+                  *self.ids, self.source, self.schema,
+                  "1" * 64, "2" * 64, "BTCUSDT", 1200000,
+                  json.dumps({"dataset_fingerprint": "1" * 64}))
+        sql = ("SELECT public.lab_fenced_insert("
+               "%s::text,%s::text,%s::bigint,%s::bigint,"
+               "%s::uuid,%s::uuid,%s::uuid,"
+               "%s::text,%s::text,%s::text,%s::text,%s::text,"
+               "%s::bigint,%s::jsonb)")
+        self.assertEqual(len(params), 14)
+        with self.writer.cursor() as cur:
+            cur.execute(sql, params)
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*) FROM public.provenance_minutes "
+            "WHERE fingerprint='" + "1" * 64 + "'"), "1")
+        # The original C stop/recovery lane, not a raw pg.stop/start, proves
+        # backend extinction and invokes the canonical exact six-field
+        # revoke with independent durable inactive readback.
+        receipt = self._recover()
+        self.assertFalse(receipt["native_admitted"])
+        self.assertFalse(receipt["root_consul_admitted"])
+        self.assertFalse(receipt["durable_fence_active"])
+        self.assertEqual(self.pg.sql(
+            "SELECT session_id::text,generation,token,active "
+            "FROM public.lab_writer_fence"), actual + "|1|100|f")
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*) FROM public.provenance_minutes"), "1")
+        # Old session must remain denied even when an unrelated writer
+        # reconnects after the native C-controlled recovery.
+        with self.psycopg.connect(self.pg.dsn("lab_writer"),
+                                  autocommit=True) as stale:
+            with self.assertRaises(self.psycopg.Error):
+                with stale.cursor() as cur:
+                    cur.execute(sql, (*params[:9], "3" * 64, "4" * 64,
+                                      "BTCUSDT", 1260000,
+                                      json.dumps({"dataset_fingerprint": "3" * 64})))
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*) FROM public.provenance_minutes"), "1")
+
+    def test_native_consul_session_invalid_shape_fails_without_mutation(self):
+        """Reject malformed/noncanonical C SQL sessions before claim."""
+        from unified_system.lab_pg_fence import _id
+        real = "4a91bb79-c488-1086-0664-30ccbc028eda"
+        self.assertEqual(_id(real, consul_session=True), real)
+        before = self.pg.sql(
+            "SELECT generation,token,session_id,active "
+            "FROM public.lab_writer_fence")
+        for invalid in (real.upper(), "opaque-not-uuid",
+                        "{" + real + "}", real.replace("-", ""),
+                        real + " "):
+            with self.subTest(invalid=invalid):
+                with self.assertRaises(LabAdmissionRejected):
+                    claim_lab_fence(
+                        self.pg, owner=self.old["owner"],
+                        namespace=self.old["namespace"],
+                        generation=2, token=101, session_id=invalid,
+                        instance_id=self.ids[1],
+                        node_incarnation_id=self.ids[2],
+                        source_sha256=self.source,
+                        schema_sha256=self.schema,
+                        backend_pid=self.old["backend_pid"],
+                        previous_quiescence_verified=True)
+        self.assertEqual(self.pg.sql(
+            "SELECT generation,token,session_id,active "
+            "FROM public.lab_writer_fence"), before)
+
+    def test_sql_commit_after_simulated_external_lease_loss_is_not_root_proof(self):
+        """Native PostgreSQL commit; EXTERNAL lease loss is SIMULATED only.
+
+        An external Consul TTL does not participate in PostgreSQL's SQL
+        transaction. Do not treat this experiment as actual Consul expiry or
+        wire-level COMMIT reply loss. No Root admission is granted.
+        """
+        import json
+        params = (self.old["owner"], self.old["namespace"], 1, 100,
+                  *self.ids, self.source, self.schema,
+                  "8" * 64, "9" * 64, "BTCUSDT", 1320000,
+                  json.dumps({"dataset_fingerprint": "8" * 64}))
+        sql = ("SELECT public.lab_fenced_insert("
+               "%s::text,%s::text,%s::bigint,%s::bigint,"
+               "%s::uuid,%s::uuid,%s::uuid,"
+               "%s::text,%s::text,%s::text,%s::text,%s::text,"
+               "%s::bigint,%s::jsonb)")
+        with self.writer.transaction():
+            with self.writer.cursor() as cur:
+                cur.execute(sql, params)
+            # The only synthetic step: E's remote Consul lease is considered
+            # expired while C's original SQL row is still held FOR UPDATE.
+            simulated_consul_lease_current = False
+            self.assertFalse(simulated_consul_lease_current)
+            self.assertEqual(self.pg.sql(
+                "SELECT count(*) FROM public.provenance_minutes "
+                "WHERE fingerprint='" + "8" * 64 + "'"), "0")
+        # SQL can still COMMIT after this simulated external event. Thus C's
+        # row lock is never a substitute for E's independent Root transfer
+        # block, backend extinction and durable exact revocation.
+        self.assertEqual(self.pg.sql(
+            "SELECT count(*) FROM public.provenance_minutes "
+            "WHERE fingerprint='" + "8" * 64 + "'"), "1")
+        self.assertEqual(self.pg.sql(
+            "SELECT generation,token,active FROM public.lab_writer_fence"),
+            "1|100|t")
+        self.assertFalse(simulated_consul_lease_current)
+        self.assertEqual(observe_old_lab_backend(
+            self.pg, **self.old), "STILL_ALIVE")
+
+    def test_native_lost_commit_wire_reply_reconciles_exact_pending_after_wal(self):
+        """Real PG18 COMMIT with server reply deliberately lost on loopback.
+
+        This deliberately intercepts one TEST-ONLY PostgreSQL connection
+        after authentication, not Consul and not a production SQL writer.
+        Seeing a committed row does not acknowledge delivery: the pending
+        marker survives until a separate authenticated recovery can decide.
+        """
+        import json
+        import select
+        import socket
+        import threading
+        import time
+        import uuid
+        from unittest.mock import patch
+
+        # Retire the original test backend with C's six-field, durable
+        # owner revoke. Do not recycle a live backend PID or its identity.
+        original = dict(self.old)
+        self.assertTrue(revoke_lab_fence(self.pg, **original))
+        self.writer.close()
+        self.writer = None
+        self.assertEqual(observe_old_lab_backend(self.pg, **original),
+                         "EXTINCT")
+
+        listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        listener.bind(("127.0.0.1", 0))
+        listener.listen(1)
+        listener.settimeout(10)
+        stop_relay = threading.Event()
+        intercept_commit = threading.Event()
+        commit_forwarded = threading.Event()
+        reply_discarded = threading.Event()
+        expected_backend_shutdown = threading.Event()
+        relay_errors = []
+        relay_sockets = []
+
+        def relay_once():
+            front = back = None
+            try:
+                front, _ = listener.accept()
+                back = socket.create_connection(("127.0.0.1", self.pg.port),
+                                                timeout=5)
+                relay_sockets.extend((front, back))
+                # The fixture is authenticated before issuing COMMIT.
+                # Parse PG v3 message frames rather than dropping an arbitrary
+                # packet; the SQL text is not authorization.
+                client_buffer = b""
+                server_buffer = b""
+                commit_phase = False
+                while not stop_relay.is_set():
+                    ready, _, _ = select.select((front, back), (), (), 0.1)
+                    for sock in ready:
+                        packet = sock.recv(65536)
+                        if not packet:
+                            return
+                        if not intercept_commit.is_set():
+                            # Startup packets are length-prefixed with NO type
+                            # byte; AUTH can include protocol negotiation.
+                            # Relay all pre-armed traffic transparently.
+                            if sock is front:
+                                back.sendall(packet)
+                            else:
+                                front.sendall(packet)
+                            continue
+                        if sock is front:
+                            client_buffer += packet
+                            while len(client_buffer) >= 5:
+                                size = int.from_bytes(client_buffer[1:5], "big")
+                                if size < 4 or size > 16 * 1024 * 1024:
+                                    raise RuntimeError("LAB_PROXY_CLIENT_FRAME_INVALID")
+                                frame_end = 1 + size
+                                if len(client_buffer) < frame_end:
+                                    break
+                                frame = client_buffer[:frame_end]
+                                client_buffer = client_buffer[frame_end:]
+                                if (frame[:1] == b"Q" and
+                                        frame[5:] in (b"COMMIT\x00",
+                                                      b"COMMIT;\x00")):
+                                    commit_phase = True
+                                    back.sendall(frame)
+                                    commit_forwarded.set()
+                                else:
+                                    back.sendall(frame)
+                        else:
+                            server_buffer += packet
+                            while len(server_buffer) >= 5:
+                                size = int.from_bytes(server_buffer[1:5], "big")
+                                if size < 4 or size > 16 * 1024 * 1024:
+                                    raise RuntimeError("LAB_PROXY_SERVER_FRAME_INVALID")
+                                frame_end = 1 + size
+                                if len(server_buffer) < frame_end:
+                                    break
+                                frame = server_buffer[:frame_end]
+                                server_buffer = server_buffer[frame_end:]
+                                if commit_phase:
+                                    # An arbitrary packet drop is NOT proof
+                                    # that PostgreSQL executed COMMIT. Demand
+                                    # the exact PG v3 CommandComplete tag.
+                                    if (frame[:1] == b"C" and
+                                            frame[5:] == b"COMMIT\x00"):
+                                        reply_discarded.set()
+                                    elif frame[:1] == b"E":
+                                        raise RuntimeError(
+                                            "LAB_PROXY_COMMIT_ERROR_RESPONSE")
+                                else:
+                                    front.sendall(frame)
+            except (OSError, RuntimeError) as exc:
+                # A deliberately crashed PG18 backend may reset the
+                # transport; only unexpected pre-crash relay errors fail.
+                if (not stop_relay.is_set()
+                        and not expected_backend_shutdown.is_set()):
+                    relay_errors.append(repr(exc))
+            finally:
+                for sock in (front, back):
+                    if sock is not None:
+                        try:
+                            sock.close()
+                        except OSError:
+                            pass
+
+        relay_thread = threading.Thread(target=relay_once, daemon=True)
+        relay_thread.start()
+        commit_thread = None
+        try:
+            self.writer = self.psycopg.connect(
+                host="127.0.0.1",
+                port=listener.getsockname()[1],
+                dbname=self.pg.database, user="lab_writer",
+                password=self.pg.passwords["lab_writer"],
+                sslmode="disable", connect_timeout=5)
+            with self.writer.cursor() as cur:
+                cur.execute("SELECT pg_backend_pid()")
+                owned_backend = cur.fetchone()[0]
+            self.writer.commit()
+            new_ids = tuple(str(uuid.uuid4()) for _ in range(3))
+            started = self.pg.sql(
+                "SELECT backend_start FROM pg_catalog.pg_stat_activity "
+                f"WHERE pid={owned_backend} AND usename='lab_writer'")
+            self.assertTrue(started)
+            self.assertTrue(claim_lab_fence(
+                self.pg, owner=original["owner"],
+                namespace=original["namespace"], generation=2, token=101,
+                session_id=new_ids[0], instance_id=new_ids[1],
+                node_incarnation_id=new_ids[2],
+                source_sha256=self.source, schema_sha256=self.schema,
+                backend_pid=owned_backend,
+                previous_quiescence_verified=True))
+            self.old = dict(original, generation=2, token=101,
+                            backend_pid=owned_backend, backend_start=started)
+
+            # Durable four-field pending evidence BEFORE the uncertain write.
+            stream, symbol, minute = "bybit:BTCUSDT:1m", "BTCUSDT", 1860000
+            fingerprint, content_id = "6" * 64, "7" * 64
+            self.pg.sql(
+                "INSERT INTO public.lab_stream_pending("
+                "stream_id,symbol,start_ms,fingerprint,content_id,"
+                "owner,namespace,generation,token,source_sha256,schema_sha256)"
+                f" VALUES ('{stream}','{symbol}',{minute},"
+                f"'{fingerprint}','{content_id}',"
+                "'unified-system','unified/lab',2,101,"
+                f"'{self.source}','{self.schema}')")
+            query = ("SELECT public.lab_fenced_insert("
+                     "%s::text,%s::text,%s::bigint,%s::bigint,"
+                     "%s::uuid,%s::uuid,%s::uuid,"
+                     "%s::text,%s::text,%s::text,%s::text,%s::text,"
+                     "%s::bigint,%s::jsonb)")
+            args = (original["owner"], original["namespace"], 2, 101,
+                    *new_ids, self.source, self.schema,
+                    fingerprint, content_id, symbol, minute,
+                    json.dumps({"dataset_fingerprint": fingerprint}))
+            self.assertEqual(len(args), 14)
+            with self.writer.cursor() as cur:
+                cur.execute(query, args)
+            self.assertEqual(self.pg.sql(
+                "SELECT count(*) FROM public.provenance_minutes"
+                f" WHERE fingerprint='{fingerprint}'"), "0")
+
+            commit_errors = []
+            commit_done = threading.Event()
+
+            def send_commit_without_receiving_reply():
+                try:
+                    self.writer.commit()
+                except Exception as exc:
+                    commit_errors.append(type(exc).__name__)
+                finally:
+                    commit_done.set()
+
+            # All startup/authentication, SQL INSERT and reply traffic
+            # has completed. Only the next standalone COMMIT wire message
+            # is framed; no raw StartupMessage is treated as a v3 frame.
+            intercept_commit.set()
+            commit_thread = threading.Thread(
+                target=send_commit_without_receiving_reply, daemon=True)
+            commit_thread.start()
+            deadline = time.monotonic() + 15
+            committed = False
+            while time.monotonic() < deadline:
+                if self.pg.sql(
+                    "SELECT count(*) FROM public.provenance_minutes"
+                    f" WHERE symbol='{symbol}' AND start_ms={minute}"
+                    f" AND fingerprint='{fingerprint}'"
+                    f" AND content_id='{content_id}'") == "1":
+                    committed = True
+                    break
+                time.sleep(0.1)
+            self.assertTrue(committed, "LAB_COMMIT_NOT_DURABLY_OBSERVED")
+            self.assertTrue(commit_forwarded.wait(5),
+                            "LAB_COMMIT_FRAME_NOT_FORWARDED")
+            self.assertTrue(reply_discarded.wait(5),
+                            "LAB_COMMIT_REPLY_DROP_NOT_OBSERVED")
+            self.assertFalse(commit_done.is_set(),
+                             "LAB_COMMIT_ACK_WAS_NOT_LOST")
+            self.assertEqual(observe_old_lab_backend(
+                self.pg, **self.old), "STILL_ALIVE")
+
+            # C retains original OS witness, crashes ONLY its disposable PG,
+            # restarts through its sole recovery and reads independent WAL.
+            expected_backend_shutdown.set()
+            with patch.dict(os.environ,
+                            {"LAB_C_PG18_PROCESS_CRASH_TEST": "1"}):
+                contained = contain_exclusive_lab_cluster(
+                    self.pg, old=dict(self.old), quiesced=True,
+                    max_seconds=180, fault="PROCESS_CRASH_TEST")
+                self.assertEqual(contained["state"], "UNKNOWN")
+                recovered = self._recover(
+                    streams=(stream,), max_seconds=250)
+            commit_thread.join(timeout=10)
+            self.assertFalse(commit_thread.is_alive(),
+                             "LAB_COMMIT_CLIENT_NOT_DISCONNECTED")
+            self.assertTrue(commit_errors,
+                            "LAB_LOST_REPLY_SHOULD_NOT_ACKNOWLEDGE_COMMIT")
+            self.assertEqual(recovered["wal_recovery"],
+                             "LAB_PROCESS_CRASH_WAL_REPLAY_LOG_VERIFIED")
+            self.assertFalse(recovered["native_admitted"])
+            self.assertFalse(recovered["trading_authorized"])
+            snap = recovered["stream_snapshots"][stream]
+            self.assertEqual(snap["immutable_outcome"], "MATCH")
+            self.assertEqual(snap["pending"]["symbol"], symbol)
+            self.assertEqual(snap["pending"]["start_ms"], minute)
+            self.assertEqual(snap["pending"]["fingerprint"], fingerprint)
+            self.assertEqual(snap["pending"]["content_id"], content_id)
+            self.assertIsNone(snap["checkpoint"])
+            self.assertEqual(self.pg.sql(
+                "SELECT generation,token,active FROM public.lab_writer_fence"),
+                "2|101|f")
+            self.assertEqual(self.pg.sql(
+                "SELECT count(*) FROM public.provenance_minutes"
+                f" WHERE symbol='{symbol}' AND start_ms={minute}"), "1")
+            self.assertFalse(relay_errors, relay_errors)
+        finally:
+            stop_relay.set()
+            try:
+                listener.close()
+            except OSError:
+                pass
+            for sock in relay_sockets:
+                try:
+                    sock.shutdown(socket.SHUT_RDWR)
+                except OSError:
+                    pass
+            relay_thread.join(timeout=5)
+            if commit_thread is not None:
+                commit_thread.join(timeout=5)
 
     def test_owner_process_death_releases_advisory_lock_but_not_root_admission(self):
         # A dedicated throw-away child dies AFTER C's original lock and
@@ -651,6 +1045,87 @@ class NativeCRecoveryTests(unittest.TestCase):
             datetime.fromisoformat(
                 self.old["backend_start"].replace(" ","T")))
         self.assertEqual(receipt["backend_pid"],self.old["backend_pid"])
+        # A matching checkpoint row from another owner must not resolve
+        # our original pending write even when all four immutable fields
+        # and monotonically bounded generation/token happen to match.
+        # These fixtures are INSERTed by the disposable PG owner only;
+        # no alternate market writer or Root authority is created.
+        from unified_system.lab_pg_checkpoint import (
+            clear_verified_lab_pending, read_lab_pending,
+            verify_existing_lab_checkpoint)
+        stream="bybit:BTCUSDT:1m"
+        ms=300000
+        fp,cid="3"*64,"4"*64
+        self.pg.sql(
+            "INSERT INTO public.provenance_minutes("
+            "fingerprint,content_id,symbol,start_ms,record)"
+            f" VALUES ('{fp}','{cid}','BTCUSDT',{ms},"
+            f"'{{\"dataset_fingerprint\":\"{fp}\"}}'::jsonb)")
+        self.pg.sql(
+            "INSERT INTO public.lab_stream_pending("
+            "stream_id,symbol,start_ms,fingerprint,content_id,"
+            "owner,namespace,generation,token,source_sha256,schema_sha256)"
+            f" VALUES ('{stream}','BTCUSDT',{ms},'{fp}','{cid}',"
+            "'unified-system','unified/lab',1,100,"
+            f"'{self.source}','{self.schema}')")
+        self.pg.sql(
+            "INSERT INTO public.lab_stream_checkpoint("
+            "stream_id,symbol,cursor_value,source_start_ms,"
+            "fingerprint,content_id,owner,namespace,generation,token)"
+            f" VALUES ('{stream}','BTCUSDT',{ms},{ms},"
+            f"'{fp}','{cid}','foreign-owner','unified/lab',1,100)")
+        with self.assertRaisesRegex(
+                LabAdmissionRejected,"LAB_PENDING_CLEAR_UNVERIFIED"):
+            clear_verified_lab_pending(
+                self.pg,identity=identity,generation=1,
+                backend_pid=self.old["backend_pid"],stream_id=stream)
+        self.assertEqual(read_lab_pending(
+            self.pg,stream_id=stream)["fingerprint"],fp)
+        self.assertEqual(verify_existing_lab_checkpoint(
+            self.pg,identity=identity,generation=1,
+            backend_pid=self.old["backend_pid"],stream_id=stream,
+            symbol="BTCUSDT",start_ms=ms,fingerprint=fp,
+            content_id=cid)["state"],"UNRESOLVED")
+        # Namespace is also part of ownership, not merely decoration.
+        self.pg.sql(
+            "UPDATE public.lab_stream_checkpoint SET"
+            " owner='unified-system',namespace='foreign/lab'"
+            f" WHERE stream_id='{stream}'")
+        with self.assertRaisesRegex(
+                LabAdmissionRejected,"LAB_PENDING_CLEAR_UNVERIFIED"):
+            clear_verified_lab_pending(
+                self.pg,identity=identity,generation=1,
+                backend_pid=self.old["backend_pid"],stream_id=stream)
+        self.assertEqual(read_lab_pending(
+            self.pg,stream_id=stream)["content_id"],cid)
+        self.assertEqual(verify_existing_lab_checkpoint(
+            self.pg,identity=identity,generation=1,
+            backend_pid=self.old["backend_pid"],stream_id=stream,
+            symbol="BTCUSDT",start_ms=ms,fingerprint=fp,
+            content_id=cid)["state"],"UNRESOLVED")
+        # Exact owner AND namespace may resolve the immutable checkpoint,
+        # but this remains a LAB-only local SQL acknowledgement.
+        self.pg.sql(
+            "UPDATE public.lab_stream_checkpoint"
+            " SET namespace='unified/lab'"
+            f" WHERE stream_id='{stream}'")
+        self.assertEqual(verify_existing_lab_checkpoint(
+            self.pg,identity=identity,generation=1,
+            backend_pid=self.old["backend_pid"],stream_id=stream,
+            symbol="BTCUSDT",start_ms=ms,fingerprint=fp,
+            content_id=cid)["state"],"EXACT_ALREADY_ACKNOWLEDGED")
+        # ROUND35: run both immutable original SQL source files against
+        # this SAME live C-owned PostgreSQL 18 fence and actual checkpoint.
+        # No 30th test / second bootstrap; the mandatory roster stays 29.
+        from tests.c_round35_sql_variants_probe import (
+            exercise_two_pinned_sql_sources)
+        exercise_two_pinned_sql_sources(
+            self, identity=identity, stream=stream, start_ms=ms,
+            fingerprint=fp, content_id=cid)
+        self.assertTrue(clear_verified_lab_pending(
+            self.pg,identity=identity,generation=1,
+            backend_pid=self.old["backend_pid"],stream_id=stream))
+        self.assertIsNone(read_lab_pending(self.pg,stream_id=stream))
         self._recover()
         with self.assertRaises(LabAdmissionRejected):
             revalidate_lab_fence(
@@ -753,6 +1228,38 @@ class NativeCRecoveryTests(unittest.TestCase):
                 node_incarnation_id=str(uuid.uuid4()),
                 source_sha256=self.source,schema_sha256=self.schema,
                 backend_pid=new_backend,previous_quiescence_verified=True)
+        # The originally granted lab_writer role also exists at CLUSTER
+        # scope. A same-role backend in ANOTHER database must never qualify
+        # as the single protected database's writer fence.
+        # Create only a second DB inside this already disposable PG18 LAB.
+        self.pg.sql("CREATE DATABASE c_lab_foreign_backend")
+        self.pg.sql(
+            "GRANT CONNECT ON DATABASE c_lab_foreign_backend TO lab_writer")
+        foreign_dsn=(self.pg.dsn("lab_writer").rsplit("/",1)[0]
+                     + "/c_lab_foreign_backend")
+        foreign_writer=self.psycopg.connect(foreign_dsn,autocommit=True)
+        try:
+            with foreign_writer.cursor() as cur:
+                cur.execute("SELECT pg_backend_pid()")
+                foreign_backend=cur.fetchone()[0]
+            with self.assertRaisesRegex(
+                    LabAdmissionRejected,"LAB_FENCE_CLAIM_DENIED"):
+                claim_lab_fence(
+                    self.pg,owner="unified-system",namespace="unified/lab",
+                    generation=2,token=101,session_id=str(uuid.uuid4()),
+                    instance_id=str(uuid.uuid4()),
+                    node_incarnation_id=str(uuid.uuid4()),
+                    source_sha256=self.source,schema_sha256=self.schema,
+                    backend_pid=foreign_backend,
+                    previous_quiescence_verified=True)
+            self.assertEqual(
+                self.pg.sql("SELECT generation,token,active,backend_pid"
+                            " FROM public.lab_writer_fence"),
+                f"1|100|f|{self.old['backend_pid']}")
+        finally:
+            foreign_writer.close()
+        # The actual protected-database backend remains eligible after the
+        # negative cross-database attempt, preserving normal successor CAS.
         self.assertTrue(claim_lab_fence(
             self.pg,owner="unified-system",namespace="unified/lab",
             generation=2,token=101,session_id=str(uuid.uuid4()),
