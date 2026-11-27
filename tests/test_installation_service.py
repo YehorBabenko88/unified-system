@@ -157,6 +157,16 @@ class ServiceResourceTests(unittest.TestCase):
   self.assertEqual(paths['file:lab-release.json'],code/'lab-release.json')
   self.assertEqual(paths['file:runtime/python/python.exe'],code/'runtime/python/python.exe')
   self.assertEqual(set(paths),set(dict(paths)))
+  # Cross-owner J estimator parity: explicit directory identity must not
+  # also be counted/opened as a second parent identity of the same path.
+  explicit={'files':{'a/b/c.py':{},'a/d.py':{}},
+            'directories':['a','a/b']}
+  roster=service._native_roster_paths(root,code,explicit)
+  self.assertEqual(len(roster),6+len(root.parents)+2+2)
+  self.assertEqual(roster['directory:a'],code/'a')
+  self.assertEqual(roster['directory:a/b'],code/'a/b')
+  self.assertNotIn('parent:a',roster)
+  self.assertNotIn('parent:a/b',roster)
   for hostile in ('../foreign.bin','runtime/../../foreign.bin'):
    with self.subTest(path=hostile),self.assertRaises(ValueError):
     service._native_roster_paths(root,code,{'files':{hostile:{}},'directories':[]})
