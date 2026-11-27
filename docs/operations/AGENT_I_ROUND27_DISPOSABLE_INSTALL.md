@@ -53,3 +53,67 @@ python -m unittest tests.test_installation_transaction tests.test_installation_u
 ```
 
 Round28 focused status at authoring: source code and Git blob comparison PASS; test runtime PASS=0, FAIL=0, SKIP=0, NOT_RUN=15 authored methods. Native Windows/PG/Consul/live operations and 22 physical gates remain NOT_RUN. Independent F/J owner acceptance is pending. **CODE NO_GO / PRODUCTION NO_GO**.
+
+
+## Round29 actual isolated test receipts and TOCTOU closure
+
+The 15 ORIGINAL test methods from I PR182 ROUND28 (Git blob
+`811c9db6847260afe6f84120245e782923233bd4`) were executed
+locally using Python 3.13.5 on Linux. Git blob SHA1 was verified identical
+for `installation_transaction.py`, `disposable_installation.py`,
+`tests/test_agent_i_disposable_installation.py`, `lab_release.py`,
+`journal.py` and `contracts.py`. Minimal auxiliary modules
+(`runtime_process._safe_path`, `lab_capsule_acl._safe`,
+`installation_progress.safe/identifier`, and the LAB fixture) were
+extracts of canonical helper functions rather than the entire repository.
+**15 PASS / 0 FAIL / 0 ERROR / 0 SKIP** in this *source-bound partial
+checkout*. Do not confuse it with full-repo CI, installed publisher
+provenance, or native Windows proof.
+
+A separate failpoint probe against the original ROUND28 exact code
+demonstrated a genuine path TOCTOU defect: after source hash validation
+but immediately before `Path.unlink`, replacing `release/deps` with
+a symlink redirected deletion to `outside/requirements.lock`. The
+operation subsequently failed, but the unrelated file was already lost.
+This was confined to a newly created temporary fixture; no user files
+were involved. **Original ROUND28 disposal must NOT be accepted.**
+
+ROUND29 corrects the existing `installation_transaction.py` in-place:
+- `_anchored_deletion_supported` refuses all Windows/path-only disposal
+  (no native Win32 DeleteFile-by-retained-handle approval). It admits
+  only POSIX `O_NOFOLLOW|O_DIRECTORY` and `dir_fd` operations.
+- Code and manifest deletion now pin a retained parent directory
+  descriptor and retained regular-file descriptor, re-hash exact bytes
+  with `fstat`/directory-relative `stat`, and invoke `unlink` using
+  the retained parent `dir_fd`, never a late absolute parent path.
+  Empty directory deletion likewise uses parent-anchored `rmdir`.
+- The same adversarial injected parent-swap now preserves the foreign
+  file and leaves `DISPOSE_INTENT` + audit state, refusing retry.
+  POSIX `dir_fd` lowers one demonstrated race; it is **NOT fully
+  hostile race-proof**, nor production service/ACL/Root authority.
+
+Original 15 plus four added focused tests then executed with exact
+ROUND29 I source blobs on Linux: **19 PASS / 0 FAIL / 0 ERROR / 0 SKIP**.
+Four added cases cover unsupported-native-delete denial, TOCTOU parent
+swap preservation, rollback journal write failure preserving exact
+staged code, and symlink member refusal. On Windows, POSIX-only
+positive assertions are intentionally SKIP; no equivalent native
+destructive path is enabled.
+
+For scoped service lifecycle, a NEW test-only file
+`tests/test_agent_i_scoped_service_lifecycle.py` composes EXISTING
+`ServiceResource.create/inspect`, `Uninstaller.run(APP_ONLY)`,
+`tests.test_installation_service.FakeWindows` and
+`tests.test_installation_uninstall.FakeRemoval`. It exercises stopped
+registration -> owned removal with state/journal retention, foreign-code
+refusal, register crash/no implicit adoption and wrong-host refusal.
+There is no additional production SCM, activation, supervisor or
+service-uninstaller implementation. **These 4 service-composition
+methods are newly AUTHORED / NOT_RUN** in the local partial checkout;
+full original test dependencies were not downloaded. Original host,
+wheel signer, Windows Job, PostgreSQL 18, Consul TTL, production and
+physical acceptance remain **NOT_RUN/DENIED**.
+
+Exact I HEAD and Git blobs must be frozen again by F/J after selective
+transplant; this document does not authorize release. **CODE NO_GO /
+PRODUCTION NO_GO**.

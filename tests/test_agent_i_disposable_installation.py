@@ -122,6 +122,7 @@ class DisposableInstallationTests(unittest.TestCase):
         self.assertEqual(partial.read_bytes(), b"RETAIN")
 
 
+    @unittest.skipUnless(os.name == "posix", "POSIX descriptor-relative sandbox only; native Windows removal denied")
     def test_dispose_inactive_removes_only_closed_code_and_preserves_state(self):
         tx = self.subject()
         tx.stage(disposable_approval=True)
@@ -160,6 +161,7 @@ class DisposableInstallationTests(unittest.TestCase):
             tx.dispose_inactive(disposable_approval=1)
         self.assertEqual(tx.observe()["status"], "STAGED_INACTIVE")
 
+    @unittest.skipUnless(os.name == "posix", "POSIX descriptor-relative sandbox only; native Windows removal denied")
     def test_dispose_failpoint_retains_audit_and_requires_manual_review(self):
         tx = self.subject()
         tx.stage(disposable_approval=True)
@@ -194,6 +196,83 @@ class DisposableInstallationTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 tx.dispose_inactive(disposable_approval=True)
         self.assertTrue((self.install / "release" / "runtime.json").exists())
+
+
+    def test_unqualified_native_delete_is_blocked_before_intent(self):
+        tx = self.subject()
+        tx.stage(disposable_approval=True)
+        from unified_system import installation_transaction as core
+        with patch.object(core, "_anchored_deletion_supported", return_value=False):
+            with self.assertRaises(ValueError):
+                tx.dispose_inactive(disposable_approval=True)
+        self.assertEqual(tx.observe()["status"], "STAGED_INACTIVE")
+        self.assertTrue((self.install / "release" / "runtime.json").is_file())
+
+    @unittest.skipUnless(os.name == "posix", "requires POSIX dir_fd for real symlink swap")
+    def test_parent_swap_before_unlink_preserves_foreign_file(self):
+        from unified_system import installation_transaction as core
+        tx = self.subject()
+        tx.stage(disposable_approval=True)
+        foreign = self.root / "external-only"
+        foreign.mkdir()
+        victim = foreign / "requirements.lock"
+        victim.write_bytes(b"DO_NOT_REMOVE")
+        pivot = self.install / "release" / "deps"
+        original_unlink = os.unlink
+        swaps = []
+        def swap_then_unlink(name, *args, **kwargs):
+            if name == "requirements.lock" and kwargs.get("dir_fd") is not None and not swaps:
+                pivot.rename(pivot.with_name("original-deps-retained"))
+                pivot.symlink_to(foreign, target_is_directory=True)
+                swaps.append(True)
+            return original_unlink(name, *args, **kwargs)
+        try:
+            # Mocking os.unlink changes Python's membership in os.supports_dir_fd.
+            # Preserve the already-qualified POSIX capability through this probe.
+            with patch.object(core, "_anchored_deletion_supported", return_value=True), \
+                 patch.object(os, "unlink", swap_then_unlink):
+                with self.assertRaises(ValueError):
+                    tx.dispose_inactive(disposable_approval=True)
+            self.assertEqual(len(swaps), 1)
+            self.assertEqual(victim.read_bytes(), b"DO_NOT_REMOVE")
+            self.assertEqual(tx.observe()["status"], "DISPOSE_INTENT")
+            self.assertTrue((self.state / "transaction.sqlite").exists())
+        finally:
+            if pivot.is_symlink():
+                pivot.unlink()
+
+    def test_rollback_journal_write_failure_preserves_staged_code(self):
+        from unified_system.journal import Journal
+        tx = self.subject()
+        tx.stage(disposable_approval=True)
+        original = Journal.append
+        def fail_rollback(journal, state, receipt=None, **kwargs):
+            if receipt is not None and receipt.get("kind") == "ROLLED_BACK_RETAINED":
+                raise OSError("INJECTED_JOURNAL_FAILURE")
+            return original(journal, state, receipt, **kwargs)
+        before = (self.install / "release" / "runtime.json").read_bytes()
+        with patch.object(Journal, "append", fail_rollback):
+            with self.assertRaisesRegex(OSError, "INJECTED_JOURNAL_FAILURE"):
+                tx.rollback(disposable_approval=True)
+        self.assertEqual(tx.observe()["status"], "STAGED_INACTIVE")
+        self.assertEqual((self.install / "release" / "runtime.json").read_bytes(), before)
+        self.assertEqual(tx.rollback(disposable_approval=True)["status"], "ROLLED_BACK_RETAINED")
+
+    def test_symlink_member_never_removed(self):
+        tx = self.subject()
+        tx.stage(disposable_approval=True)
+        foreign = self.root / "outside-symlink-target"
+        foreign.write_bytes(b"KEEP_ME")
+        member = self.install / "release" / "runtime.json"
+        member.unlink()
+        try:
+            member.symlink_to(foreign)
+        except (OSError, NotImplementedError):
+            self.skipTest("symlink creation is unavailable under current sandbox privileges")
+        with self.assertRaises(ValueError):
+            tx.dispose_inactive(disposable_approval=True)
+        self.assertEqual(foreign.read_bytes(), b"KEEP_ME")
+        self.assertTrue(member.is_symlink())
 
     def test_no_runtime_executor_in_wrapper(self):
         import inspect
