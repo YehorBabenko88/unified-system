@@ -1147,6 +1147,38 @@ class NativeCRecoveryTests(unittest.TestCase):
                 node_incarnation_id=str(uuid.uuid4()),
                 source_sha256=self.source,schema_sha256=self.schema,
                 backend_pid=new_backend,previous_quiescence_verified=True)
+        # The originally granted lab_writer role also exists at CLUSTER
+        # scope. A same-role backend in ANOTHER database must never qualify
+        # as the single protected database's writer fence.
+        # Create only a second DB inside this already disposable PG18 LAB.
+        self.pg.sql("CREATE DATABASE c_lab_foreign_backend")
+        self.pg.sql(
+            "GRANT CONNECT ON DATABASE c_lab_foreign_backend TO lab_writer")
+        foreign_dsn=(self.pg.dsn("lab_writer").rsplit("/",1)[0]
+                     + "/c_lab_foreign_backend")
+        foreign_writer=self.psycopg.connect(foreign_dsn,autocommit=True)
+        try:
+            with foreign_writer.cursor() as cur:
+                cur.execute("SELECT pg_backend_pid()")
+                foreign_backend=cur.fetchone()[0]
+            with self.assertRaisesRegex(
+                    LabAdmissionRejected,"LAB_FENCE_CLAIM_DENIED"):
+                claim_lab_fence(
+                    self.pg,owner="unified-system",namespace="unified/lab",
+                    generation=2,token=101,session_id=str(uuid.uuid4()),
+                    instance_id=str(uuid.uuid4()),
+                    node_incarnation_id=str(uuid.uuid4()),
+                    source_sha256=self.source,schema_sha256=self.schema,
+                    backend_pid=foreign_backend,
+                    previous_quiescence_verified=True)
+            self.assertEqual(
+                self.pg.sql("SELECT generation,token,active,backend_pid"
+                            " FROM public.lab_writer_fence"),
+                f"1|100|f|{self.old['backend_pid']}")
+        finally:
+            foreign_writer.close()
+        # The actual protected-database backend remains eligible after the
+        # negative cross-database attempt, preserving normal successor CAS.
         self.assertTrue(claim_lab_fence(
             self.pg,owner="unified-system",namespace="unified/lab",
             generation=2,token=101,session_id=str(uuid.uuid4()),
