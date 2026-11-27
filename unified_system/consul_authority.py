@@ -250,6 +250,12 @@ class ConsulSessionAuthority:
         except CoordinationUnavailable:
             self._deadlines[lease.session_id] = 0
             return False
+        except BaseException:
+            # asyncio.CancelledError is BaseException (not Exception).
+            # A renew request can have reached Consul before task shutdown.
+            # Never retain a locally trusted deadline after such ambiguity.
+            self._deadlines[lease.session_id] = 0
+            raise
 
     async def release(self, lease):
         if self._sessions.get(getattr(lease, 'session_id', None)) is not lease:
@@ -289,7 +295,11 @@ class ConsulSessionAuthority:
         # reconciliation; the caller must not replay or mint a new owner.
         try:
             result = await self._request('PUT', '/v1/txn', json=operations)
-        except CoordinationUnavailable:
+        except BaseException:
+            # Includes asyncio cancellation during the original network
+            # mutation; the server may have committed without an ACK.
+            # Quarantine the exact old lease, propagate cancellation, and
+            # never blindly replay the transaction.
             self._deadlines[lease.session_id] = 0
             raise
         # HTTP 200 without transaction Results is not a verifiable commit.
@@ -316,7 +326,14 @@ class ConsulSessionAuthority:
         # No caller may interpret that old write as current Root authority.
         # Re-read the original lease and consistent leader KV *after* the
         # network transaction, rejecting both timeout and changed owner.
-        if not await self.validate(lease):
+        try:
+            still_current = await self.validate(lease)
+        except BaseException:
+            # Even post-transaction read cancellation leaves the preceding
+            # mutation outcome uncertain to its caller.
+            self._deadlines[lease.session_id] = 0
+            raise
+        if not still_current:
             self._deadlines[lease.session_id] = 0
             raise CoordinationLost('Consul lease lost after control transaction')
 
