@@ -202,6 +202,29 @@ class ServiceResourceTests(unittest.TestCase):
   self.assertIn("self.close()",source)
   # This is a static source contract, not a Win32 share-mode experiment.
 
+ def test_r35_complete_v2_roster_preflight_budget(self):
+  from unified_system import installation_service as service
+  tiny={'root':self.root,'ancestor:0':self.root.parent}
+  self.assertIs(service._native_receipt_roster_budget(tiny),tiny)
+  # Exactly 512 short identities remain eligible for the separate native
+  # receipt-size and Win32 checks; 513 refuse before opening a HANDLE.
+  within={'root':self.root}
+  within.update({'file:'+str(i):self.root/str(i) for i in range(511)})
+  self.assertEqual(len(within),512)
+  self.assertIs(service._native_receipt_roster_budget(within),within)
+  too_many=dict(within,extra=self.root/'extra')
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(too_many)
+  lengthy={'root':self.root,'file:'+'x'*301:self.root/'x'}
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(lengthy)
+  large={'root':self.root}
+  large.update({'file:'+str(i).zfill(5)+'x'*225:self.root/str(i)
+                for i in range(320)})
+  self.assertLessEqual(len(large),512)
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(large)
+
  def test_r35_retained_native_custody_handle_budget_fails_closed(self):
   from unified_system import installation_service as service
   paths={'root':self.root}
