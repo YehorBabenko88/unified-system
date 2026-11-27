@@ -282,19 +282,22 @@ class WindowsHijackTests(unittest.TestCase):
                                                                  'LOCALAPPDATA': str(profile / 'AppData' / 'Local')}))
 
     def test_autoload_disabled_command_outside_trusted_set_is_not_found(self):
-        # Imported-command inventory alone does not prove an attempted
-        # command cannot autoload a nonimported module. Retain the original
-        # direct forbidden invocation and assert exact post-call module
-        # roster. The existing 15s bounded runner remains unchanged.
+        # Invoke a disposable command from an adversarial module, not an
+        # unimported Windows OS cmdlet whose cold discovery can exceed 15s.
+        # The fake module must not autoload or run from any inherited path.
+        poison = self.root / 'untrusted-modules'
+        self.poison_module(poison, 'UnifiedPoisonProbe')
         report = self.run_child(
-            "$before=([bool]@(Get-Command Get-NetIPAddress -ListImported -ErrorAction SilentlyContinue));"
+            "$before=([bool]@(Get-Command Get-UnifiedPoisonProbe -ListImported -ErrorAction SilentlyContinue));"
             "$invoked='UNEXPECTED';"
-            "try{Get-NetIPAddress -ErrorAction Stop|Out-Null;$invoked='LOADED'}"
+            "try{Get-UnifiedPoisonProbe -ErrorAction Stop|Out-Null;$invoked='LOADED'}"
             "catch [System.Management.Automation.CommandNotFoundException]{$invoked='NOT_FOUND'};"
-            "@{before=$before;x=$invoked;m=@(Get-Module|ForEach-Object{$_.Name})}|ConvertTo-Json -Compress")
+            "@{before=$before;x=$invoked;m=@(Get-Module|ForEach-Object{$_.Name})}|ConvertTo-Json -Compress",
+            parent_env={'PSModulePath': str(poison)})
         self.assertIs(report['before'], False)
         self.assertEqual(report['x'], 'NOT_FOUND')
         self.assertEqual(sorted(report['m']), sorted(service.TRUSTED_POWERSHELL_MODULES))
+        self.assertFalse(self.marker.exists(), 'untrusted module autoloaded or ran')
 
     def test_trusted_module_manifests_are_regular_system_files(self):
         manifests = service.trusted_module_manifests()
