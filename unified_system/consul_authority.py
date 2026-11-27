@@ -205,8 +205,14 @@ class ConsulSessionAuthority:
             return False
         try:
             result = await self._request('PUT', '/v1/session/renew/' + lease.session_id)
+            # A malformed session-renew reply is an unknown result, not an
+            # exception that leaves the old local renewal deadline active.
+            # Session ID must match exactly; a forged JSON scalar or row
+            # cannot extend or retain this Root owner's lease authority.
             if (type(result) is not list or len(result) != 1
-                    or result[0].get('ID') != lease.session_id or not await self.validate(lease)):
+                    or type(result[0]) is not dict
+                    or result[0].get('ID') != lease.session_id
+                    or not await self.validate(lease)):
                 self._deadlines[lease.session_id] = 0
                 return False
             self._deadlines[lease.session_id] = started + self.config.ttl_seconds - 1
