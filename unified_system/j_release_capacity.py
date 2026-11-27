@@ -30,6 +30,8 @@ def project_native_roster(manifest, *, install_ancestor_count):
     lab_release.need(type(files) is dict and type(dirs) is list)
     lab_release.need(type(install_ancestor_count) is int and 0 <= install_ancestor_count <= 64)
     lab_release.need("lab-release.json" not in files)
+    lab_release.need(len(files) == len(set(files)) and len(dirs) == len(set(dirs)))
+    lab_release.need(all(type(x) is str for x in files) and all(type(x) is str for x in dirs))
     keys = {"root", "code", "ownership", "state", "ownership:service.sqlite", "file:lab-release.json"}
     keys.update("ancestor:" + str(i) for i in range(install_ancestor_count))
     for name in files:
