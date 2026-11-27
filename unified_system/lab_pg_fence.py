@@ -6,6 +6,7 @@ No user databases, external PostgreSQL instance or trading endpoints.
 """
 import re
 import uuid
+import datetime
 
 from .lab_simulation_admission import LabAdmissionRejected, need
 
@@ -14,13 +15,22 @@ _RESOURCE = "grid-market-data-primary"
 _OWNER_PATTERN = re.compile(r"[A-Za-z0-9_.:-]{1,128}\Z")
 _NAMESPACE_PATTERN = re.compile(r"[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*\Z")
 
-def _id(value):
+def _id(value, *, consul_session=False):
     need(type(value) is str, "LAB_FENCE_ID_INVALID")
     try:
         parsed = uuid.UUID(value)
     except (ValueError, AttributeError) as exc:
         raise LabAdmissionRejected("LAB_FENCE_ID_INVALID") from exc
-    need(str(parsed) == value and parsed.version == 4, "LAB_FENCE_ID_INVALID")
+    # A Consul session identifier is an opaque server-issued UUID-shaped
+    # value, not an application UUID4/5 identity. Do not infer lease
+    # authority from its version or variant. Keep exact canonical bytes for
+    # PostgreSQL uuid binding, and prove the actual lease independently.
+    # Instance and node incarnation identities remain strict RFC4122 UUID4.
+    if consul_session:
+        need(str(parsed) == value, "LAB_FENCE_ID_INVALID")
+    else:
+        need(str(parsed) == value and parsed.variant == uuid.RFC_4122
+             and parsed.version == 4, "LAB_FENCE_ID_INVALID")
     return value
 
 def _scope(owner, namespace):
@@ -125,7 +135,8 @@ def claim_lab_fence(pg, *, owner, namespace, generation, token,
     need(type(backend_pid) is int and 0 < backend_pid < 2**31,
          "LAB_FENCE_BACKEND_INVALID")
     owner, namespace = _scope(owner, namespace)
-    ids = tuple(map(_id, (session_id, instance_id, node_incarnation_id)))
+    ids = (_id(session_id, consul_session=True), _id(instance_id),
+           _id(node_incarnation_id))
     sha1, sha2 = _sha(source_sha256), _sha(schema_sha256)
     # A claimed PID must be an existing lab_writer DB connection. A current
     # backend_start is stored by PostgreSQL, not asserted in any client JSON.
@@ -163,20 +174,57 @@ def claim_lab_fence(pg, *, owner, namespace, generation, token,
     need(pg.sql(sql) == str(generation), "LAB_FENCE_CLAIM_DENIED")
     return True
 
-def revoke_lab_fence(pg, *, generation, token):
-    """Owner-only revocation; high-water persists across restart."""
+def revoke_lab_fence(pg, *, owner, namespace, generation, token,
+                     backend_pid, backend_start, timeout=120):
+    """Revoke ONE exact original LAB backend fence with durable SQL readback.
+
+    Caller-supplied generation/token alone MUST fail closed (TypeError).
+    PostgreSQL row revocation is not process/backend extinction, Consul lease
+    expiry, Root admission, or an assertion that no old COMMIT ever occurred.
+    Unknown UPDATE outcome is resolved only by an independent exact readback.
+    """
     pg._verify_owned()
     need(pg.started, "LAB_PG_NOT_STARTED")
     pg._verify_postmaster()
-    need(type(generation) is int and generation>0
-         and type(token) is int and token>0, "LAB_FENCE_TOKEN_INVALID")
-    result = pg.sql(
-        "UPDATE public.lab_writer_fence SET active=false"
-        f" WHERE resource_id='grid-market-data-primary' AND active=true"
+    owner, namespace = _scope(owner, namespace)
+    need(type(generation) is int and 0 < generation < 2**63
+         and type(token) is int and 0 < token < 2**63,
+         "LAB_FENCE_TOKEN_INVALID")
+    need(type(backend_pid) is int and 0 < backend_pid < 2**31,
+         "LAB_FENCE_BACKEND_INVALID")
+    need(type(backend_start) is str and len(backend_start) <= 64,
+         "LAB_FENCE_BACKEND_START_INVALID")
+    need(type(timeout) in (int, float) and 1 <= timeout <= 120,
+         "LAB_FENCE_REVOKE_TIMEOUT_INVALID")
+    try:
+        old_start = datetime.datetime.fromisoformat(
+            backend_start.replace("Z", "+00:00").replace(" ", "T"))
+    except (ValueError, OverflowError) as exc:
+        raise LabAdmissionRejected("LAB_FENCE_BACKEND_START_INVALID") from exc
+    need(old_start.tzinfo is not None, "LAB_FENCE_BACKEND_START_INVALID")
+    where = (
+        " WHERE resource_id='grid-market-data-primary'"
+        f" AND owner='{owner}' AND namespace='{namespace}'"
         f" AND generation={generation} AND token={token}"
-        " RETURNING generation")
-    need(result == str(generation), "LAB_FENCE_REVOKE_DENIED")
+        f" AND backend_pid={backend_pid}"
+        f" AND backend_start='{old_start.isoformat()}'::timestamptz"
+    )
+    try:
+        pg.sql("UPDATE public.lab_writer_fence SET active=false"
+               + where + " AND active=true RETURNING generation",
+               timeout=timeout)
+    except Exception:
+        # Could be a lock timeout, network failure, or unknown COMMIT.
+        # Nothing is acknowledged until a new owner-only SQL connection
+        # independently proves the exact durable identity is inactive.
+        pass
+    result = pg.sql(
+        "SELECT CASE WHEN active=false THEN 'REVOKED_EXACT'"
+        " ELSE 'UNKNOWN' END FROM public.lab_writer_fence" + where,
+        timeout=timeout)
+    need(result == "REVOKED_EXACT", "LAB_FENCE_REVOKE_UNVERIFIED")
     return True
+
 
 def fence_identity():
     """Immutable fixture identity; caller still needs independent Root authority."""
@@ -185,7 +233,7 @@ def fence_identity():
             "scope": "ISOLATED_LAB_ONLY", "execution_authority": False,
             "trading_authorized": False, "native_admission": False}
 
-def fenced_lab_witness(pg):
+def fenced_lab_witness(pg, *, timeout=120):
     """Independent owner catalogue check for opt-in fenced LAB, not production."""
     import json
     pg._verify_owned()
@@ -222,7 +270,7 @@ def fenced_lab_witness(pg):
        FROM pg_proc p
        WHERE p.oid=
          'public.lab_fenced_insert(text,text,bigint,bigint,uuid,uuid,uuid,text,text,text,text,text,bigint,jsonb)'::regprocedure
-    """)
+    """, timeout=timeout)
     try:
         witness = json.loads(result)
     except (TypeError, ValueError) as exc:
@@ -266,7 +314,7 @@ def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
     from .grid_writer_fence_model import WriterLeaseIdentity
     need(type(identity) is WriterLeaseIdentity, "LAB_FENCE_IDENTITY_REQUIRED")
     owner, namespace = _scope(identity.owner, identity.namespace)
-    sess = _id(identity.session_id)
+    sess = _id(identity.session_id, consul_session=True)
     inst = _id(identity.instance_id)
     node = _id(identity.node_incarnation_id)
     source = _sha(identity.source_sha256)
@@ -293,12 +341,21 @@ def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
         " AND s.usename='lab_writer'"
         " AND s.datname=current_database()"
         " AND s.backend_type='client backend'"
-        " THEN 1 ELSE 0 END"
+        " THEN f.backend_start::text ELSE 'DENIED' END"
         " FROM public.lab_writer_fence f"
         " LEFT JOIN pg_catalog.pg_stat_activity s ON s.pid=f.backend_pid"
         " WHERE f.resource_id='grid-market-data-primary'"
     )
-    need(pg.sql(query) == "1", "LAB_FENCE_REVALIDATION_DENIED")
+    result = pg.sql(query)
+    need(result not in ("", "DENIED"), "LAB_FENCE_REVALIDATION_DENIED")
+    # The backend_start comes from the EXACT matching C fence + live
+    # pg_stat_activity in the SAME SQL snapshot. Still NOT Root authority.
+    from datetime import datetime
+    try:
+        parsed = datetime.fromisoformat(result.replace(" ", "T"))
+    except (TypeError, ValueError) as exc:
+        raise LabAdmissionRejected("LAB_FENCE_BACKEND_START_INVALID") from exc
+    need(parsed.tzinfo is not None, "LAB_FENCE_BACKEND_START_INVALID")
     receipt = {
         "schema": "lab-postgres-fence-revalidation.v1",
         "scope": "ISOLATED_LAB_ONLY",
@@ -306,6 +363,7 @@ def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
         "generation": generation,
         "token": token,
         "backend_pid": backend_pid,
+        "backend_start": parsed.isoformat(),
         "owner": owner,
         "namespace": namespace,
         "session_id": sess,
@@ -324,3 +382,68 @@ def revalidate_lab_fence(pg, *, identity, generation, backend_pid):
     }
     return receipt
 
+
+def observe_old_lab_backend(pg, *, owner, namespace, generation, token,
+                            backend_pid, backend_start, timeout=120):
+    """Read-only old-backend observation; not a transferable Root grant.
+
+    A missing/mismatched row, inaccessible PostgreSQL, or any ambiguous
+    identity is UNKNOWN. The exact old backend start comes from the durable
+    fence and must match the trusted caller's expected value.
+    """
+    import datetime
+    pg._verify_owned()
+    need(pg.started, "LAB_PG_NOT_STARTED")
+    pg._verify_postmaster()
+    owner, namespace = _scope(owner, namespace)
+    need(type(generation) is int and 0 < generation < 2**63
+         and type(token) is int and 0 < token < 2**63,
+         "LAB_BACKEND_FENCE_ARGUMENTS")
+    need(type(backend_pid) is int and 0 < backend_pid < 2**31,
+         "LAB_BACKEND_PID_INVALID")
+    need(type(backend_start) is str and len(backend_start) <= 64,
+         "LAB_BACKEND_START_INVALID")
+    try:
+        started = datetime.datetime.fromisoformat(backend_start.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise LabAdmissionRejected("LAB_BACKEND_START_INVALID") from exc
+    need(started.tzinfo is not None, "LAB_BACKEND_START_INVALID")
+    query = (
+        "SELECT CASE WHEN "
+        f"f.owner='{owner}' AND f.namespace='{namespace}'"
+        f" AND f.generation={generation} AND f.token={token}"
+        f" AND f.backend_pid={backend_pid}"
+        f" AND f.backend_start='{started.isoformat()}'::timestamptz"
+        " THEN CASE WHEN EXISTS ("
+        " SELECT 1 FROM pg_catalog.pg_stat_activity a"
+        " WHERE a.pid=f.backend_pid AND a.backend_start=f.backend_start"
+        " AND a.datname=current_database() AND a.usename='lab_writer'"
+        " AND a.backend_type='client backend') THEN 'STILL_ALIVE'"
+        " WHEN EXISTS (SELECT 1 FROM pg_catalog.pg_stat_activity a"
+        " WHERE a.pid=f.backend_pid) THEN 'UNKNOWN'"
+        " ELSE 'EXTINCT' END"
+        " ELSE 'UNKNOWN' END"
+        " FROM public.lab_writer_fence f"
+        " WHERE f.resource_id='grid-market-data-primary'"
+    )
+    try:
+        state = pg.sql(query, timeout=timeout)
+    except Exception:
+        return "UNKNOWN"
+    return state if state in ("EXTINCT", "STILL_ALIVE") else "UNKNOWN"
+
+
+def terminate_old_lab_backend(pg, *, owner, namespace, generation, token,
+                              backend_pid, backend_start):
+    """Conservative LAB-only backend stop; NOT a transferable Root proof.
+
+    This helper deliberately DOES NOT terminate a PID. PostgreSQL exposes
+    pg_terminate_backend(pid), not an atomic pid+backend_start CAS, so an
+    in-statement pg_stat_activity join still has a PID-reuse TOCTOU race.
+    Until Root can hold an OS/backend-incarnation-stable actuator, only
+    observe old state. In particular do not return EXTINCT on a racing probe.
+    """
+    state = observe_old_lab_backend(
+        pg, owner=owner, namespace=namespace, generation=generation,
+        token=token, backend_pid=backend_pid, backend_start=backend_start)
+    return "UNKNOWN" if state == "STILL_ALIVE" else state
