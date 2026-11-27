@@ -127,6 +127,35 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
             check_source_minutes([60000+i*60000 for i in range(5)],
                                  interval_minutes=5, first_start=60000, cutoff_ms=360000)
 
+    def test_round29_original_math_and_historical_boundaries(self):
+        spec = _load_contract()
+        self.assertEqual(spec["pins"], {
+            "Grid": "00ac898ba658a546c308087db06cda78a108fd38",
+            "Math": "9e6acbd9e12a91189f57234828e31640983af553",
+            "Terminan": "78da418ac31acad0f750b98e3b89ea511cefad51",
+        })
+        history = spec["historical_asof"]
+        self.assertEqual(history["status"], "PARTIAL")
+        self.assertEqual(history["freshness_mode"], "HISTORICAL_AS_OF")
+        self.assertEqual(history["historical_source_trust"],
+                         "NOT_INDEPENDENTLY_ATTESTED")
+        self.assertEqual(history["consumer"].split(";")[0],
+                         "Terminan PR130 LIVE only")
+        self.assertEqual(spec["rejection"]["historical_asof"],
+                         "SOURCE_ONLY_CANDIDATE_UNATTESTED")
+        self.assertIn("MUST NOT recompute delta", spec["delta_presentation"])
+
+    def test_float_presentation_cancellation_is_not_source_delta(self):
+        from decimal import Decimal
+        buy = Decimal("10000000000000004.01")
+        sell = Decimal("10000000000000004")
+        # Decimal oracle only: does not import or replace the original Math SDK.
+        self.assertEqual(buy - sell, Decimal("0.01"))
+        self.assertEqual(float(buy), float(sell))
+        self.assertEqual(float(buy) - float(sell), 0.0)
+        self.assertEqual(float(buy - sell), 0.01)
+
+
 
 if __name__ == "__main__":
     unittest.main()
