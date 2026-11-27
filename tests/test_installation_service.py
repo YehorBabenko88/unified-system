@@ -6,10 +6,13 @@ from tests.test_lab_release import fixture
 from unified_system import lab_release
 from unified_system.installation_service import ServiceResource,service_plan,parse_service_sid,WindowsServiceBoundary
 
+# Inert simulated System32: production powershell_argv path guard is NOT mocked.
+FAKE_SYSTEM32 = Path(tempfile.gettempdir()).resolve() / 'UnifiedInertSystem32'
+
 class FakeWindows:
  def __init__(self):self.calls=[];self.service=None;self.fault=None;self.acl='a'*64;self.host='TEST-PC'
  def computer_name(self):return self.host
- def native_tools(self):return {'sc':{'path':str(Path(tempfile.gettempdir()).resolve()/'fixture-sc.exe'),'sha256':'a'*64},'powershell':{'path':str(Path(tempfile.gettempdir()).resolve()/'powershell.exe'),'sha256':'b'*64}}
+ def native_tools(self):return {'sc':{'path':str(Path(tempfile.gettempdir()).resolve()/'fixture-sc.exe'),'sha256':'a'*64},'powershell':{'path':str(FAKE_SYSTEM32/'WindowsPowerShell/v1.0/powershell.exe'),'sha256':'b'*64}}
  def sid(self,name):return 'S-1-5-80-1-2-3-4-5'
  def call(self,action,plan,guard):
   if guard is None or guard(action,plan['plan_sha256']) is not True:raise ValueError('approval')
@@ -141,6 +144,355 @@ class ServiceResourceTests(unittest.TestCase):
   self.assertEqual(ServiceResource.open(plan,self.backend).inspect(self.guard),snapshot)
   self.assertEqual(self.backend.service['state'],1);self.assertFalse(any(x in self.backend.calls for x in ('START','STOP','DELETE')))
   self.assertTrue(all(pin==plan['plan_sha256'] for _,pin in self.grants))
+ def test_r35_native_roster_includes_root_ancestors_and_undeclared_parents(self):
+  from unified_system import installation_service as service
+  p=self.plan();root=Path(p['root']);code=Path(p['code'])
+  manifest={'files':{'runtime/python/python.exe':{'sha256':'a'*64,'bytes':1}},
+            'directories':[]}
+  paths=service._native_roster_paths(root,code,manifest)
+  self.assertEqual(paths['root'],root)
+  self.assertEqual(paths['ancestor:0'],root.parent)
+  self.assertEqual(paths['parent:runtime'],code/'runtime')
+  self.assertEqual(paths['parent:runtime/python'],code/'runtime/python')
+  self.assertEqual(paths['file:lab-release.json'],code/'lab-release.json')
+  self.assertEqual(paths['file:runtime/python/python.exe'],code/'runtime/python/python.exe')
+  self.assertEqual(set(paths),set(dict(paths)))
+  # Cross-owner J estimator parity: explicit directory identity must not
+  # also be counted/opened as a second parent identity of the same path.
+  explicit={'files':{'a/b/c.py':{},'a/d.py':{}},
+            'directories':['a','a/b']}
+  roster=service._native_roster_paths(root,code,explicit)
+  self.assertEqual(len(roster),6+len(root.parents)+2+2)
+  self.assertEqual(roster['directory:a'],code/'a')
+  self.assertEqual(roster['directory:a/b'],code/'a/b')
+  self.assertNotIn('parent:a',roster)
+  self.assertNotIn('parent:a/b',roster)
+  for hostile in ('../foreign.bin','runtime/../../foreign.bin'):
+   with self.subTest(path=hostile),self.assertRaises(ValueError):
+    service._native_roster_paths(root,code,{'files':{hostile:{}},'directories':[]})
+
+ def test_r35_native_roster_repeated_handle_read_rejects_identity_drift(self):
+  from unified_system import installation_service as service
+  paths={'root':self.root,'ancestor:0':self.root.parent,'file:owner':self.root/'owner'}
+  good={'volume_serial':1,'file_id_128':'a'*32}
+  changed={'volume_serial':1,'file_id_128':'b'*32}
+  with patch.object(service,'_native_file_identity',return_value=good) as probe:
+   self.assertEqual(service._capture_native_roster(paths),dict.fromkeys(paths,good))
+   self.assertEqual(probe.call_count,2*len(paths))
+  calls=[0]
+  def changing(path):
+   calls[0]+=1
+   return changed if calls[0]==2*len(paths) else good
+  with patch.object(service,'_native_file_identity',side_effect=changing):
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._capture_native_roster(paths)
+  self.assertEqual(calls[0],2*len(paths))
+  with patch.object(service,'_native_file_identity',
+                    side_effect=lambda path: dict(good,volume_serial=2) if path==paths['ancestor:0'] else good):
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._capture_native_roster(paths)
+
+ def test_r35_retained_native_custody_fails_closed_outside_windows(self):
+  from unified_system import installation_service as service
+  paths={'root':self.root,'ancestor:0':self.root.parent}
+  if os.name=='nt':
+   self.skipTest('Native custody is tested only with disposable Windows native runner')
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._NativeReceiptCustody(paths)
+ 
+ def test_r35_native_custody_shares_sqlite_write_but_not_delete(self):
+  from unified_system import installation_service as service
+  import inspect
+  source=inspect.getsource(service._NativeReceiptCustody.__enter__)
+  self.assertIn("flags=_native_roster_open_flags(key)",source)
+  self.assertIn("h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,flags,None)",source)
+  identity_source=inspect.getsource(service._native_file_identity)
+  self.assertIn("h=k.CreateFileW(str(root),0x80,0x1|0x2,None,3,0x00200000|0x02000000,None)",identity_source)
+  self.assertNotIn("0x1|0x2|0x4",source)
+  self.assertIn("self.handles[key]=h",source)
+  self.assertIn("self.close()",source)
+  # This is a static source contract, not a Win32 share-mode experiment.
+
+ def test_r35_native_win32_directory_backup_flags_and_unknown_roles(self):
+  from unified_system import installation_service as service
+  # Actual production flag-decider executed; independent of Windows/SCM.
+  for name in ('root','code','ownership','state','ancestor:0',
+               'directory:runtime','parent:runtime'):
+   with self.subTest(directory=name):
+    self.assertIs(service._native_roster_is_file(name),False)
+    self.assertEqual(service._native_roster_open_flags(name),0x02200000)
+  for name in ('ownership:service.sqlite','file:lab-release.json',
+               'file:runtime/runner.py'):
+   with self.subTest(file=name):
+    self.assertIs(service._native_roster_is_file(name),True)
+    self.assertEqual(service._native_roster_open_flags(name),0x00200000)
+  for name in ('','FILE:foreign','file:','directory:','parent:','ancestor:',
+               'foreign','ownership:forged.sqlite',None,True):
+   with self.subTest(invalid=name),self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._native_roster_open_flags(name)
+  for name in ('root','file:run.py'):
+   self.assertEqual(service._native_roster_open_flags(name)&0x00000004,0)
+   self.assertEqual(service._native_roster_open_flags(name)&0x04000000,0)
+
+ def test_r35_custody_real_enter_fake_kernel_directory_flags_and_close(self):
+  from unified_system import installation_service as service
+  import ctypes
+  from unittest.mock import Mock
+  # Exercise original __enter__/__exit__, fake kernel and original role flags.
+  # No Windows native call, service install, filesystem deletion or SCM.
+  paths={'root':self.root,'ancestor:0':self.root.parent,
+         'file:lab-release.json':self.source/'lab-release.json'}
+  kernel=Mock();kernel.CreateFileW.side_effect=[101,102,103]
+  kernel.CloseHandle.return_value=True
+  custody=object.__new__(service._NativeReceiptCustody)
+  custody.paths=paths;custody.handles={};custody.kernel=None;custody.closed=False
+  identity={'volume_serial':5,'file_id_128':'a'*32}
+  with patch.object(ctypes,'WinDLL',return_value=kernel,create=True):
+   with patch.object(service,'_safe',side_effect=lambda path:path):
+    with patch.object(custody,'_read',return_value=dict.fromkeys(paths,identity)):
+     with patch.object(custody,'verify',return_value=dict.fromkeys(paths,identity)):
+      with custody as entered:
+       self.assertIs(entered,custody)
+       self.assertEqual(len(custody.handles),3)
+       opened=kernel.CreateFileW.call_args_list
+       self.assertEqual([call.args[5] for call in opened],
+                        [0x02200000,0x02200000,0x00200000])
+       self.assertTrue(all(call.args[2]==0x1|0x2 for call in opened))
+       self.assertEqual(kernel.CloseHandle.call_count,0)
+  self.assertEqual([call.args[0] for call in kernel.CloseHandle.call_args_list],
+                   [103,102,101])
+  self.assertEqual(custody.handles,{})
+  self.assertTrue(custody.closed)
+
+ def test_r35_custody_fake_kernel_partial_open_failure_releases_handles(self):
+  from unified_system import installation_service as service
+  import ctypes
+  from unittest.mock import Mock
+  paths={'root':self.root,'ancestor:0':self.root.parent}
+  kernel=Mock();kernel.CreateFileW.side_effect=[101,ctypes.c_void_p(-1).value]
+  kernel.CloseHandle.return_value=True
+  custody=object.__new__(service._NativeReceiptCustody)
+  custody.paths=paths;custody.handles={};custody.kernel=None;custody.closed=False
+  with patch.object(ctypes,'WinDLL',return_value=kernel,create=True):
+   with patch.object(service,'_safe',side_effect=lambda path:path):
+    with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+     custody.__enter__()
+  self.assertEqual([call.args[0] for call in kernel.CloseHandle.call_args_list],[101])
+  self.assertEqual(custody.handles,{})
+  self.assertTrue(custody.closed)
+
+ def test_r35_roster_capacity_checked_before_root_creation(self):
+  from unified_system import installation_service as service
+  import inspect
+  code=inspect.getsource(service.ServiceResource.create)
+  self.assertLess(code.index('_native_receipt_roster_budget(preflight)'),
+                  code.index("resource._call('BEGIN',guard)"))
+  self.assertLess(code.index("resource._call('BEGIN',guard)"),
+                  code.index('lab_release.stage_capsule('))
+  # On Windows the original boundary must remain untouched when the
+  # preflight rejects; this test uses only the private fake SCM boundary.
+  if os.name=='nt':
+   plan=self.plan()
+   with patch.object(service,'_native_receipt_roster_budget',
+                     side_effect=ValueError('OWNED_SERVICE_REJECTED')):
+    with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+     service.ServiceResource.create(plan,self.backend,self.guard)
+   self.assertEqual(self.backend.calls,[])
+   self.assertFalse(Path(plan['root']).exists())
+
+ def test_r35_complete_v2_roster_preflight_budget(self):
+  from unified_system import installation_service as service
+  tiny={'root':self.root,'ancestor:0':self.root.parent}
+  self.assertIs(service._native_receipt_roster_budget(tiny),tiny)
+  # A moderate roster is eligible; a 513-member roster is denied on
+  # count even though a 512-member roster can exceed the byte budget.
+  within={'root':self.root}
+  within.update({'file:'+str(i):self.root/str(i) for i in range(399)})
+  self.assertEqual(len(within),400)
+  self.assertIs(service._native_receipt_roster_budget(within),within)
+  too_many={'root':self.root}
+  too_many.update({'file:'+str(i):self.root/str(i) for i in range(512)})
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(too_many)
+  lengthy={'root':self.root,'file:'+'x'*301:self.root/'x'}
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(lengthy)
+  # 200 Unicode code points, but 400 UTF-8 bytes. The previous len(str)
+  # gate admitted this path despite its per-key encoded-byte violation.
+  multibyte={'root':self.root,'file:'+'é'*200:self.root/'unicode'}
+  self.assertLess(len('file:'+'é'*200),300)
+  self.assertGreater(len(('file:'+'é'*200).encode('utf-8')),300)
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(multibyte)
+  large={'root':self.root}
+  large.update({'file:'+str(i).zfill(5)+'x'*225:self.root/str(i)
+                for i in range(320)})
+  self.assertLessEqual(len(large),512)
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._native_receipt_roster_budget(large)
+
+ def test_r35_retained_native_custody_handle_budget_fails_closed(self):
+  from unified_system import installation_service as service
+  paths={'root':self.root}
+  paths.update({'file:'+str(i):self.root/str(i) for i in range(512)})
+  if os.name!='nt':
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._NativeReceiptCustody(paths)
+  else:
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._NativeReceiptCustody(paths)
+
+ def test_r35_retained_native_custody_closes_all_handles_after_crash(self):
+  from unified_system import installation_service as service
+  # Fake kernel only: no Win32 execution and no actual file removal.
+  class FakeKernel:
+   def __init__(self):self.closed=[]
+   def CloseHandle(self,h):
+    self.closed.append(h);return True
+  obj=object.__new__(service._NativeReceiptCustody)
+  obj.paths={'root':self.root,'ancestor:0':self.root.parent}
+  obj.handles={'root':101,'ancestor:0':102}
+  obj.kernel=FakeKernel();obj.closed=False
+  with self.assertRaisesRegex(RuntimeError,'INJECTED_RECEIPT_CRASH'):
+   try:
+    raise RuntimeError('INJECTED_RECEIPT_CRASH')
+   finally:obj.close()
+  self.assertEqual(obj.kernel.closed,[102,101])
+  self.assertEqual(obj.handles,{})
+  self.assertTrue(obj.closed)
+  obj.close()
+  self.assertEqual(obj.kernel.closed,[102,101])
+
+ def test_r35_retained_native_custody_detects_drift_before_register(self):
+  from unified_system import installation_service as service
+  obj=object.__new__(service._NativeReceiptCustody)
+  obj.paths={'root':self.root,'ancestor:0':self.root.parent}
+  obj.handles={'root':101,'ancestor:0':102}
+  obj.kernel=None;obj.closed=False
+  expected={'volume_serial':5,'file_id_128':'1'*32}
+  obj.snapshot={'root':dict(expected),'ancestor:0':dict(expected)}
+  with patch.object(obj,'_read',return_value=copy.deepcopy(obj.snapshot)) as handle_read:
+   with patch.object(service,'_native_file_identity',return_value=dict(expected)) as reopened:
+    self.assertEqual(obj.verify(),obj.snapshot)
+    self.assertEqual(handle_read.call_count,2)
+    self.assertEqual(reopened.call_count,2)
+  with patch.object(obj,'_read',return_value=copy.deepcopy(obj.snapshot)):
+   with patch.object(service,'_native_file_identity',
+                     side_effect=[dict(expected),dict(expected,file_id_128='2'*32)]):
+    with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+     obj.verify()
+  obj.closed=True
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   obj.verify()
+
+ def test_r35_windows_registration_retains_custody_through_registered_transition(self):
+  from unified_system import installation_service as service
+  # Exact scoped static order gate: real Windows resource tests remain NOT_RUN.
+  import inspect
+  source=inspect.getsource(service.ServiceResource.create)
+  self.assertIn('with _NativeReceiptCustody(paths) as custody:',source)
+  block=source.split('with _NativeReceiptCustody(paths) as custody:',1)[1].split('  else:',1)[0]
+  for required in ('NATIVE_FILE_IDS','ACL_SEALED','REGISTER_INTENT','REGISTERED'):
+   self.assertIn(required,block)
+  self.assertLess(block.index("'NATIVE_FILE_IDS'"),block.index("'ACL_SEALED'"))
+  self.assertLess(block.index("'ACL_SEALED'"),block.index("'REGISTER_INTENT'"))
+  self.assertLess(block.index("'REGISTER_INTENT'"),block.index("'REGISTERED'"))
+  self.assertGreaterEqual(block.count('custody.verify()'),3)
+
+ def test_r35_oversized_v2_receipt_denied_before_journal(self):
+  from unified_system import installation_service as service
+  small={'schema':service.NATIVE_RECEIPT_SCHEMA,'entries':{},'manifest_sha256':'a'*64,
+         'receipt_sha256':'b'*64}
+  self.assertEqual(service._bounded_native_receipt(small),small)
+  oversized=dict(small,entries={'owner':'x'*65536})
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._bounded_native_receipt(oversized)
+
+ def test_v2_native_installation_receipt_or_explicit_non_windows_denial(self):
+  from unified_system.installation_service import NATIVE_RECEIPT_SCHEMA,_check_native_installation_receipt
+  plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+  self.assertEqual(len(resource._read()),7)
+  entry=resource._read()[3]['receipt']
+  self.assertEqual(entry['kind'],'NATIVE_FILE_IDS')
+  if os.name=='nt':
+   proof=entry['proof'];self.assertEqual(proof['schema'],NATIVE_RECEIPT_SCHEMA)
+   self.assertEqual(_check_native_installation_receipt(proof,plan),proof)
+   self.assertEqual(resource.recorded()['native_file_identity'],proof)
+   self.assertIn('file:lab-release.json',proof['entries'])
+   self.assertIn('ownership:service.sqlite',proof['entries'])
+   self.assertIn('state',proof['entries'])
+  else:
+   self.assertEqual(entry['proof'],{'schema':NATIVE_RECEIPT_SCHEMA,'status':'NOT_RUN'})
+   self.assertIsNone(resource.recorded()['native_file_identity'])
+  self.assertEqual(ServiceResource.open(plan,self.backend).recorded(),resource.recorded())
+  self.assertFalse(resource.inspect(self.guard)['execution_authority'])
+
+ def test_crash_after_v2_native_receipt_before_acl_does_not_adopt_partial_service(self):
+  plan=self.plan();self.backend.fault='SEAL'
+  with self.assertRaisesRegex(OSError,'INJECTED_PRIVATE_FAULT'):
+   ServiceResource.create(plan,self.backend,self.guard)
+  self.assertTrue(Path(plan['code']).is_dir())
+  incomplete=ServiceResource.open(plan,self.backend)
+  receipts=incomplete._read()
+  self.assertEqual([r['receipt']['kind'] for r in receipts],
+                   ['ROOTS','STAGE_INTENT','CODE_STAGED','NATIVE_FILE_IDS'])
+  with self.assertRaises(ValueError):incomplete.recorded()
+  with self.assertRaises(ValueError):incomplete.inspect(self.guard)
+  self.backend.fault=None
+  with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,self.guard)
+  self.assertEqual(self.backend.service,None)
+  self.assertTrue(Path(plan['code']).is_dir())
+
+ def test_v1_unqualified_receipt_remains_readable_but_denied_for_native_uninstall(self):
+  from unified_system.installation_uninstall import Uninstaller,WindowsRemovalBoundary
+  from unified_system.journal import Journal
+  plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
+  # Rebuild a legacy V1 chain INSIDE this temporary fake-service fixture only.
+  old=resource.journal.read();self.assertEqual(len(old),7)
+  retained=[x['receipt'] for i,x in enumerate(old) if i!=3]
+  resource.journal.path.unlink()
+  restored=Journal(resource.journal.path);restored.initialize()
+  for i,receipt in enumerate(retained):restored.append('OBSERVING',receipt,expected_sequence=i)
+  legacy=ServiceResource.open(plan,self.backend)
+  self.assertEqual(len(legacy._read()),6)
+  self.assertIsNone(legacy.recorded()['native_file_identity'])
+  before=(Path(plan['code'])/'lab-release.json').read_bytes()
+  with self.assertRaises(ValueError):
+   Uninstaller(legacy,WindowsRemovalBoundary())._members()
+  self.assertEqual((Path(plan['code'])/'lab-release.json').read_bytes(),before)
+  self.assertIsNotNone(self.backend.service)
+
+ def test_native_receipt_rejects_corrupt_version_extra_member_and_bad_volume(self):
+  from unified_system.installation_service import _check_native_installation_receipt,NATIVE_RECEIPT_SCHEMA
+  from unified_system.contracts import seal
+  plan=self.plan()
+  from unified_system import lab_release
+  m=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])['manifest']
+  from unified_system.installation_service import _native_roster_paths
+  names=set(_native_roster_paths(Path(plan['root']),Path(plan['code']),m))
+  identity={'volume_serial':23,'file_id_128':'01'+'00'*15}
+  body={'schema':NATIVE_RECEIPT_SCHEMA,'manifest_sha256':plan['manifest_sha256'],
+        'entries':{key:dict(identity) for key in names}}
+  good=dict(body,receipt_sha256=seal(body))
+  self.assertEqual(_check_native_installation_receipt(good,plan),good)
+  for invalid in (
+    dict(good,schema='unified.installed-file-identity.v1'),
+    dict(good,receipt_sha256='0'*64),
+    dict(good,entries={k:v for k,v in good['entries'].items() if k!='file:lab-release.json'}),
+  ):
+   with self.assertRaises(ValueError):_check_native_installation_receipt(invalid,plan)
+  forged={k:dict(v) for k,v in good['entries'].items()}
+  # A whole installed code tree must not claim a foreign volume.
+  cross={k:dict(v) for k,v in good['entries'].items()}
+  cross['code']['volume_serial']=24
+  cross_receipt=dict(body,entries=cross)
+  cross_receipt['receipt_sha256']=seal({k:v for k,v in cross_receipt.items() if k!='receipt_sha256'})
+  with self.assertRaises(ValueError):
+   _check_native_installation_receipt(cross_receipt,plan)
+  forged['root']['volume_serial']=True
+  bad=dict(body,entries=forged);bad['receipt_sha256']=seal({k:v for k,v in bad.items() if k!='receipt_sha256'})
+  with self.assertRaises(ValueError):_check_native_installation_receipt(bad,plan)
+
  def test_wrong_phase_grant_and_existing_service_never_adopted(self):
   plan=self.plan()
   with self.assertRaises(ValueError):ServiceResource.create(plan,self.backend,lambda a,p:p=='wrong')
