@@ -453,6 +453,32 @@
       "complete_original_math_sdk": "NOT_RUN",
       "production_installation": "NOT_RUN",
       "evidence": "https://github.com/YehorBabenko88/math/pull/168#issuecomment-7223523486"
+    },
+    "current_math_owner_draft_pr_head": "9a049c6ec51bc6bb8743f89d9bf35a08397e338c",
+    "d_original_adapter_consumer_canary": {
+      "d_owner_head": "8e5196840848d0991706cbbd4d782c58e3e7f719",
+      "d_owner_original_path": "terminan/analytics/wall_tracker_math_adapter.py",
+      "d_original_git_blob": "74025a11afefca5657b3b01755b4a710fe681f69",
+      "d_original_exact_bytes": 1571,
+      "math_installed_candidate_file_blob": "0e22810943294a8cf8163660b08b44a4cc54f9ed",
+      "math_pr168_latest_head": "9a049c6ec51bc6bb8743f89d9bf35a08397e338c",
+      "committed_canary_path": "tests/test_h_round35_original_d_consumer_wall.py",
+      "committed_canary_git_blob": "faf828a8c187dab4c74432c743f0522d832ecbfc",
+      "committed_canary_exact_bytes": 4779,
+      "local_command": "H_TERMINAN_WALL_ADAPTER_FILE=/mnt/data/h_round35_fullsdk/terminan/analytics/wall_tracker_math_adapter.py /mnt/data/h_round35_sandbox/venv/bin/python -B -m unittest discover -s /mnt/data/h_round35_fullsdk/tests -p test_h_round35_original_d_consumer_wall.py -v",
+      "local_log_sha256": "a0150f3e0f172d44c4bbbb417149ed683907d7fd679f0afccc33c492e0cc854b",
+      "actual_local_executed_methods": 6,
+      "local_result": {
+        "pass": 6,
+        "fail": 0,
+        "error": 0,
+        "skip": 0
+      },
+      "source_scope": "EXACT_ORIGINAL_TERMINAN_ADAPTER_AND_MATH_WALL_MODULE_FROM_SYNTHETIC_INSTALLED_WHEEL_WITH_ORIGINAL_EXTRACTED_NUMERIC_KERNEL",
+      "full_original_math_sdk": "NOT_RUN",
+      "real_production_terminan_caller_switch": "NOT_RUN",
+      "no_silent_legacy_fallback": "PASS_IN_ISOLATED_CANARY",
+      "source_removal_allowed": false
     }
   }
 }
