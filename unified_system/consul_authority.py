@@ -182,8 +182,10 @@ class ConsulSessionAuthority:
             raise
 
     async def validate(self, lease):
+        # A copied caller-built dataclass can equal the original lease by
+        # value. Only the exact object issued by this authority is local proof.
         if (type(lease) is not ConsulLease
-                or self._sessions.get(lease.session_id) != lease):
+                or self._sessions.get(lease.session_id) is not lease):
             return False
         deadline = self._deadlines.get(lease.session_id, 0)
         if self.clock() >= deadline:
@@ -192,13 +194,13 @@ class ConsulSessionAuthority:
             row = await self._read_lock()
             return (self.clock() < deadline
                     and self._deadlines.get(lease.session_id, 0) >= deadline
-                    and self._sessions.get(lease.session_id) == lease
+                    and self._sessions.get(lease.session_id) is lease
                     and self._matches(row, lease))
         except CoordinationUnavailable:
             return False
 
     async def renew(self, lease):
-        if self._sessions.get(getattr(lease, 'session_id', None)) != lease:
+        if self._sessions.get(getattr(lease, 'session_id', None)) is not lease:
             return False
         started = self.clock()
         if started >= self._deadlines[lease.session_id]:
@@ -222,7 +224,7 @@ class ConsulSessionAuthority:
             return False
 
     async def release(self, lease):
-        if self._sessions.get(getattr(lease, 'session_id', None)) != lease:
+        if self._sessions.get(getattr(lease, 'session_id', None)) is not lease:
             return
         # Never allow a stale local lease to validate while destruction is
         # in flight or its outcome remains unknown.
@@ -255,8 +257,24 @@ class ConsulSessionAuthority:
             {'KV': {'Verb': 'set', 'Key': self._state_key(name), 'Value': base64.b64encode(value).decode()}},
         ]
         result = await self._request('PUT', '/v1/txn', json=operations)
-        if type(result) is not dict or result.get('Errors'):
-            raise CoordinationLost('Consul fencing transaction rejected')
+        # HTTP 200 without transaction Results is not a verifiable commit.
+        # A successful set operation returns its KV key and ModifyIndex;
+        # check-session/check-index are still enforced by Consul atomically.
+        # Never treat {}, a malformed Errors field, or an unrelated KV row as
+        # confirmation of the original owner-controlled state write.
+        target = self._state_key(name)
+        if (type(result) is not dict
+                or result.get('Errors') not in (None, [])
+                or type(result.get('Results')) is not list
+                or not any(
+                    type(entry) is dict
+                    and type(entry.get('KV')) is dict
+                    and entry['KV'].get('Key') == target
+                    and type(entry['KV'].get('ModifyIndex')) is int
+                    and entry['KV']['ModifyIndex'] > 0
+                    for entry in result['Results']
+                )):
+            raise CoordinationLost('Consul fencing transaction unconfirmed')
 
     async def read_control(self, name):
         rows = await self._request('GET', '/v1/kv/' + quote(self._state_key(name), safe='/'),

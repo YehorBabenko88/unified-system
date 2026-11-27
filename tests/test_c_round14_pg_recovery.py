@@ -340,6 +340,218 @@ class NativeCRecoveryTests(unittest.TestCase):
         self.assertEqual(observe_old_lab_backend(
             self.pg, **self.old), "STILL_ALIVE")
 
+    def test_native_lost_commit_wire_reply_reconciles_exact_pending_after_wal(self):
+        """Real PG18 COMMIT with server reply deliberately lost on loopback.
+
+        This deliberately intercepts one TEST-ONLY PostgreSQL connection
+        after authentication, not Consul and not a production SQL writer.
+        Seeing a committed row does not acknowledge delivery: the pending
+        marker survives until a separate authenticated recovery can decide.
+        """
+        import json
+        import select
+        import socket
+        import threading
+        import time
+        import uuid
+        from unittest.mock import patch
+
+        # Retire the original test backend with C's six-field, durable
+        # owner revoke. Do not recycle a live backend PID or its identity.
+        original = dict(self.old)
+        self.assertTrue(revoke_lab_fence(self.pg, **original))
+        self.writer.close()
+        self.writer = None
+        self.assertEqual(observe_old_lab_backend(self.pg, **original),
+                         "EXTINCT")
+
+        listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        listener.bind(("127.0.0.1", 0))
+        listener.listen(1)
+        listener.settimeout(10)
+        stop_relay = threading.Event()
+        lose_reply = threading.Event()
+        reply_discarded = threading.Event()
+        expected_backend_shutdown = threading.Event()
+        relay_errors = []
+        relay_sockets = []
+
+        def relay_once():
+            front = back = None
+            try:
+                front, _ = listener.accept()
+                back = socket.create_connection(("127.0.0.1", self.pg.port),
+                                                timeout=5)
+                relay_sockets.extend((front, back))
+                while not stop_relay.is_set():
+                    ready, _, _ = select.select((front, back), (), (), 0.1)
+                    for sock in ready:
+                        packet = sock.recv(65536)
+                        if not packet:
+                            return
+                        if sock is front:
+                            back.sendall(packet)
+                        elif lose_reply.is_set():
+                            reply_discarded.set()
+                            # DROP actual PostgreSQL-to-client COMMIT bytes.
+                        else:
+                            front.sendall(packet)
+            except OSError as exc:
+                # A deliberately crashed PG18 backend may reset the
+                # transport; only unexpected pre-crash relay errors fail.
+                if (not stop_relay.is_set()
+                        and not expected_backend_shutdown.is_set()):
+                    relay_errors.append(repr(exc))
+            finally:
+                for sock in (front, back):
+                    if sock is not None:
+                        try:
+                            sock.close()
+                        except OSError:
+                            pass
+
+        relay_thread = threading.Thread(target=relay_once, daemon=True)
+        relay_thread.start()
+        commit_thread = None
+        try:
+            self.writer = self.psycopg.connect(
+                host="127.0.0.1",
+                port=listener.getsockname()[1],
+                dbname=self.pg.database, user="lab_writer",
+                password=self.pg.passwords["lab_writer"],
+                sslmode="disable", connect_timeout=5)
+            with self.writer.cursor() as cur:
+                cur.execute("SELECT pg_backend_pid()")
+                owned_backend = cur.fetchone()[0]
+            self.writer.commit()
+            new_ids = tuple(str(uuid.uuid4()) for _ in range(3))
+            started = self.pg.sql(
+                "SELECT backend_start FROM pg_catalog.pg_stat_activity "
+                f"WHERE pid={owned_backend} AND usename='lab_writer'")
+            self.assertTrue(started)
+            self.assertTrue(claim_lab_fence(
+                self.pg, owner=original["owner"],
+                namespace=original["namespace"], generation=2, token=101,
+                session_id=new_ids[0], instance_id=new_ids[1],
+                node_incarnation_id=new_ids[2],
+                source_sha256=self.source, schema_sha256=self.schema,
+                backend_pid=owned_backend,
+                previous_quiescence_verified=True))
+            self.old = dict(original, generation=2, token=101,
+                            backend_pid=owned_backend, backend_start=started)
+
+            # Durable four-field pending evidence BEFORE the uncertain write.
+            stream, symbol, minute = "bybit:BTCUSDT:1m", "BTCUSDT", 1860000
+            fingerprint, content_id = "6" * 64, "7" * 64
+            self.pg.sql(
+                "INSERT INTO public.lab_stream_pending("
+                "stream_id,symbol,start_ms,fingerprint,content_id,"
+                "owner,namespace,generation,token,source_sha256,schema_sha256)"
+                f" VALUES ('{stream}','{symbol}',{minute},"
+                f"'{fingerprint}','{content_id}',"
+                "'unified-system','unified/lab',2,101,"
+                f"'{self.source}','{self.schema}')")
+            query = ("SELECT public.lab_fenced_insert("
+                     "%s::text,%s::text,%s::bigint,%s::bigint,"
+                     "%s::uuid,%s::uuid,%s::uuid,"
+                     "%s::text,%s::text,%s::text,%s::text,%s::text,"
+                     "%s::bigint,%s::jsonb)")
+            args = (original["owner"], original["namespace"], 2, 101,
+                    *new_ids, self.source, self.schema,
+                    fingerprint, content_id, symbol, minute,
+                    json.dumps({"dataset_fingerprint": fingerprint}))
+            self.assertEqual(len(args), 14)
+            with self.writer.cursor() as cur:
+                cur.execute(query, args)
+            self.assertEqual(self.pg.sql(
+                "SELECT count(*) FROM public.provenance_minutes"
+                f" WHERE fingerprint='{fingerprint}'"), "0")
+
+            commit_errors = []
+            commit_done = threading.Event()
+
+            def send_commit_without_receiving_reply():
+                try:
+                    self.writer.commit()
+                except Exception as exc:
+                    commit_errors.append(type(exc).__name__)
+                finally:
+                    commit_done.set()
+
+            # Only server->client packets are dropped; COMMIT itself still
+            # reaches the original disposable PG18 backend.
+            lose_reply.set()
+            commit_thread = threading.Thread(
+                target=send_commit_without_receiving_reply, daemon=True)
+            commit_thread.start()
+            deadline = time.monotonic() + 15
+            committed = False
+            while time.monotonic() < deadline:
+                if self.pg.sql(
+                    "SELECT count(*) FROM public.provenance_minutes"
+                    f" WHERE symbol='{symbol}' AND start_ms={minute}"
+                    f" AND fingerprint='{fingerprint}'"
+                    f" AND content_id='{content_id}'") == "1":
+                    committed = True
+                    break
+                time.sleep(0.1)
+            self.assertTrue(committed, "LAB_COMMIT_NOT_DURABLY_OBSERVED")
+            self.assertTrue(reply_discarded.wait(5),
+                            "LAB_COMMIT_REPLY_DROP_NOT_OBSERVED")
+            self.assertFalse(commit_done.is_set(),
+                             "LAB_COMMIT_ACK_WAS_NOT_LOST")
+            self.assertEqual(observe_old_lab_backend(
+                self.pg, **self.old), "STILL_ALIVE")
+
+            # C retains original OS witness, crashes ONLY its disposable PG,
+            # restarts through its sole recovery and reads independent WAL.
+            expected_backend_shutdown.set()
+            with patch.dict(os.environ,
+                            {"LAB_C_PG18_PROCESS_CRASH_TEST": "1"}):
+                contained = contain_exclusive_lab_cluster(
+                    self.pg, old=dict(self.old), quiesced=True,
+                    max_seconds=180, fault="PROCESS_CRASH_TEST")
+                self.assertEqual(contained["state"], "UNKNOWN")
+                recovered = self._recover(
+                    streams=(stream,), max_seconds=250)
+            commit_thread.join(timeout=10)
+            self.assertFalse(commit_thread.is_alive(),
+                             "LAB_COMMIT_CLIENT_NOT_DISCONNECTED")
+            self.assertTrue(commit_errors,
+                            "LAB_LOST_REPLY_SHOULD_NOT_ACKNOWLEDGE_COMMIT")
+            self.assertEqual(recovered["wal_recovery"],
+                             "LAB_PROCESS_CRASH_WAL_REPLAY_LOG_VERIFIED")
+            self.assertFalse(recovered["native_admitted"])
+            self.assertFalse(recovered["trading_authorized"])
+            snap = recovered["stream_snapshots"][stream]
+            self.assertEqual(snap["immutable_outcome"], "MATCH")
+            self.assertEqual(snap["pending"]["symbol"], symbol)
+            self.assertEqual(snap["pending"]["start_ms"], minute)
+            self.assertEqual(snap["pending"]["fingerprint"], fingerprint)
+            self.assertEqual(snap["pending"]["content_id"], content_id)
+            self.assertIsNone(snap["checkpoint"])
+            self.assertEqual(self.pg.sql(
+                "SELECT generation,token,active FROM public.lab_writer_fence"),
+                "2|101|f")
+            self.assertEqual(self.pg.sql(
+                "SELECT count(*) FROM public.provenance_minutes"
+                f" WHERE symbol='{symbol}' AND start_ms={minute}"), "1")
+            self.assertFalse(relay_errors, relay_errors)
+        finally:
+            stop_relay.set()
+            try:
+                listener.close()
+            except OSError:
+                pass
+            for sock in relay_sockets:
+                try:
+                    sock.shutdown(socket.SHUT_RDWR)
+                except OSError:
+                    pass
+            relay_thread.join(timeout=5)
+            if commit_thread is not None:
+                commit_thread.join(timeout=5)
+
     def test_owner_process_death_releases_advisory_lock_but_not_root_admission(self):
         # A dedicated throw-away child dies AFTER C's original lock and
         # marker, but BEFORE initdb/start. No PostgreSQL process is created.
