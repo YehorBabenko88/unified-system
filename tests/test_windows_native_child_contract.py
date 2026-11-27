@@ -959,25 +959,11 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
             self.driver.consume_job_extinction(
                 receipt, release_id='disposable-lab', operation_id=op)
 
-    def test_native_detached_child_descendants_exit_with_original_job(self):
-        """Actual nested Python must join the exact original pre-resume Job."""
-        import hashlib
+    def _assert_detached_descendant_extinction(self, op, child):
+        """Shared original Job/retained-handle proof for both native fixtures."""
         import time
         from unified_system.runtime_process import RetainedOsProcessWait, _identity
 
-        secondary = self.worker.with_name('descendant_worker.py')
-        secondary.write_text('import time\ntime.sleep(30)\n', encoding='utf-8')
-        self.worker.write_text(
-            'import subprocess, sys, os, time\n'
-            'subprocess.Popen([sys.executable, os.path.join('
-            'os.path.dirname(__file__), "descendant_worker.py")], close_fds=True)\n'
-            'time.sleep(30)\n', encoding='utf-8')
-        program = self.driver.programs['market_data']
-        program['file_pins']['job_worker.py'] = hashlib.sha256(
-            self.worker.read_bytes()).hexdigest()
-        program['file_pins']['descendant_worker.py'] = hashlib.sha256(
-            secondary.read_bytes()).hexdigest()
-        op, child = self._start_detached_diagnostic_child()
         deadline = time.monotonic() + 5
         members = ()
         while time.monotonic() < deadline:
@@ -1001,6 +987,46 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.assertEqual(receipt.active_members, 0)
         self.assertIs(self.driver.consume_job_extinction(
             receipt, release_id='disposable-lab', operation_id=op), receipt)
+
+    def test_native_detached_inline_descendant_job_differential(self):
+        """One variable: nested inline Python, rather than a second script.
+
+        Test-only DETACHED_PROCESS, exact original LOW restricted primary token,
+        pre-resume Job and original handles are preserved. Even a positive
+        result does not qualify file-backed production worker or SCM.
+        """
+        program = self.driver.programs['market_data']
+        original_argv = program['argv']
+        self.addCleanup(lambda: program.__setitem__('argv', original_argv))
+        parent_code = (
+            'import subprocess,sys,time;'
+            'p=subprocess.Popen([sys.executable,"-c",'
+            '"import time;time.sleep(30)"],close_fds=True);'
+            'time.sleep(2);'
+            'sys.exit(83) if p.poll() is not None else time.sleep(28)'
+        )
+        program['argv'] = [original_argv[0], '-c', parent_code]
+        op, child = self._start_detached_diagnostic_child()
+        self._assert_detached_descendant_extinction(op, child)
+
+    def test_native_detached_child_descendants_exit_with_original_job(self):
+        """Actual pinned nested Python must join original pre-resume Job."""
+        import hashlib
+
+        secondary = self.worker.with_name('descendant_worker.py')
+        secondary.write_text('import time\ntime.sleep(30)\n', encoding='utf-8')
+        self.worker.write_text(
+            'import subprocess, sys, os, time\n'
+            'subprocess.Popen([sys.executable, os.path.join('
+            'os.path.dirname(__file__), "descendant_worker.py")], close_fds=True)\n'
+            'time.sleep(30)\n', encoding='utf-8')
+        program = self.driver.programs['market_data']
+        program['file_pins']['job_worker.py'] = hashlib.sha256(
+            self.worker.read_bytes()).hexdigest()
+        program['file_pins']['descendant_worker.py'] = hashlib.sha256(
+            secondary.read_bytes()).hexdigest()
+        op, child = self._start_detached_diagnostic_child()
+        self._assert_detached_descendant_extinction(op, child)
 
     def test_native_detached_worker_proves_actual_scm_create_denial(self):
         """Never create service: test restricted child OpenSCManagerW CREATE."""
