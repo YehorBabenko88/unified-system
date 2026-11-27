@@ -251,7 +251,8 @@ class ServiceResourceTests(unittest.TestCase):
   plan=self.plan()
   from unified_system import lab_release
   m=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])['manifest']
-  names={'root','code','ownership','state','ownership:service.sqlite','file:lab-release.json'}|{'file:'+p for p in m['files']}|{'directory:'+p for p in m['directories']}
+  from unified_system.installation_service import _native_roster_paths
+  names=set(_native_roster_paths(Path(plan['root']),Path(plan['code']),m))
   identity={'volume_serial':23,'file_id_128':'01'+'00'*15}
   body={'schema':NATIVE_RECEIPT_SCHEMA,'manifest_sha256':plan['manifest_sha256'],
         'entries':{key:dict(identity) for key in names}}
