@@ -112,6 +112,18 @@ class QualificationTests(unittest.TestCase):
         self.assertEqual(member.read_bytes(), SRC)
         self.assertNotEqual(member.stat().st_ino, original_inode)
 
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX hardlink identity only")
+    def test_installed_hardlink_alias_denied_even_when_bytes_match(self):
+        """One externally writable inode must not authenticate as one owned installed path."""
+        import os
+        member = self.install / MOD
+        alias = self.base / "foreign-hardlink-alias.py"
+        os.link(member, alias)
+        self.assertEqual(member.stat().st_nlink, 2)
+        self.deny()
+        self.assertEqual(alias.read_bytes(), SRC)
+        self.assertEqual(member.read_bytes(), SRC)
+
     def test_missing_installed_record(self):
         (self.install / RECORD).unlink()
         self.deny()
