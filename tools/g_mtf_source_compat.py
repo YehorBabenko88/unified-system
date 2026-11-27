@@ -99,6 +99,26 @@ def _has_lossy_recomputation(tree):
     return False
 
 
+def _numeric_source_unverified(grid_tree, terminal_tree):
+    """Admit source-only scrutiny, never infer Decimal parity from float names."""
+    producer = _function(grid_tree, 'project_qualified_rollup')
+    consumer = _function(terminal_tree, 'validate_qualified_rollup')
+    text_producer = ast.dump(producer, include_attributes=False)
+    text_consumer = ast.dump(consumer, include_attributes=False)
+    # Original Math is single numeric owner. Wire numeric sources MUST be
+    # lossless decimal strings, not two binary64 DTO totals with epsilon.
+    if ('volume_total' in text_producer and
+            'buy_volume_decimal' not in text_producer):
+        return 'LOSSLESS_SOURCE_DECIMAL_FIELDS_ABSENT'
+    if 'volume_total' in text_producer and 'delta == volume_delta' in ast.unparse(producer):
+        return 'LOSSY_FLOAT_RECONSTRUCTION_VETO'
+    if ('volume_decimal' not in text_consumer or
+            'executed_volume_delta' not in text_consumer or
+            'exact_sum' not in text_consumer):
+        return 'CANONICAL_MATH_DECIMAL_CONSUMER_UNVERIFIED'
+    return None
+
+
 def check_pair(grid_source: str, terminan_source: str):
     reasons = []
     try:
@@ -114,6 +134,9 @@ def check_pair(grid_source: str, terminan_source: str):
             reasons.append('SOURCE_QUALITY_LITERAL_NOT_ENFORCED')
         if _has_lossy_recomputation(terminal):
             reasons.append('LOSSY_DELTA_BINARY64_RECOMPUTATION')
+        numeric = _numeric_source_unverified(grid, terminal)
+        if numeric is not None:
+            reasons.append(numeric)
     except (SyntaxError, ContractUnverified, ValueError, TypeError) as exc:
         reasons.append('UNVERIFIED_SOURCE:' + type(exc).__name__)
     return {'status': 'BLOCKED' if reasons else 'SOURCE_CONTRACT_MATCH_ONLY',
