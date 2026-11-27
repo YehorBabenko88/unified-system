@@ -119,6 +119,71 @@ def _numeric_source_unverified(grid_tree, terminal_tree):
     return None
 
 
+
+def _frozen_set_constant(tree, name):
+    hits = [n.value for n in tree.body if isinstance(n, ast.Assign)
+            and any(isinstance(t, ast.Name) and t.id == name for t in n.targets)]
+    if len(hits) != 1 or not isinstance(hits[0], ast.Call) or len(hits[0].args) != 1:
+        raise ContractUnverified('DYNAMIC_SCHEMA:' + name)
+    value = ast.literal_eval(hits[0].args[0])
+    if type(value) is not set or not all(type(s) is str for s in value):
+        raise ContractUnverified('NONLITERAL_SCHEMA:' + name)
+    return frozenset(value)
+
+
+def _exact_source_contract(grid, terminal):
+    """Versioned producer/consumer static comparison, not runtime proof."""
+    producer = _function(grid, 'project_qualified_rollup')
+    consumer = _function(terminal, 'validate_qualified_rollup')
+    top = _producer_keys(grid)
+    consumer_top = _consumer_keys(terminal)
+    additional = _frozen_set_constant(terminal, '_EXACT_TOP')
+    old_row = _frozen_set_constant(terminal, '_ROW')
+    extra_row = _frozen_set_constant(terminal, '_EXACT_ROW')
+    hist = _frozen_set_constant(terminal, '_HISTORICAL_ONLY')
+    result = []
+    # The published v2 adds precisely these keys to the old source envelope.
+    if (top - {'source_declared_quality'}) | additional != ((consumer_top - {'source_declared_quality'}) | additional):
+        result.append('EXACT_TOP_KEYS_MISMATCH')
+    if additional != frozenset({'decimal_contract','numeric_presentation','source_numeric_precision'}):
+        result.append('EXACT_METADATA_FIELDS_UNVERIFIED')
+    expected_exact = frozenset({'buy_volume_decimal','sell_volume_decimal','volume_decimal','delta_decimal'})
+    if extra_row != expected_exact:
+        result.append('EXACT_ROW_FIELDS_UNVERIFIED')
+    if hist != frozenset({'freshness_mode','as_of_ms','live_freshness','historical_source_trust'}):
+        result.append('HISTORICAL_FIELDS_UNVERIFIED')
+    # Verify the original Grid named row dictionary and v2 fixed sidecar.
+    candle_dicts = [n.value for n in ast.walk(producer)
+                    if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'candle' for t in n.targets)
+                    and isinstance(n.value, ast.Dict)]
+    if len(candle_dicts) != 1:
+        result.append('PRODUCER_CANDLE_NOT_LITERAL')
+    else:
+        keys = frozenset(ast.literal_eval(k) for k in candle_dicts[0].keys)
+        if keys != old_row:
+            result.append('PRODUCER_ROW_V1_KEYS_MISMATCH')
+    exact_dicts = [n.value for n in ast.walk(producer)
+                   if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'exact_values' for t in n.targets)
+                   and isinstance(n.value, ast.Dict)]
+    if len(exact_dicts) != 1 or frozenset(ast.literal_eval(k) for k in exact_dicts[0].keys) != expected_exact:
+        result.append('PRODUCER_EXACT_FIELDS_UNVERIFIED')
+    p = ast.unparse(producer)
+    c = ast.unparse(consumer)
+    # Existence of these constructs is a weak static proof only.
+    for snippet in ('raw_volume = exact_sum(', 'raw_delta = executed_volume_delta(',
+                    'decimal_contract', 'dataset_fingerprint=digest(result)'):
+        if snippet not in p:
+            result.append('PRODUCER_MATH_OR_DIGEST_UNVERIFIED')
+            break
+    for snippet in ('exact_sum((buy, sell)) == volume', 'executed_volume_delta(buy, sell) == delta',
+                    'envelope[', 'dataset_fingerprint'):
+        if snippet not in c:
+            result.append('CONSUMER_MATH_OR_INTEGRITY_UNVERIFIED')
+            break
+    # Zero authorizations, even on a matching schema. It proves no runtime parity.
+    return result
+
+
 def check_pair(grid_source: str, terminan_source: str):
     reasons = []
     try:
@@ -126,6 +191,10 @@ def check_pair(grid_source: str, terminan_source: str):
         terminal = ast.parse(terminan_source)
         provided = _producer_keys(grid)
         accepted = _consumer_keys(terminal)
+        if any(isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == '_EXACT_TOP' for t in n.targets) for n in terminal.body):
+            reasons.extend(_exact_source_contract(grid, terminal))
+            return {'status':'BLOCKED' if reasons else 'SOURCE_CONTRACT_MATCH_ONLY', 'reasons':reasons,
+                    'native':'NOT_RUN', 'release_authorized':False, 'deletion_authorized':False}
         if provided != accepted:
             reasons.append('DTO_KEYS_MISMATCH:' + json.dumps({
                 'missing_in_consumer': sorted(provided - accepted),
