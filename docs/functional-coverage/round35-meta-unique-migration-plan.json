@@ -406,6 +406,40 @@
     "canonical_math_full_sdk_test": "NOT_RUN",
     "original_consumer_cutover": "NOT_PROVEN",
     "source_retirement_allowed": false,
-    "requirement": "Use real canonical Math installed source, owned Terminan/Meta consumer, original same-input event logs, original rollback receipt before retiring the old Meta module"
+    "requirement": "Use real canonical Math installed source, owned Terminan/Meta consumer, original same-input event logs, original rollback receipt before retiring the old Meta module",
+    "original_committed_parity_execution": {
+      "git_test_blob": "3c7deedd97b7533a5a1f6ad198e8d7c54a9acc67",
+      "exact_test_file_bytes": 7202,
+      "test_file_byte_identical_to_github": true,
+      "original_meta_blob": "faae6e3539c8b33e9d933fce4fd2a92b518c4ac5",
+      "candidate_math_wall_blob": "0e22810943294a8cf8163660b08b44a4cc54f9ed",
+      "canonical_math_full_module_git_blob": "7d0e45f099b53bd1632d67bd059bc85540105329",
+      "math_original_functions_executed": [
+        "_positive_finite_decimal",
+        "_orderflow_decimal",
+        "_market_context",
+        "wall_notional"
+      ],
+      "math_test_runtime_scope": "EXACT_SELECTED_ORIGINAL_MATH_FUNCTION_BODIES_EXTRACTED_FROM_PINNED_GIT_SOURCE_NOT_FULL_SDK",
+      "command": "H_META_WALL_ORIGINAL_FILE=<absolute-old-Meta-source> python -B -m unittest discover -s <isolated-tests> -p test_h_round35_meta_wall_tracker_original.py -v",
+      "environment": "isolated local Linux Python 3.13.5",
+      "pass": 7,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "original_test_executed": true,
+      "full_original_math_sdk_import": false,
+      "full_wheel_install_test": "NOT_RUN",
+      "official_hosted_github_actions": "NOT_RUN",
+      "owner_cutover": "NOT_PROVEN",
+      "source_retirement_allowed": false,
+      "evidence_url": "https://github.com/YehorBabenko88/math/pull/168#issuecomment-7223495077"
+    },
+    "original_math_manifest_verify": {
+      "blob": "fb944447361b17cd2011732d843bc2f9f78be0bd",
+      "local_tomllib_parse": "PASS",
+      "new_math_module_in_py_modules": true,
+      "built_wheel": "NOT_RUN"
+    }
   }
 }
