@@ -30,6 +30,239 @@ NATIVE_STAGES=frozenset(('UNAVAILABLE','SID_LOOKUP','ACL_PROOF','MEMBER_PINS','S
  'NSSM_INITIAL_APPLICATION','NSSM_SET_APPLICATION','NSSM_SET_PARAMETERS','NSSM_SET_DIRECTORY','NSSM_SET_APP_EXIT',
  'NSSM_GET_APPLICATION','NSSM_GET_PARAMETERS','NSSM_GET_DIRECTORY','NSSM_GET_APP_EXIT'))
 
+
+# The original V1 journal is readable but has no full native FileId provenance.
+# No legacy receipt is ever silently upgraded or trusted for file deletion.
+NATIVE_RECEIPT_SCHEMA='unified.installed-file-identity.v2'
+
+def _native_file_identity(path):
+ """Win32 original no-reparse HANDLE; read-only identity, not a delete grant."""
+ need(os.name=='nt')
+ import ctypes
+ from ctypes import wintypes as w
+ root=_safe(path)
+ k=ctypes.WinDLL('kernel32',use_last_error=True)
+ k.CreateFileW.argtypes=(w.LPCWSTR,w.DWORD,w.DWORD,w.LPVOID,w.DWORD,w.DWORD,w.HANDLE)
+ k.CreateFileW.restype=w.HANDLE
+ k.GetFileInformationByHandleEx.argtypes=(w.HANDLE,ctypes.c_int,w.LPVOID,w.DWORD)
+ k.GetFileInformationByHandleEx.restype=w.BOOL
+ k.CloseHandle.argtypes=(w.HANDLE,)
+ k.CloseHandle.restype=w.BOOL
+ class ID(ctypes.Structure):
+  _fields_=[('volume',ctypes.c_ulonglong),('identifier',ctypes.c_ubyte*16)]
+ class TAG(ctypes.Structure):
+  _fields_=[('attributes',w.DWORD),('reparse_tag',w.DWORD)]
+ class STANDARD(ctypes.Structure):
+  _fields_=[('allocation_size',ctypes.c_longlong),('end_of_file',ctypes.c_longlong),
+            ('number_of_links',w.DWORD),('delete_pending',ctypes.c_ubyte),('directory',ctypes.c_ubyte)]
+ need(ctypes.sizeof(STANDARD)==24)  # Win32 FILE_STANDARD_INFO; BOOLEAN is 1 byte.
+ h=k.CreateFileW(str(root),0x80,0x1|0x2,None,3,0x00200000|0x02000000,None)
+ need(h not in (None,0,ctypes.c_void_p(-1).value))
+ try:
+  info=ID();tag=TAG();standard=STANDARD()
+  need(k.GetFileInformationByHandleEx(h,18,ctypes.byref(info),ctypes.sizeof(info)))
+  need(k.GetFileInformationByHandleEx(h,9,ctypes.byref(tag),ctypes.sizeof(tag)))
+  need(k.GetFileInformationByHandleEx(h,5,ctypes.byref(standard),ctypes.sizeof(standard)))
+  need(not tag.attributes&0x400 and info.volume>0 and any(info.identifier))
+  need(not standard.delete_pending and standard.number_of_links>=1)
+  need(bool(tag.attributes&0x10)==bool(standard.directory))
+  need(bool(standard.directory) or standard.number_of_links==1)
+  return {'volume_serial':int(info.volume),'file_id_128':bytes(info.identifier).hex()}
+ finally:need(k.CloseHandle(h))
+
+def _native_roster_paths(root,code,manifest):
+ """Deterministic namespace roster including every ancestor of the install root.
+
+ Path validation alone is not a hostile-writer lock. Every identity is observed
+ twice by native handles, and any drift rejects capture before ACL/SCM.
+ """
+ root=_safe(root);code=_safe(code)
+ need(code.parent==root and type(manifest) is dict)
+ need(type(manifest.get('files')) is dict and type(manifest.get('directories')) is list)
+ paths={'root':root,'code':code,'ownership':root/'ownership',
+        'state':root/'state','ownership:service.sqlite':root/'ownership/service.sqlite'}
+ need(len(root.parents)<=64)
+ for i,parent in enumerate(root.parents):paths['ancestor:'+str(i)]=_safe(parent)
+ need(len(manifest['files'])<=40000)
+ for relative in sorted(manifest['files']):
+  need(type(relative) is str and relative!='lab-release.json')
+  member=_safe(code/relative);need(member!=code and code in member.parents)
+  paths['file:'+relative]=member
+ paths['file:lab-release.json']=_safe(code/'lab-release.json')
+ for relative in sorted(set(manifest['directories'])):
+  need(type(relative) is str)
+  member=_safe(code/relative);need(member!=code and code in member.parents)
+  paths['directory:'+relative]=member
+ for member in tuple(paths.values()):
+  if code not in member.parents:continue
+  for parent in member.parents:
+   if parent==code:break
+   need(code in parent.parents)
+   relative=parent.relative_to(code).as_posix()
+   if 'directory:'+relative not in paths:paths['parent:'+relative]=_safe(parent)
+ need(len(paths)<=40064)
+ return paths
+
+def _capture_native_roster(paths):
+ """Fallback two snapshots are NOT a retained-handle chain or native grant."""
+ need(type(paths) is dict and 0<len(paths)<=40064 and 'root' in paths)
+ first={key:_native_file_identity(path) for key,path in paths.items()}
+ second={key:_native_file_identity(path) for key,path in paths.items()}
+ need(first==second)
+ need(all(value['volume_serial']==first['root']['volume_serial']
+          for value in first.values()))
+ return first
+
+def _native_roster_is_file(key):
+ """No filesystem probing to choose native flags during hostile path races."""
+ need(type(key) is str)
+ if key=='ownership:service.sqlite':return True
+ if key.startswith('file:') and len(key)>5:return True
+ if key in ('root','code','ownership','state'):return False
+ if key.startswith(('ancestor:','directory:','parent:')) and ':' in key and key.split(':',1)[1]:return False
+ need(False)
+
+def _native_roster_open_flags(key):
+ """Open reparse point itself; directories additionally require backup semantics."""
+ return 0x00200000 if _native_roster_is_file(key) else 0x00200000|0x02000000
+
+class _NativeReceiptCustody:
+ """Retain Windows no-delete-sharing handles through verify, SEAL, REGISTER.
+
+ This is source-only, not a tested native parent-child security proof.
+ """
+ def __init__(self,paths):
+  need(os.name=='nt' and type(paths) is dict and 'root' in paths)
+  # Restrict native HANDLE quota; oversized roster refuses rather than
+  # exhausting SCM/host resources or adopting a partial receipt.
+  _native_receipt_roster_budget(paths)
+  self.paths=dict(paths);self.handles={};self.kernel=None;self.closed=False
+ def __enter__(self):
+  import ctypes
+  from ctypes import wintypes as w
+  k=ctypes.WinDLL('kernel32',use_last_error=True)
+  k.CreateFileW.argtypes=(w.LPCWSTR,w.DWORD,w.DWORD,w.LPVOID,w.DWORD,w.DWORD,w.HANDLE)
+  k.CreateFileW.restype=w.HANDLE
+  k.CloseHandle.argtypes=(w.HANDLE,);k.CloseHandle.restype=w.BOOL
+  k.GetFileInformationByHandleEx.argtypes=(w.HANDLE,ctypes.c_int,w.LPVOID,w.DWORD)
+  k.GetFileInformationByHandleEx.restype=w.BOOL
+  self.kernel=k
+  try:
+   need(0<len(self.paths)<=40064)
+   for key,path in self.paths.items():
+    target=_safe(path)
+    # Directory handles REQUIRE FILE_FLAG_BACKUP_SEMANTICS (0x02000000).
+    # Reparse processing is disabled for both files and directories; never
+    # share DELETE. Preserve SQLite journal WRITE sharing through append.
+    flags=_native_roster_open_flags(key)
+    h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,flags,None)
+    need(h not in (None,0,ctypes.c_void_p(-1).value))
+    self.handles[key]=h
+   self.snapshot=self._read()
+   self.verify()
+   return self
+  except BaseException:
+   self.close()
+   raise
+ def _read(self):
+  import ctypes
+  from ctypes import wintypes as w
+  class ID(ctypes.Structure):
+   _fields_=[('volume',ctypes.c_ulonglong),('identifier',ctypes.c_ubyte*16)]
+  class TAG(ctypes.Structure):
+   _fields_=[('attributes',w.DWORD),('reparse_tag',w.DWORD)]
+  class STANDARD(ctypes.Structure):
+   _fields_=[('allocation_size',ctypes.c_longlong),('end_of_file',ctypes.c_longlong),
+             ('number_of_links',w.DWORD),('delete_pending',ctypes.c_ubyte),('directory',ctypes.c_ubyte)]
+  need(ctypes.sizeof(STANDARD)==24)
+  result={}
+  for key,h in self.handles.items():
+   info=ID();tag=TAG();standard=STANDARD()
+   need(self.kernel.GetFileInformationByHandleEx(h,18,ctypes.byref(info),ctypes.sizeof(info)))
+   need(self.kernel.GetFileInformationByHandleEx(h,9,ctypes.byref(tag),ctypes.sizeof(tag)))
+   need(self.kernel.GetFileInformationByHandleEx(h,5,ctypes.byref(standard),ctypes.sizeof(standard)))
+   need(info.volume>0 and any(info.identifier) and not tag.attributes&0x400)
+   need(standard.number_of_links>=1 and not standard.delete_pending)
+   need(bool(tag.attributes&0x10)==bool(standard.directory))
+   need(bool(standard.directory) or standard.number_of_links==1)
+   need(bool(standard.directory)!=_native_roster_is_file(key))
+   result[key]={'volume_serial':int(info.volume),'file_id_128':bytes(info.identifier).hex()}
+  need(all(v['volume_serial']==result['root']['volume_serial'] for v in result.values()))
+  return result
+ def verify(self):
+  need(not self.closed and len(self.handles)==len(self.paths))
+  need(self._read()==self.snapshot)
+  for key,path in self.paths.items():need(_native_file_identity(path)==self.snapshot[key])
+  need(self._read()==self.snapshot)
+  return dict(self.snapshot)
+ def close(self):
+  if self.closed:return
+  self.closed=True;failed=False
+  if self.kernel is not None:
+   for h in reversed(tuple(self.handles.values())):
+    if not self.kernel.CloseHandle(h):failed=True
+  self.handles.clear()
+  need(not failed)
+ def __exit__(self,kind,value,tb):
+  self.close()
+  return False
+
+def _native_installation_receipt(root,code,manifest,manifest_sha256,*,custody=None):
+ """Capture install-time parent, leaf and directory native identities, no SCM."""
+ need(os.name=='nt')
+ root=_safe(root);code=_safe(code)
+ need(code.parent==root and root.is_dir() and code.is_dir())
+ paths=_native_roster_paths(root,code,manifest)
+ for key,path in paths.items():
+  if key.startswith('file:') or key=='ownership:service.sqlite':need(path.is_file())
+  else:need(path.is_dir())
+ if custody is not None:
+  need(type(custody) is _NativeReceiptCustody and custody.paths==paths)
+  entries=custody.verify()
+ else:entries=_capture_native_roster(paths)
+ body={'schema':NATIVE_RECEIPT_SCHEMA,'entries':entries,
+       'manifest_sha256':manifest_sha256}
+ receipt=dict(body,receipt_sha256=seal(body))
+ # Fail before REGISTER; never silently truncate native identities.
+ return _bounded_native_receipt(receipt)
+
+def _bounded_native_receipt(receipt):
+ """Preserve the existing journal's per-row and SQLite 2MiB constraints."""
+ need(type(receipt) is dict)
+ need(len(canonical({'kind':'NATIVE_FILE_IDS','plan_sha256':'0'*64,'proof':receipt}))<=60000)
+ return receipt
+
+def _native_receipt_roster_budget(paths):
+ """Deny oversized V2 receipts BEFORE any native HANDLE or SCM action."""
+ need(type(paths) is dict and 'root' in paths and 0<len(paths)<=512)
+ # Bound the encoded bytes, not Python Unicode code points. A multibyte
+ # path must never bypass the per-identity budget admitted by this gate.
+ need(all(type(k) is str and 0<len(k.encode('utf-8'))<=300 for k in paths))
+ # Conservative preflight; the exact 60K canonical row limit still applies.
+ need(sum(112+len(k.encode('utf-8')) for k in paths)<=56000)
+ return paths
+
+def _check_native_installation_receipt(receipt,plan):
+ need(type(receipt) is dict and set(receipt)=={'schema','entries','manifest_sha256','receipt_sha256'})
+ need(receipt['schema']==NATIVE_RECEIPT_SCHEMA and
+      receipt['receipt_sha256']==seal({k:v for k,v in receipt.items() if k!='receipt_sha256'}))
+ lab_release.digest(receipt['manifest_sha256'])
+ entries=receipt['entries'];need(type(entries) is dict and 'root' in entries and 'code' in entries)
+ for proof in entries.values():
+  need(type(proof) is dict and set(proof)=={'volume_serial','file_id_128'})
+  need(type(proof['volume_serial']) is int and 0<proof['volume_serial']<2**64)
+  need(type(proof['file_id_128']) is str and len(proof['file_id_128'])==32
+       and all(ch in '0123456789abcdef' for ch in proof['file_id_128'])
+       and int(proof['file_id_128'],16)>0)
+ manifest=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])['manifest']
+ expected=set(_native_roster_paths(Path(plan['root']),Path(plan['code']),manifest))
+ need(set(entries)==expected and receipt['manifest_sha256']==plan['manifest_sha256'])
+ # This code tree is beneath the installed root; foreign volume members are
+ # not accepted by a whole-namespace receipt without explicit source proof.
+ need(all(entry['volume_serial']==entries['root']['volume_serial']
+          for entry in entries.values()))
+ return receipt
+
 class OwnedServiceRejected(ValueError):
  """A closed diagnostic stage, never raw native output or exception text."""
  def __init__(self,native_stage='UNAVAILABLE',native_exit_code=None):
@@ -286,7 +519,12 @@ class ServiceResource:
  @classmethod
  def create(cls,plan,boundary,guard=None):
   resource=cls(plan,boundary);plan=resource.plan;need(not resource.root.exists())
-  lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])
+  report=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])
+  if os.name=='nt':
+   # Capacity failure MUST precede BEGIN/root creation and staging; never
+   # strand a new partial installation solely due to an oversize manifest.
+   preflight=_native_roster_paths(Path(plan['root']),Path(plan['code']),report['manifest'])
+   _native_receipt_roster_budget(preflight)
   roots=resource._call('BEGIN',guard)
   actual=resource.root.stat();need(roots=={'root_device':actual.st_dev,'root_inode':actual.st_ino})
   resource._permit('WRITE_RECEIPT',guard)
@@ -296,14 +534,39 @@ class ServiceResource:
   resource._permit('STAGE',guard)
   lab_release.stage_capsule(plan['capsule_root'],plan['code'],plan['manifest_sha256'])
   resource._append('CODE_STAGED',guard=guard)
-  acl=resource._call('SEAL',guard)
-  need(set(acl)=={'code_acl_sha256','state_acl_sha256','acl_policy'} and acl['acl_policy']=='EXACT_SERVICE_SID_V1')
-  for key in ('code_acl_sha256','state_acl_sha256'):lab_release.digest(acl[key])
-  resource._append('ACL_SEALED',acl,guard=guard)
-  lab_release.verify_capsule(plan['code'],plan['manifest_sha256'])
-  resource._append('REGISTER_INTENT',guard=guard)
-  proof=_proof(plan,resource._call('REGISTER',guard));need(all(proof[key]==value for key,value in acl.items()))
-  resource._append('REGISTERED',proof,guard=guard)
+  # V2 identity is recorded immediately after the staged members exist.
+  # Non-Windows test fixtures get an explicit unqualified marker, never fake ID.
+  if os.name=='nt':
+   lab_release.verify_capsule(plan['code'],plan['manifest_sha256'])
+   manifest=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])['manifest']
+   paths=_native_roster_paths(Path(plan['root']),Path(plan['code']),manifest)
+   _native_receipt_roster_budget(paths)  # fail before opening retained Win32 handles
+   # Retain the full member+ancestor handle roster until REGISTER is receipted.
+   with _NativeReceiptCustody(paths) as custody:
+    native=_native_installation_receipt(plan['root'],plan['code'],manifest,plan['manifest_sha256'],custody=custody)
+    resource._append('NATIVE_FILE_IDS',native,guard=guard)
+    custody.verify()
+    acl=resource._call('SEAL',guard)
+    need(set(acl)=={'code_acl_sha256','state_acl_sha256','acl_policy'} and acl['acl_policy']=='EXACT_SERVICE_SID_V1')
+    for key in ('code_acl_sha256','state_acl_sha256'):lab_release.digest(acl[key])
+    resource._append('ACL_SEALED',acl,guard=guard)
+    lab_release.verify_capsule(plan['code'],plan['manifest_sha256'])
+    custody.verify()
+    resource._append('REGISTER_INTENT',guard=guard)
+    proof=_proof(plan,resource._call('REGISTER',guard))
+    need(all(proof[key]==value for key,value in acl.items()))
+    custody.verify()
+    resource._append('REGISTERED',proof,guard=guard)
+  else:
+   resource._append('NATIVE_FILE_IDS',{'schema':NATIVE_RECEIPT_SCHEMA,'status':'NOT_RUN'},guard=guard)
+   acl=resource._call('SEAL',guard)
+   need(set(acl)=={'code_acl_sha256','state_acl_sha256','acl_policy'} and acl['acl_policy']=='EXACT_SERVICE_SID_V1')
+   for key in ('code_acl_sha256','state_acl_sha256'):lab_release.digest(acl[key])
+   resource._append('ACL_SEALED',acl,guard=guard)
+   lab_release.verify_capsule(plan['code'],plan['manifest_sha256'])
+   resource._append('REGISTER_INTENT',guard=guard)
+   proof=_proof(plan,resource._call('REGISTER',guard));need(all(proof[key]==value for key,value in acl.items()))
+   resource._append('REGISTERED',proof,guard=guard)
   return resource
  @classmethod
  def open(cls,plan,boundary):
@@ -311,18 +574,25 @@ class ServiceResource:
  def _read(self):
   safe_journal(self.journal.path);need(self.journal.path.stat().st_size<=2*1024*1024)
   with closing(sqlite3.connect(self.journal.path.resolve().as_uri()+'?mode=ro',uri=True)) as db:
-   need(1<=db.execute('SELECT COUNT(*) FROM transitions').fetchone()[0]<=6)
+   need(1<=db.execute('SELECT COUNT(*) FROM transitions').fetchone()[0]<=7)
    need(db.execute("SELECT COUNT(*) FROM transitions WHERE typeof(receipt)!='text' OR length(CAST(receipt AS BLOB))>65536").fetchone()[0]==0)
   rows=self.journal.read();s=self.root.stat();need(rows[0]['state']=='OBSERVING' and rows[0]['receipt']=={'kind':'ROOTS','plan':self.plan,'fingerprint':{'root_device':s.st_dev,'root_inode':s.st_ino}})
-  order=('STAGE_INTENT','CODE_STAGED','ACL_SEALED','REGISTER_INTENT','REGISTERED')
+  # Original V1 six-transition receipts are read-only legacy provenance.
+  v2=len(rows)>=4 and rows[3]['receipt'].get('kind')=='NATIVE_FILE_IDS'
+  order=('STAGE_INTENT','CODE_STAGED')+(('NATIVE_FILE_IDS',) if v2 else ())+('ACL_SEALED','REGISTER_INTENT','REGISTERED')
+  need(len(rows)<=len(order)+1)
   for index,row in enumerate(rows[1:]):
    r=row['receipt'];need(row['state']=='OBSERVING' and set(r)=={'kind','plan_sha256','proof'} and r['kind']==order[index] and r['plan_sha256']==self.plan['plan_sha256'])
    if r['kind'] in ('STAGE_INTENT','CODE_STAGED','REGISTER_INTENT'):need(r['proof'] is None)
+   elif r['kind']=='NATIVE_FILE_IDS':
+    if os.name!='nt':need(r['proof']=={'schema':NATIVE_RECEIPT_SCHEMA,'status':'NOT_RUN'})
+    else:_check_native_installation_receipt(r['proof'],self.plan)
    elif r['kind']=='ACL_SEALED':
     proof=r['proof'];need(type(proof) is dict and set(proof)=={'code_acl_sha256','state_acl_sha256','acl_policy'} and proof['acl_policy']=='EXACT_SERVICE_SID_V1')
     for field in ('code_acl_sha256','state_acl_sha256'):lab_release.digest(proof[field])
    else:
-    _proof(self.plan,r['proof']);need(all(r['proof'][k]==v for k,v in rows[3]['receipt']['proof'].items()))
+    _proof(self.plan,r['proof'])
+    need(all(r['proof'][k]==v for k,v in rows[4 if v2 else 3]['receipt']['proof'].items()))
   return rows
  def _append(self,kind,proof=None,*,guard=None):
   self._permit('WRITE_RECEIPT',guard)
@@ -333,11 +603,13 @@ class ServiceResource:
   This is evidence for a separately approved removal adapter, not live-resource
   admission. No filesystem deletion or SCM action is authorized by this record.
   """
-  rows=self._read();need(len(rows)==6 and rows[-1]['receipt']['kind']=='REGISTERED')
+  rows=self._read();need(len(rows) in (6,7) and rows[-1]['receipt']['kind']=='REGISTERED')
   return copy.deepcopy({'schema':SCHEMA,'plan':self.plan,'proof':_proof(self.plan,rows[-1]['receipt']['proof']),
-   'acl_proof':rows[3]['receipt']['proof'],'root_fingerprint':rows[0]['receipt']['fingerprint'],'receipt_sha256':seal(rows[-1])})
+   'acl_proof':rows[4 if len(rows)==7 else 3]['receipt']['proof'],
+   'root_fingerprint':rows[0]['receipt']['fingerprint'],'receipt_sha256':seal(rows[-1]),
+   'native_file_identity':copy.deepcopy(rows[3]['receipt']['proof']) if len(rows)==7 and os.name=='nt' else None})
  def inspect(self,guard=None):
-  rows=self._read();need(len(rows)==6 and rows[-1]['receipt']['kind']=='REGISTERED')
+  rows=self._read();need(len(rows) in (6,7) and rows[-1]['receipt']['kind']=='REGISTERED')
   lab_release.verify_capsule(self.plan['code'],self.plan['manifest_sha256'])
   recorded=_proof(self.plan,rows[-1]['receipt']['proof']);live=_proof(self.plan,self._call('INSPECT',guard));need(recorded==live)
   return dict(schema=SCHEMA,status='STOPPED_RESOURCE_RECORDED',computer_name=self.plan['computer_name'],service_name=self.plan['service_name'],service_sid=self.plan['service_sid'],plan_sha256=self.plan['plan_sha256'],
