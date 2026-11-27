@@ -199,6 +199,16 @@ def _wheel_bytes_snapshot(wheel) -> bytes:
         fields = lambda x: (x.st_dev, x.st_ino, x.st_size, x.st_mtime_ns, x.st_ctime_ns)
         if fields(first) != fields(end):
             raise ValueError("wheel changed while reading")
+        # Retaining a readable archive FD does not prove that the present
+        # wheel pathname still points to the file whose bytes we just read.
+        # This is a bounded diagnostic recheck, not hostile-writer custody.
+        try:
+            live = os.stat(wheel, follow_symlinks=False)
+        except OSError as exc:
+            raise ValueError("wheel pathname no longer exists") from exc
+        if (not stat.S_ISREG(live.st_mode) or live.st_nlink != 1
+                or fields(live) != fields(first)):
+            raise ValueError("wheel pathname no longer identifies original archive")
         return b''.join(chunks)
     finally:
         os.close(fd)
