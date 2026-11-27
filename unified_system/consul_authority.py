@@ -4,6 +4,7 @@ Extracted from Grid295 c9ffdaa coordination.py; no Grid factories or aliases.
 """
 import asyncio
 import base64
+import binascii
 from dataclasses import dataclass, field
 import json
 import math
@@ -27,6 +28,25 @@ class CoordinationLost(CoordinationUnavailable):
 
 def canonical(value):
     return json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()
+
+
+def _unique_json_members(pairs):
+    # Both current leader and historical control KV are authority-related
+    # records. Default json.loads silently accepts duplicate keys; reject
+    # ambiguous owner/session/namespace fields at every nested object level.
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError('duplicate Consul JSON member')
+        result[key] = value
+    return result
+
+
+def _strict_consul_json(raw):
+    return json.loads(
+        raw, object_pairs_hook=_unique_json_members,
+        parse_constant=lambda _: (_ for _ in ()).throw(
+            ValueError('non-finite Consul JSON value')))
 
 
 @dataclass(frozen=True)
@@ -159,13 +179,22 @@ class ConsulSessionAuthority:
         return rows[0]
 
     def _matches(self, row, lease):
+        # Reject ambiguous/malformed leader KV before treating it as a lease
+        # witness. JSON duplicate keys and non-finite values must never be
+        # interpreted as authoritative, even if the last JSON key matches.
         try:
-            return (row is not None and row.get('Key') == self.key
+            if (type(row) is not dict or type(row.get('Value')) is not str
+                    or len(row['Value']) > 8192):
+                return False
+            raw = base64.b64decode(row['Value'], validate=True)
+            if len(raw) > 4096:
+                return False
+            return (row.get('Key') == self.key
                     and row['Session'] == lease.session_id
                     and type(row['ModifyIndex']) is int and row['ModifyIndex'] == lease.token
-                    and json.loads(base64.b64decode(row['Value'], validate=True)) ==
+                    and _strict_consul_json(raw) ==
                         {'owner': lease.owner, 'session_id': lease.session_id, 'namespace': self.config.namespace})
-        except (ValueError, TypeError, KeyError):
+        except (ValueError, TypeError, KeyError, binascii.Error, UnicodeError):
             return False
 
     async def acquire(self, owner):
@@ -377,22 +406,8 @@ class ConsulSessionAuthority:
             raw = base64.b64decode(row['Value'], validate=True)
             if len(raw) > 32768:
                 raise ValueError('control data exceeds byte budget')
-            # The canonical writer emits unique JSON members. Duplicate
-            # keys in a Consul readback are ambiguous (Python's default
-            # decoder silently takes the last value), including nested
-            # payload objects. Refuse the historical record entirely.
-            def unique_members(pairs):
-                result = {}
-                for key, value in pairs:
-                    if key in result:
-                        raise ValueError('duplicate control JSON member')
-                    result[key] = value
-                return result
-
-            record = json.loads(
-                raw, object_pairs_hook=unique_members,
-                parse_constant=lambda _: (_ for _ in ()).throw(
-                    ValueError('non-finite control data')))
+            # Reuse the leader witness' fail-closed JSON decoder.
+            record = _strict_consul_json(raw)
             if (type(record) is not dict
                     or set(record) != {'owner', 'token', 'session_id', 'payload'}
                     or type(record['owner']) is not str
@@ -407,5 +422,5 @@ class ConsulSessionAuthority:
             if self._closed:
                 raise CoordinationUnavailable('Consul authority already closed')
             return record
-        except (KeyError, TypeError, ValueError, IndexError):
+        except (KeyError, TypeError, ValueError, IndexError, binascii.Error, UnicodeError):
             raise CoordinationUnavailable('control record invalid') from None
