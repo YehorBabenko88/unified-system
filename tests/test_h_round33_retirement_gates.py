@@ -88,7 +88,23 @@ class HRound33RetirementGateTests(unittest.TestCase):
         self.assertEqual(ev["original_terminan_http"]["passed"], 72)
         self.assertEqual(ev["original_terminan_browser_prior"]["failed"], 1)
         self.assertEqual(ev["current_terminan_d135_browser_ci"],
-                         "NOT_RUN_VERIFIED_AT_EXACT_HEAD")
+                         "BROWSER_PASS_EXACT_SHA")
+        browser = ev["current_terminan_d135_browser_proof"]
+        self.assertEqual(browser["sha"], self.data["ancestry"]["terminan_browser_fix"])
+        self.assertEqual(browser["run_id"], 45996794337)
+        self.assertEqual(browser["job_id"], 140498081944)
+        self.assertEqual((browser["passed"], browser["failed"],
+                          browser["errors"], browser["skipped"]), (1, 0, 0, 0))
+        http = ev["current_terminan_d135_http_proof"]
+        self.assertEqual(http["sha"], browser["sha"])
+        self.assertEqual(http["workflow_run_id"], 45996794071)
+        self.assertEqual(http["pinned_grid"], "b2e3f9a77384080ecbb834b32d51d8816ed1aa2a")
+        self.assertEqual(http["pinned_math"], self.data["ancestry"]["math"])
+        self.assertEqual((http["windows_python311"], http["windows_python312"],
+                          http["ubuntu_python311"], http["ubuntu_python312"]),
+                         (18, 18, 18, 18))
+        self.assertEqual((http["passed"], http["failed"], http["errors"],
+                          http["skipped"]), (72, 0, 0, 0))
         self.assertEqual(ev["native_installed_e2e"], "NOT_RUN")
 
     def test_release_and_deletion_gates_are_all_blocked(self):
