@@ -897,7 +897,11 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         code = (
             'import pathlib,sys;'
             'p=pathlib.Path(%r);'
-            'sys.exit(71 if p.read_bytes()==%r else 76)'
+            'try:\n'
+            ' data=p.read_bytes()\n'
+            'except OSError as e:\n'
+            ' sys.exit(80 if isinstance(e, PermissionError) else 81)\n'
+            'sys.exit(71 if data==%r else 76)'
             % (str(self.worker), self.worker.read_bytes()))
         program['argv'] = [original_argv[0], '-c', code]
         op, child = self._start_detached_diagnostic_child()
