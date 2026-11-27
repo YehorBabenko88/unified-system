@@ -143,7 +143,9 @@
     "integration_runtime_tests": "NOT_RUN_CURRENT_J",
     "manual_host_acceptance": "NOT_RUN_NO_ADMINIT_ACCESS",
     "grid309_d134": "CI_COHORT_ONLY_NO_ORIGINAL_INSTALLED_E2E",
-    "strattester123": "PARTIAL_MIGRATION_NOT_IMPORTED"
+    "strattester123": "PARTIAL_MIGRATION_NOT_IMPORTED",
+    "crossrepo_d134_b309_original_execution": "NOT_RUN",
+    "native_uninstall": "NOT_RUN_AND_BOTH_GATES_DENIED"
   },
   "round": 33,
   "integration_status": "ROUND33_OWNER_SOURCE_REFRESH_AND_COHORT_PINS_NATIVE_NOT_RUN",
@@ -344,7 +346,15 @@
       },
       "canonical_math": "9e6acbd9e12a91189f57234828e31640983af553",
       "native_execution": "NOT_RUN",
-      "physical_uninstall": "DENIED_BOTH_GATES"
+      "physical_uninstall": "DENIED_BOTH_GATES",
+      "source_owner_blob_parity": {
+        "pass": 14,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "scope": "Original immutable commit SHA Git blob equality ONLY, not native imported-execution"
+      },
+      "J_verified_pre_receipt_head": "56f70a12987382a8c008095a47d3629603f9ef80"
     }
   },
   "g_h_i_status": "G_CUTOVER_ONLY_NO_LEGACY_FEATURE_RETIREMENT_I_DISPOSABLE_SOURCE_ONLY_H_CURRENT_SOURCE_COHORT"
