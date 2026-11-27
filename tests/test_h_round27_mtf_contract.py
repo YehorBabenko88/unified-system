@@ -131,9 +131,9 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
     def test_round29_original_math_and_historical_boundaries(self):
         spec = _load_contract()
         self.assertEqual(spec["pins"], {
-            "Grid": "36883fbf3d02e84822638aa87d0f307972852dbc",
+            "Grid": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
             "Math": "9e6acbd9e12a91189f57234828e31640983af553",
-            "Terminan": "f4ffbe2913dee0a9987f8b9ad68f2b7df5ad360f",
+            "Terminan": "bcdf3287a47e60f6c50022adce7651bcb51e587f",
         })
         history = spec["historical_asof"]
         self.assertEqual(history["status"], "PARTIAL")
@@ -160,11 +160,11 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
 
 
 
-    def test_round31_pair_is_source_matched_not_installed_release(self):
-        gate = _load_contract()["round31_gate"]
+    def test_round32_pair_is_source_matched_not_installed_release(self):
+        gate = _load_contract()["round32_gate"]
         self.assertEqual(gate["status"], "SOURCE_PAIR_MATCHED_NOT_RELEASE")
-        self.assertEqual(gate["grid_producer_sha"], "36883fbf3d02e84822638aa87d0f307972852dbc")
-        self.assertEqual(gate["terminan_consumer_sha"], "f4ffbe2913dee0a9987f8b9ad68f2b7df5ad360f")
+        self.assertEqual(gate["grid_producer_sha"], "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f")
+        self.assertEqual(gate["terminan_consumer_sha"], "bcdf3287a47e60f6c50022adce7651bcb51e587f")
         self.assertEqual(gate["canonical_math_sha"], "9e6acbd9e12a91189f57234828e31640983af553")
         self.assertEqual(gate["api_version"], {"major": 2, "minor": 1})
         self.assertEqual(gate["source_schema_keys"], {"top": 29, "row": 15})
@@ -173,13 +173,17 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
             "volume_decimal", "delta_decimal"})
         self.assertEqual(gate["source_precision"],
                          "STORED_1M_JSON_NUMBERS_NOT_PROVIDER_RAW")
-        for field in ("historical_ui_implemented", "original_cross_repo_runtime_pass",
+        for field in ("original_cross_repo_runtime_pass",
                       "native_e2e_pass", "deduplicated_68_lines_equivalence_pass",
                       "production_release_admitted", "trading_authority_allowed"):
             self.assertIs(gate[field], False)
         self.assertTrue(gate["historical_source_only"])
         self.assertTrue(gate["live_5m_15m_ui_implemented"])
         self.assertTrue(gate["historical_backend_implemented"])
+        self.assertTrue(gate["historical_ui_implemented"])
+        self.assertTrue(gate["exact_live_cursor_alignment_implemented"])
+        self.assertTrue(gate["historical_full_period_cursor_alignment_implemented"])
+        self.assertFalse(gate["historical_ui_e2e_pass"])
 
     def test_round30_exact_volume_loss_is_a_real_blocker(self):
         from decimal import Decimal
@@ -211,16 +215,29 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
             self.assertEqual(Decimal(rendered), value)
         self.assertNotEqual(Decimal(str(float(buy))) + Decimal(str(float(sell))), total)
 
-    def test_round31_historical_ui_and_native_are_not_claimed(self):
+    def test_round32_historical_ui_is_source_only_not_native_proven(self):
         spec = _load_contract()
-        gate = spec["round31_gate"]
+        gate = spec["round32_gate"]
         self.assertEqual(gate["historical_schema"],
                          "market_data.historical-as-of-mtf-envelope.v2")
         self.assertEqual(gate["live_schema"],
                          "market_data.qualified-mtf-envelope.v2")
-        self.assertIn("NOT_IMPLEMENTED", spec["historical_asof"]["consumer"])
-        self.assertIs(gate["historical_ui_implemented"], False)
+        self.assertIn("IMPLEMENTED", spec["historical_asof"]["consumer"])
+        self.assertIs(gate["historical_ui_implemented"], True)
+        self.assertIs(gate["historical_ui_e2e_pass"], False)
         self.assertIs(gate["native_e2e_pass"], False)
+
+
+    def test_round32_new_cursor_gate_never_confers_release(self):
+        gate = _load_contract()["round32_gate"]
+        self.assertTrue(gate["exact_live_cursor_alignment_implemented"])
+        self.assertTrue(gate["historical_full_period_cursor_alignment_implemented"])
+        self.assertTrue(gate["historical_ui_implemented"])
+        self.assertIs(gate["original_cross_repo_runtime_pass"], False)
+        self.assertIs(gate["native_e2e_pass"], False)
+        self.assertIs(gate["deduplicated_68_lines_equivalence_pass"], False)
+        self.assertIs(gate["trading_authority_allowed"], False)
+
 
 
 if __name__ == "__main__":
