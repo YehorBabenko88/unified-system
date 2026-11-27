@@ -504,7 +504,12 @@ class ServiceResource:
  @classmethod
  def create(cls,plan,boundary,guard=None):
   resource=cls(plan,boundary);plan=resource.plan;need(not resource.root.exists())
-  lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])
+  report=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])
+  if os.name=='nt':
+   # Capacity failure MUST precede BEGIN/root creation and staging; never
+   # strand a new partial installation solely due to an oversize manifest.
+   preflight=_native_roster_paths(Path(plan['root']),Path(plan['code']),report['manifest'])
+   _native_receipt_roster_budget(preflight)
   roots=resource._call('BEGIN',guard)
   actual=resource.root.stat();need(roots=={'root_device':actual.st_dev,'root_inode':actual.st_ino})
   resource._permit('WRITE_RECEIPT',guard)
