@@ -672,9 +672,16 @@ class _WindowsNonServiceLabToken:
             ctypes.c_void_p, w.BOOL, w.DWORD, ctypes.c_void_p,
             w.LPCWSTR, ctypes.c_void_p, ctypes.c_void_p]
         self._a.CreateProcessAsUserW.restype = w.BOOL
+        # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | DETACHED_PROCESS.
+        # Original Win2022/Python3.11 native CI proved restricted script/SCM
+        # and inline nested Job execution with this console topology; the
+        # other Python versions and file-backed descendants remain unqualified.
+        # CREATE_NO_WINDOW exited at DLL initialization (0xC0000142).
+        # Only console topology differs: original LOW token, no inherited
+        # handles, assignment before resume and Job/SCM checks stay mandatory.
         return bool(self._a.CreateProcessAsUserW(
             self._handle, str(argv[0]), command, None, None, False,
-            0x00000004 | 0x00000400 | 0x08000000,
+            0x00000004 | 0x00000400 | 0x00000008,
             ctypes.cast(env_buffer, ctypes.c_void_p), str(cwd),
             ctypes.byref(startup), ctypes.byref(info)))
 
@@ -1032,7 +1039,7 @@ def _launch_owned_windows_job_process(argv, cwd, env):
         raise
     created = False
     try:
-        # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW
+        # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | DETACHED_PROCESS.
         # Creation cannot execute any process code until ResumeThread.
         if not security_token.create_suspended(kernel, argv, command,
                                                env_buffer, cwd, startup, info):
@@ -1334,7 +1341,13 @@ class ProcessDriver:
                          'COMSPEC', 'TEMP', 'TMP')
             env = {key: env[key] for key in inherited if key in env}
             env.update(public)
-            env.update(PYTHONPYCACHEPREFIX=cache, PYTHONDONTWRITEBYTECODE='1',
+            # The LOW-integrity token is intentionally unable to write the
+            # original medium-integrity owner cache. Never direct CPython's
+            # import cache into that private root: Python 3.12+ may attempt
+            # to inspect it while resolving file-backed scripts or modules.
+            # Bytecode output stays explicitly disabled; do not grant the
+            # child file rights or create an alternate writable cache.
+            env.update(PYTHONDONTWRITEBYTECODE='1',
                        UNIFIED_PRIVATE_CACHE_ROOT=cache,
                        UNIFIED_MODULE_ID=spec.module_id,
                        UNIFIED_MODULE_VERSION=spec.version,
