@@ -111,7 +111,7 @@
     "H": "e23c3785c0ed8ec68d4a9993941d4c04dc5fdddc",
     "I": "da42b3e7d047f65f0ef78a18f1b8c2bf2d38f52f"
   },
-  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity. E exact 2 owner blobs imported only as candidate, no transfer of native acceptance. New cycle source snapshots and isolated local capacity tests are not fleet/package acceptance.",
+  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity. E exact 2 owner blobs imported only as candidate, no transfer of native acceptance. New cycle source snapshots and isolated local capacity tests are not fleet/package acceptance. D four original hosted jobs independently inspected at tested HEAD; no current moving-SHA equivalence.",
   "qualified_source_pins": {
     "A": {
       "tested_head": "89b78cc4075a2fcb845b3494cceda20dec0cc64c",
@@ -150,6 +150,20 @@
       "total_skip": 2,
       "meaning": "G_ORIGINAL_FIXTURE_PRESERVATION_ONLY_NOT_GRID_MIGRATION_PARITY",
       "integration": "EXTERNAL_STRATTESTER_PIN_ONLY_NO_G006_G012_RETIREMENT"
+    },
+    "D": {
+      "tested_head": "fe4316d7c1580b9799903b57d8471034b5281996",
+      "original_run": "https://github.com/YehorBabenko88/Terminan/actions/runs/46026544862",
+      "status": "EXTERNAL_ORIGINAL_D129_G012_DELTA_TEST_ONLY_NO_FULL_CANONICAL_MIGRATION",
+      "jobs": 4,
+      "per_job_case_count": 21,
+      "total_pass": 84,
+      "total_fail": 0,
+      "total_error": 0,
+      "total_skip": 0,
+      "per_cell": "18_MANAGED_ROUNDTRIP_PLUS_3_ORIGINAL_DIFFERENTIAL",
+      "current_owner_moving_head_not_inherited": true,
+      "legacy_retirement": false
     }
   },
   "latest_owner_observations": {
