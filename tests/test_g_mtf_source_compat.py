@@ -89,5 +89,88 @@ class CrossOwnerSourceProbeTests(unittest.TestCase):
         self.assertEqual(good['native'],'NOT_RUN')
 
 
+    def test_versioned_v2_exact_roster_is_only_source_match(self):
+        grid, consumer = self._v2_source_fixture()
+        receipt = probe.check_pair(grid, consumer)
+        self.assertEqual(receipt['status'], 'SOURCE_CONTRACT_MATCH_ONLY', receipt)
+        self.assertEqual(receipt['reasons'], [])
+        self.assertFalse(receipt['deletion_authorized'])
+        self.assertFalse(receipt['release_authorized'])
+
+    def test_v2_missing_exact_field_is_denied(self):
+        grid, consumer = self._v2_source_fixture()
+        altered = grid.replace('"delta_decimal": raw_delta}', '}')
+        receipt = probe.check_pair(altered, consumer)
+        self.assertEqual(receipt['status'], 'BLOCKED')
+        self.assertIn('PRODUCER_EXACT_FIELDS_UNVERIFIED', receipt['reasons'])
+
+    def test_v2_missing_math_check_is_denied(self):
+        grid, consumer = self._v2_source_fixture()
+        altered = consumer.replace('executed_volume_delta(buy, sell) == delta', 'True')
+        receipt = probe.check_pair(grid, altered)
+        self.assertEqual(receipt['status'], 'BLOCKED')
+        self.assertIn('CONSUMER_MATH_OR_INTEGRITY_UNVERIFIED', receipt['reasons'])
+
+    def test_v2_unexpected_top_field_is_denied(self):
+        grid, consumer = self._v2_source_fixture()
+        altered = grid.replace("'schema': None,", "'schema': None, 'unexpected': True,")
+        receipt = probe.check_pair(altered, consumer)
+        self.assertEqual(receipt['status'], 'BLOCKED')
+        self.assertIn('EXACT_TOP_KEYS_MISMATCH', receipt['reasons'])
+
+    @staticmethod
+    def _v2_source_fixture():
+        import ast
+        # These are intentionally synthetic: we validate AST behavior, not
+        # assert original B307/D132 runtime was loaded into this test.
+        base_top = (
+            'schema api_version producer symbol timeframe limit status reason '
+            'source_timeframe source_minutes parent_dataset_fingerprint '
+            'source_revision producer_epoch coverage record_integrity '
+            'source_authenticity exchange_completeness quality_attestation '
+            'storage_immutability immutable read_only execution_authority '
+            'trading_authorized paper_admitted rows dataset_fingerprint'
+        ).split()
+        v1_top = base_top + ['source_declared_quality']
+        row = ('start_ms end_ms open high low close buy_volume sell_volume '
+               'delta trade_count source_minute_fingerprints').split()
+        extra = 'buy_volume_decimal sell_volume_decimal volume_decimal delta_decimal'.split()
+        literal = lambda keys, value: ', '.join(f'{key!r}: {value}' for key in keys)
+        # Use a real result dict (with .v2 metadata amended after creation)
+        # to match the original B307 AST shape.
+        producer = f'''def project_qualified_rollup(envelope, *, timeframe, limit, now_ms, exact=False):
+    raw_buy = Decimal('1.01')
+    raw_sell = Decimal('1')
+    raw_volume = exact_sum((raw_buy, raw_sell))
+    raw_delta = executed_volume_delta(raw_buy, raw_sell)
+    candle = {{{literal(row, '0')}}}
+    exact_values = {{"buy_volume_decimal": raw_buy, "sell_volume_decimal": raw_sell,
+                    "volume_decimal": raw_volume, "delta_decimal": raw_delta}}
+    for key, value in exact_values.items():
+        candle[key] = format(value, 'f')
+    result = {{{literal([k for k in base_top if k != 'dataset_fingerprint'], 'None')}}}
+    if exact:
+        result['decimal_contract'] = 'CANONICAL_MATH_EXACT_STORED_1M'
+    return dict(result, dataset_fingerprint=digest(result))
+'''
+        top = ', '.join(map(repr, v1_top))
+        rowkeys = ', '.join(map(repr, row))
+        consumer = f'''_TOP = frozenset({{{top}}})
+_ROW = frozenset({{{rowkeys}}})
+_EXACT_TOP = frozenset({{"decimal_contract", "numeric_presentation", "source_numeric_precision"}})
+_EXACT_ROW = frozenset({{"buy_volume_decimal", "sell_volume_decimal", "volume_decimal", "delta_decimal"}})
+_HISTORICAL_ONLY = frozenset({{"freshness_mode", "as_of_ms", "live_freshness", "historical_source_trust"}})
+def validate_qualified_rollup(envelope, symbol, timeframe, limit, exact=False):
+    buy, sell, volume, delta = (Decimal('1.01'), Decimal('1'), Decimal('2.01'), Decimal('0.01'))
+    _need(exact_sum((buy, sell)) == volume)
+    _need(executed_volume_delta(buy, sell) == delta)
+    _need(envelope['dataset_fingerprint'])
+'''
+        ast.parse(producer)
+        ast.parse(consumer)
+        return producer, consumer
+
+
+
 if __name__ == '__main__':
     unittest.main()
