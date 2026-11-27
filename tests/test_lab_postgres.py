@@ -97,15 +97,21 @@ class LabPostgresLifecycle(unittest.TestCase):
             return
         if pg is not None:
             from unified_system import lab_pg_recovery as c
-            if pg.started and self.old is None:
-                self.claim_cleanup_fence()
-            if pg.started and self.old is not None:
-                if c._resource(pg) not in c._STATES:
-                    c.contain_exclusive_lab_cluster(pg, old=self.old, quiesced=True)
-            # C refuses disposal when startup, postmaster, backend or
-            # retained-OS identity is uncertain. Never bypass that refusal.
-            c._dispose_native_pg18_fixture(pg)
-        if self.writer is not None:
+            try:
+                if pg.started and self.old is None:
+                    self.claim_cleanup_fence()
+                if pg.started and self.old is not None:
+                    if c._resource(pg) not in c._STATES:
+                        c.contain_exclusive_lab_cluster(pg, old=self.old, quiesced=True)
+                # C refuses disposal when startup, postmaster, backend or
+                # retained-OS identity is uncertain. Never bypass that refusal.
+                c._dispose_native_pg18_fixture(pg)
+            finally:
+                # Closing only this test-owned client connection does not
+                # release C process/PGDATA ownership or permit root deletion.
+                if self.writer is not None:
+                    self.writer.close()
+        elif self.writer is not None:
             self.writer.close()
         # Before any pg object exists, only remove a verified empty root.
         # After an object exists, C disposal success is the sole deletion gate.
