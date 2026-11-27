@@ -1227,6 +1227,197 @@ class OpaqueSessionTests(unittest.TestCase):
             with self.subTest(raw=raw):
                 asyncio.run(exercise(raw))
 
+    def test_leader_kv_ambiguous_json_never_confers_lease_authority(self):
+        # Real original E class with isolated MockTransport only. A forged
+        # Consul leader Value may carry duplicate object keys whose *last*
+        # value matches the expected owner/session; Python json.loads would
+        # silently accept it. It must not validate or permit a control txn.
+        from unified_system.consul_authority import CoordinationLost
+
+        async def exercise(bad_value):
+            key = "isolated/round25/leader"
+            state = {"value": b"", "txn": 0, "destroy": 0}
+
+            def handler(req):
+                if req.url.path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if req.url.path == "/v1/kv/" + key:
+                    if req.method == "PUT":
+                        state["value"] = req.content
+                        return httpx.Response(200, json=True)
+                    raw = state["value"] if bad_value is None else bad_value
+                    return httpx.Response(200, json=[{
+                        "Key": key, "Session": OBSERVED,
+                        "ModifyIndex": 41,
+                        "Value": base64.b64encode(raw).decode(),
+                    }])
+                if req.url.path == "/v1/session/destroy/" + OBSERVED:
+                    state["destroy"] += 1
+                    return httpx.Response(200, json=True)
+                if req.url.path == "/v1/session/renew/" + OBSERVED:
+                    return httpx.Response(200, json=[{"ID": OBSERVED}])
+                if req.url.path == "/v1/txn":
+                    state["txn"] += 1
+                    raise AssertionError("stale/ambiguous writer reached txn")
+                raise AssertionError("unexpected Consul operation")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                lease = await authority.acquire("owner")
+                self.assertIsNotNone(lease)
+                self.assertTrue(await authority.validate(lease))
+                if bad_value is None:
+                    return
+                self.assertFalse(await authority.validate(lease))
+                self.assertFalse(await authority.renew(lease))
+                with self.assertRaises(CoordinationLost):
+                    await authority.write_control(lease, "probe", {"x": 1})
+                self.assertEqual(state["txn"], 0)
+
+        asyncio.run(exercise(None))
+        # Two conflicting duplicate member positions and nonstandard NaN
+        # must be rejected, including a last-value owner/session that matches.
+        expected = (
+            b'{"owner":"attacker","owner":"owner",'
+            b'"session_id":"' + OBSERVED.encode() +
+            b'","namespace":"isolated/round25"}'
+        )
+        duplicate_session = (
+            b'{"owner":"owner","session_id":"forged","session_id":"'
+            + OBSERVED.encode() + b'","namespace":"isolated/round25"}'
+        )
+        nested_duplicate = (
+            b'{"owner":"owner","session_id":"' + OBSERVED.encode()
+            + b'","namespace":"isolated/round25","extra":{"x":1,"x":2}}'
+        )
+        nonfinite = (
+            b'{"owner":"owner","session_id":"' + OBSERVED.encode()
+            + b'","namespace":"isolated/round25","extra":NaN}'
+        )
+        for bad in (expected, duplicate_session, nested_duplicate, nonfinite,
+                    b'not-json', b'[]'):
+            with self.subTest(bad=bad):
+                asyncio.run(exercise(bad))
+
+    def test_consul_http_envelope_duplicate_json_never_issues_lease(self):
+        # Consul response.json normally accepts duplicate keys (last wins).
+        # Session creation and consistent KV read are Root authority inputs:
+        # never allow duplicate IDs, nested Session, or non-finite JSON.
+        async def exercise(fault):
+            key = "isolated/round25/leader"
+            state = {"value": b"", "seen": [], "destroy": 0}
+            def handler(req):
+                path = req.url.path
+                state["seen"].append((req.method, path))
+                if path == "/v1/session/create":
+                    if fault == "duplicate-id":
+                        return httpx.Response(200, content=(
+                            b'{"ID":"forged","ID":"' + OBSERVED.encode() + b'"}'))
+                    if fault == "nan-id":
+                        return httpx.Response(200, content=(
+                            b'{"ID":"' + OBSERVED.encode() + b'","extra":NaN}'))
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == "/v1/kv/" + key:
+                    if req.method == "PUT":
+                        state["value"] = req.content
+                        return httpx.Response(200, json=True)
+                    value = base64.b64encode(state["value"]).decode()
+                    if fault == "duplicate-session":
+                        return httpx.Response(200, content=(
+                            b'[{"Key":"' + key.encode() +
+                            b'","Session":"forged","Session":"' +
+                            OBSERVED.encode() +
+                            b'","ModifyIndex":41,"Value":"' +
+                            value.encode() + b'"}]'))
+                    if fault == "nested-duplicate":
+                        return httpx.Response(200, content=(
+                            b'[{"Key":"' + key.encode() +
+                            b'","Session":"' + OBSERVED.encode() +
+                            b'","ModifyIndex":41,"Value":"' +
+                            value.encode() +
+                            b'","extra":{"x":1,"x":2}}]'))
+                    return httpx.Response(200, json=[{
+                        "Key": key, "Session": OBSERVED,
+                        "ModifyIndex": 41, "Value": value,
+                    }])
+                if path == "/v1/session/destroy/" + OBSERVED:
+                    state["destroy"] += 1
+                    return httpx.Response(200, json=True)
+                raise AssertionError("ambiguous Consul reply must not progress")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                if fault is None:
+                    lease = await authority.acquire("owner")
+                    self.assertTrue(await authority.validate(lease))
+                else:
+                    with self.assertRaises(CoordinationUnavailable):
+                        await authority.acquire("owner")
+                    self.assertEqual(authority._sessions, {})
+                    self.assertEqual(authority._deadlines, {})
+                    self.assertFalse(any(
+                        method == "PUT" and path == "/v1/txn"
+                        for method, path in state["seen"]))
+                    if fault in ("duplicate-id", "nan-id"):
+                        self.assertEqual(
+                            state["seen"], [("PUT", "/v1/session/create")])
+                    else:
+                        self.assertEqual(state["destroy"], 1)
+        for fault in (None, "duplicate-id", "nan-id",
+                      "duplicate-session", "nested-duplicate"):
+            with self.subTest(fault=fault):
+                asyncio.run(exercise(fault))
+
+    def test_consul_http_txn_duplicate_results_quarantines_lease(self):
+        # Even a 200 with a syntactically valid last Results field cannot
+        # confirm a transaction after a conflicting earlier Results field.
+        from unified_system.consul_authority import CoordinationLost
+
+        async def exercise():
+            key = "isolated/round25/leader"
+            target = "isolated/round25/state/probe"
+            state = {"value": b"", "txn": 0}
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == "/v1/kv/" + key:
+                    if req.method == "PUT":
+                        state["value"] = req.content
+                        return httpx.Response(200, json=True)
+                    return httpx.Response(200, json=[{
+                        "Key": key, "Session": OBSERVED, "ModifyIndex": 41,
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if path == "/v1/txn":
+                    state["txn"] += 1
+                    return httpx.Response(200, content=(
+                        b'{"Results":[],"Results":[{"KV":{"Key":"' +
+                        target.encode() + b'","ModifyIndex":42}}]}'))
+                raise AssertionError("unexpected Consul request")
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                lease = await authority.acquire("owner")
+                with self.assertRaises(CoordinationUnavailable):
+                    await authority.write_control(lease, "probe", {"x": 1})
+                self.assertEqual(state["txn"], 1)
+                self.assertEqual(authority._deadlines[lease.session_id], 0)
+                self.assertFalse(await authority.validate(lease))
+                self.assertFalse(await authority.renew(lease))
+        asyncio.run(exercise())
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
