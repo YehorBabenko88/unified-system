@@ -31,9 +31,11 @@ jobs:
         with:
           python-version: '3.13'
       - name: Compile F source without native Windows claims
-        run: python -B -m py_compile tools/f_windows_handle.py tools/f_wheel_qualification.py tests/test_f_windows_handle.py
+        run: python -B -m py_compile tools/f_windows_handle.py tools/f_wheel_qualification.py tests/test_f_windows_handle.py tests/test_f_wheel_qualification.py
       - name: Non-Windows path and import shadow negatives; native cases are SKIP
         run: python -B -m unittest discover -s tests -p test_f_windows_handle.py -v
+      - name: Synthetic wheel RECORD and retained POSIX leaf-identity negatives
+        run: python -B -m unittest discover -s tests -p test_f_wheel_qualification.py -v
   native-handle-negative:
     runs-on: windows-2022
     timeout-minutes: 25
