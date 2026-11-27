@@ -495,6 +495,7 @@ def clear_verified_lab_pending(pg, *, identity, generation, backend_pid,
         " AND k.cursor_value=p.start_ms"
         " AND k.fingerprint=p.fingerprint"
         " AND k.content_id=p.content_id"
+        " AND k.owner=f.owner AND k.namespace=f.namespace"
         " AND p.owner=f.owner AND p.namespace=f.namespace"
         " AND p.source_sha256=f.source_sha256"
         " AND p.schema_sha256=f.schema_sha256"
