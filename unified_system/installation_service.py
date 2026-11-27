@@ -125,8 +125,12 @@ def _native_installation_receipt(root,code,manifest,manifest_sha256):
  body={'schema':NATIVE_RECEIPT_SCHEMA,'entries':entries,
        'manifest_sha256':manifest_sha256}
  receipt=dict(body,receipt_sha256=seal(body))
- # Fail before REGISTER on a journal receipt that cannot fit existing 64KiB
- # per-row and 2MiB SQLite limits. Never silently truncate native identities.
+ # Fail before REGISTER; never silently truncate native identities.
+ return _bounded_native_receipt(receipt)
+
+def _bounded_native_receipt(receipt):
+ """Preserve the existing journal's per-row and SQLite 2MiB constraints."""
+ need(type(receipt) is dict)
  need(len(canonical({'kind':'NATIVE_FILE_IDS','plan_sha256':'0'*64,'proof':receipt}))<=60000)
  return receipt
 
