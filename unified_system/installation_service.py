@@ -120,6 +120,9 @@ class _NativeReceiptCustody:
  """
  def __init__(self,paths):
   need(os.name=='nt' and type(paths) is dict and 'root' in paths)
+  # Restrict native HANDLE quota; oversized roster refuses rather than
+  # exhausting SCM/host resources or adopting a partial receipt.
+  need(0<len(paths)<=512)
   self.paths=dict(paths);self.handles={};self.kernel=None;self.closed=False
  def __enter__(self):
   import ctypes
