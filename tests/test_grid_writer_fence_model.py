@@ -98,7 +98,7 @@ class GridWriterFenceModelTests(unittest.TestCase):
         for bad in ("", "/invalid", "../escape", "slash/segment", "%2F",
                     "with space", "line\nfeed", "name:port", "é",
                     "a" * 129, None, True, str(uuid.uuid4()).upper(),
-                    "ffffffff-ffff-ffff-ffff-ffffffffffff"):
+                    "ffffFFFF-ffff-ffff-ffff-ffffffffffff"):
             with self.subTest(session=repr(bad)):
                 with self.assertRaises(ResourceFenceBlocked):
                     identity(session=bad)
