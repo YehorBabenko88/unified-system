@@ -223,7 +223,15 @@ class WindowsInstalledRoot:
             current = drive.rstrip("\\")
             for part in parts:
                 current += "\\" + part
-                self._retain_dir(current)
+                # At each traversed directory boundary, refuse substitution
+                # of a component that would otherwise be reached by name.
+                retained, pinned = self._retain_dir(current)
+                probe, observed = _open(self.dll, current, directory=True)
+                try:
+                    if observed != pinned:
+                        raise ValueError("Windows root ancestor path substituted")
+                finally:
+                    self.dll.CloseHandle(probe)
             return self
         except BaseException:
             self.__exit__(None, None, None)
