@@ -2,9 +2,9 @@
   "schema": "unified.h.mtf-acceptance.v1",
   "status": "CANDIDATE_NOT_RELEASE",
   "pins": {
-    "Grid": "165aa614cf6f79d451eac2faa48d6084fbd03d31",
-    "Math": "9e6acbd9e12a91189f57234828e31640983af553",
-    "Terminan": "cb11788144a9827d5ea7a2e1342c31520c7145dc"
+    "Grid": "2404a7a61c7ddde0ea96b45088cf6072a9235b1e",
+    "Math": "14d9ca92803b3ede19c7292e85c3627554d5c1d9",
+    "Terminan": "6e4a39c185d51eeab37f004964655da3b8dd938b"
   },
   "source_record": "market_data.qualified-read-envelope.v1",
   "proposed_response": "market_data.qualified-mtf-envelope.v1",
@@ -16,19 +16,16 @@
     "15m"
   ],
   "base_interval": "1m",
-  "max_source_rows": 1000,
-  "max_output_bars": 200,
+  "max_source_rows": 75,
+  "max_output_bars": 5,
   "status_only": [
-    "PARTIAL",
-    "GAP",
-    "STALE",
-    "UNAVAILABLE"
+    "PARTIAL"
   ],
   "source_preconditions": [
     "Grid v2 existing managed loopback source and startup identity",
     "original 1m closed source records validated via Grid qualify_records",
     "exact single producer identity/source revision/epoch and same symbol",
-    "all source minutes contiguous and unique, all 5m or 15m buckets fully covered",
+    "source window has exactly width * bars consecutive unique 1m starts, aligned and fully closed",
     "all source event end clocks <= cutoff; no cross future bar, no partial current bar",
     "source 1m may be PARTIAL only, never GAP/STALE/UNAVAILABLE for data output"
   ],
@@ -51,5 +48,15 @@
     "false_ready",
     "false_trading_permission"
   ],
-  "handoff": "B/D must publish an exact schema/DTO implementation, status and source review before this contract can be treated as matched"
+  "handoff": "B PR303 produces 5m/15m read-only rollup and D PR129 uses original qualified 1m + Math PR167. These are two candidate paths requiring independent numerical and provenance parity; do not infer either is released.",
+  "rejection": {
+    "non_partial_source": "HTTP_503_NO_ROWS",
+    "invalid_request": "HTTP_400_NO_ROWS",
+    "historical_asof": "NOT_IMPLEMENTED",
+    "original_stale_threshold_ms": 120000
+  },
+  "quality_limit": {
+    "max_source_minutes": 75,
+    "max_output_bars": 5
+  }
 }
