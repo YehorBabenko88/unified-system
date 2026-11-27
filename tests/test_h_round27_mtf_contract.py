@@ -143,7 +143,7 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
                          "Terminan PR130 LIVE only")
         self.assertEqual(spec["rejection"]["historical_asof"],
                          "SOURCE_ONLY_CANDIDATE_UNATTESTED")
-        self.assertIn("MUST NOT recompute delta", spec["delta_presentation"])
+        self.assertIn("MUST NOT recompute delta", spec["numeric_policy"])
 
     def test_float_presentation_cancellation_is_not_source_delta(self):
         from decimal import Decimal
