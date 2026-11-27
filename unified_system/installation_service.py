@@ -56,7 +56,7 @@ def _native_file_identity(path):
   _fields_=[('allocation_size',ctypes.c_longlong),('end_of_file',ctypes.c_longlong),
             ('number_of_links',w.DWORD),('delete_pending',ctypes.c_ubyte),('directory',ctypes.c_ubyte)]
  need(ctypes.sizeof(STANDARD)==24)  # Win32 FILE_STANDARD_INFO; BOOLEAN is 1 byte.
- h=k.CreateFileW(str(root),0x80,0x1,None,3,0x00200000|0x02000000,None)
+ h=k.CreateFileW(str(root),0x80,0x1|0x2,None,3,0x00200000|0x02000000,None)
  need(h not in (None,0,ctypes.c_void_p(-1).value))
  try:
   info=ID();tag=TAG();standard=STANDARD()
