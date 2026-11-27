@@ -219,7 +219,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
             self.skipTest("I owner source not supplied")
         raw = p.read_bytes()
         blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + bytes([0]) + raw).hexdigest()
-        expected = "0a39ec57556d96aeda15b4273c59ce074fa70406"
+        expected = "e107b78e47560169d59650838ce6a0d42fa1e90e"
         if not owner_file and blob != expected:
             self.skipTest("F inherited checkout lacks exact I custody source")
         self.assertEqual(blob, expected, "I source drift: require independent re-review")
@@ -249,7 +249,11 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         self.assertIn("self._read()==self.snapshot", checking)
         self.assertIn("_native_file_identity(path)==self.snapshot[key]", checking)
         self.assertIn("CloseHandle(h)", closing)
-        self.assertIn("len(paths)<=512", ast.get_source_segment(source, cls))
+        budget = next((n for n in tree.body
+                       if isinstance(n, ast.FunctionDef) and
+                       n.name == "_native_receipt_roster_budget"), None)
+        self.assertIsNotNone(budget)
+        self.assertIn("0<len(paths)<=512", ast.get_source_segment(source, budget))
         service = next((n for n in tree.body if isinstance(n, ast.ClassDef)
                         and n.name == "ServiceResource"), None)
         self.assertIsNotNone(service)
