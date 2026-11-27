@@ -372,6 +372,7 @@ class NativeCRecoveryTests(unittest.TestCase):
         stop_relay = threading.Event()
         lose_reply = threading.Event()
         reply_discarded = threading.Event()
+        expected_backend_shutdown = threading.Event()
         relay_errors = []
         relay_sockets = []
 
@@ -396,7 +397,10 @@ class NativeCRecoveryTests(unittest.TestCase):
                         else:
                             front.sendall(packet)
             except OSError as exc:
-                if not stop_relay.is_set():
+                # A deliberately crashed PG18 backend may reset the
+                # transport; only unexpected pre-crash relay errors fail.
+                if (not stop_relay.is_set()
+                        and not expected_backend_shutdown.is_set()):
                     relay_errors.append(repr(exc))
             finally:
                 for sock in (front, back):
@@ -501,6 +505,7 @@ class NativeCRecoveryTests(unittest.TestCase):
 
             # C retains original OS witness, crashes ONLY its disposable PG,
             # restarts through its sole recovery and reads independent WAL.
+            expected_backend_shutdown.set()
             with patch.dict(os.environ,
                             {"LAB_C_PG18_PROCESS_CRASH_TEST": "1"}):
                 contained = contain_exclusive_lab_cluster(
