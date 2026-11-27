@@ -25,8 +25,20 @@ jobs:
     env:
       PYTHONPATH: tools
       PYTHONDONTWRITEBYTECODE: '1'
+      F_I_V2_OWNER_SOURCE: .f-owner-i-checkout/unified_system/installation_service.py
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Read-only exact I service source (no native execution)
+        uses: actions/checkout@v4
+        with:
+          ref: e5d775fccb2425aee9b43617012f4ad6cf3153f4
+          path: .f-owner-i-checkout
+          persist-credentials: false
+          sparse-checkout: |
+            unified_system/installation_service.py
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
@@ -46,8 +58,20 @@ jobs:
     env:
       PYTHONPATH: tools
       PYTHONDONTWRITEBYTECODE: '1'
+      F_I_V2_OWNER_SOURCE: .f-owner-i-checkout/unified_system/installation_service.py
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Read-only exact I service source (no native execution)
+        uses: actions/checkout@v4
+        with:
+          ref: e5d775fccb2425aee9b43617012f4ad6cf3153f4
+          path: .f-owner-i-checkout
+          persist-credentials: false
+          sparse-checkout: |
+            unified_system/installation_service.py
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
