@@ -93,7 +93,7 @@ def _segments(path):
     if not isinstance(path, (str, os.PathLike)):
         raise ValueError("Windows path required")
     raw = os.fspath(path)
-    if type(raw) is not str or not re.match(r"^[A-Za-z]:\\\\", raw):
+    if type(raw) is not str or not re.match(r"^[A-Za-z]:\\", raw):
         raise ValueError("local drive-absolute Windows path required")
     if "/" in raw or raw.endswith((".", " ")) or "\x00" in raw:
         raise ValueError("non-canonical Windows path")
@@ -157,7 +157,7 @@ def _final_path_matches(dll, handle, expected):
     if not actual.startswith("\\\\?\\"):
         raise ValueError("Windows non-DOS handle path refused")
     actual = actual[4:]
-    if (not re.match(r"^[A-Za-z]:\\\\", actual)
+    if (not re.match(r"^[A-Za-z]:\\", actual)
             or ntpath.normcase(actual) != ntpath.normcase(expected)):
         raise ValueError("Windows path alias or reparse resolution refused")
 
