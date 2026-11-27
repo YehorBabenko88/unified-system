@@ -80,6 +80,7 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
         spec = _load_contract()
         self.assertEqual(spec["status"], "CANDIDATE_NOT_RELEASE")
         self.assertEqual(spec["supported_intervals"], ["5m", "15m"])
+        self.assertEqual(spec["proposed_response"], "market_data.qualified-mtf-envelope.v2")
         self.assertEqual(spec["max_source_rows"],75)
         self.assertEqual(spec["max_output_bars"],5)
         self.assertEqual(spec["rejection"]["non_partial_source"],"HTTP_503_NO_ROWS")
@@ -136,6 +137,8 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
         })
         history = spec["historical_asof"]
         self.assertEqual(history["status"], "PARTIAL")
+        self.assertEqual(history["schema"], "market_data.historical-as-of-mtf-envelope.v2")
+        self.assertEqual(history["route"], "/internal/v2/candles/historical-as-of-exact")
         self.assertEqual(history["freshness_mode"], "HISTORICAL_AS_OF")
         self.assertEqual(history["historical_source_trust"],
                          "NOT_INDEPENDENTLY_ATTESTED")

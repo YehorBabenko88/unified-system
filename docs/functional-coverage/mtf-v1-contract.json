@@ -7,7 +7,7 @@
     "Terminan": "f4ffbe2913dee0a9987f8b9ad68f2b7df5ad360f"
   },
   "source_record": "market_data.qualified-read-envelope.v1",
-  "proposed_response": "market_data.qualified-mtf-envelope.v1",
+  "proposed_response": "market_data.qualified-mtf-envelope.v2",
   "producer_owner": "Grid",
   "consumer_owner": "Terminan",
   "numerical_owner": "Math",
@@ -60,8 +60,8 @@
     "max_output_bars": 5
   },
   "historical_asof": {
-    "schema": "market_data.historical-as-of-mtf-envelope.v1",
-    "route": "/internal/v2/candles/historical-as-of",
+    "schema": "market_data.historical-as-of-mtf-envelope.v2",
+    "route": "/internal/v2/candles/historical-as-of-exact",
     "freshness_mode": "HISTORICAL_AS_OF",
     "reason": "HISTORICAL_AS_OF_SOURCE_ONLY",
     "status": "PARTIAL",
