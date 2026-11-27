@@ -263,6 +263,33 @@ class NativeWindowsRetainedHandleTests(unittest.TestCase):
         self.assertEqual(previous.read_bytes(), original)
         self.assertEqual(self.file.read_bytes(), original)
 
+    def test_retained_ancestor_directory_blocks_rename(self):
+        """Native kernel deny: an already-open retained ancestor cannot be swapped."""
+        nested = self.install / "nested"
+        nested.mkdir()
+        (nested / "module.py").write_bytes(b"module = 1\\n")
+        with WindowsInstalledRoot(str(self.install)) as root:
+            self.assertEqual(root.read(("nested", "module.py")), b"module = 1\\n")
+            with self.assertRaises(OSError):
+                nested.rename(self.install / "substituted")
+        self.assertTrue(nested.is_dir())
+
+    def test_same_bytes_ancestor_replacement_denies_observed_receipt(self):
+        """Original FileId parent pin must reject an equal-byte new namespace."""
+        original = self.install / "nested"
+        original.mkdir()
+        (original / "module.py").write_bytes(b"module = 1\\n")
+        with WindowsInstalledRoot(str(self.install)) as root:
+            proof = root.readonly_identity_receipt(("nested", "module.py"))
+        detached = self.install / "detached-nested"
+        original.rename(detached)
+        original.mkdir()
+        (original / "module.py").write_bytes(b"module = 1\\n")
+        with WindowsInstalledRoot(str(self.install)) as root:
+            with self.assertRaisesRegex(ValueError, "identity mismatch"):
+                root.verify_readonly_identity_receipt(("nested", "module.py"), proof)
+        self.assertEqual((detached / "module.py").read_bytes(), b"module = 1\\n")
+
     def test_hardlink_is_denied_at_win32_file_information_gate(self):
         alias = self.install / "alias.py"
         os.link(self.file, alias)
