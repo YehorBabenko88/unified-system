@@ -674,7 +674,7 @@ class _WindowsNonServiceLabToken:
         pins; this second read detects a different restricted-token view.
         """
         if (type(cwd) is not str or not Path(cwd).is_absolute()
-                or type(file_pins) is not dict or not 1 <= len(file_pins) <= 64
+                or type(file_pins) is not dict or not file_pins
                 or type(external_file_pins) is not dict
                 or len(external_file_pins) > 64):
             raise ValueError('LAB pinned artifact inventory invalid')
