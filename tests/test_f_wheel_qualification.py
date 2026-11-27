@@ -160,6 +160,18 @@ class QualificationTests(unittest.TestCase):
         self.assertEqual(alias.read_bytes(), SRC)
         self.assertEqual(member.read_bytes(), SRC)
 
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX installed closure hardlink only")
+    def test_closure_rejects_unrecorded_hardlinked_archive_member(self):
+        """A new inode alias in the installed tree must fail closure even before RECORD."""
+        import os
+        foreign = self.base / "other-file"
+        foreign.write_bytes(b"outside controlled install")
+        alias = self.install / "foreign-link.txt"
+        os.link(foreign, alias)
+        self.assertEqual(alias.stat().st_nlink, 2)
+        self.deny()
+        self.assertEqual(foreign.read_bytes(), b"outside controlled install")
+
     def test_missing_installed_record(self):
         (self.install / RECORD).unlink()
         self.deny()
