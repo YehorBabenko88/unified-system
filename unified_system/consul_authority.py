@@ -160,7 +160,11 @@ class ConsulSessionAuthority:
                 if response.status_code != 200 or len(response.content) > 65536:
                     raise CoordinationUnavailable('Consul request denied or invalid response')
                 try:
-                    return response.json()
+                    # Consul's API JSON is part of session/lease authority.
+                    # httpx.Response.json() silently keeps the final value
+                    # of duplicate members (including nested KV/txn rows).
+                    # Reuse the same fail-closed decoder as persistent KV.
+                    return _strict_consul_json(response.content)
                 except (ValueError, TypeError):
                     raise CoordinationUnavailable('Consul returned invalid JSON') from None
             raise CoordinationUnavailable('Consul quorum endpoint unavailable')
