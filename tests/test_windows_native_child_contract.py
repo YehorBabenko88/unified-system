@@ -119,6 +119,60 @@ class PortableContractTests(unittest.TestCase):
         self.assertEqual(args[8], str(self.system))
         self.assertEqual(args[3:5], (None, None))
 
+    def test_restricted_pinned_artifact_read_with_original_token(self):
+        """Execute canonical pinned SHA read while original token impersonates."""
+        import ctypes
+        import hashlib
+        from ctypes import wintypes as w
+        from types import SimpleNamespace
+        from unified_system.runtime_process import _WindowsNonServiceLabToken
+
+        worker = self.system / 'job_worker.py'
+        worker.write_bytes(b'import sys\\nsys.exit(71)\\n')
+        digest = hashlib.sha256(worker.read_bytes()).hexdigest()
+        calls = []
+        token = object.__new__(_WindowsNonServiceLabToken)
+        token._handle = w.HANDLE(17)
+        token._a = SimpleNamespace(
+            ImpersonateLoggedOnUser=lambda handle: calls.append(('enter', handle.value)) or True,
+            RevertToSelf=lambda: calls.append(('leave',)) or True)
+        token.verify_restricted_pinned_read(
+            str(self.system), {'job_worker.py': digest}, {})
+        self.assertEqual(calls, [('enter', 17), ('leave',)])
+        with self.assertRaisesRegex(ValueError, 'read denied'):
+            token.verify_restricted_pinned_read(
+                str(self.system), {'job_worker.py': '0' * 64}, {})
+        self.assertEqual(calls[-2:], [('enter', 17), ('leave',)])
+
+    def test_restricted_pinned_artifact_permission_denied_fails_closed(self):
+        """A denied LOW-token read never yields a positive artifact witness."""
+        import ctypes
+        import hashlib
+        from ctypes import wintypes as w
+        from types import SimpleNamespace
+        from unified_system.runtime_process import _WindowsNonServiceLabToken
+
+        worker = self.system / 'job_worker.py'
+        worker.write_bytes(b'only-disposable-test-bytes')
+        digest = hashlib.sha256(worker.read_bytes()).hexdigest()
+        calls = []
+        token = object.__new__(_WindowsNonServiceLabToken)
+        token._handle = w.HANDLE(17)
+        token._a = SimpleNamespace(
+            ImpersonateLoggedOnUser=lambda handle: calls.append('enter') or True,
+            RevertToSelf=lambda: calls.append('leave') or True)
+        with patch('unified_system.runtime_process._sha',
+                   side_effect=PermissionError('restricted ACL denied')):
+            with self.assertRaisesRegex(ValueError, 'read denied'):
+                token.verify_restricted_pinned_read(
+                    str(self.system), {'job_worker.py': digest}, {})
+        self.assertEqual(calls, ['enter', 'leave'])
+        with self.assertRaisesRegex(ValueError, 'pinned artifact invalid'):
+            token.verify_restricted_pinned_read(
+                str(self.system), {'../private/secret': digest}, {})
+        self.assertEqual(calls, ['enter', 'leave'],
+                         'invalid path must reject before impersonation')
+
 @unittest.skipUnless(WINDOWS, 'real Windows PowerShell 5.1 child')
 class WindowsHijackTests(unittest.TestCase):
     def setUp(self):
