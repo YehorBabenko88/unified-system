@@ -855,6 +855,60 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.addCleanup(self._cleanup)
         return op, self.driver.children[op]
 
+    def test_native_detached_relative_script_access_differential(self):
+        """Compare absolute versus same-cwd relative pinned worker arguments.
+
+        Exact restricted token, original Job/handles, worker byte pin and
+        test-local console flag are unchanged. No ACL or privilege change.
+        """
+        import hashlib
+
+        self.worker.write_text('import sys\nsys.exit(71)\n', encoding='utf-8')
+        program = self.driver.programs['market_data']
+        program['file_pins']['job_worker.py'] = hashlib.sha256(
+            self.worker.read_bytes()).hexdigest()
+        original_argv = program['argv']
+        self.addCleanup(lambda: program.__setitem__('argv', original_argv))
+        # Same pinned script/cwd; alter only the argv path spelling.
+        program['argv'] = [original_argv[0], self.worker.name]
+        op, child = self._start_detached_diagnostic_child()
+        status = child.wait(timeout=8)
+        print('LAB_FILE_ACCESS_DIAG relative_worker_exit=%s' % status,
+              flush=True)
+        self.assertEqual(
+            status, 71, 'restricted relative-path worker could not execute')
+        self.driver.stop(op)
+        self.assertEqual(self.driver.job_extinction_receipt(op).active_members, 0)
+
+    def test_native_detached_file_access_matches_low_token(self):
+        """Pinned file read from same restricted child; no filesystem mutation.
+
+        A failing file open reports 75; a child that can read the exact bytes
+        exits 71. The low-IL token and original owner handles are retained.
+        """
+        import hashlib
+
+        self.worker.write_text('import sys\nsys.exit(71)\n', encoding='utf-8')
+        program = self.driver.programs['market_data']
+        program['file_pins']['job_worker.py'] = hashlib.sha256(
+            self.worker.read_bytes()).hexdigest()
+        original_argv = program['argv']
+        self.addCleanup(lambda: program.__setitem__('argv', original_argv))
+        code = (
+            'import pathlib,sys;'
+            'p=pathlib.Path(%r);'
+            'sys.exit(71 if p.read_bytes()==%r else 76)'
+            % (str(self.worker), self.worker.read_bytes()))
+        program['argv'] = [original_argv[0], '-c', code]
+        op, child = self._start_detached_diagnostic_child()
+        status = child.wait(timeout=8)
+        print('LAB_FILE_ACCESS_DIAG inline_file_read_exit=%s' % status,
+              flush=True)
+        self.assertEqual(
+            status, 71, 'original restricted token cannot read pinned worker')
+        self.driver.stop(op)
+        self.assertEqual(self.driver.job_extinction_receipt(op).active_members, 0)
+
     def test_native_detached_inline_python_distinguishes_script_open_failure(self):
         """Use pinned Python -c to separate interpreter startup from file open.
 
