@@ -182,9 +182,8 @@ def _wheel_bytes_snapshot(wheel) -> bytes:
         raise ValueError("wheel inaccessible or symlink") from exc
     try:
         first = os.fstat(fd)
-        if (not stat.S_ISREG(first.st_mode) or first.st_nlink != 1
-                or first.st_size > _MAX_ARCHIVE_BYTES + 1024 * 1024):
-            raise ValueError("wheel is not a bounded single-link regular file")
+        if not stat.S_ISREG(first.st_mode) or first.st_size > _MAX_ARCHIVE_BYTES + 1024 * 1024:
+            raise ValueError("wheel is not a bounded regular file")
         chunks = []
         remaining = _MAX_ARCHIVE_BYTES + 1024 * 1024 + 1
         while remaining:
