@@ -91,10 +91,14 @@ class GridWriterFenceModelTests(unittest.TestCase):
         observed = "4a91bb79-c488-1086-0664-30ccbc028eda"
         self.assertEqual(identity(session=observed).session_id, observed)
         opaque = "Consul_Session_opaque-7"
-        self.assertEqual(identity(session=opaque).session_id, opaque)
+        with self.assertRaises(ResourceFenceBlocked):
+            identity(session=opaque)
+        # Transport strings are not automatically compatible with C's UUID
+        # column, even when Root can safely carry them as opaque text.
         for bad in ("", "/invalid", "../escape", "slash/segment", "%2F",
                     "with space", "line\nfeed", "name:port", "é",
-                    "a" * 129, None, True):
+                    "a" * 129, None, True, str(uuid.uuid4()).upper(),
+                    "ffffffff-ffff-ffff-ffff-ffffffffffff"):
             with self.subTest(session=repr(bad)):
                 with self.assertRaises(ResourceFenceBlocked):
                     identity(session=bad)
