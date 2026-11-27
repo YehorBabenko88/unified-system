@@ -93,7 +93,7 @@ def _segments(path):
     if not isinstance(path, (str, os.PathLike)):
         raise ValueError("Windows path required")
     raw = os.fspath(path)
-    if type(raw) is not str or not re.match(r"^[A-Za-z]:[\\/]", raw):
+    if type(raw) is not str or not re.match(r"^[A-Za-z]:\\", raw):
         raise ValueError("local drive-absolute Windows path required")
     if "/" in raw or raw.endswith((".", " ")) or "\x00" in raw:
         raise ValueError("non-canonical Windows path")
@@ -257,7 +257,17 @@ class WindowsInstalledRoot:
         for name in parts[:-1]:
             _part(name)
             path = ntpath.join(path, name)
-            self._retain_dir(path)
+            retained, pinned = self._retain_dir(path)
+            # The Win32 directory was retained before opening any descendant.
+            # A second pathname probe must resolve to the SAME kernel object;
+            # a replacement via an existing writable handle cannot be
+            # silently mistaken for the retained parent.
+            probe, observed = _open(self.dll, path, directory=True)
+            try:
+                if observed != pinned:
+                    raise ValueError("Windows parent directory path substituted")
+            finally:
+                self.dll.CloseHandle(probe)
         return path
 
     def read(self, parts, *, max_bytes=_MAX_BYTES):
@@ -273,6 +283,15 @@ class WindowsInstalledRoot:
         self._files.append(handle)
         data = _read(self.dll, handle, first, max_bytes)
         self._retain_dir(parent)
+        # Verify the live pathname still identifies the retained original
+        # file, not merely that our old handle remains readable. The held
+        # handle stays open through the repeat-open check.
+        probe, current = _open(self.dll, path, directory=False)
+        try:
+            if current != first:
+                raise ValueError("Windows installed file path substituted")
+        finally:
+            self.dll.CloseHandle(probe)
         return data
 
     def closure(self):
@@ -315,6 +334,12 @@ class WindowsInstalledRoot:
                     raise ValueError("Windows reparse or unsupported installed member")
             if _info(self.dll, handle, directory=True) != first:
                 raise ValueError("Windows directory changed during inspection")
+            probe, current = _open(self.dll, directory, directory=True)
+            try:
+                if current != first:
+                    raise ValueError("Windows traversed directory path substituted")
+            finally:
+                self.dll.CloseHandle(probe)
             with os.scandir(directory) as entries:
                 after = [e.name for e in entries]
             if sorted(x.casefold() for x in names) != sorted(x.casefold() for x in after):
