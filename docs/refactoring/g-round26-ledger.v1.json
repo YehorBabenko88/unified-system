@@ -1,0 +1,251 @@
+{
+  "schema_version": "1.0",
+  "agent": "G",
+  "snapshot_date": "2026-11-27",
+  "status": "INVENTORY_IN_PROGRESS",
+  "release_gate": "CODE_NO_GO / PRODUCTION_NO_GO",
+  "provenance": "GitHub REST commits and recursive trees; tree results for working refs were not truncated",
+  "main_heads": {
+    "unified-system": "b9b03a1ce9f887dbe113fd22d0bda8932f46ef80",
+    "bybit-cluster-grid": "d537d525296ef34f727996e240ae6c60102c6082",
+    "math": "ccfe97dd88b1ebee9bd19795002a30d0bd1c1ca3",
+    "Terminan": "fee79f4b15fc1f9efcff9ca12c403688b0026260",
+    "strattester": "37ff7e9d12a4d2dccd788fc493c28557dbe8bcea",
+    "meta_analyse": "2317c79d78654d8006d99b914532a089554677da"
+  },
+  "working_refs": {
+    "unified-system": {
+      "agent_A": "ad7efedb0cae0893ca1c6ba1c76c9335b507bb6b",
+      "agent_C": "98ef352a6acf527fda831f94fb04dd92b906443c",
+      "agent_E_candidate": "98e301ea05ee86606616a5e8bacfe52c3d0f1dfd",
+      "agent_F": "255b2a9868591aafe3e0e8519949b626908daf81",
+      "candidate_C": "a43ca6c2fc9ee3cd319d71df04c15e7ceb7b72b6",
+      "frozen_F_PR166": "9349d7f3ed93ef82d120976816b968e0b716b067"
+    },
+    "bybit-cluster-grid": {
+      "agent_B": "52d81298a3acbf1ff49ae9d84eb1d803333da922"
+    },
+    "math": {
+      "agent_D": "9e6acbd9e12a91189f57234828e31640983af553"
+    },
+    "Terminan": {
+      "agent_D": "380c9af8a4da5feb5d7adf26dd8e1d54316409cc"
+    },
+    "strattester": {
+      "main": "37ff7e9d12a4d2dccd788fc493c28557dbe8bcea",
+      "migration_source": "3850995 (short ref from #152, full SHA not established)"
+    },
+    "meta_analyse": {
+      "main": "2317c79d78654d8006d99b914532a089554677da",
+      "working_ref": "UNRESOLVED; main README-only"
+    }
+  },
+  "working_tree_file_counts": {
+    "unified-system/E": 2261,
+    "bybit-cluster-grid/B": 1182,
+    "math/D": 1017,
+    "Terminan/D": 357,
+    "strattester/main": 289,
+    "meta_analyse/main": 1
+  },
+  "owners": {
+    "Unified System": "orchestration, admission, service/PG lifecycle",
+    "Grid": "single Bybit transport, market collection, writer/read API",
+    "Math": "scientific computation",
+    "Terminan": "strategies, analytics, paper engine and UI"
+  },
+  "package_entrypoints": [
+    {
+      "repo": "bybit-cluster-grid",
+      "file": "pyproject.toml",
+      "blob": "4fb4e72360605cd92b3afab3837015b4ac29dace",
+      "scripts": [
+        "market-data=market_data.cli:main",
+        "market-data-qualified-read-v2=market_data_v2.read_api:main"
+      ],
+      "packages": [
+        "market_data",
+        "market_data_v2",
+        "grid.canonical_lab_continuous_collector",
+        "grid.c_lab_journal_adapter",
+        "grid.canonical_lab_fenced_writer",
+        "grid.c_async_fenced_writer"
+      ]
+    },
+    {
+      "repo": "Terminan",
+      "file": "pyproject.toml",
+      "blob": "283a7415d4f5bf5e2f72c41ae63000c10eeb078a",
+      "scripts": [
+        "terminan=terminan.server:main",
+        "terminan-research=terminan.desktop:main"
+      ]
+    },
+    {
+      "repo": "strattester",
+      "file": "pyproject.toml",
+      "blob": "1ede2131ab4d8f6002c03dcb471a63c7ca5a4927",
+      "packages": [
+        "strattester*"
+      ]
+    },
+    {
+      "repo": "math",
+      "file": "package.json",
+      "blob": "8ff337557b2e815945c50b4cf7e88312a152a6fb",
+      "scripts": [
+        "test=node --test tests/*.test.mjs tests/*.windows.mjs tests/*.cross.mjs",
+        "test:e2e=playwright test"
+      ]
+    }
+  ],
+  "ledger": [
+    {
+      "id": "G-001",
+      "status": "KEEP",
+      "repo": "bybit-cluster-grid",
+      "path": "grid/canonical_lab_fenced_writer.py",
+      "owner": "Grid",
+      "consumers": [
+        "pyproject.toml"
+      ],
+      "replacement": null,
+      "tests": "manifest inspection PASS; runtime NOT_RUN",
+      "rollback": "retain/revert isolated PR"
+    },
+    {
+      "id": "G-002",
+      "status": "KEEP",
+      "repo": "bybit-cluster-grid",
+      "path": "market_data/cli.py",
+      "owner": "Grid",
+      "consumers": [
+        "pyproject.toml project.scripts"
+      ],
+      "replacement": null,
+      "tests": "manifest inspection PASS; runtime NOT_RUN",
+      "rollback": "retain/revert isolated PR"
+    },
+    {
+      "id": "G-003",
+      "status": "KEEP",
+      "repo": "Terminan",
+      "path": "terminan/server.py",
+      "owner": "Terminan",
+      "consumers": [
+        "pyproject.toml project.scripts"
+      ],
+      "replacement": null,
+      "tests": "manifest inspection PASS; runtime NOT_RUN",
+      "rollback": "retain/revert isolated PR"
+    },
+    {
+      "id": "G-004",
+      "status": "MIGRATE",
+      "repo": "bybit-cluster-grid",
+      "path": "grid/strategy_runtime.py",
+      "owner": "Terminan",
+      "consumers": [
+        "UNKNOWN, AST/dynamic/CI scan pending"
+      ],
+      "replacement": "Terminan canonical strategy engine pending D contract",
+      "tests": "NOT_RUN; deletion BLOCKED",
+      "rollback": "preserve until parity + revert proposed deletion PR"
+    },
+    {
+      "id": "G-005",
+      "status": "MIGRATE",
+      "repo": "bybit-cluster-grid",
+      "path": "grid/ml_process_supervisor.py",
+      "owner": "Unified System",
+      "consumers": [
+        "UNKNOWN"
+      ],
+      "replacement": "Unified supervisor pending E/I review",
+      "tests": "NOT_RUN; deletion BLOCKED",
+      "rollback": "preserve until parity"
+    },
+    {
+      "id": "G-006",
+      "status": "MIGRATE",
+      "repo": "strattester",
+      "path": "strattester/marketdata/bybit_client.py",
+      "owner": "Grid",
+      "consumers": [
+        "tests/marketdata/test_bybit_client.py",
+        "additional UNKNOWN"
+      ],
+      "replacement": "Grid versioned read/ingestion API pending B/H approval",
+      "tests": "NOT_RUN; deletion BLOCKED",
+      "rollback": "preserve historical tests and fixture"
+    },
+    {
+      "id": "G-007",
+      "status": "BLOCKED",
+      "repo": "meta_analyse",
+      "path": "<working implementation not pinned>",
+      "owner": "Terminan/Math by symbol",
+      "consumers": [
+        "UNKNOWN"
+      ],
+      "replacement": "NOT VERIFIED",
+      "tests": "NOT_RUN",
+      "rollback": "no deletion until full working ref inventory"
+    },
+    {
+      "id": "G-008",
+      "status": "MIGRATE",
+      "repo": "math",
+      "path": "src/ingestion-supervisor.mjs",
+      "owner": "Unified System",
+      "consumers": [
+        "UNKNOWN"
+      ],
+      "replacement": "Unified scheduler; retain distinct book/scientific ingestion",
+      "tests": "NOT_RUN; deletion BLOCKED",
+      "rollback": "retain until parity"
+    },
+    {
+      "id": "G-009",
+      "status": "KEEP",
+      "repo": "Terminan",
+      "path": "tests/fixtures/meta_paper_engine_b1a4d6a.py",
+      "owner": "Terminan",
+      "consumers": [
+        "tests/test_meta_paper_differential.py"
+      ],
+      "replacement": null,
+      "tests": "presence PASS; execution NOT_RUN",
+      "rollback": "never delete original historical fixture"
+    }
+  ],
+  "deletion_gate": {
+    "requires": [
+      "full pinned SHA and source blob",
+      "static/dynamic consumers plus CI/installer",
+      "functional replacement and DTO tests",
+      "H unique-feature approval and B/D/E/I owners as applicable",
+      "negative imports, package RECORD and Windows/Linux regression",
+      "isolated Draft PR with rollback"
+    ],
+    "approved_candidates": 0
+  },
+  "test_matrix": {
+    "git_tree_inventory": "PASS",
+    "package_manifest_read": "PASS",
+    "full_import_graph": "NOT_RUN",
+    "runtime_regression": "NOT_RUN",
+    "windows": "NOT_RUN",
+    "linux": "NOT_RUN",
+    "real_host": "NOT_RUN"
+  },
+  "restrictions": [
+    "no main merge",
+    "no force push",
+    "frozen #166 unchanged",
+    "no user data or fixtures deletion",
+    "no security bypass",
+    "no Codex/Claude",
+    "no manual CI reruns"
+  ]
+}
