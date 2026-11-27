@@ -99,7 +99,11 @@ class ConsulSessionAuthority:
     async def _request(self, method, path, *, missing_ok=False, **kwargs):
         headers = {'X-Consul-Token': self.config.acl_token} if self.config.acl_token else {}
         async def attempt():
-            budget = self.config.request_timeout / len(self.config.endpoints)
+            # Writes deliberately target one endpoint (no uncertain replay),
+            # so retain the full request deadline. Divide only GET failover
+            # budgets among the configured independent read endpoints.
+            budget = (self.config.request_timeout if method != 'GET'
+                      else self.config.request_timeout / len(self.config.endpoints))
             for endpoint in self.config.endpoints:
                 try:
                     response = await asyncio.wait_for(
