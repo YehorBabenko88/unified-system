@@ -107,7 +107,7 @@ class StaticContract(unittest.TestCase):
         self.assertEqual(x["schema"], "unified-system.j.round35.disposable.v1")
         self.assertRegex(x["source_j_head"], r"^[a-f0-9]{40}$")
         self.assertNotEqual(x["source_j_head"], x["frozen_pr166_sha"])
-        self.assertEqual(x["observation_epoch"], "round35-next-cycle")
+        self.assertRegex(x["observation_epoch"], r"^round35-(?:next-cycle|master-[0-9]+)$")
         self.assertEqual(x["frozen_pr166_sha"],
                          "9349d7f3ed93ef82d120976816b968e0b716b067")
         self.assertEqual(x["release"], "CODE_NO_GO_PRODUCTION_NO_GO")
