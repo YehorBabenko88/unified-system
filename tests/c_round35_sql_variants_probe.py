@@ -76,8 +76,12 @@ def exercise_two_pinned_sql_sources(test, *, identity, stream, start_ms,
                   fingerprint=fingerprint, content_id=content_id)
     test.assertEqual(test.pg.major, 18)
     test.assertNotEqual(test.pg.port, 5432)
-    with test.psycopg.connect(test.pg.dsn("lab_owner"),
-                              autocommit=True) as connection:
+    # C's public dsn() intentionally refuses lab_owner. The existing
+    # disposable fixture has its own owner password, used only over loopback.
+    with test.psycopg.connect(host="127.0.0.1", port=test.pg.port,
+                              dbname=test.pg.database, user="lab_owner",
+                              password=test.pg.passwords["lab_owner"],
+                              connect_timeout=5, autocommit=True) as connection:
         for tag, module, expected_blob in (
             ("cad4ccf", legacy, LEGACY_BLOB),
             ("076980d", current, CURRENT_BLOB),
