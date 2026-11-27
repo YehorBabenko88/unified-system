@@ -86,11 +86,25 @@ class GridWriterFenceModelTests(unittest.TestCase):
                 with self.assertRaises(ResourceFenceBlocked):
                     identity(source=bad)
 
-    def test_invalid_uuid_and_owner_bounded(self):
-        for bad in ("", "not-uuid", str(uuid.uuid1()), str(uuid.uuid4()).upper()):
-            with self.subTest(uuid=bad):
+    def test_invalid_opaque_session_and_owner_bounded(self):
+        # A Consul session is exact opaque text, not an RFC UUID-version claim.
+        observed = "4a91bb79-c488-1086-0664-30ccbc028eda"
+        self.assertEqual(identity(session=observed).session_id, observed)
+        opaque = "Consul_Session_opaque-7"
+        self.assertEqual(identity(session=opaque).session_id, opaque)
+        for bad in ("", "/invalid", "../escape", "slash/segment", "%2F",
+                    "with space", "line\nfeed", "name:port", "é",
+                    "a" * 129, None, True):
+            with self.subTest(session=repr(bad)):
                 with self.assertRaises(ResourceFenceBlocked):
                     identity(session=bad)
+        current = identity(session=observed)
+        for field in ("instance_id", "node_incarnation_id"):
+            for bad in (str(uuid.uuid1()), str(uuid.uuid5(uuid.NAMESPACE_DNS, "x")),
+                        observed, str(uuid.uuid4()).upper(), opaque):
+                with self.subTest(field=field, value=bad):
+                    with self.assertRaises(ResourceFenceBlocked):
+                        replace(current, **{field: bad})
         with self.assertRaises(ResourceFenceBlocked):
             replace(identity(), owner="private/invalid/owner")
 
