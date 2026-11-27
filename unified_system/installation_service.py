@@ -104,7 +104,7 @@ def _native_roster_paths(root,code,manifest):
  return paths
 
 def _capture_native_roster(paths):
- """Two full independent native observations; fail closed on any drift."""
+ """Fallback two snapshots are NOT a retained-handle chain or native grant."""
  need(type(paths) is dict and 0<len(paths)<=40064 and 'root' in paths)
  first={key:_native_file_identity(path) for key,path in paths.items()}
  second={key:_native_file_identity(path) for key,path in paths.items()}
@@ -113,7 +113,83 @@ def _capture_native_roster(paths):
           for value in first.values()))
  return first
 
-def _native_installation_receipt(root,code,manifest,manifest_sha256):
+class _NativeReceiptCustody:
+ """Retain Windows no-delete-sharing handles through verify, SEAL, REGISTER.
+
+ This is source-only, not a tested native parent-child security proof.
+ """
+ def __init__(self,paths):
+  need(os.name=='nt' and type(paths) is dict and 'root' in paths)
+  self.paths=dict(paths);self.handles={};self.kernel=None;self.closed=False
+ def __enter__(self):
+  import ctypes
+  from ctypes import wintypes as w
+  k=ctypes.WinDLL('kernel32',use_last_error=True)
+  k.CreateFileW.argtypes=(w.LPCWSTR,w.DWORD,w.DWORD,w.LPVOID,w.DWORD,w.DWORD,w.HANDLE)
+  k.CreateFileW.restype=w.HANDLE
+  k.CloseHandle.argtypes=(w.HANDLE,);k.CloseHandle.restype=w.BOOL
+  k.GetFileInformationByHandleEx.argtypes=(w.HANDLE,ctypes.c_int,w.LPVOID,w.DWORD)
+  k.GetFileInformationByHandleEx.restype=w.BOOL
+  self.kernel=k
+  try:
+   need(0<len(self.paths)<=40064)
+   for key,path in self.paths.items():
+    target=_safe(path)
+    # FILE_SHARE_READ only: no DELETE sharing on retained original handles.
+    h=k.CreateFileW(str(target),0x80,0x1,None,3,0x00200000,None)
+    need(h not in (None,0,ctypes.c_void_p(-1).value))
+    self.handles[key]=h
+   self.snapshot=self._read()
+   self.verify()
+   return self
+  except BaseException:
+   self.close()
+   raise
+ def _read(self):
+  import ctypes
+  from ctypes import wintypes as w
+  class ID(ctypes.Structure):
+   _fields_=[('volume',ctypes.c_ulonglong),('identifier',ctypes.c_ubyte*16)]
+  class TAG(ctypes.Structure):
+   _fields_=[('attributes',w.DWORD),('reparse_tag',w.DWORD)]
+  class STANDARD(ctypes.Structure):
+   _fields_=[('allocation_size',ctypes.c_longlong),('end_of_file',ctypes.c_longlong),
+             ('number_of_links',w.DWORD),('delete_pending',ctypes.c_ubyte),('directory',ctypes.c_ubyte)]
+  need(ctypes.sizeof(STANDARD)==24)
+  result={}
+  for key,h in self.handles.items():
+   info=ID();tag=TAG();standard=STANDARD()
+   need(self.kernel.GetFileInformationByHandleEx(h,18,ctypes.byref(info),ctypes.sizeof(info)))
+   need(self.kernel.GetFileInformationByHandleEx(h,9,ctypes.byref(tag),ctypes.sizeof(tag)))
+   need(self.kernel.GetFileInformationByHandleEx(h,5,ctypes.byref(standard),ctypes.sizeof(standard)))
+   need(info.volume>0 and any(info.identifier) and not tag.attributes&0x400)
+   need(standard.number_of_links>=1 and not standard.delete_pending)
+   need(bool(tag.attributes&0x10)==bool(standard.directory))
+   need(bool(standard.directory) or standard.number_of_links==1)
+   if key.startswith('file:') or key=='ownership:service.sqlite':need(not standard.directory)
+   else:need(bool(standard.directory))
+   result[key]={'volume_serial':int(info.volume),'file_id_128':bytes(info.identifier).hex()}
+  need(all(v['volume_serial']==result['root']['volume_serial'] for v in result.values()))
+  return result
+ def verify(self):
+  need(not self.closed and len(self.handles)==len(self.paths))
+  need(self._read()==self.snapshot)
+  for key,path in self.paths.items():need(_native_file_identity(path)==self.snapshot[key])
+  need(self._read()==self.snapshot)
+  return dict(self.snapshot)
+ def close(self):
+  if self.closed:return
+  self.closed=True;failed=False
+  if self.kernel is not None:
+   for h in reversed(tuple(self.handles.values())):
+    if not self.kernel.CloseHandle(h):failed=True
+  self.handles.clear()
+  need(not failed)
+ def __exit__(self,kind,value,tb):
+  self.close()
+  return False
+
+def _native_installation_receipt(root,code,manifest,manifest_sha256,*,custody=None):
  """Capture install-time parent, leaf and directory native identities, no SCM."""
  need(os.name=='nt')
  root=_safe(root);code=_safe(code)
@@ -122,7 +198,10 @@ def _native_installation_receipt(root,code,manifest,manifest_sha256):
  for key,path in paths.items():
   if key.startswith('file:') or key=='ownership:service.sqlite':need(path.is_file())
   else:need(path.is_dir())
- entries=_capture_native_roster(paths)
+ if custody is not None:
+  need(type(custody) is _NativeReceiptCustody and custody.paths==paths)
+  entries=custody.verify()
+ else:entries=_capture_native_roster(paths)
  body={'schema':NATIVE_RECEIPT_SCHEMA,'entries':entries,
        'manifest_sha256':manifest_sha256}
  receipt=dict(body,receipt_sha256=seal(body))
@@ -427,18 +506,33 @@ class ServiceResource:
   if os.name=='nt':
    lab_release.verify_capsule(plan['code'],plan['manifest_sha256'])
    manifest=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])['manifest']
-   native=_native_installation_receipt(plan['root'],plan['code'],manifest,plan['manifest_sha256'])
-   resource._append('NATIVE_FILE_IDS',native,guard=guard)
+   paths=_native_roster_paths(Path(plan['root']),Path(plan['code']),manifest)
+   # Retain the full member+ancestor handle roster until REGISTER is receipted.
+   with _NativeReceiptCustody(paths) as custody:
+    native=_native_installation_receipt(plan['root'],plan['code'],manifest,plan['manifest_sha256'],custody=custody)
+    resource._append('NATIVE_FILE_IDS',native,guard=guard)
+    custody.verify()
+    acl=resource._call('SEAL',guard)
+    need(set(acl)=={'code_acl_sha256','state_acl_sha256','acl_policy'} and acl['acl_policy']=='EXACT_SERVICE_SID_V1')
+    for key in ('code_acl_sha256','state_acl_sha256'):lab_release.digest(acl[key])
+    resource._append('ACL_SEALED',acl,guard=guard)
+    lab_release.verify_capsule(plan['code'],plan['manifest_sha256'])
+    custody.verify()
+    resource._append('REGISTER_INTENT',guard=guard)
+    proof=_proof(plan,resource._call('REGISTER',guard))
+    need(all(proof[key]==value for key,value in acl.items()))
+    custody.verify()
+    resource._append('REGISTERED',proof,guard=guard)
   else:
    resource._append('NATIVE_FILE_IDS',{'schema':NATIVE_RECEIPT_SCHEMA,'status':'NOT_RUN'},guard=guard)
-  acl=resource._call('SEAL',guard)
-  need(set(acl)=={'code_acl_sha256','state_acl_sha256','acl_policy'} and acl['acl_policy']=='EXACT_SERVICE_SID_V1')
-  for key in ('code_acl_sha256','state_acl_sha256'):lab_release.digest(acl[key])
-  resource._append('ACL_SEALED',acl,guard=guard)
-  lab_release.verify_capsule(plan['code'],plan['manifest_sha256'])
-  resource._append('REGISTER_INTENT',guard=guard)
-  proof=_proof(plan,resource._call('REGISTER',guard));need(all(proof[key]==value for key,value in acl.items()))
-  resource._append('REGISTERED',proof,guard=guard)
+   acl=resource._call('SEAL',guard)
+   need(set(acl)=={'code_acl_sha256','state_acl_sha256','acl_policy'} and acl['acl_policy']=='EXACT_SERVICE_SID_V1')
+   for key in ('code_acl_sha256','state_acl_sha256'):lab_release.digest(acl[key])
+   resource._append('ACL_SEALED',acl,guard=guard)
+   lab_release.verify_capsule(plan['code'],plan['manifest_sha256'])
+   resource._append('REGISTER_INTENT',guard=guard)
+   proof=_proof(plan,resource._call('REGISTER',guard));need(all(proof[key]==value for key,value in acl.items()))
+   resource._append('REGISTERED',proof,guard=guard)
   return resource
  @classmethod
  def open(cls,plan,boundary):
