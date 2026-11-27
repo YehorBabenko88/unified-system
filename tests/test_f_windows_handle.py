@@ -13,6 +13,21 @@ import unittest
 from f_windows_handle import _segments, WindowsInstalledRoot, wheel_snapshot
 
 
+def _pinned_i_owner_bytes(path):
+    """Read tracked Git blob, never CRLF-transformed checkout bytes, if available."""
+    repository = path.parent.parent
+    if (repository / ".git").exists():
+        pinned = "e5d775fccb2425aee9b43617012f4ad6cf3153f4"
+        actual = subprocess.check_output(
+            ["git", "-C", str(repository), "rev-parse", "HEAD"], text=True).strip()
+        if actual != pinned:
+            raise AssertionError("I owner checkout HEAD changed: requalify before use")
+        return subprocess.check_output(
+            ["git", "-C", str(repository), "show",
+             "HEAD:unified_system/installation_service.py"])
+    return path.read_bytes()
+
+
 class WindowsPathSyntaxTests(unittest.TestCase):
     def test_rejects_unsafe_windows_spelling_before_native_open(self):
         for path in (
@@ -215,7 +230,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         path = os.environ.get("F_I_V2_OWNER_SOURCE")
         if not path:
             self.skipTest("Exact I current owner source export not supplied")
-        source_bytes = Path(path).read_bytes()
+        source_bytes = _pinned_i_owner_bytes(Path(path))
         blob = hashlib.sha1(b"blob " + str(len(source_bytes)).encode("ascii")
                             + b"\0" + source_bytes).hexdigest()
         self.assertEqual(blob, "725f2eac5e5b1e7c5e8b43e6a26f6c1433e7251c",
@@ -264,7 +279,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
              Path(__file__).resolve().parents[1] / "unified_system" / "installation_service.py")
         if not p.is_file():
             self.skipTest("I owner source not supplied")
-        raw = p.read_bytes()
+        raw = _pinned_i_owner_bytes(p)
         blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + bytes([0]) + raw).hexdigest()
         expected = "725f2eac5e5b1e7c5e8b43e6a26f6c1433e7251c"
         if not owner_file and blob != expected:
