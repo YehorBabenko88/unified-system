@@ -48,9 +48,16 @@ def _safe_member(name: str) -> tuple[str, ...]:
 def _root_fd(installed_root):
     """Retain the original directory inode for every installed-file open.
 
-    This is POSIX-only forensic inspection, NOT a protected runtime install.
-    A Windows protected-handle implementation must be separately reviewed.
+    Windows uses the reviewed F-only original Win32 handle snapshot backend.
+    Neither backend is an authenticated or protected runtime installation.
     """
+    if os.name == "nt":
+        # Same central wheel/RECORD/source validation; only the OS-backed
+        # retained-handle reader differs. It does NOT issue runtime authority.
+        from f_windows_handle import WindowsInstalledRoot
+        with WindowsInstalledRoot(installed_root) as owned:
+            yield owned
+        return
     if os.name != "posix" or not hasattr(os, "O_NOFOLLOW") or not hasattr(os, "O_DIRECTORY"):
         raise ValueError("protected directory-fd inspection unsupported")
     path = pathlib.Path(installed_root)
@@ -71,6 +78,8 @@ def _installed_bytes(root_fd: int, parts: tuple[str, ...]) -> bytes:
     """Read through retained directory FDs; reject symlink replacement races."""
     if not parts or any('/' in part or part in ('', '.', '..') for part in parts):
         raise ValueError("invalid installed file path")
+    if os.name == "nt":
+        return root_fd.read(parts)
     fd = os.dup(root_fd)
     try:
         for part in parts[:-1]:
@@ -107,6 +116,8 @@ def _installed_bytes(root_fd: int, parts: tuple[str, ...]) -> bytes:
 
 def _installed_closure(root_fd: int) -> set[str]:
     """Reject unrecorded import-shadowing files and all untrusted bytecode."""
+    if os.name == "nt":
+        return root_fd.closure()
     discovered = set()
     def walk(parent_fd, prefix):
         with os.scandir(parent_fd) as iterator:
@@ -135,6 +146,9 @@ def _installed_closure(root_fd: int) -> set[str]:
 
 def _wheel_bytes_snapshot(wheel) -> bytes:
     """Hash and ZipFile must inspect precisely this ONE immutable bytes object."""
+    if os.name == "nt":
+        from f_windows_handle import wheel_snapshot
+        return wheel_snapshot(wheel)
     if not hasattr(os, "O_NOFOLLOW"):
         raise ValueError("safe wheel descriptor inspection unsupported")
     try:
