@@ -383,6 +383,11 @@ class ConsulSessionAuthority:
                     or not 0 < record['token'] < (1 << 63)
                     or not _consul_session_id(record['session_id'])):
                 raise ValueError('control identity invalid')
+            # A concurrent authority.close() can complete while this
+            # consistent GET is in flight. Never return data from a closed
+            # authority even if the original Consul response was valid.
+            if self._closed:
+                raise CoordinationUnavailable('Consul authority already closed')
             return record
         except (KeyError, TypeError, ValueError, IndexError):
             raise CoordinationUnavailable('control record invalid') from None
