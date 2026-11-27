@@ -672,9 +672,15 @@ class _WindowsNonServiceLabToken:
             ctypes.c_void_p, w.BOOL, w.DWORD, ctypes.c_void_p,
             w.LPCWSTR, ctypes.c_void_p, ctypes.c_void_p]
         self._a.CreateProcessAsUserW.restype = w.BOOL
+        # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | DETACHED_PROCESS.
+        # The original Win2022 native CI established restricted Python/SCM
+        # execution and nested Job containment with this console topology;
+        # CREATE_NO_WINDOW instead exited at DLL initialization (0xC0000142).
+        # Only console topology differs: original LOW token, no inherited
+        # handles, assignment before resume and Job/SCM checks stay mandatory.
         return bool(self._a.CreateProcessAsUserW(
             self._handle, str(argv[0]), command, None, None, False,
-            0x00000004 | 0x00000400 | 0x08000000,
+            0x00000004 | 0x00000400 | 0x00000008,
             ctypes.cast(env_buffer, ctypes.c_void_p), str(cwd),
             ctypes.byref(startup), ctypes.byref(info)))
 
@@ -1032,7 +1038,7 @@ def _launch_owned_windows_job_process(argv, cwd, env):
         raise
     created = False
     try:
-        # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW
+        # CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | DETACHED_PROCESS.
         # Creation cannot execute any process code until ResumeThread.
         if not security_token.create_suspended(kernel, argv, command,
                                                env_buffer, cwd, startup, info):
