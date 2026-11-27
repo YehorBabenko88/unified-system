@@ -1192,6 +1192,41 @@ class OpaqueSessionTests(unittest.TestCase):
                     ConsulLease("owner", OBSERVED, 41)))
         asyncio.run(exercise())
 
+    def test_control_read_rejects_duplicate_json_members_at_any_depth(self):
+        # Canonical writer emits unique keys. Python's ordinary json.loads
+        # accepts ambiguous duplicate members and silently takes the last
+        # value; Consul historical readback must instead fail closed.
+        async def exercise(raw):
+            state_key = "isolated/round25/state/probe"
+            row = {
+                "Key": state_key, "ModifyIndex": 42,
+                "Value": base64.b64encode(raw).decode(),
+            }
+            def handler(req):
+                self.assertEqual(req.method, "GET")
+                self.assertEqual(req.url.path, "/v1/kv/" + state_key)
+                self.assertIn("consistent", req.url.params)
+                return httpx.Response(200, json=[row])
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                with self.assertRaises(CoordinationUnavailable):
+                    await authority.read_control("probe")
+        prefix = (b'{"owner":"owner","token":41,'
+                  b'"session_id":"' + OBSERVED.encode() + b'",')
+        originals = (
+            b'{"owner":"owner","owner":"attacker","token":41,'
+            b'"session_id":"' + OBSERVED.encode() + b'","payload":{}}',
+            prefix + b'"payload":{"value":"1","value":"999"}}',
+            prefix + b'"payload":{"nested":{"x":1,"x":2}}}',
+        )
+        for raw in originals:
+            with self.subTest(raw=raw):
+                asyncio.run(exercise(raw))
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
