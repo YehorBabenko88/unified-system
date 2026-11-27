@@ -17,7 +17,7 @@ def _pinned_i_owner_bytes(path):
     """Read tracked Git blob, never CRLF-transformed checkout bytes, if available."""
     repository = path.parent.parent
     if os.environ.get("F_I_V2_OWNER_SOURCE") and (repository / ".git").exists():
-        pinned = "e5d775fccb2425aee9b43617012f4ad6cf3153f4"
+        pinned = "3f4262c2096767096939f86df69da57358430e35"
         actual = subprocess.check_output(
             ["git", "-C", str(repository), "rev-parse", "HEAD"], text=True).strip()
         if actual != pinned:
@@ -233,7 +233,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         source_bytes = _pinned_i_owner_bytes(Path(path))
         blob = hashlib.sha1(b"blob " + str(len(source_bytes)).encode("ascii")
                             + b"\0" + source_bytes).hexdigest()
-        self.assertEqual(blob, "725f2eac5e5b1e7c5e8b43e6a26f6c1433e7251c",
+        self.assertEqual(blob, "c05c8f641efb29e93e8b413d3571514005acf551",
                          "Owner I source drift: re-review before this test")
         tree = ast.parse(source_bytes.decode("utf-8"))
         funcs = {node.name: node for node in tree.body
@@ -281,7 +281,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
             self.skipTest("I owner source not supplied")
         raw = _pinned_i_owner_bytes(p)
         blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + bytes([0]) + raw).hexdigest()
-        expected = "725f2eac5e5b1e7c5e8b43e6a26f6c1433e7251c"
+        expected = "c05c8f641efb29e93e8b413d3571514005acf551"
         if not owner_file and blob != expected:
             self.skipTest("F inherited checkout lacks exact I custody source")
         self.assertEqual(blob, expected, "I source drift: require independent re-review")
@@ -329,6 +329,8 @@ class WindowsPathSyntaxTests(unittest.TestCase):
                        n.name == "_native_receipt_roster_budget"), None)
         self.assertIsNotNone(budget)
         self.assertIn("0<len(paths)<=512", ast.get_source_segment(source, budget))
+        self.assertIn("0<len(k.encode('utf-8'))<=300",
+                      ast.get_source_segment(source, budget))
         service = next((n for n in tree.body if isinstance(n, ast.ClassDef)
                         and n.name == "ServiceResource"), None)
         self.assertIsNotNone(service)
