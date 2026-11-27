@@ -90,6 +90,35 @@ class PortableContractTests(unittest.TestCase):
         self.assertEqual(seen['cwd'], str(self.system))
 
 
+    def test_restricted_windows_launch_uses_detached_original_handle_contract(self):
+        """Portable call-contract test of original A Win32 function, no spawn."""
+        import ctypes
+        from ctypes import wintypes as w
+        from types import SimpleNamespace
+        from unified_system.runtime_process import _WindowsNonServiceLabToken
+
+        captured = []
+        def fake_create_process(*args):
+            captured.append(args)
+            return 1
+
+        token = object.__new__(_WindowsNonServiceLabToken)
+        token._handle = w.HANDLE(17)
+        token._a = SimpleNamespace(CreateProcessAsUserW=fake_create_process)
+        scalar = ctypes.c_ulong()
+        self.assertTrue(token.create_suspended(
+            None, [str(self.system / 'python.exe')],
+            ctypes.create_unicode_buffer('python.exe'),
+            ctypes.create_unicode_buffer('X=Y\\0\\0'),
+            str(self.system), scalar, scalar))
+        self.assertEqual(len(captured), 1)
+        args = captured[0]
+        self.assertEqual(args[0].value, 17)  # original restricted primary token
+        self.assertEqual(args[5], False)  # inherit NO handles
+        self.assertEqual(args[6], 0x00000004 | 0x00000400 | 0x00000008)
+        self.assertEqual(args[8], str(self.system))
+        self.assertEqual(args[3:5], (None, None))
+
 @unittest.skipUnless(WINDOWS, 'real Windows PowerShell 5.1 child')
 class WindowsHijackTests(unittest.TestCase):
     def setUp(self):
@@ -828,30 +857,16 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
                     'console-topology experiment')
 
     def _start_detached_diagnostic_child(self):
-        """Test-only variant; same original restricted token, Job, and handles."""
-        import ctypes
-        from ctypes import wintypes as w
+        """Legacy test name; use the exact canonical restricted Job launcher.
+
+        A second test-only CreateProcessAsUserW implementation previously
+        duplicated the production call. The owner launch now uses the
+        already native-proven detached console flag itself, so tests must
+        exercise its original token, suspended Job and retained handles.
+        """
         from unified_system.runtime import ModuleSpec
-        from unified_system.runtime_process import _WindowsNonServiceLabToken
-
-        def detached_create_suspended(token, kernel, argv, command,
-                                      env_buffer, cwd, startup, info):
-            a = token._a
-            a.CreateProcessAsUserW.argtypes = [
-                w.HANDLE, w.LPCWSTR, w.LPWSTR, ctypes.c_void_p,
-                ctypes.c_void_p, w.BOOL, w.DWORD, ctypes.c_void_p,
-                w.LPCWSTR, ctypes.c_void_p, ctypes.c_void_p]
-            a.CreateProcessAsUserW.restype = w.BOOL
-            return bool(a.CreateProcessAsUserW(
-                token._handle, str(argv[0]), command, None, None, False,
-                0x00000004 | 0x00000400 | 0x00000008,
-                ctypes.cast(env_buffer, ctypes.c_void_p), str(cwd),
-                ctypes.byref(startup), ctypes.byref(info)))
-
-        with patch.object(_WindowsNonServiceLabToken, 'create_suspended',
-                          detached_create_suspended):
-            op = self.driver.start(ModuleSpec('market_data', '1.0.0'),
-                                   'disposable-lab', self.op)
+        op = self.driver.start(ModuleSpec('market_data', '1.0.0'),
+                               'disposable-lab', self.op)
         self.addCleanup(self._cleanup)
         return op, self.driver.children[op]
 
