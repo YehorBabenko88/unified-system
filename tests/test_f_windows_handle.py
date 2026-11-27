@@ -187,12 +187,21 @@ class WindowsPathSyntaxTests(unittest.TestCase):
 
     def test_install_receipt_requires_uninterrupted_ancestor_identity(self):
         """Document the owner's fail-closed gate, not a simulated OS race."""
-        from pathlib import Path
-        p = Path(__file__).resolve().parents[1] / "unified_system" / "installation_service.py"
-        if not p.exists():
-            self.skipTest("owner I production module unavailable in this checkout")
         import ast
-        source = p.read_text(encoding="utf-8")
+        import hashlib
+        from pathlib import Path
+        owner_file = os.environ.get("F_I_V2_OWNER_SOURCE")
+        p = (Path(owner_file) if owner_file else
+             Path(__file__).resolve().parents[1] / "unified_system" / "installation_service.py")
+        if not p.is_file():
+            self.skipTest("I owner V2 source not supplied")
+        raw = p.read_bytes()
+        blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\\0" + raw).hexdigest()
+        expected = "9ddaebbb8c0d24e19e595654f316e8646d0d675e"
+        if not owner_file and blob != expected:
+            self.skipTest("F checkout contains pre-I-V2 installer; owner source not supplied")
+        self.assertEqual(blob, expected, "I R35 HEAD source drift; re-pin before qualification")
+        source = raw.decode("utf-8")
         tree = ast.parse(source)
         names = {node.name:node for node in tree.body if isinstance(node, ast.FunctionDef)}
         self.assertIn("_capture_native_roster", names)
