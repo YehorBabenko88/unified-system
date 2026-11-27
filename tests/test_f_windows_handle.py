@@ -45,6 +45,35 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         self.assertEqual(parts, ["isolated", "wheel.whl"])
 
 
+    def test_final_handle_path_exact_drive_anchor_synthetic(self):
+        """Exercise original final-path match logic without claiming a Win32 run."""
+        from f_windows_handle import _final_path_matches
+
+        class RecordedKernel32:
+            def __init__(self, final_path):
+                self.final_path = final_path
+
+            def GetFinalPathNameByHandleW(self, handle, buffer, capacity, flags):
+                if len(self.final_path) >= capacity:
+                    raise AssertionError("test buffer unexpectedly undersized")
+                buffer.value = self.final_path
+                return len(self.final_path)
+
+        expected = r"C:\isolated\wheel.whl"
+        _final_path_matches(
+            RecordedKernel32(r"\\?\C:\isolated\wheel.whl"), None, expected
+        )
+        for alien in (
+            r"\\?\D:\isolated\wheel.whl",
+            r"\\?\C:\isolated\other.whl",
+            r"\\?\UNC\server\isolated\wheel.whl",
+            r"C:\isolated\wheel.whl",
+        ):
+            with self.subTest(alien=alien):
+                with self.assertRaises(ValueError):
+                    _final_path_matches(RecordedKernel32(alien), None, expected)
+
+
 @unittest.skipUnless(os.name == "nt", "genuine Win32 kernel handles required")
 class NativeWindowsRetainedHandleTests(unittest.TestCase):
     def setUp(self):
