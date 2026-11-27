@@ -16,31 +16,29 @@
       "role": "A",
       "repo": "YehorBabenko88/unified-system",
       "pr": 162,
-      "sha": "5331f0fb4e684d94d2229bdca00596bd9f018fe9",
-      "disposition": "SOURCE_PIN_ONLY_NOT_RELEASE_AUTHORITY"
+      "sha": "74fc782da27980626bc3721ca1db6684d12559ff",
+      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE"
     },
     {
       "role": "B",
       "repo": "YehorBabenko88/bybit-cluster-grid",
-      "pr": 307,
-      "sha": "36883fbf3d02e84822638aa87d0f307972852dbc",
-      "disposition": "SOURCE_PIN_ONLY_NOT_RELEASE_AUTHORITY"
+      "pr": 308,
+      "sha": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+      "disposition": "EXTERNAL_SOURCE_PIN_ONLY_CROSS_REPO_NATIVE_NOT_RUN"
     },
     {
       "role": "C",
       "repo": "YehorBabenko88/unified-system",
       "pr": 170,
-      "sha": "d8f3d64c81d2cdf5cd63996e2aa0dd9e49784c80",
-      "candidate_pr": 170,
-      "candidate_sha": "38cf210d649540839ad7ff80668dbe81c83e03de",
-      "disposition": "SOURCE_PIN_ONLY_NOT_RELEASE_AUTHORITY"
+      "sha": "a54e2914e741197399d39c14263966ffddc83dc4",
+      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE"
     },
     {
       "role": "D",
       "repo": "YehorBabenko88/Terminan",
-      "pr": 132,
-      "sha": "f4ffbe2913dee0a9987f8b9ad68f2b7df5ad360f",
-      "disposition": "SOURCE_PIN_ONLY_NOT_RELEASE_AUTHORITY"
+      "pr": 133,
+      "sha": "bcdf3287a47e60f6c50022adce7651bcb51e587f",
+      "disposition": "EXTERNAL_SOURCE_PIN_ONLY_CROSS_REPO_NATIVE_NOT_RUN"
     },
     {
       "role": "Math",
@@ -52,40 +50,38 @@
       "role": "E",
       "repo": "YehorBabenko88/unified-system",
       "pr": 171,
-      "sha": "26cbdee93a3b7f37d32d5e6bdc7106cb135b8df4",
-      "candidate_pr": 171,
-      "candidate_sha": "4f5a7565c6ea022a1b555443933d3f803d6e9dc4",
-      "disposition": "SOURCE_PIN_ONLY_NOT_RELEASE_AUTHORITY"
+      "sha": "5cd9b6a42e64679b762043dc7547d88ad35a84bb",
+      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE"
     },
     {
       "role": "F",
       "repo": "YehorBabenko88/unified-system",
       "pr": 180,
-      "sha": "a84014d0cbc4b3d84ff64d9fc6ff728b02d9a5bb",
-      "disposition": "SOURCE_PIN_ONLY_NOT_RELEASE_AUTHORITY"
+      "sha": "cacc3c4c28da260462696243ed39ed4f9e5cf861",
+      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE"
     },
     {
       "role": "G",
       "repo": "YehorBabenko88/unified-system",
       "issue": 172,
-      "sha": "bc7191fcb27d041f37547e8973015f3053fdfe17",
-      "disposition": "CLOSED_UNMERGED_SOURCE_REUSED_FOR_INERT_TEST_ONLY",
-      "pr": 177
+      "sha": "6dc7e1a186385080bbbd3950c8c6280cc82ed67b",
+      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE",
+      "pr": 183
     },
     {
       "role": "H",
       "repo": "YehorBabenko88/unified-system",
       "issue": 173,
-      "sha": "f24bdec811a63a04a34f8c887e2d7d0baf86a170",
-      "disposition": "SOURCE_PIN_ONLY_NOT_RELEASE_AUTHORITY",
+      "sha": "d4a48420f2807602f12d6ffab793fc7f0510d8cf",
+      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE",
       "pr": 181
     },
     {
       "role": "I",
       "repo": "YehorBabenko88/unified-system",
       "issue": 174,
-      "sha": "f7858a31973ff7c7b52b79167446103276c63ded",
-      "disposition": "SOURCE_PIN_ONLY_NOT_RELEASE_AUTHORITY",
+      "sha": "2db8430347ba7440823c174f0a1a0b3685f3e080",
+      "disposition": "SELECTIVE_OWNER_SOURCE_IMPORTED_UNVERIFIED_NATIVE",
       "pr": 182
     },
     {
@@ -121,24 +117,26 @@
   "acceptance": {
     "source_revision": "A_C_E_H_I_ORIGINAL_BLOBS_PRESENT_AND_PINNED",
     "original_package_hashes": "NOT_VERIFIED",
-    "native_windows": "FAIL_PRIOR_NATIVE_CURRENT_NOT_RUN",
-    "native_consul_pg": "NOT_RUN",
+    "native_windows": "NOT_RUN_CURRENT_INTEGRATION",
+    "native_consul_pg": "NOT_RUN_CURRENT_INTEGRATION",
     "native_c_wal_reply_loss": "NOT_RUN",
     "grid306_d130_schema_source": "PASS_26_OF_26",
     "grid306_d130_original_consumer_e2e": "NOT_RUN",
     "mtf_precision_fidelity": "SOURCE_CANDIDATE_EXACT_OVER_STORED_JSON_ONLY_NOT_PROVIDER_RAW",
     "full_market_completeness": "NOT_PROVEN",
-    "installer_recovery": "DISPOSAL_DENIED_MISSING_EXCLUSIVE_NAMESPACE",
+    "installer_recovery": "APP_ONLY_AND_DISPOSAL_PHYSICAL_DELETION_DENIED",
     "disposable_toctou": "NOT_QUALIFIED_DIRFD_FINAL_PATH_RACE",
     "protected_root": "DENIED",
     "release": "NO_GO",
     "grid306_d131_original_consumer_e2e": "SUPERSEDED_INCOMPATIBLE",
     "grid307_d132_schema": "PASS_SOURCE_ONLY_29_TOP_15_ROW_3_METADATA",
     "grid307_d132_original_consumer_e2e": "NOT_RUN",
-    "h_g_f_independent_current_v2_acceptance": "PENDING"
+    "h_g_f_independent_current_v2_acceptance": "PENDING_B308_D133",
+    "grid308_d133_source": "PINNED_UNVERIFIED_NATIVE",
+    "grid308_d133_full_e2e": "NOT_RUN"
   },
-  "round": 30,
-  "integration_status": "ROUND30_LOSSLESS_B307_D132_SOURCE_CONTRACT_MATCH_PENDING_ORIGINAL_PAIR_EXECUTION_AND_F_H_G_ACCEPTANCE",
+  "round": 32,
+  "integration_status": "ROUND31_SOURCE_IMPORT_COMPLETE_ROUND32_B308_D133_PINNED_NOT_RUNTIME_QUALIFIED",
   "protected_admission": "DENIED",
   "integration_source_evidence": {
     "C": {
@@ -285,6 +283,25 @@
       "original_wheel_qualifier_blob": "de0b03097c8ea30d1907cde581d130d250f397ac",
       "original_wheel_test_blob": "9048cdcf7272feac5f71fa0359e3d9093928a0cf",
       "native_windows_handle": "NOT_RUN_AT_CURRENT_J"
+    },
+    "round32": {
+      "head_before_manifest": "c61ad5b28d7937db61879e2fe223220caee14d1b",
+      "owner_refs": {
+        "A": "74fc782da27980626bc3721ca1db6684d12559ff",
+        "B": "4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f",
+        "C": "a54e2914e741197399d39c14263966ffddc83dc4",
+        "D": "bcdf3287a47e60f6c50022adce7651bcb51e587f",
+        "E": "5cd9b6a42e64679b762043dc7547d88ad35a84bb",
+        "F": "cacc3c4c28da260462696243ed39ed4f9e5cf861",
+        "G": "6dc7e1a186385080bbbd3950c8c6280cc82ed67b",
+        "H": "d4a48420f2807602f12d6ffab793fc7f0510d8cf",
+        "I": "2db8430347ba7440823c174f0a1a0b3685f3e080"
+      },
+      "canonical_math": "9e6acbd9e12a91189f57234828e31640983af553",
+      "source_only": true,
+      "native_integration": "NOT_RUN",
+      "physical_destructive_uninstall": "DENIED",
+      "scope": "A_C_E_F_G_H_I_SELECTIVE_IMPORT_AND_B_D_EXTERNAL_PINS_NO_SHIPPING_AUTHORITY"
     }
   },
   "g_h_i_status": "G_CUTOVER_ONLY_NO_LEGACY_FEATURE_RETIREMENT_I_DISPOSABLE_SOURCE_ONLY_H_CURRENT_SOURCE_COHORT"
