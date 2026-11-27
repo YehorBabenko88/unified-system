@@ -182,8 +182,10 @@ class ConsulSessionAuthority:
             raise
 
     async def validate(self, lease):
+        # A copied caller-built dataclass can equal the original lease by
+        # value. Only the exact object issued by this authority is local proof.
         if (type(lease) is not ConsulLease
-                or self._sessions.get(lease.session_id) != lease):
+                or self._sessions.get(lease.session_id) is not lease):
             return False
         deadline = self._deadlines.get(lease.session_id, 0)
         if self.clock() >= deadline:
@@ -192,13 +194,13 @@ class ConsulSessionAuthority:
             row = await self._read_lock()
             return (self.clock() < deadline
                     and self._deadlines.get(lease.session_id, 0) >= deadline
-                    and self._sessions.get(lease.session_id) == lease
+                    and self._sessions.get(lease.session_id) is lease
                     and self._matches(row, lease))
         except CoordinationUnavailable:
             return False
 
     async def renew(self, lease):
-        if self._sessions.get(getattr(lease, 'session_id', None)) != lease:
+        if self._sessions.get(getattr(lease, 'session_id', None)) is not lease:
             return False
         started = self.clock()
         if started >= self._deadlines[lease.session_id]:
@@ -222,7 +224,7 @@ class ConsulSessionAuthority:
             return False
 
     async def release(self, lease):
-        if self._sessions.get(getattr(lease, 'session_id', None)) != lease:
+        if self._sessions.get(getattr(lease, 'session_id', None)) is not lease:
             return
         # Never allow a stale local lease to validate while destruction is
         # in flight or its outcome remains unknown.
