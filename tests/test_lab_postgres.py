@@ -92,7 +92,9 @@ class LabPostgresLifecycle(unittest.TestCase):
         pg = getattr(self, 'pg', None)
         if pg is not None and self.preserve_root:
             # Failed initial start is UNKNOWN. Preserve original owner,
-            # lock and PGDATA; never silently remove a live or uncertain DB.
+            # lock and PGDATA; close this test's client only.
+            if self.writer is not None:
+                self.writer.close()
             print('LAB_PG_FIXTURE_QUARANTINED ' + str(self.root), flush=True)
             return
         if pg is not None:
