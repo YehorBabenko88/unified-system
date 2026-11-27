@@ -282,14 +282,18 @@ class WindowsHijackTests(unittest.TestCase):
                                                                  'LOCALAPPDATA': str(profile / 'AppData' / 'Local')}))
 
     def test_autoload_disabled_command_outside_trusted_set_is_not_found(self):
-        # An unresolved command may invoke expensive discovery even with
-        # module autoload disabled on cold hosted Windows images. Inspect
-        # imported command inventory instead of invoking that discovery.
-        # Keep the same trusted-module and closed autoload assertions.
+        # Imported-command inventory alone does not prove an attempted
+        # command cannot autoload a nonimported module. Retain the original
+        # direct forbidden invocation and assert exact post-call module
+        # roster. The existing 15s bounded runner remains unchanged.
         report = self.run_child(
-            "$x=([bool]@(Get-Command Get-NetIPAddress -ListImported -ErrorAction SilentlyContinue));"
-            "@{x=$x;m=@(Get-Module|ForEach-Object{$_.Name})}|ConvertTo-Json -Compress")
-        self.assertIs(report['x'], False)
+            "$before=([bool]@(Get-Command Get-NetIPAddress -ListImported -ErrorAction SilentlyContinue));"
+            "$invoked='UNEXPECTED';"
+            "try{Get-NetIPAddress -ErrorAction Stop|Out-Null;$invoked='LOADED'}"
+            "catch [System.Management.Automation.CommandNotFoundException]{$invoked='NOT_FOUND'};"
+            "@{before=$before;x=$invoked;m=@(Get-Module|ForEach-Object{$_.Name})}|ConvertTo-Json -Compress")
+        self.assertIs(report['before'], False)
+        self.assertEqual(report['x'], 'NOT_FOUND')
         self.assertEqual(sorted(report['m']), sorted(service.TRUSTED_POWERSHELL_MODULES))
 
     def test_trusted_module_manifests_are_regular_system_files(self):
