@@ -664,6 +664,44 @@ class _WindowsNonServiceLabToken:
         finally:
             self._k.CloseHandle(token)
 
+    def verify_restricted_pinned_read(self, cwd, file_pins, external_file_pins):
+        """Rehash original pinned artifacts under the ACTUAL LOW token.
+
+        A medium-integrity owner may successfully hash a script that the
+        restricted child cannot read. Deny this launch *before* making a Job
+        or resuming any thread. No ACL, privilege, or ownership is changed.
+        The caller has already enforced the original executable/manifest
+        pins; this second read detects a different restricted-token view.
+        """
+        if (type(cwd) is not str or not Path(cwd).is_absolute()
+                or type(file_pins) is not dict or not 1 <= len(file_pins) <= 64
+                or type(external_file_pins) is not dict
+                or len(external_file_pins) > 64):
+            raise ValueError('LAB pinned artifact inventory invalid')
+        artifacts = []
+        for relative, digest in file_pins.items():
+            if (type(relative) is not str or Path(relative).is_absolute()
+                    or '..' in Path(relative).parts
+                    or type(digest) is not str or not re.fullmatch('[a-f0-9]{64}', digest)):
+                raise ValueError('LAB pinned artifact invalid')
+            artifacts.append((_safe_path(Path(cwd) / relative), digest))
+        for absolute, digest in external_file_pins.items():
+            if (type(absolute) is not str or not Path(absolute).is_absolute()
+                    or type(digest) is not str or not re.fullmatch('[a-f0-9]{64}', digest)):
+                raise ValueError('LAB external pinned artifact invalid')
+            artifacts.append((_safe_path(absolute), digest))
+        if not self._a.ImpersonateLoggedOnUser(self._handle):
+            raise ValueError('LAB restricted artifact impersonation unavailable')
+        try:
+            for path, digest in artifacts:
+                if _sha(path) != digest:
+                    raise ValueError('LAB restricted pinned artifact integrity changed')
+        except (OSError, ValueError) as exc:
+            raise ValueError('LAB restricted pinned artifact read denied') from exc
+        finally:
+            if not self._a.RevertToSelf():
+                raise ValueError('LAB restricted artifact impersonation revert failed')
+
     def create_suspended(self, kernel, argv, command, env_buffer, cwd,
                          startup, info):
         from ctypes import wintypes as w
@@ -973,7 +1011,8 @@ def _resume_original_suspended_thread(kernel, original_thread_handle):
         raise ValueError('Windows suspended resume failed')
 
 
-def _launch_owned_windows_job_process(argv, cwd, env):
+def _launch_owned_windows_job_process(argv, cwd, env, *, file_pins=None,
+                                      external_file_pins=None):
     """Launch a new subprocess suspended and attach before any user code.
 
     Caller has already verified executable/artifact pins. Uses the existing
@@ -1033,6 +1072,9 @@ def _launch_owned_windows_job_process(argv, cwd, env):
     # No unrestricted fallback when restricted token creation/SCM probe fails.
     security_token = _WindowsNonServiceLabToken()
     try:
+        if file_pins is not None:
+            security_token.verify_restricted_pinned_read(
+                cwd, file_pins, external_file_pins or {})
         job = OwnedWindowsJob()
     except BaseException:
         security_token.close()
@@ -1353,7 +1395,9 @@ class ProcessDriver:
                        UNIFIED_MODULE_VERSION=spec.version,
                        UNIFIED_RELEASE_ID=release_id,
                        UNIFIED_INSTANCE_TOKEN=d['token'])
-        proc = (_launch_owned_windows_job_process(p['argv'],p['cwd'],env)
+        proc = (_launch_owned_windows_job_process(
+                    p['argv'], p['cwd'], env, file_pins=p['file_pins'],
+                    external_file_pins=p.get('external_file_pins', {}))
                 if lab_job else
                 subprocess.Popen(p['argv'],cwd=p['cwd'],env=env,stdin=subprocess.PIPE,
                                  stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=False))
