@@ -74,6 +74,67 @@ class WindowsPathSyntaxTests(unittest.TestCase):
                     _final_path_matches(RecordedKernel32(alien), None, expected)
 
 
+    def test_root_ancestor_component_substitution_denied(self):
+        """Original Win32 traversal must compare retained and reopened ancestor IDs."""
+        from unittest.mock import patch
+        import f_windows_handle
+
+        class FakeKernel:
+            def __init__(self):
+                self.closed = []
+            def CloseHandle(self, h):
+                self.closed.append(h)
+                return True
+
+        root = WindowsInstalledRoot(r"C:\\disposable\\install")
+        kernel = FakeKernel()
+        baseline = (7, bytes.fromhex("11" * 16), 0, 40)
+        changed = (7, bytes.fromhex("22" * 16), 0, 40)
+        retained = {}
+        probes = []
+
+        def open_directory(dll, path, *, directory):
+            self.assertTrue(directory)
+            probes.append(path)
+            count = sum(item == path for item in probes)
+            # C:\\disposable is a retained ancestor: second open is a
+            # different kernel FileId even though the pathname is unchanged.
+            ident = changed if path == r"C:\\disposable" and count == 2 else baseline
+            return object(), ident
+
+        def retain(path):
+            if path not in retained:
+                retained[path] = open_directory(kernel, path, directory=True)
+            return retained[path]
+
+        root._retain_dir = retain
+        with patch("f_windows_handle._api", return_value=kernel), \\
+                patch("f_windows_handle._open", side_effect=open_directory):
+            with self.assertRaisesRegex(ValueError, "root ancestor path substituted"):
+                root.__enter__()
+        self.assertIn(r"C:\\disposable", probes)
+        self.assertIsNone(root.dll)
+        self.assertEqual(root._dirs, {})
+
+    def test_install_identity_observation_never_grants_deletion(self):
+        """The F receipt remains an observation, regardless of 128-bit IDs."""
+        from unittest.mock import patch
+        state = {"id": bytes.fromhex("21" * 16)}
+        root = WindowsInstalledRoot(r"C:\\disposable")
+        root.dll = type("FakeKernel", (), {"CloseHandle": lambda self, h: True})()
+        parent = (9, bytes.fromhex("31" * 16), 0, 10)
+        root._parent = lambda parts: r"C:\\disposable"
+        root._retain_dir = lambda path: ("parent", parent)
+        with patch("f_windows_handle._open",
+                   side_effect=lambda dll, path, *, directory:
+                   ("file", (9, state["id"], 12, 20))), \\
+                patch("f_windows_handle._info",
+                      side_effect=lambda dll, handle, *, directory:
+                      parent if directory else (9, state["id"], 12, 20)):
+            proof = root.readonly_identity_receipt(("module.py",))
+        self.assertIs(proof["installation_ownership_attested"], False)
+        self.assertIs(proof["physical_delete_authorized"], False)
+
     def test_readonly_file_id_receipt_synthetic_denies_substituted_identity(self):
         """Run the original receipt logic, not any claimed native Win32 API."""
         from unittest.mock import patch
