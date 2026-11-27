@@ -44,6 +44,17 @@ class HRound33RetirementGateTests(unittest.TestCase):
         self.assertEqual(inv["original_h_ledger_families"], 27)
         self.assertEqual(inv["meta_inventory_feature_families"], 17)
         self.assertEqual(inv["meta_inventory_python_file_rows"], 83)
+        self.assertEqual(inv["meta_stage6_actual_python_file_count"], 85)
+        self.assertEqual(inv["meta_stage6_old_blob_changed_count"], 8)
+        self.assertEqual(inv["meta_stage6_unlisted_python_file_count"], 2)
+        self.assertFalse(inv["meta_stage6_semantic_diff_tests_passed"])
+        self.assertEqual(set(inv["meta_stage6_unlisted_source_paths"]), {
+            "src/meta_analyse/offline_paper_delivery.py",
+            "src/meta_analyse/retirement_receipt.py",
+        })
+        self.assertEqual(
+            self.data["source_blobs"]["meta_stage6_actual_85_crosswalk"],
+            "aad4b095bb1fd619dc633889e7011dff6455edf7")
         self.assertTrue(inv["overlap_not_additive"])
         self.assertFalse(inv["full_six_repo_symbol_inventory_verified"])
 
