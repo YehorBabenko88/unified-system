@@ -1,0 +1,128 @@
+{
+  "schema": "unified-system.j-immutable-cohort.v1",
+  "created_utc": "2026-11-27",
+  "release_status": "CODE_NO_GO_PRODUCTION_NO_GO",
+  "integration_branch": "gpt/j-round26-integration-20261127",
+  "integration_start_commit": "9349d7f3ed93ef82d120976816b968e0b716b067",
+  "integration_start_tree": "a6f7c675c3489badf31399a8dca380004947c0cf",
+  "frozen_reference": {
+    "repo": "YehorBabenko88/unified-system",
+    "pr": 166,
+    "sha": "9349d7f3ed93ef82d120976816b968e0b716b067",
+    "read_only": true
+  },
+  "sources": [
+    {
+      "role": "A",
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 162,
+      "sha": "ad7efedb0cae0893ca1c6ba1c76c9335b507bb6b",
+      "disposition": "owner_open_unmerged_native_windows_failure"
+    },
+    {
+      "role": "B",
+      "repo": "YehorBabenko88/bybit-cluster-grid",
+      "pr": 300,
+      "sha": "52d81298a3acbf1ff49ae9d84eb1d803333da922",
+      "disposition": "owner_branch_ff_only_native_integrated_unverified"
+    },
+    {
+      "role": "C",
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 163,
+      "sha": "98ef352a6acf527fda831f94fb04dd92b906443c",
+      "candidate_pr": 170,
+      "candidate_sha": "a43ca6c2fc9ee3cd319d71df04c15e7ceb7b72b6",
+      "disposition": "candidate_unmerged_protected_runtime_unverified"
+    },
+    {
+      "role": "D",
+      "repo": "YehorBabenko88/Terminan",
+      "pr": 126,
+      "sha": "380c9af8a4da5feb5d7adf26dd8e1d54316409cc",
+      "disposition": "draft_unmerged_partial_chart_only"
+    },
+    {
+      "role": "Math",
+      "repo": "YehorBabenko88/math",
+      "sha": "9e6acbd9e12a91189f57234828e31640983af553",
+      "disposition": "dependency_pin_not_native_cohort_proven"
+    },
+    {
+      "role": "E",
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 164,
+      "sha": "5eadc8842cdb33e75b5f034a22a0f14457eb01eb",
+      "candidate_pr": 171,
+      "candidate_sha": "98e301ea05ee86606616a5e8bacfe52c3d0f1dfd",
+      "disposition": "candidate_unmerged_native_consul_sql_unverified"
+    },
+    {
+      "role": "F",
+      "repo": "YehorBabenko88/unified-system",
+      "pr": 165,
+      "sha": "255b2a9868591aafe3e0e8519949b626908daf81",
+      "disposition": "independent_qualifier_windows_denied"
+    },
+    {
+      "role": "G",
+      "repo": "YehorBabenko88/unified-system",
+      "issue": 172,
+      "sha": null,
+      "disposition": "await_owner_deliverable"
+    },
+    {
+      "role": "H",
+      "repo": "YehorBabenko88/unified-system",
+      "issue": 173,
+      "sha": null,
+      "disposition": "await_owner_deliverable"
+    },
+    {
+      "role": "I",
+      "repo": "YehorBabenko88/unified-system",
+      "issue": 174,
+      "sha": null,
+      "disposition": "await_owner_deliverable"
+    },
+    {
+      "role": "J",
+      "repo": "YehorBabenko88/unified-system",
+      "issue": 175,
+      "sha": "9349d7f3ed93ef82d120976816b968e0b716b067",
+      "disposition": "integration_baseline_only"
+    }
+  ],
+  "canonical_owners": {
+    "market_acquisition_writer": "YehorBabenko88/bybit-cluster-grid",
+    "math": "YehorBabenko88/math",
+    "ui_paper_strategy": "YehorBabenko88/Terminan",
+    "lifecycle_gateway_postgresql": "YehorBabenko88/unified-system"
+  },
+  "migration_sources": [
+    "YehorBabenko88/strattester",
+    "YehorBabenko88/meta_analyse"
+  ],
+  "policy": {
+    "no_main_merge": true,
+    "no_force_push": true,
+    "no_frozen_pr_edit": true,
+    "no_production": true,
+    "no_real_trades": true,
+    "no_user_db": true,
+    "no_5432": true,
+    "no_security_bypass": true,
+    "no_manual_ci_dispatch": true,
+    "unverified_sha_is_not_accepted": true
+  },
+  "acceptance": {
+    "source_revision": "PINNED_NOT_CONSOLIDATED",
+    "original_package_hashes": "NOT_VERIFIED",
+    "native_windows": "FAIL",
+    "native_consul_pg": "NOT_PROVEN",
+    "full_market_completeness": "NOT_PROVEN",
+    "installer_recovery": "NOT_RUN",
+    "protected_root": "DENIED",
+    "release": "NO_GO"
+  }
+}
