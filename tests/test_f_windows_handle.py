@@ -207,8 +207,8 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         self.assertIn('"installation_ownership_attested": False', source)
         self.assertNotIn("SetFileInformationByHandle", source)
 
-    def test_install_receipt_requires_uninterrupted_ancestor_identity(self):
-        """Block qualification of exact I V2 source with only closed snapshots."""
+    def test_i_r35_native_custody_source_gate_is_not_release_approval(self):
+        """Pin I's revised handle-custody source, without native GO claims."""
         import ast
         import hashlib
         from pathlib import Path
@@ -216,28 +216,58 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         p = (Path(owner_file) if owner_file else
              Path(__file__).resolve().parents[1] / "unified_system" / "installation_service.py")
         if not p.is_file():
-            self.skipTest("I owner V2 source not supplied")
+            self.skipTest("I owner source not supplied")
         raw = p.read_bytes()
         blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + bytes([0]) + raw).hexdigest()
-        expected = "9ddaebbb8c0d24e19e595654f316e8646d0d675e"
+        expected = "0a39ec57556d96aeda15b4273c59ce074fa70406"
         if not owner_file and blob != expected:
-            self.skipTest("F checkout contains pre-I-V2 installer; owner source not supplied")
-        self.assertEqual(blob, expected, "I R35 HEAD source drift; re-pin before qualification")
+            self.skipTest("F inherited checkout lacks exact I custody source")
+        self.assertEqual(blob, expected, "I source drift: require independent re-review")
         source = raw.decode("utf-8")
         tree = ast.parse(source)
-        names = {node.name:node for node in tree.body if isinstance(node, ast.FunctionDef)}
-        self.assertIn("_capture_native_roster", names)
-        self.assertIn("_native_file_identity", names)
-        capture = ast.get_source_segment(source, names["_capture_native_roster"])
-        helper = ast.get_source_segment(source, names["_native_file_identity"])
-        self.assertIn("first==second", capture)
-        self.assertIn("CloseHandle(h)", helper)
-        # This is a P0 negative source gate, NOT a simulated Windows race.
-        # A green result would incorrectly accept two snapshots as custody.
-        if "CloseHandle(h)" in helper and "retained_ancestor_handles" not in capture:
-            self.fail("I_V2_ANCESTOR_HANDLE_CUSTODY_NOT_PROVEN: sequential FileId "
-                      "snapshots close each native handle before seal/register; "
-                      "native hostile Windows qualification is still required")
+        cls = next((n for n in tree.body
+                    if isinstance(n, ast.ClassDef) and n.name == "_NativeReceiptCustody"), None)
+        self.assertIsNotNone(cls, "I native custody type absent")
+        enter = next((n for n in cls.body
+                      if isinstance(n, ast.FunctionDef) and n.name == "__enter__"), None)
+        verify = next((n for n in cls.body
+                       if isinstance(n, ast.FunctionDef) and n.name == "verify"), None)
+        close = next((n for n in cls.body
+                      if isinstance(n, ast.FunctionDef) and n.name == "close"), None)
+        self.assertTrue(enter and verify and close)
+        opening = ast.get_source_segment(source, enter)
+        checking = ast.get_source_segment(source, verify)
+        closing = ast.get_source_segment(source, close)
+        self.assertIn("self.handles[key]=h", opening)
+        self.assertIn("0x1|0x2,None", opening)
+        self.assertNotIn("0x1|0x2|0x4", opening)
+        self.assertIn("self._read()==self.snapshot", checking)
+        self.assertIn("_native_file_identity(path)==self.snapshot[key]", checking)
+        self.assertIn("CloseHandle(h)", closing)
+        self.assertIn("len(paths)<=512", ast.get_source_segment(source, cls))
+        create = next(n for n in cls.body if n.name == "__enter__")
+        self.assertIsNotNone(create)
+        service = next((n for n in tree.body if isinstance(n, ast.ClassDef)
+                        and n.name == "ServiceResource"), None)
+        self.assertIsNotNone(service)
+        create_method = next((n for n in service.body
+                              if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+                              and n.name == "create"), None)
+        self.assertIsNotNone(create_method)
+        lifecycle = ast.get_source_segment(source, create_method)
+        self.assertIn("with _NativeReceiptCustody(paths) as custody:", lifecycle)
+        for stage in ("NATIVE_FILE_IDS", "ACL_SEALED", "REGISTER_INTENT", "REGISTERED"):
+            self.assertIn("'" + stage + "'", lifecycle)
+        self.assertLess(lifecycle.index("'NATIVE_FILE_IDS'"),
+                        lifecycle.index("'ACL_SEALED'"))
+        self.assertLess(lifecycle.index("'ACL_SEALED'"),
+                        lifecycle.index("'REGISTER_INTENT'"))
+        self.assertLess(lifecycle.index("'REGISTER_INTENT'"),
+                        lifecycle.index("'REGISTERED'"))
+        # An offline source contract is never a substitute for real Win32
+        # ancestor races, SQLite WAL/rollback coexistence, SCM or crash tests.
+        self.assertTrue(True)
+
 
 @unittest.skipUnless(os.name == "nt", "genuine Win32 kernel handles required")
 class NativeWindowsRetainedHandleTests(unittest.TestCase):
