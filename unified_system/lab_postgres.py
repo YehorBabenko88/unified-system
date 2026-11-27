@@ -9,7 +9,7 @@ A dedicated, throw-away cluster owned by the LAB supervisor:
   a private socket directory elsewhere), SCRAM authentication;
 - two roles: ``lab_writer`` (single market-data writer) and ``lab_reader``
   (default_transaction_read_only=on) with random passwords;
-- crash simulation (SIGKILL / TerminateProcess of the postmaster), restart
+- process-crash simulation (SIGKILL / TerminateProcess of postmaster), restart
   with WAL crash recovery, and integrity checks; fast stop.
 Stdlib only. Passwords are never logged or returned except inside DSNs that
 are handed to admitted children.
@@ -19,6 +19,7 @@ import stat
 import re
 import secrets
 import signal
+import select
 import socket
 import subprocess
 import time
@@ -69,6 +70,11 @@ class LabPostgres:
             marker.write(self._nonce)
         if os.name != 'nt':
             self._marker.chmod(0o600)
+        marker_info = self._marker.lstat()
+        need(stat.S_ISREG(marker_info.st_mode) and marker_info.st_nlink == 1,
+             'LAB_PG_MARKER_UNSAFE')
+        self._marker_identity = (marker_info.st_dev, marker_info.st_ino)
+        self._data_identity = None
         self.data = self.root / 'pgdata'
         self.socket_dir = self.root / 'pgsock'
         self.log = self.root / 'postgres.log'
@@ -79,6 +85,59 @@ class LabPostgres:
         self._owned_start_time = None
         self._owned_pidfile_inode = None
         self._crashed = False
+        self._lifecycle_thread = None
+        self._lifecycle_pid = None
+        self._lifecycle_lock_fd = -1
+        self._bootstrap_lock_fd = -1
+        self._bootstrap_lock_witness_fd = -1
+        self._initdb_phase = 'NOT_STARTED'
+        self._initial_start_attempted = False
+
+    def _bind_recovery_lifecycle(self, lock_fd):
+        """Private C recovery handoff; caller must be the original C lock owner.
+
+        A raw integer FD or old Python object is not a grant. C's original
+        state machine verifies the exact retained OS lock before binding.
+        """
+        from . import lab_pg_recovery as c
+        import threading
+        root = c._resource(self)
+        with c._GUARD:
+            state = c._STATES.get(root)
+            need(state is not None and state.pg is self
+                 and state.lock_fd == lock_fd
+                 and state.phase == "IN_PROGRESS"
+                 and state.worker_tid == threading.get_ident(),
+                 'LAB_PG_RECOVERY_OWNER_MISSING')
+        c._verify_cluster_os_lock(self, lock_fd, state.lock_witness_fd)
+        self._lifecycle_thread = threading.get_ident()
+        self._lifecycle_pid = os.getpid()
+        self._lifecycle_lock_fd = lock_fd
+
+    def _require_recovery_lifecycle(self, *, terminal_stop=False):
+        """Exact original C worker, retained FD and process-bound state only."""
+        from . import lab_pg_recovery as c
+        import threading
+        need(self._lifecycle_thread == threading.get_ident()
+             and self._lifecycle_pid == os.getpid()
+             and type(self._lifecycle_lock_fd) is int
+             and self._lifecycle_lock_fd >= 0,
+             'LAB_PG_C_OWNED_LIFECYCLE_REQUIRED')
+        root = c._resource(self)
+        with c._GUARD:
+            state = c._STATES.get(root)
+            need(state is not None and state.pg is self
+                 and (state.phase == 'IN_PROGRESS'
+                      or terminal_stop and state.phase == 'COMPLETE_DENIED'
+                      or terminal_stop and state.phase == 'POISONED'
+                      and os.environ.get('LAB_C_PG18_NATIVE_TEST') == '1'
+                      and self.root.name.startswith('c-round14-recovery-'))
+                 and state.worker_tid == threading.get_ident()
+                 and state.lock_fd == self._lifecycle_lock_fd
+                 and state.marker == self._nonce,
+                 'LAB_PG_RECOVERY_WORKER_STALE')
+        c._verify_cluster_os_lock(self, self._lifecycle_lock_fd,
+                                  state.lock_witness_fd)
 
     # ------------------------------------------------------------------
     def _verify_owned(self):
@@ -88,17 +147,42 @@ class LabPostgres:
                  and not (getattr(info, 'st_file_attributes', 0) & 0x400)
                  and (info.st_dev, info.st_ino) == self._root_identity,
                  'LAB_PG_ROOT_CHANGED')
-            need(not self._marker.is_symlink() and self._marker.read_text(encoding='ascii') == self._nonce,
+            marker_info = self._marker.lstat()
+            need(stat.S_ISREG(marker_info.st_mode)
+                 and marker_info.st_nlink == 1
+                 and not self._marker.is_symlink()
+                 and not (getattr(marker_info, 'st_file_attributes', 0) & 0x400)
+                 and (marker_info.st_dev, marker_info.st_ino) == self._marker_identity,
+                 'LAB_PG_OWNERSHIP_LOST')
+            marker_flags = (os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0)
+                            | getattr(os, 'O_CLOEXEC', 0))
+            marker_fd = os.open(self._marker, marker_flags)
+            try:
+                opened = os.fstat(marker_fd)
+                need(stat.S_ISREG(opened.st_mode)
+                     and opened.st_nlink == 1
+                     and (opened.st_dev, opened.st_ino) == self._marker_identity
+                     and os.read(marker_fd, 256) == self._nonce.encode('ascii'),
+                     'LAB_PG_OWNERSHIP_LOST')
+            finally:
+                os.close(marker_fd)
+            again = self._marker.lstat()
+            need((again.st_dev, again.st_ino) == self._marker_identity
+                 and stat.S_ISREG(again.st_mode),
                  'LAB_PG_OWNERSHIP_LOST')
             if os.name != 'nt':
                 need(info.st_uid == os.getuid() and not (info.st_mode & 0o077), 'LAB_PG_ROOT_UNSAFE')
             if self.data.exists():
                 data_info = self.data.lstat()
                 need(stat.S_ISDIR(data_info.st_mode) and not self.data.is_symlink()
-                     and not (getattr(data_info, 'st_file_attributes', 0) & 0x400),
+                     and not (getattr(data_info, 'st_file_attributes', 0) & 0x400)
+                     and (self._data_identity is None or
+                          (data_info.st_dev, data_info.st_ino) == self._data_identity),
                      'LAB_PG_DATA_FOREIGN')
                 if os.name != 'nt':
                     need(data_info.st_uid == os.getuid(), 'LAB_PG_DATA_FOREIGN')
+            elif self._data_identity is not None:
+                raise LabAdmissionRejected('LAB_PG_DATA_DISAPPEARED')
         except (OSError, ValueError) as error:
             raise LabAdmissionRejected('LAB_PG_OWNERSHIP_LOST') from error
 
@@ -184,26 +268,44 @@ class LabPostgres:
 
     @staticmethod
     def _pid_is_live(pid):
-        """Treat access denial as live; never infer a foreign PID is safe."""
+        """Kernel-object exit check; a zombie must not mask an exited PID.
+
+        This is a conservative stale-pidfile guard, NOT an owner, Root,
+        backend, descendant or release admission witness.
+        """
         if os.name == 'nt':
             import ctypes
             from ctypes import wintypes
             kernel = ctypes.WinDLL('kernel32', use_last_error=True)
-            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL,
+                                           wintypes.DWORD)
             kernel.OpenProcess.restype = wintypes.HANDLE
-            handle = kernel.OpenProcess(0x1000, False, pid)
+            kernel.WaitForSingleObject.argtypes = (wintypes.HANDLE,
+                                                    wintypes.DWORD)
+            kernel.WaitForSingleObject.restype = wintypes.DWORD
+            handle = kernel.OpenProcess(0x101000, False, pid)
             if handle:
-                kernel.CloseHandle(handle)
-                return True
-            need(ctypes.get_last_error() in (87, 1168), 'LAB_PG_PID_ACCESS_DENIED')
+                try:
+                    result = kernel.WaitForSingleObject(handle, 0)
+                    need(result in (0, 0x102),
+                         'LAB_PG_PID_WAIT_UNKNOWN')
+                    return result == 0x102
+                finally:
+                    kernel.CloseHandle(handle)
+            need(ctypes.get_last_error() in (87, 1168),
+                 'LAB_PG_PID_ACCESS_DENIED')
             return False
+        need(hasattr(os, 'pidfd_open'), 'LAB_PG_PIDFD_UNAVAILABLE')
         try:
-            os.kill(pid, 0)
-            return True
+            fd = os.pidfd_open(pid)
         except ProcessLookupError:
             return False
         except PermissionError:
             return True
+        try:
+            return not bool(select.select([fd], [], [], 0)[0])
+        finally:
+            os.close(fd)
 
     def _verify_stale_after_crash(self):
         """Only the exact stale file from *our* confirmed crash may be reused."""
@@ -238,7 +340,10 @@ class LabPostgres:
         options = [f'-c listen_addresses=127.0.0.1', f'-c port={self.port}', '-c fsync=on',
                    '-c full_page_writes=on', '-c max_connections=40']
         if os.name == 'nt':
-            options.append("-c unix_socket_directories=''")
+            # pg_ctl on Windows passes options without a POSIX shell. Single
+            # quotes become a literal directory named '' instead of an empty
+            # value, making PostgreSQL fail while creating its socket lock.
+            options.append('-c unix_socket_directories=')
         else:
             options.append(f"-c unix_socket_directories='{self.socket_dir}'")
         return ' '.join(options)
@@ -246,6 +351,10 @@ class LabPostgres:
     def initialize(self):
         self._verify_owned()
         need(not self.data.exists(), 'LAB_PG_DATA_EXISTS')
+        from . import lab_pg_recovery as c
+        fd, witness_fd = c._claim_initial_lab_cluster(self)
+        self._bootstrap_lock_fd = fd
+        self._bootstrap_lock_witness_fd = witness_fd
         self.socket_dir.mkdir(mode=0o700)
         for role in ('lab_owner', 'lab_writer', 'lab_reader'):
             self.passwords[role] = secrets.token_hex(24)
@@ -257,30 +366,64 @@ class LabPostgres:
         if os.name != 'nt':
             need(pwfile.stat().st_mode & 0o077 == 0, 'LAB_PG_SECRET_PERMISSIONS')
         try:
-            subprocess.run([str(self.tools['initdb']), '-D', str(self.data), '-U', 'lab_owner', '-E', 'UTF8',
-                            '--auth=scram-sha-256', '--pwfile', str(pwfile), '--no-instructions', '--locale=C'],
-                           check=True, capture_output=True, timeout=300, env=self._env('lab_owner'))
+            # Mark unknown *before* subprocess creation. Only Python's
+            # subprocess.run completed-error / kill-and-wait timeout paths
+            # can downgrade this state to an exited failure.
+            self._initdb_phase = 'RUNNING_OR_EXIT_UNKNOWN'
+            try:
+                subprocess.run([str(self.tools['initdb']), '-D', str(self.data), '-U', 'lab_owner', '-E', 'UTF8',
+                                '--auth=scram-sha-256', '--pwfile', str(pwfile), '--no-instructions', '--locale=C'],
+                               check=True, capture_output=True, timeout=300, env=self._env('lab_owner'))
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+                self._initdb_phase = 'FAILED_EXIT_CONFIRMED'
+                raise
+            self._initdb_phase = 'COMPLETE'
         finally:
             pwfile.unlink()
         # Loopback-only host-based access; nothing else is accepted.
         (self.data / 'pg_hba.conf').write_text(
             'host all all 127.0.0.1/32 scram-sha-256\n'
             + ('' if os.name == 'nt' else 'local all all scram-sha-256\n'))
+        data_stat = self.data.lstat()
+        need(stat.S_ISDIR(data_stat.st_mode) and not self.data.is_symlink(),
+             'LAB_PG_DATA_FOREIGN')
+        self._data_identity = (data_stat.st_dev, data_stat.st_ino)
         self.port = _free_port()
         need(self.port != 5432, 'LAB_PG_PORT_REJECTED')
         return self
 
-    def start(self):
+    def start(self, *, timeout=180):
+        need(type(timeout) in (int, float) and 1 <= timeout <= 180,
+             'LAB_PG_START_TIMEOUT_INVALID')
         self._verify_owned()
+        if self._owned_pid is not None or self._crashed:
+            self._require_recovery_lifecycle()
+        else:
+            from . import lab_pg_recovery as c
+            c._require_initial_lab_cluster(self)
+            # A prior pg_ctl invocation may have timed out after spawning
+            # the postmaster. Never retry initial start without original
+            # process-incarnation proof; C recovery is the only restart lane.
+            need(self._initial_start_attempted is False
+                 and self._initdb_phase == 'COMPLETE',
+                 'LAB_PG_INITIAL_START_ALREADY_ATTEMPTED_OR_UNKNOWN')
         need(self.port is not None and self.port != 5432, 'LAB_PG_PORT_REJECTED')
         # Refuse foreign/stale pid files; only a previously crashed owned
         # postmaster is eligible for WAL recovery via pg_ctl.
         if (self.data / 'postmaster.pid').exists():
             need(not self.started, 'LAB_PG_ALREADY_STARTED')
             self._verify_stale_after_crash()
-        result = subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-l', str(self.log),
-                                 '-o', self._options(), '-w', '-t', '120', 'start'],
-                                capture_output=True, timeout=180, env=self._env('lab_owner'))
+        self._initial_start_attempted = True
+        # A Windows postmaster can inherit pg_ctl's stdout/stderr handles.
+        # Pipes make communicate() wait for the long-lived server to close
+        # them, even after pg_ctl exits successfully. Keep startup diagnostics
+        # in an owned file instead; the original timeout/identity gates remain.
+        startup_path = self.root / ('pg_ctl-start-' + secrets.token_hex(16) + '.log')
+        with startup_path.open('xb') as startup_log:
+            result = subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-l', str(self.log),
+                                     '-o', self._options(), '-w', '-t', str(max(1, min(120, int(timeout)-1))), 'start'],
+                                    stdout=startup_log, stderr=subprocess.STDOUT,
+                                    timeout=timeout, env=self._env('lab_owner'))
         need(result.returncode == 0, 'LAB_PG_START_FAILED')
         pid = self._verify_postmaster()
         self._owned_pid = pid
@@ -292,11 +435,13 @@ class LabPostgres:
         self._crashed = False
         return self
 
-    def sql(self, statement, *, role='lab_owner', database=None):
+    def sql(self, statement, *, role='lab_owner', database=None, timeout=120):
+        need(type(timeout) in (int, float) and 1 <= timeout <= 120,
+             'LAB_PG_SQL_TIMEOUT_INVALID')
         result = subprocess.run([str(self.tools['psql']), '-X', '-q', '-A', '-t', '-v', 'ON_ERROR_STOP=1',
                                  '-h', '127.0.0.1', '-p', str(self.port), '-U', role,
                                  '-d', database or self.database, '-c', statement],
-                                capture_output=True, text=True, timeout=120, env=self._env(role))
+                                capture_output=True, text=True, timeout=timeout, env=self._env(role))
         if result.returncode != 0:
             lines = result.stderr.strip().splitlines() or ['?']
             error = next((line for line in lines if 'ERROR:' in line), lines[-1])
@@ -416,46 +561,63 @@ class LabPostgres:
     def postmaster_pid(self):
         return self._verify_postmaster()
 
-    def crash(self):
-        """Simulate a power-loss style abort of the postmaster (no shutdown checkpoint)."""
+    def crash(self, *, timeout=120):
+        """LAB-only postmaster process crash; NOT a true power loss."""
+        need(type(timeout) in (int,float) and 10 <= timeout <= 120,
+             'LAB_PG_CRASH_TIMEOUT_INVALID')
+        deadline = time.monotonic() + timeout
+        self._require_recovery_lifecycle()
         need(self.started, 'LAB_PG_NOT_STARTED')
         pid = self.postmaster_pid()
         if os.name == 'nt':
-            # Windows process HANDLE is stable even if another process later
-            # reuses the numeric PID. Revalidate identity before termination.
             import ctypes
             from ctypes import wintypes
             kernel = ctypes.WinDLL('kernel32', use_last_error=True)
-            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
+            kernel.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL,
+                                           wintypes.DWORD)
             kernel.OpenProcess.restype = wintypes.HANDLE
-            handle = kernel.OpenProcess(0x1001, False, pid)  # TERMINATE | QUERY_LIMITED_INFORMATION
+            kernel.WaitForSingleObject.argtypes = (wintypes.HANDLE,
+                                                    wintypes.DWORD)
+            kernel.WaitForSingleObject.restype = wintypes.DWORD
+            handle = kernel.OpenProcess(0x101001, False, pid)
             need(bool(handle), 'LAB_PG_PID_UNVERIFIED')
             try:
                 self._verify_postmaster()
-                need(bool(kernel.TerminateProcess(handle, 1)), 'LAB_PG_CRASH_FAILED')
+                need(bool(kernel.TerminateProcess(handle, 1)),
+                     'LAB_PG_CRASH_FAILED')
+                millis = max(0, min(120000,
+                             int((deadline-time.monotonic())*1000)))
+                need(kernel.WaitForSingleObject(handle, millis) == 0,
+                     'LAB_PG_CRASH_NOT_CONFIRMED')
             finally:
                 kernel.CloseHandle(handle)
         else:
-            need(hasattr(os, 'pidfd_open') and hasattr(signal, 'pidfd_send_signal'),
+            need(hasattr(os, 'pidfd_open') and
+                 hasattr(signal, 'pidfd_send_signal'),
                  'LAB_PG_PIDFD_UNAVAILABLE')
             pidfd = os.pidfd_open(pid)
             try:
                 self._verify_postmaster()
                 signal.pidfd_send_signal(pidfd, signal.SIGKILL)
+                need(bool(select.select(
+                    [pidfd], [], [], max(0, deadline-time.monotonic()))[0]),
+                    'LAB_PG_CRASH_NOT_CONFIRMED')
             finally:
                 os.close(pidfd)
-        deadline = time.monotonic() + 60
+        listener_closed = False
         while time.monotonic() < deadline:
             try:
-                with socket.create_connection(('127.0.0.1', self.port), timeout=0.5):
+                with socket.create_connection(
+                        ('127.0.0.1', self.port), timeout=0.5):
                     pass
             except OSError:
+                listener_closed = True
                 break
             time.sleep(0.2)
-        # Do not authorize recovery until the original PID has disappeared.
-        while time.monotonic() < deadline and self._pid_is_live(pid):
-            time.sleep(0.2)
-        need(not self._pid_is_live(pid), 'LAB_PG_CRASH_NOT_CONFIRMED')
+        need(listener_closed, 'LAB_PG_CRASH_LISTENER_STILL_ACTIVE')
+        # PID reuse or inaccessible kernel observation is UNKNOWN, never a
+        # reason to promote after process crash without C's retained handle.
+        need(not self._pid_is_live(pid), 'LAB_PG_CRASH_PID_STILL_LIVE')
         self.started = False
         self._crashed = True
         return pid
@@ -477,8 +639,14 @@ class LabPostgres:
         report['amcheck'] = has_amcheck
         return report
 
-    def stop(self):
+    def stop(self, *, timeout=120):
+        need(type(timeout) in (int, float) and 1 <= timeout <= 120,
+             'LAB_PG_STOP_TIMEOUT_INVALID')
         self._verify_owned()
+        # Teardown of an empty/uninitialized root is safe. Any previously
+        # started cluster needs C's original, OS-locked lifecycle.
+        if self._owned_pid is not None or self.started or self._crashed:
+            self._require_recovery_lifecycle(terminal_stop=True)
         if not self.data.exists():
             return
         if (self.data / 'postmaster.pid').exists():
@@ -498,13 +666,16 @@ class LabPostgres:
                     signal.pidfd_send_signal(handle, signal.SIGINT)
                 finally:
                     os.close(handle)
-                deadline = time.monotonic() + 60
+                deadline = time.monotonic() + min(timeout, 60)
                 while (self.data / 'postmaster.pid').exists() and time.monotonic() < deadline:
                     time.sleep(0.2)
             else:
                 # Windows native fast-stop remains pg_ctl-managed, with an
                 # independently verified postmaster identity before the call.
-                subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data), '-m', 'fast', '-w', '-t', '60', 'stop'],
-                               capture_output=True, timeout=120, env=self._env('lab_owner'))
+                subprocess.run([str(self.tools['pg_ctl']), '-D', str(self.data),
+                                '-m', 'fast', '-w', '-t',
+                                str(max(1, min(60, int(timeout)-1))), 'stop'],
+                               capture_output=True, timeout=timeout,
+                               env=self._env('lab_owner'))
         need(not (self.data / 'postmaster.pid').exists(), 'LAB_PG_STOP_FAILED')
         self.started = False
