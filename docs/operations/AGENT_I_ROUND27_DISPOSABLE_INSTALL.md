@@ -314,8 +314,10 @@ enable any physical deletion gate.
 ## ROUND 35 later cycle — retained native handle custody source candidate
 
 Follow-up to F security review: `_NativeReceiptCustody` now opens every
-observed namespace member and ancestor using `CreateFileW` with only
-`FILE_SHARE_READ`, captures native FileIdInfo/FileStandardInfo from the
+observed namespace member and ancestor using `CreateFileW` with
+`FILE_SHARE_READ | FILE_SHARE_WRITE` (but **without FILE_SHARE_DELETE**),
+so SQLite can append to its ownership journal during the custody period.
+It captures native FileIdInfo/FileStandardInfo from the
 **same retained handles**, compares fresh native path observations, and keeps
 the original handles open through `NATIVE_FILE_IDS`, `ACL_SEALED`,
 `REGISTER_INTENT` and `REGISTERED` journal transitions. No delete sharing
@@ -343,3 +345,14 @@ inside the custody scope. Fake/static tests do not prove genuine Win32.
 No physical deletion, user data, real SCM deployment, ADMINIT, production
 PG, live trades, main merge, force push or frozen PR #166 changes. No
 code-retirement authorization is implied. **CODE NO_GO / PRODUCTION NO_GO.**
+
+### ROUND35 additional fail-closed handle budget
+
+`_NativeReceiptCustody` currently refuses to retain more than **512**
+handles and never falls back to path-only registration. This limit can
+reject normal large releases and is therefore an **installation blocker**
+until a separately reviewed bounded roster/chunk protocol exists; it is
+not a production-ready scalability feature. A static assertion confirms
+SQLite write sharing remains enabled while delete sharing is denied.
+The owner source and native retention tests remain subject to independent
+F and J acceptance and must not be counted as native PASS by this text.
