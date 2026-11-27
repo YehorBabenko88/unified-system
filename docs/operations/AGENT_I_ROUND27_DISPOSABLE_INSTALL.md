@@ -391,3 +391,22 @@ path-key overflow and preflight byte-estimate overflow. All current-HEAD
 original native Windows tests remain **NOT_RUN**, not PASS. The two
 physical deletion predicates remain unconditional `False`.
 **CODE NO_GO / PRODUCTION NO_GO.**
+
+### Canonical capsule capacity versus installer admission
+
+Original `unified_system/lab_release.py` at Git blob
+`1084158079d961c73d805350ff57731292c44137`
+accepts up to **100000 `files`** and up to **100000 `directories`**
+in the V1 manifest schema. That is a verified **source-contract
+mismatch** with the Windows V2 native custody limit of **512 total
+roster keys**, and the 60000-byte journal receipt cap. It is not proof
+that any particular assembled release actually contains more than 512.
+Do not raise the limit, truncate identities, split receipts or relax
+no-delete-sharing solely to make a large release pass. Large release
+support needs an independently reviewed design and real manifest
+counts and raw Windows fixture evidence. Until then the intended
+outcome for an oversized real candidate is safe pre-BEGIN rejection.
+
+Current exact-HEAD original tests are not executed by this document;
+GitHub source checks and synthetic method-count bounds are evidence
+only for static logic. **PRODUCTION NO_GO**.
