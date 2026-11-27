@@ -112,7 +112,7 @@ class RetainedOsProcessWait:
     """
 
     def __init__(self, pid, created):
-        if (type(pid) is not int or pid <= 1 or type(created) is not list
+        if (type(pid) is not int or pid <= 1 or type(created) not in (list, tuple)
                 or len(created) != 2 or not all(type(v) is str and v for v in created)):
             raise ValueError('owned OS incarnation invalid')
         self.pid = pid
@@ -120,7 +120,7 @@ class RetainedOsProcessWait:
         self._handle = None
         self._kernel = None
         self._windows = os.name == 'nt'
-        if _identity(pid) != created:
+        if tuple(_identity(pid) or ()) != self.created:
             raise ValueError('owned OS incarnation changed')
         if self._windows:
             kernel, wintypes = _win_api()
@@ -131,7 +131,7 @@ class RetainedOsProcessWait:
                 # Opened handle pins a kernel process object, not a PID
                 # which may later be reused by a different application.
                 if (kernel.WaitForSingleObject(handle, 0) != 0x102
-                        or _win_identity(kernel, wintypes, handle) != created):
+                        or tuple(_win_identity(kernel, wintypes, handle)) != self.created):
                     raise ValueError('owned OS incarnation changed')
             except BaseException:
                 kernel.CloseHandle(handle)
@@ -142,7 +142,7 @@ class RetainedOsProcessWait:
                 raise ValueError('owned OS pidfd unavailable')
             fd = os.pidfd_open(pid)
             try:
-                if (_identity(pid) != created
+                if (tuple(_identity(pid) or ()) != self.created
                         or bool(select.select([fd], [], [], 0)[0])):
                     raise ValueError('owned OS incarnation changed')
             except BaseException:
