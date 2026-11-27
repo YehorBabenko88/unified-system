@@ -146,6 +146,68 @@ class OpaqueSessionTests(unittest.TestCase):
                 # Never claim the altered KV row is a valid old lease.
         asyncio.run(scenario())
 
+    def test_bad_renewal_reply_irreversibly_drops_local_deadline(self):
+        # This is transport-level safety only. Never interpret as native
+        # PostgreSQL, Consul consensus, Root grant or owner-transfer evidence.
+        async def exercise(payload, *, lost_reply=False):
+            state = {"held": False, "value": None}
+            key = "isolated/round25/leader"
+            calls = []
+
+            def handler(req):
+                calls.append((req.method, req.url.path))
+                if req.url.path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if req.url.path == "/v1/kv/" + key:
+                    if req.method == "PUT":
+                        state["held"] = True
+                        state["value"] = req.content
+                        return httpx.Response(200, json=True)
+                    return httpx.Response(200, json=[{
+                        "Key": key, "Session": OBSERVED if state["held"] else "",
+                        "ModifyIndex": 41,
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if req.url.path == "/v1/session/renew/" + OBSERVED:
+                    if lost_reply:
+                        raise httpx.ReadTimeout("unknown renewal response")
+                    return httpx.Response(200, json=payload)
+                raise AssertionError("unexpected Consul request")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25", isolated_lab=True,
+            ), client=client)
+            async with client:
+                lease = await authority.acquire("owner")
+                self.assertTrue(await authority.validate(lease))
+                self.assertFalse(await authority.renew(lease))
+                self.assertEqual(authority._deadlines[lease.session_id], 0)
+                self.assertFalse(await authority.validate(lease))
+                self.assertFalse(await authority.renew(lease))
+                self.assertEqual(sum(path == "/v1/session/renew/" + OBSERVED
+                                     for _, path in calls), 1)
+
+        bad = ([None], ["forged"], [False], [0], [[]],
+               [{"ID": "foreign-session"}], [{"ID": OBSERVED.upper()}],
+               {"ID": OBSERVED}, [], None, False)
+        for payload in bad:
+            with self.subTest(payload=repr(payload)):
+                asyncio.run(exercise(payload))
+        asyncio.run(exercise(None, lost_reply=True))
+
+    def test_opaque_transport_only_session_never_creates_sql_identity(self):
+        from unified_system.grid_writer_fence_model import (
+            _consul_session_id, native_writer_admission,
+        )
+        session = "OpaqueSession_2"
+        self.assertTrue(_consul_session_id(session))
+        with self.assertRaises(ResourceFenceBlocked):
+            self.identity(session)
+        with self.assertRaisesRegex(
+                ResourceFenceBlocked, "NATIVE_DB_FENCE_NOT_ADMITTED"):
+            native_writer_admission()
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
