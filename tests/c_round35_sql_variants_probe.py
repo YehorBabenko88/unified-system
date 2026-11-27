@@ -17,7 +17,7 @@ CURRENT_BLOB = "076980d9556bf3a685091f16129ef321cb1372be"
 def _git_blob_sha(path):
     data = path.read_bytes()
     return hashlib.sha1(
-        b"blob " + str(len(data)).encode("ascii") + b"\\0" + data
+        b"blob " + str(len(data)).encode("ascii") + bytes((0,)) + data
     ).hexdigest()
 
 
