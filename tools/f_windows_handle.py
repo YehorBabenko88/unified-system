@@ -157,6 +157,13 @@ def _final_path_matches(dll, handle, expected):
     if not actual.startswith("\\\\?\\"):
         raise ValueError("Windows non-DOS handle path refused")
     actual = actual[4:]
+    # Windows commonly returns a drive root without its trailing backslash
+    # (e.g. \\?\\C:), while CreateFileW was called with C:\\. Treat only that
+    # exact drive-root spelling as equivalent; do NOT normalize any other
+    # pathname, alias, dot component, junction or reparse resolution.
+    if expected.endswith(":\\") and len(expected) == 3 and len(actual) == 2:
+        if ntpath.normcase(actual) + "\\" == ntpath.normcase(expected):
+            return
     if (not re.match(r"^[A-Za-z]:\\", actual)
             or ntpath.normcase(actual) != ntpath.normcase(expected)):
         raise ValueError("Windows path alias or reparse resolution refused")
