@@ -1114,6 +1114,14 @@ class NativeCRecoveryTests(unittest.TestCase):
             backend_pid=self.old["backend_pid"],stream_id=stream,
             symbol="BTCUSDT",start_ms=ms,fingerprint=fp,
             content_id=cid)["state"],"EXACT_ALREADY_ACKNOWLEDGED")
+        # ROUND35: run both immutable original SQL source files against
+        # this SAME live C-owned PostgreSQL 18 fence and actual checkpoint.
+        # No 30th test / second bootstrap; the mandatory roster stays 29.
+        from tests.c_round35_sql_variants_probe import (
+            exercise_two_pinned_sql_sources)
+        exercise_two_pinned_sql_sources(
+            self, identity=identity, stream=stream, start_ms=ms,
+            fingerprint=fp, content_id=cid)
         self.assertTrue(clear_verified_lab_pending(
             self.pg,identity=identity,generation=1,
             backend_pid=self.old["backend_pid"],stream_id=stream))
