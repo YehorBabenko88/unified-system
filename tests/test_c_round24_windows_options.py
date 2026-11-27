@@ -74,17 +74,21 @@ class WindowsPostgresOptionsTests(unittest.TestCase):
                     destination = os.environ.get("LAB_PG_LOG_COPY")
                     if destination:
                         shutil.copyfile(pg.log, destination)
-                if pg is not None:
-                    if pg.started is False and pg._owned_pid is None:
-                        # The original owner still verifies postmaster
-                        # executable/start/PID-file identity on this path.
-                        pg.stop()
-                    # Startup failure is deliberately quarantined by C when
-                    # its initial outcome is unknown; never bypass that gate.
-                    _dispose_native_pg18_fixture(pg)
+                # Disposal is a terminal, C-owned permission to remove this
+                # private fixture root. Never remove a root on an unknown
+                # startup, lock, postmaster, backend or containment result.
                 if writer is not None:
                     writer.close()
-                shutil.rmtree(root)
+                if pg is not None:
+                    _dispose_native_pg18_fixture(pg)
+                    shutil.rmtree(root)
+                else:
+                    # Before LabPostgres construction there is no C-owned
+                    # PGDATA/process. The freshly created directory is empty.
+                    if not any(root.iterdir()):
+                        root.rmdir()
+                    else:
+                        print("LAB_PG_FIXTURE_QUARANTINED " + str(root), flush=True)
             finally:
                 if previous is None:
                     sys.modules.pop(name, None)
