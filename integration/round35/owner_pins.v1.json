@@ -99,7 +99,7 @@
     "recorded_roster_delist": "DENIED",
     "legacy_retirement": "DENIED"
   },
-  "observation_epoch": "round35-master-7222478307",
+  "observation_epoch": "round35-master-7223403929",
   "previous_source_shas": {
     "A": "c14bb55ece3b580600a6f6e528d1faa0b4790ea8",
     "B": "8719dfb0a865fa3b4cce09050c8f15e36f2dfe16",
@@ -111,16 +111,41 @@
     "H": "e23c3785c0ed8ec68d4a9993941d4c04dc5fdddc",
     "I": "da42b3e7d047f65f0ef78a18f1b8c2bf2d38f52f"
   },
-  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity. E exact 2 owner blobs imported only as candidate, no transfer of native acceptance. New cycle source snapshots and isolated local capacity tests are not fleet/package acceptance. D four original hosted jobs independently inspected at tested HEAD; no current moving-SHA equivalence. C exact original owner native workflow selectively added because missing J branch; no C full owner ancestry merged.",
+  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity. E exact 2 owner blobs imported only as candidate, no transfer of native acceptance. New cycle source snapshots and isolated local capacity tests are not fleet/package acceptance. D four original hosted jobs independently inspected at tested HEAD; no current moving-SHA equivalence. C exact original owner native workflow selectively added because missing J branch; no C full owner ancestry merged. R35 MASTER 7223403929: A actual Win2022 3.11/3.12 regression gates J native; H Math168 pin-only; duplicate J estimator deleted after actual count mismatch; I single canonical source, real manifest missing.",
   "qualified_source_pins": {
     "A": {
       "tested_head": "89b78cc4075a2fcb845b3494cceda20dec0cc64c",
       "reviewed_owner_head": "3ff47bba6c6eef74e4a14c3bbc938097681c23ec",
       "code_semantics": "SAME_PRODUCTION_LOGIC_COMMENT_ONLY_NEWER_HEAD",
-      "ci": "WIN2022_PY311_312_313_558_PASS_6_SKIP_WIN2025_NOT_RUN",
+      "ci": "HISTORICAL_WIN2022_89b78cc_558_PASS_6_SKIP_SUPERSEDED_FOR_CURRENT_CANDIDATE_BY_REGRESSION_AT_3ff47bb",
       "runtime_process_blob": "bd9bb626f41f2daf5fc7ceb3f8cb8a89acd2e3e9",
       "test_blob": "47ea8c0a101fbf752e68fec5a4d292a9ae31a63f",
-      "integration": "SELECTIVE_IMPORTED_SOURCE_PARITY_ONLY"
+      "integration": "SELECTIVE_IMPORTED_SOURCE_PARITY_ONLY",
+      "regression_quarantine": {
+        "tested_head": "3ff47bba6c6eef74e4a14c3bbc938097681c23ec",
+        "original_run": "https://github.com/YehorBabenko88/unified-system/actions/runs/46028331374",
+        "win2022_py311": {
+          "passed": 185,
+          "error": 1,
+          "skipped": 2
+        },
+        "win2022_py312": {
+          "passed": 184,
+          "error": 2,
+          "skipped": 2
+        },
+        "win2022_py313": {
+          "passed": 186,
+          "error": 0,
+          "skipped": 2
+        },
+        "source_of_errors": "OWNED_SERVICE_REJECTED_IN_BOUNDED_POWERSHELL_15S_CHILD",
+        "production_runtime_blob_unchanged": "bd9bb626f41f2daf5fc7ceb3f8cb8a89acd2e3e9",
+        "latest_A_candidate_head": "5fa7b3bfb1af26cbd5843ac3c1f8fb31960176e4",
+        "latest_A_test_blob": "ae6b497d545ec36257eb848ec36897ada0ef3077",
+        "candidate_test_narrowed_imported_command_check": "NOT_NATIVE_OR_SECURITY_QUALIFIED",
+        "J_integrated_A_promotion": "DENIED_UNTIL_A_REGRESSION_CLOSED_AND_F_REVIEW"
+      }
     },
     "G": {
       "tested_head": "5ff4f10d068bbed08db816e6e4ffdeb2b81ac338",
@@ -168,43 +193,43 @@
   },
   "latest_owner_observations": {
     "A": {
-      "sha": "3ff47bba6c6eef74e4a14c3bbc938097681c23ec",
-      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+      "sha": "5fa7b3bfb1af26cbd5843ac3c1f8fb31960176e4",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
     },
     "B": {
-      "sha": "eee29d8fae7c52d5b489a86a5a9ec08718265f18",
-      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+      "sha": "be0f9d783912c2bef625d04fbacd22b97396f8c0",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
     },
     "C": {
-      "sha": "e6e72d1e3e7c20abe39cab9750743fda7f6c8ab7",
-      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+      "sha": "a21f86caa096f480b3e0821438e6c4c5371a6099",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
     },
     "D": {
-      "sha": "fe4316d7c1580b9799903b57d8471034b5281996",
-      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+      "sha": "8e5196840848d0991706cbbd4d782c58e3e7f719",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
     },
     "E": {
-      "sha": "1aef1d8b5138d7aa132c404d1d66f92cf958b017",
-      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+      "sha": "5a7b64ac2e537e8971309feabdd5b756d21e062d",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
     },
     "F": {
-      "sha": "847eeeced4a5561db6b149e51817a60bd8d2cd9f",
-      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+      "sha": "120e0d0f81756761d7c9a787d1cfce66bc95f8d6",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
     },
     "G": {
-      "sha": "5ff4f10d068bbed08db816e6e4ffdeb2b81ac338",
-      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+      "sha": "fa9e0ff2235b35466a03c78781a80d42dbe1c4af",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
     },
     "H": {
-      "sha": "ebf668dc13be0cc2b6cd8c16c02e9dce6a6ac38e",
-      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+      "sha": "ff34defd5fad8e3a2ab32ee59bd3faa8cf9edc4e",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
     },
     "I": {
-      "sha": "fbce3d80d425e5a02c87b58b691531161634b25a",
-      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+      "sha": "92c63fa0a62175544bea847c692eb8249a65fca9",
+      "status": "MOVING_CANDIDATE_NOT_RELEASE_QUALIFIED"
     }
   },
-  "snapshot_cycle": "ROUND35_MASTER_7222746388",
+  "snapshot_cycle": "ROUND35_MASTER_7223403929",
   "reviewed_candidate_imports": {
     "E": {
       "owner_sha": "5a7b64ac2e537e8971309feabdd5b756d21e062d",
@@ -263,14 +288,59 @@
     },
     "owner_I_import": "DENIED_UNTIL_REAL_MANIFEST_AND_F_REVIEW"
   },
-  "original_local_test_execution": {
-    "source_blob": "90bbabde163b40dc303e4a7d826253d3673fa5a9",
-    "test_blob": "09ba3285f6ed6f3b37833bb3251cb55725de0ac6",
-    "host": "ISOLATED_LINUX_PYTHON_3_13_5",
-    "pass": 7,
-    "fail": 0,
-    "error": 0,
-    "skip": 0,
-    "limitation": "LAB_RELEASE_RELPATH_REAL_EXCERPT_AND_PARSE_MANIFEST_FAIL_CLOSED_STUB_NOT_FULL_ORIGINAL_REPOSITORY_DEPENDENCY"
+  "meta_migration_candidate": {
+    "owner": "H",
+    "math_pr": 168,
+    "math_head": "0c3a97aa3f76908c464298c345108bd355af4854",
+    "math_base": "9e6acbd9e12a91189f57234828e31640983af553",
+    "math_wall_tracker_blob": "0e22810943294a8cf8163660b08b44a4cc54f9ed",
+    "original_differential_test_blob": "3c7deedd97b7533a5a1f6ad198e8d7c54a9acc67",
+    "packaging_blob": "fb944447361b17cd2011732d843bc2f9f78be0bd",
+    "original_meta_wall_blob": "faae6e3539c8b33e9d933fce4fd2a92b518c4ac5",
+    "scope": "OBSERVATIONAL_FIRST_FAMILY_ONLY_NO_BROKER_TRADES_OR_PERSISTENCE",
+    "local_scoped_tests": "8_PASS_BUT_NUMERIC_MATH_STUB_NO_FULL_SDK",
+    "original_committed_math_tests": "NOT_RUN",
+    "consumer_cutover_authorized": false,
+    "legacy_removal_authorized": false,
+    "J_integration": "PIN_ONLY_NO_SOURCE_COPY_NO_MERGE"
+  },
+  "central_capacity_contract": {
+    "owner": "I",
+    "owner_head": "92c63fa0a62175544bea847c692eb8249a65fca9",
+    "canonical_service_blob": "725f2eac5e5b1e7c5e8b43e6a26f6c1433e7251c",
+    "original_functions": [
+      "_native_roster_paths",
+      "_native_receipt_roster_budget",
+      "_bounded_native_receipt"
+    ],
+    "max_handles": 512,
+    "max_estimate_bytes": 56000,
+    "max_actual_journal_bytes": 60000,
+    "duplicate_J_estimator": "RETIRED_FROM_PR_AND_CI",
+    "observed_prior_source_counterexample": {
+      "files": [
+        "a/b/c.py",
+        "a/d.py"
+      ],
+      "directories": [
+        "a",
+        "a/b"
+      ],
+      "ancestors": 4,
+      "old_J_count": 16,
+      "owner_I_canonical_roles": 14
+    },
+    "real_assembled_manifest_sha256": null,
+    "real_receipt_bytes": null,
+    "release_approved": false,
+    "independent_F_windows_review": "PENDING_NATIVE_WINDOWS"
+  },
+  "historical_retired_local_estimator": {
+    "original_source_blob": "90bbabde163b40dc303e4a7d826253d3673fa5a9",
+    "original_test_blob": "09ba3285f6ed6f3b37833bb3251cb55725de0ac6",
+    "prior_local_seven_pass": "INVALID_FOR_CANONICAL_ROSTER_ALIGNMENT",
+    "demonstrated_duplicate_parent_regression": true,
+    "active_in_J_branch": false,
+    "operator_acceptance": false
   }
 }
