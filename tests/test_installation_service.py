@@ -206,13 +206,14 @@ class ServiceResourceTests(unittest.TestCase):
   from unified_system import installation_service as service
   tiny={'root':self.root,'ancestor:0':self.root.parent}
   self.assertIs(service._native_receipt_roster_budget(tiny),tiny)
-  # Exactly 512 short identities remain eligible for the separate native
-  # receipt-size and Win32 checks; 513 refuse before opening a HANDLE.
+  # A moderate roster is eligible; a 513-member roster is denied on
+  # count even though a 512-member roster can exceed the byte budget.
   within={'root':self.root}
-  within.update({'file:'+str(i):self.root/str(i) for i in range(511)})
-  self.assertEqual(len(within),512)
+  within.update({'file:'+str(i):self.root/str(i) for i in range(399)})
+  self.assertEqual(len(within),400)
   self.assertIs(service._native_receipt_roster_budget(within),within)
-  too_many=dict(within,extra=self.root/'extra')
+  too_many={'root':self.root}
+  too_many.update({'file:'+str(i):self.root/str(i) for i in range(512)})
   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
    service._native_receipt_roster_budget(too_many)
   lengthy={'root':self.root,'file:'+'x'*301:self.root/'x'}
