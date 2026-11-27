@@ -302,6 +302,65 @@ class WindowsInstalledRoot:
             self.dll.CloseHandle(probe)
         return data
 
+    def readonly_identity_receipt(self, parts):
+        """Observed Win32 object identities, NOT installation or delete authority.
+
+        The caller must separately bind this observation to a versioned,
+        authenticated installation receipt at initial installation time.
+        Retain original directory and file handles while checking a repeat
+        open; never interpret this forensic observation as ownership.
+        """
+        if not isinstance(parts, tuple) or not parts:
+            raise ValueError("installed relative parts required")
+        parent = self._parent(parts)
+        _part(parts[-1])
+        path = ntpath.join(parent, parts[-1])
+        root_handle, root_before = self._retain_dir(self.root)
+        parent_handle, parent_before = self._retain_dir(parent)
+        if self._count >= _MAX_FILES * 4:
+            raise ValueError("Windows retained identity handle budget exceeded")
+        self._count += 1
+        handle, first = _open(self.dll, path, directory=False)
+        self._files.append(handle)
+        probe, second = _open(self.dll, path, directory=False)
+        try:
+            if first != second or _info(self.dll, handle, directory=False) != first:
+                raise ValueError("Windows original file identity changed")
+            if (_info(self.dll, parent_handle, directory=True) != parent_before
+                    or _info(self.dll, root_handle, directory=True) != root_before):
+                raise ValueError("Windows root or parent file identity changed")
+            if any(len(info[1]) != 16 or info[0] <= 0
+                   for info in (first, parent_before, root_before)):
+                raise ValueError("Windows native 128-bit identity unavailable")
+            return {
+                "schema": "f-win32-file-identity-observation.v1",
+                "relative_path": "/".join(parts),
+                "file_volume_serial": first[0],
+                "file_id128": first[1].hex(),
+                "parent_volume_serial": parent_before[0],
+                "parent_file_id128": parent_before[1].hex(),
+                "root_volume_serial": root_before[0],
+                "root_file_id128": root_before[1].hex(),
+                "size_bytes": first[2],
+                "filetime_last_write": first[3],
+                "installation_ownership_attested": False,
+                "physical_delete_authorized": False,
+            }
+        finally:
+            self.dll.CloseHandle(probe)
+
+    def verify_readonly_identity_receipt(self, parts, expected):
+        """Compare an exact earlier observation; fail closed on substitution.
+
+        This check does not authenticate when or by whom expected was made.
+        """
+        if type(expected) is not dict or expected.get("schema") != "f-win32-file-identity-observation.v1":
+            raise ValueError("Windows identity observation schema invalid")
+        current = self.readonly_identity_receipt(parts)
+        if current != expected:
+            raise ValueError("Windows observed installation identity mismatch")
+        return current
+
     def closure(self):
         discovered = set()
         visited = set()
