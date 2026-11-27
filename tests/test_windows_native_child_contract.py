@@ -1130,7 +1130,7 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
             receipt, release_id='disposable-lab', operation_id=op), receipt)
 
     def test_native_detached_inline_descendant_job_differential(self):
-        """One variable: nested inline Python, rather than a second script.
+        """Native console-less nested Python, without Job breakaway.
 
         Test-only DETACHED_PROCESS, exact original LOW restricted primary token,
         pre-resume Job and original handles are preserved. Even a positive
@@ -1142,7 +1142,7 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         parent_code = (
             'import subprocess,sys,time;'
             'p=subprocess.Popen([sys.executable,"-c",'
-            '"import time;time.sleep(30)"],close_fds=True);'
+            '"import time;time.sleep(30)"],close_fds=True,creationflags=subprocess.DETACHED_PROCESS);'
             'time.sleep(2);'
             'rc=p.poll();'
             'sys.exit(rc) if rc is not None else time.sleep(28)'
@@ -1160,7 +1160,7 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.worker.write_text(
             'import subprocess, sys, os, time\n'
             'p=subprocess.Popen([sys.executable, os.path.join('
-            'os.path.dirname(__file__), "descendant_worker.py")], close_fds=True)\n'
+            'os.path.dirname(__file__), "descendant_worker.py")], close_fds=True, creationflags=subprocess.DETACHED_PROCESS)\n'
             'time.sleep(1)\n'
             'rc=p.poll()\n'
             'if rc is not None: sys.exit(rc)\n'
@@ -1425,7 +1425,7 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.worker.write_text(
             'import os, subprocess, sys, time\n'
             'p = subprocess.Popen([sys.executable, os.path.join(os.path.dirname(__file__),'
-            ' "descendant_worker.py")], close_fds=True)\n'
+            ' "descendant_worker.py")], close_fds=True, creationflags=subprocess.DETACHED_PROCESS)\n'
             'time.sleep(30)\n',
             encoding='utf-8')
         program = self.driver.programs['market_data']
