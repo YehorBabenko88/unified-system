@@ -174,6 +174,36 @@ class WindowsPathSyntaxTests(unittest.TestCase):
                 root.verify_readonly_identity_receipt(("module.py",), receipt)
         self.assertEqual(kernel.closed, ["file-handle", "file-handle", "file-handle"])
 
+    def test_retained_ancestor_does_not_grant_deletion(self):
+        """F's original retained Win32 handle is read-only forensic evidence."""
+        import inspect
+        import f_windows_handle
+        source = inspect.getsource(f_windows_handle.WindowsInstalledRoot)
+        self.assertIn("self._retain_dir(drive)", source)
+        self.assertIn("self._retain_dir(current)", source)
+        self.assertIn('"physical_delete_authorized": False', source)
+        self.assertIn('"installation_ownership_attested": False', source)
+        self.assertNotIn("SetFileInformationByHandle", source)
+
+    def test_install_receipt_requires_uninterrupted_ancestor_identity(self):
+        """Document the owner's fail-closed gate, not a simulated OS race."""
+        from pathlib import Path
+        p = Path(__file__).resolve().parents[1] / "unified_system" / "installation_service.py"
+        if not p.exists():
+            self.skipTest("owner I production module unavailable in this checkout")
+        import ast
+        source = p.read_text(encoding="utf-8")
+        tree = ast.parse(source)
+        names = {node.name:node for node in tree.body if isinstance(node, ast.FunctionDef)}
+        self.assertIn("_capture_native_roster", names)
+        self.assertIn("_native_file_identity", names)
+        capture = ast.get_source_segment(source, names["_capture_native_roster"])
+        helper = ast.get_source_segment(source, names["_native_file_identity"])
+        self.assertIn("first==second", capture)
+        self.assertIn("CloseHandle(h)", helper)
+        # Two sequential observations cannot prove retained ancestor handles.
+        self.assertNotIn("retained_ancestor_handles", capture)
+
 @unittest.skipUnless(os.name == "nt", "genuine Win32 kernel handles required")
 class NativeWindowsRetainedHandleTests(unittest.TestCase):
     def setUp(self):
