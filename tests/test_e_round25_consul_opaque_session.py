@@ -570,6 +570,158 @@ class OpaqueSessionTests(unittest.TestCase):
             with self.subTest(bad=repr(bad)):
                 asyncio.run(exercise(bad, False))
 
+    def test_control_txn_does_not_return_success_after_lease_loss(self):
+        # The Consul transaction might have committed just before the
+        # locally observed expiry. Such an unknown/stale write is NOT a new
+        # operation permit, and the caller must never retry blindly.
+        from unified_system.consul_authority import CoordinationLost
+
+        async def exercise(loss):
+            state = {
+                "now": 100.0, "held": False, "value": b"",
+                "modify": 41, "kv_reads": 0, "txns": 0,
+            }
+            key = "isolated/round25/leader"
+            target = "isolated/round25/state/probe"
+            def clock():
+                return state["now"]
+
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == "/v1/kv/" + key:
+                    if req.method == "PUT":
+                        state["held"] = True
+                        state["value"] = req.content
+                        return httpx.Response(200, json=True)
+                    state["kv_reads"] += 1
+                    return httpx.Response(200, json=[{
+                        "Key": key, "Session": OBSERVED if state["held"] else "",
+                        "ModifyIndex": state["modify"],
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if path == "/v1/txn":
+                    self.assertEqual(len(json.loads(req.content)), 3)
+                    state["txns"] += 1
+                    if loss == "deadline":
+                        state["now"] = 115.0
+                    elif loss == "session":
+                        state["held"] = False
+                    elif loss == "modify-index":
+                        state["modify"] += 1
+                    return httpx.Response(200, json={
+                        "Results": [{"KV": {"Key": target, "ModifyIndex": 42}}],
+                    })
+                raise AssertionError("unexpected Consul path")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client, clock=clock)
+            async with client:
+                lease = await authority.acquire("owner")
+                if loss:
+                    with self.assertRaises(CoordinationLost):
+                        await authority.write_control(
+                            lease, "probe", {"value": 17})
+                else:
+                    self.assertIsNone(await authority.write_control(
+                        lease, "probe", {"value": 17}))
+                # Exactly one (potentially completed) write transaction;
+                # there is no retry even if the reply proves stale authority.
+                self.assertEqual(state["txns"], 1)
+                self.assertEqual(state["kv_reads"], 3 if loss != "deadline"
+                                 else 2)
+                if loss:
+                    self.assertFalse(await authority.validate(lease))
+
+        for loss in (None, "deadline", "session", "modify-index"):
+            with self.subTest(loss=loss):
+                asyncio.run(exercise(loss))
+
+    def test_mutating_consul_requests_never_retry_ambiguous_failover(self):
+        # First leader may commit, then lose the reply. A second PUT against
+        # another Consul endpoint would be a duplicate unknown mutation.
+        async def exercise(method, failure):
+            seen = []
+
+            def handler(req):
+                seen.append((req.method, req.url.host, req.url.path))
+                if req.url.host == "first.example":
+                    if failure == "timeout":
+                        raise httpx.ReadTimeout("possibly committed; no reply")
+                    return httpx.Response(503, json={"error": "unknown"})
+                return httpx.Response(200, json={"second": True})
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://first.example:8500", "http://second.example:8500"),
+                "isolated/round25", isolated_lab=True,
+            ), client=client)
+            async with client:
+                if method == "GET":
+                    result = await authority._request(
+                        "GET", "/v1/kv/isolated/round25/leader")
+                    self.assertEqual(result, {"second": True})
+                    self.assertEqual(len(seen), 2)
+                    self.assertEqual(seen[1][1], "second.example")
+                else:
+                    with self.assertRaises(CoordinationUnavailable):
+                        await authority._request(method, "/v1/session/create")
+                    self.assertEqual(seen, [
+                        (method, "first.example", "/v1/session/create")])
+
+        for failure in ("timeout", "server_error"):
+            for method in ("PUT", "POST", "DELETE", "GET"):
+                with self.subTest(failure=failure, method=method):
+                    asyncio.run(exercise(method, failure))
+
+    def test_failed_acquire_unknown_destroy_does_not_auto_replay(self):
+        # If KV acquire returns false, unacquired session cleanup MUST NOT
+        # execute destroy twice when the first destroy reply is lost.
+        async def exercise(destroy_reply):
+            state = {"create": 0, "acquire": 0, "destroy": 0}
+
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    state["create"] += 1
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == "/v1/kv/isolated/round25/leader":
+                    self.assertEqual(req.method, "PUT")
+                    self.assertEqual(req.url.params.get("acquire"), OBSERVED)
+                    state["acquire"] += 1
+                    return httpx.Response(200, json=False)
+                if path == "/v1/session/destroy/" + OBSERVED:
+                    state["destroy"] += 1
+                    if destroy_reply == "timeout":
+                        raise httpx.ReadTimeout("destroy may have committed")
+                    return httpx.Response(
+                        200, json=(destroy_reply == "confirmed"))
+                raise AssertionError("unexpected Consul path")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                if destroy_reply == "confirmed":
+                    self.assertIsNone(await authority.acquire("owner"))
+                else:
+                    with self.assertRaises(CoordinationUnavailable):
+                        await authority.acquire("owner")
+                self.assertEqual(state, {
+                    "create": 1, "acquire": 1, "destroy": 1})
+                self.assertEqual(authority._sessions, {})
+                self.assertEqual(authority._deadlines, {})
+
+        for reply in ("confirmed", "false", "timeout"):
+            with self.subTest(reply=reply):
+                asyncio.run(exercise(reply))
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []

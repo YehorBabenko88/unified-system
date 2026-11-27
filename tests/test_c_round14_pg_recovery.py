@@ -370,7 +370,8 @@ class NativeCRecoveryTests(unittest.TestCase):
         listener.listen(1)
         listener.settimeout(10)
         stop_relay = threading.Event()
-        lose_reply = threading.Event()
+        intercept_commit = threading.Event()
+        commit_forwarded = threading.Event()
         reply_discarded = threading.Event()
         expected_backend_shutdown = threading.Event()
         relay_errors = []
@@ -383,20 +384,70 @@ class NativeCRecoveryTests(unittest.TestCase):
                 back = socket.create_connection(("127.0.0.1", self.pg.port),
                                                 timeout=5)
                 relay_sockets.extend((front, back))
+                # The fixture is authenticated before issuing COMMIT.
+                # Parse PG v3 message frames rather than dropping an arbitrary
+                # packet; the SQL text is not authorization.
+                client_buffer = b""
+                server_buffer = b""
+                commit_phase = False
                 while not stop_relay.is_set():
                     ready, _, _ = select.select((front, back), (), (), 0.1)
                     for sock in ready:
                         packet = sock.recv(65536)
                         if not packet:
                             return
+                        if not intercept_commit.is_set():
+                            # Startup packets are length-prefixed with NO type
+                            # byte; AUTH can include protocol negotiation.
+                            # Relay all pre-armed traffic transparently.
+                            if sock is front:
+                                back.sendall(packet)
+                            else:
+                                front.sendall(packet)
+                            continue
                         if sock is front:
-                            back.sendall(packet)
-                        elif lose_reply.is_set():
-                            reply_discarded.set()
-                            # DROP actual PostgreSQL-to-client COMMIT bytes.
+                            client_buffer += packet
+                            while len(client_buffer) >= 5:
+                                size = int.from_bytes(client_buffer[1:5], "big")
+                                if size < 4 or size > 16 * 1024 * 1024:
+                                    raise RuntimeError("LAB_PROXY_CLIENT_FRAME_INVALID")
+                                frame_end = 1 + size
+                                if len(client_buffer) < frame_end:
+                                    break
+                                frame = client_buffer[:frame_end]
+                                client_buffer = client_buffer[frame_end:]
+                                if (frame[:1] == b"Q" and
+                                        frame[5:] in (b"COMMIT\x00",
+                                                      b"COMMIT;\x00")):
+                                    commit_phase = True
+                                    back.sendall(frame)
+                                    commit_forwarded.set()
+                                else:
+                                    back.sendall(frame)
                         else:
-                            front.sendall(packet)
-            except OSError as exc:
+                            server_buffer += packet
+                            while len(server_buffer) >= 5:
+                                size = int.from_bytes(server_buffer[1:5], "big")
+                                if size < 4 or size > 16 * 1024 * 1024:
+                                    raise RuntimeError("LAB_PROXY_SERVER_FRAME_INVALID")
+                                frame_end = 1 + size
+                                if len(server_buffer) < frame_end:
+                                    break
+                                frame = server_buffer[:frame_end]
+                                server_buffer = server_buffer[frame_end:]
+                                if commit_phase:
+                                    # An arbitrary packet drop is NOT proof
+                                    # that PostgreSQL executed COMMIT. Demand
+                                    # the exact PG v3 CommandComplete tag.
+                                    if (frame[:1] == b"C" and
+                                            frame[5:] == b"COMMIT\x00"):
+                                        reply_discarded.set()
+                                    elif frame[:1] == b"E":
+                                        raise RuntimeError(
+                                            "LAB_PROXY_COMMIT_ERROR_RESPONSE")
+                                else:
+                                    front.sendall(frame)
+            except (OSError, RuntimeError) as exc:
                 # A deliberately crashed PG18 backend may reset the
                 # transport; only unexpected pre-crash relay errors fail.
                 if (not stop_relay.is_set()
@@ -478,9 +529,10 @@ class NativeCRecoveryTests(unittest.TestCase):
                 finally:
                     commit_done.set()
 
-            # Only server->client packets are dropped; COMMIT itself still
-            # reaches the original disposable PG18 backend.
-            lose_reply.set()
+            # All startup/authentication, SQL INSERT and reply traffic
+            # has completed. Only the next standalone COMMIT wire message
+            # is framed; no raw StartupMessage is treated as a v3 frame.
+            intercept_commit.set()
             commit_thread = threading.Thread(
                 target=send_commit_without_receiving_reply, daemon=True)
             commit_thread.start()
@@ -496,6 +548,8 @@ class NativeCRecoveryTests(unittest.TestCase):
                     break
                 time.sleep(0.1)
             self.assertTrue(committed, "LAB_COMMIT_NOT_DURABLY_OBSERVED")
+            self.assertTrue(commit_forwarded.wait(5),
+                            "LAB_COMMIT_FRAME_NOT_FORWARDED")
             self.assertTrue(reply_discarded.wait(5),
                             "LAB_COMMIT_REPLY_DROP_NOT_OBSERVED")
             self.assertFalse(commit_done.is_set(),

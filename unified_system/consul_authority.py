@@ -106,8 +106,20 @@ class ConsulSessionAuthority:
                         self.client.request(method, endpoint.rstrip('/') + path,
                             headers=headers, timeout=budget, **kwargs), timeout=budget)
                 except (httpx.HTTPError, asyncio.TimeoutError):
+                    # A timed-out PUT may have committed before the reply was
+                    # lost. Never replay a mutation on another endpoint:
+                    # session/create, renew, destroy and /txn are all
+                    # deliberately single-attempt under ambiguous failure.
+                    if method != 'GET':
+                        raise CoordinationUnavailable(
+                            'Consul mutation outcome unknown') from None
                     continue
                 if response.status_code >= 500:
+                    # Even a server-side error can follow an applied write.
+                    # Keep GET quorum failover, but never retry mutations.
+                    if method != 'GET':
+                        raise CoordinationUnavailable(
+                            'Consul mutation outcome unknown')
                     continue
                 if response.status_code == 404 and missing_ok:
                     return None
@@ -157,12 +169,20 @@ class ConsulSessionAuthority:
         session = created.get('ID') if type(created) is dict else None
         if not _consul_session_id(session):
             raise CoordinationUnavailable('Consul session identity invalid')
+        destroy_attempted = False
         try:
             value = canonical({'owner': owner, 'session_id': session, 'namespace': self.config.namespace})
             won = await self._request('PUT', '/v1/kv/' + quote(self.key, safe='/'),
                                       params={'acquire': session}, content=value)
             if won is not True:
-                await self._request('PUT', '/v1/session/destroy/' + session)
+                # A failed KV acquire must clean up only once; if destroy
+                # replied false or its reply was lost, retrying from the
+                # exception handler would replay an unknown mutation.
+                destroy_attempted = True
+                destroyed = await self._request(
+                    'PUT', '/v1/session/destroy/' + session)
+                if destroyed is not True:
+                    raise CoordinationLost('Consul unacquired session destroy unconfirmed')
                 return None
             row = await self._read_lock()
             token = row.get('ModifyIndex') if row else None
@@ -175,10 +195,14 @@ class ConsulSessionAuthority:
             self._deadlines[session] = started + self.config.ttl_seconds - 1
             return lease
         except BaseException:
-            try:
-                await self._request('PUT', '/v1/session/destroy/' + session)
-            except CoordinationUnavailable:
-                pass
+            if not destroy_attempted:
+                destroy_attempted = True
+                try:
+                    # Best-effort single attempt; failure remains UNKNOWN and
+                    # never authorizes another Root lease or writer claim.
+                    await self._request('PUT', '/v1/session/destroy/' + session)
+                except CoordinationUnavailable:
+                    pass
             raise
 
     async def validate(self, lease):
@@ -275,6 +299,13 @@ class ConsulSessionAuthority:
                     for entry in result['Results']
                 )):
             raise CoordinationLost('Consul fencing transaction unconfirmed')
+        # A syntactically successful Consul write may finish only after the
+        # original local lease deadline (or after a concurrent release).
+        # No caller may interpret that old write as current Root authority.
+        # Re-read the original lease and consistent leader KV *after* the
+        # network transaction, rejecting both timeout and changed owner.
+        if not await self.validate(lease):
+            raise CoordinationLost('Consul lease lost after control transaction')
 
     async def read_control(self, name):
         rows = await self._request('GET', '/v1/kv/' + quote(self._state_key(name), safe='/'),
