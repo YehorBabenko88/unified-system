@@ -106,8 +106,20 @@ class ConsulSessionAuthority:
                         self.client.request(method, endpoint.rstrip('/') + path,
                             headers=headers, timeout=budget, **kwargs), timeout=budget)
                 except (httpx.HTTPError, asyncio.TimeoutError):
+                    # A timed-out PUT may have committed before the reply was
+                    # lost. Never replay a mutation on another endpoint:
+                    # session/create, renew, destroy and /txn are all
+                    # deliberately single-attempt under ambiguous failure.
+                    if method != 'GET':
+                        raise CoordinationUnavailable(
+                            'Consul mutation outcome unknown') from None
                     continue
                 if response.status_code >= 500:
+                    # Even a server-side error can follow an applied write.
+                    # Keep GET quorum failover, but never retry mutations.
+                    if method != 'GET':
+                        raise CoordinationUnavailable(
+                            'Consul mutation outcome unknown')
                     continue
                 if response.status_code == 404 and missing_ok:
                     return None
