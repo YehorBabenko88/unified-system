@@ -26,12 +26,16 @@ def _need(value, code="FENCE_MODEL_REJECTED"):
         raise ResourceFenceBlocked(code)
 
 
-def _uuid4(value):
+def _uuid4(value, *, consul_session=False):
     if type(value) is not str:
         return False
     try:
         item = uuid.UUID(value)
-        return item.version == 4 and str(item) == value
+        # Actual Consul 2.1 server sessions use UUID5. Accept that syntax only
+        # for the session field; it conveys no independent lease authority.
+        versions = (4, 5) if consul_session else (4,)
+        return (item.variant == uuid.RFC_4122 and item.version in versions
+                and str(item) == value)
     except (ValueError, TypeError, AttributeError):
         return False
 
@@ -56,7 +60,7 @@ class WriterLeaseIdentity:
         _need(type(self.owner) is str and _OWNER.fullmatch(self.owner) is not None)
         _need(type(self.namespace) is str and len(self.namespace) <= 200
               and _NAMESPACE.fullmatch(self.namespace) is not None)
-        _need(_uuid4(self.session_id) and _uuid4(self.instance_id)
+        _need(_uuid4(self.session_id, consul_session=True) and _uuid4(self.instance_id)
               and _uuid4(self.node_incarnation_id))
         _need(type(self.token) is int and 0 < self.token <= _MAX)
         _need(_digest(self.source_sha256) and _digest(self.schema_sha256))
