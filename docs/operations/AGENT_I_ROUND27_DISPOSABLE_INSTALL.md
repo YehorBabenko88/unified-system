@@ -260,3 +260,52 @@ No main merge, force, frozen PR #166 change, ADMINIT, user PostgreSQL/PG5432, re
 ROUND34 source follow-up: `Uninstaller._members()` checks the current original FileIdInfo of installed root, ownership directory, preserved state directory and ownership/service.sqlite against V2 before it could admit the real Windows removal boundary. A present code directory must also keep its original install-time FileIdInfo. If code is absent, recovery can only proceed through preexisting durable intents; a new directory identity is never adopted. These checks are read-only and remain behind the disabled physical-delete entrypoint.
 
 Hosted GitHub Actions for the R34 candidate reported instant `completed/failure` with no jobs returned (e.g. 46000955207, 46000955607; created and updated one second apart). These cannot be counted as executed unittest FAIL, or as PASS; the reason requires runner/Actions service diagnosis by owners. No retry/dispatch/cancel performed. Independent local executable source evidence remains limited to the original unchanged 20 methods and exact V2 receipt validation excerpt.
+
+
+## ROUND 35 — V2 ancestor observations and crash/size gates (2026-11-27)
+
+**Still CODE NO_GO / PRODUCTION NO_GO.** Source change only; this
+does not authorize a service install or any physical deletion.
+
+In canonical `installation_service.py`, the V2 install-time FileId roster
+now includes the complete install-root ancestor chain, intermediate
+subdirectories omitted from the manifest's directory list, each manifest
+member, the installed manifest itself, and the service ownership journal.
+Both native observations must match for **every** member and ancestor before
+`NATIVE_FILE_IDS` can be journaled. Win32 FileStandardInfo additionally
+rejects delete-pending objects and regular files with multiple hardlinks;
+the native query or capability being unavailable fails closed.
+The existing 60000-byte journal receipt cap remains a refusal rather than
+a truncation. Earlier V2 receipts that lack the new mandatory roster will
+not be silently upgraded or admitted to native removal.
+
+**Security boundary:** two path-based native observations do NOT hold all
+parent handles continuously from initial staging, and cannot establish
+hostile-writer exclusion against an intermediate swap and restoration.
+The SHA-256 journal seal is not an independent publisher signature or OS
+trust root. Native Windows 2022/2025 SCM, FileIdInfo, FileStandardInfo,
+held-handle ancestor swap, junction/reparse, hardlink race, unsupported
+filesystem, interruption/restart, large capsule, ACL and recovery remain
+unqualified until tested on J's isolated disposable runner with A/F
+independent review. Both `_exclusive_code_removal_proven()` and
+`_exclusive_namespace_proven()` must remain unconditional **False**.
+
+New source tests in `tests/test_installation_service.py` exercise
+pure roster construction (including a manifest that omits parents),
+malformed traversal rejection, stable native mock reads, drift and volume
+negative cases, and 60000-byte receipt denial. These tests do not invoke
+real Windows SCM or disposition. The existing crash-before-ACL and V1
+recovery negative cases remain in the original suite. The per-HEAD
+PASS/FAIL/ERROR/SKIP/NOT_RUN classification is recorded in issue #174.
+Do not promote earlier R34 local PASS to R35 HEAD.
+
+J may selectively import **only** these five owned files after pinning
+the exact current HEAD and reviewing test evidence:
+`unified_system/installation_service.py`,
+`unified_system/installation_uninstall.py`,
+`tests/test_installation_service.py`,
+`tests/test_installation_uninstall.py`, and
+`docs/operations/AGENT_I_ROUND27_DISPOSABLE_INSTALL.md`.
+Do NOT import the whole PR #182 (inherited 2239-file diff),
+merge main, touch frozen #166, use live SCM/user data/PG, or
+enable any physical deletion gate.
