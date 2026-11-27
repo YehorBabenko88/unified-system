@@ -370,6 +370,7 @@ class NativeCRecoveryTests(unittest.TestCase):
         listener.listen(1)
         listener.settimeout(10)
         stop_relay = threading.Event()
+        intercept_commit = threading.Event()
         commit_forwarded = threading.Event()
         reply_discarded = threading.Event()
         expected_backend_shutdown = threading.Event()
@@ -395,6 +396,15 @@ class NativeCRecoveryTests(unittest.TestCase):
                         packet = sock.recv(65536)
                         if not packet:
                             return
+                        if not intercept_commit.is_set():
+                            # Startup packets are length-prefixed with NO type
+                            # byte; AUTH can include protocol negotiation.
+                            # Relay all pre-armed traffic transparently.
+                            if sock is front:
+                                back.sendall(packet)
+                            else:
+                                front.sendall(packet)
+                            continue
                         if sock is front:
                             client_buffer += packet
                             while len(client_buffer) >= 5:
@@ -511,7 +521,10 @@ class NativeCRecoveryTests(unittest.TestCase):
                 finally:
                     commit_done.set()
 
-            # Only frames AFTER PostgreSQL's COMMIT Query are dropped.
+            # All startup/authentication, SQL INSERT and reply traffic
+            # has completed. Only the next standalone COMMIT wire message
+            # is framed; no raw StartupMessage is treated as a v3 frame.
+            intercept_commit.set()
             commit_thread = threading.Thread(
                 target=send_commit_without_receiving_reply, daemon=True)
             commit_thread.start()
