@@ -118,6 +118,24 @@ class MetaStage6CrosswalkTests(unittest.TestCase):
             self.assertIn("OWNER_ACK", row["retirement_conditions"])
             self.assertIn("ROLLBACK", row["retirement_conditions"])
 
+    def test_drifted_implementations_and_unlisted_state_receipts_are_held(self):
+        files = {row["path"]: row for row in self.data["files"]}
+        for path in DIFFERENT | UNLISTED:
+            row = files[path]
+            self.assertTrue(row["review_notes"].strip())
+            self.assertTrue(row["unique_parity_gate"].strip())
+            self.assertFalse(row["removal_allowed"])
+        paper = files["src/meta_analyse/offline_paper_delivery.py"]
+        self.assertEqual(paper["target_recommended"], "Terminan")
+        self.assertIn("deliver", paper["source_symbols"])
+        self.assertIn("checkpoint", paper["review_notes"])
+        receipt = files["src/meta_analyse/retirement_receipt.py"]
+        self.assertIn("persisted_state_receipt", receipt["source_symbols"])
+        self.assertIn("archive_paper_fills", receipt["source_symbols"])
+        self.assertIn("SPLIT_BY_SYMBOL", receipt["target_recommended"])
+        self.assertFalse(self.data["summary"]["drifted_semantic_parity_proven"])
+        self.assertFalse(self.data["summary"]["new_file_ownership_accepted"])
+
     def test_canonical_four_owner_handoff_without_retirement(self):
         actions = self.data["cross_owner_actions"]
         self.assertEqual(set(actions),
