@@ -155,6 +155,8 @@ class ServiceResourceTests(unittest.TestCase):
    self.assertEqual(_check_native_installation_receipt(proof,plan),proof)
    self.assertEqual(resource.recorded()['native_file_identity'],proof)
    self.assertIn('file:lab-release.json',proof['entries'])
+   self.assertIn('ownership:service.sqlite',proof['entries'])
+   self.assertIn('state',proof['entries'])
   else:
    self.assertEqual(entry['proof'],{'schema':NATIVE_RECEIPT_SCHEMA,'status':'NOT_RUN'})
    self.assertIsNone(resource.recorded()['native_file_identity'])
@@ -202,7 +204,7 @@ class ServiceResourceTests(unittest.TestCase):
   plan=self.plan()
   from unified_system import lab_release
   m=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])['manifest']
-  names={'root','code','file:lab-release.json'}|{'file:'+p for p in m['files']}|{'directory:'+p for p in m['directories']}
+  names={'root','code','ownership','state','ownership:service.sqlite','file:lab-release.json'}|{'file:'+p for p in m['files']}|{'directory:'+p for p in m['directories']}
   identity={'volume_serial':23,'file_id_128':'01'+'00'*15}
   body={'schema':NATIVE_RECEIPT_SCHEMA,'manifest_sha256':plan['manifest_sha256'],
         'entries':{key:dict(identity) for key in names}}

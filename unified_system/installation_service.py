@@ -67,7 +67,10 @@ def _native_installation_receipt(root,code,manifest,manifest_sha256):
  need(os.name=='nt')
  root=_safe(root);code=_safe(code)
  need(code.parent==root and root.is_dir() and code.is_dir())
- entries={'root':_native_file_identity(root),'code':_native_file_identity(code)}
+ entries={'root':_native_file_identity(root),'code':_native_file_identity(code),
+          'ownership':_native_file_identity(root/'ownership'),
+          'state':_native_file_identity(root/'state'),
+          'ownership:service.sqlite':_native_file_identity(root/'ownership/service.sqlite')}
  members=sorted(manifest['files']);need(len(members)<=40000)
  for relative in members:
   p=_safe(code/relative);need(p.is_file())
@@ -99,7 +102,7 @@ def _check_native_installation_receipt(receipt,plan):
        and all(ch in '0123456789abcdef' for ch in proof['file_id_128'])
        and int(proof['file_id_128'],16)>0)
  manifest=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])['manifest']
- expected={'root','code','file:lab-release.json'}|{'file:'+p for p in manifest['files']}|{'directory:'+p for p in manifest['directories']}
+ expected={'root','code','ownership','state','ownership:service.sqlite','file:lab-release.json'}|{'file:'+p for p in manifest['files']}|{'directory:'+p for p in manifest['directories']}
  need(set(entries)==expected and receipt['manifest_sha256']==plan['manifest_sha256'])
  # This code tree is beneath the installed root; foreign volume members are
  # not accepted by a whole-namespace receipt without explicit source proof.

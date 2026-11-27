@@ -278,6 +278,20 @@ class Uninstaller:
   if isinstance(self.boundary,WindowsRemovalBoundary):
    service.need(native is not None)
    service._check_native_installation_receipt(native,p)
+   # Full original Win32 install-time identity of preserved parents and the
+   # ownership journal must still be true BEFORE any SCM/removal admission.
+   root=Path(p['root']);entries=native['entries']
+   for key,target in (
+       ('root',root),
+       ('ownership',root/'ownership'),
+       ('state',root/'state'),
+       ('ownership:service.sqlite',root/'ownership'/'service.sqlite')):
+    need(service._native_file_identity(target)==entries[key])
+   # Once all code has been disposed, crash recovery is driven exclusively
+   # by prior durable member INTENT + original V2 sealed proofs, not by
+   # promoting a new code-directory identity.
+   if Path(p['code']).exists():
+    need(service._native_file_identity(p['code'])==entries['code'])
   files={k:dict(v) for k,v in m['files'].items()};raw=(Path(p['capsule_root'])/'lab-release.json').read_bytes();files['lab-release.json']={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}
   dirs=set(m['directories'])|{'.'};need(len(files)+len(dirs)<=MAX_MEMBERS)
   return r,files,dirs
