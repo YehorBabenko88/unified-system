@@ -1,0 +1,384 @@
+{
+  "schema": "unified.h.meta-unique-migration-plan.v1",
+  "round": 35,
+  "owner": "H",
+  "release": "CODE_NO_GO_PRODUCTION_NO_GO",
+  "meta_head": "b1a4d6a41054f0040a88dc80b585380fb6b4f323",
+  "original_85_file_crosswalk_git_blob": "aad4b095bb1fd619dc633889e7011dff6455edf7",
+  "original_files_count": 85,
+  "changed_source_blobs_in_original_inventory": 8,
+  "previously_unlisted_source_files": [
+    {
+      "path": "src/meta_analyse/offline_paper_delivery.py",
+      "blob": "a537ca2d8d7abad42c67fcc179854e140b4b81c8",
+      "destination": "Terminan paper journal",
+      "gate": "digest ACK/checkpoint/replay/fills readback"
+    },
+    {
+      "path": "src/meta_analyse/retirement_receipt.py",
+      "blob": "daeb22df272ef8cd04cf45f3fe316cc01bcb9a47",
+      "destination": "Unified provenance + Terminan archive",
+      "gate": "read-only paper_fills/level_map/checkpoint receipts parity"
+    }
+  ],
+  "current_candidates": {
+    "Grid_epoch": "eee29d8fae7c52d5b489a86a5a9ec08718265f18",
+    "Terminan_D": "fe4316d7c1580b9799903b57d8471034b5281996",
+    "Strattester_G": "5ff4f10d068bbed08db816e6e4ffdeb2b81ac338",
+    "Math": "9e6acbd9e12a91189f57234828e31640983af553"
+  },
+  "family_count": 17,
+  "all_unique_functions_preserved": true,
+  "full_six_repo_inventory": false,
+  "original_same_input_parity_proven": false,
+  "retirement_allowed": false,
+  "execution_command_for_meta_wrapper": "python -B -m unittest -v tests.test_h_round35_meta_original_consumer_math",
+  "execution_command_for_g8_source": "python -B -m unittest -v tests.test_h_round35_original_g_sqlite_eight",
+  "original_checkout_paths": [
+    ".source/meta-h35",
+    ".source/math-h35",
+    ".source/strattester-g123"
+  ],
+  "features": [
+    {
+      "id": "meta.stage6.01",
+      "meta_source_symbols": "exchange.py:BybitPublic; collector.py:CollectorService.run; raw_trades.py:RawTradeStream.run; market_collector.py:MarketCollector.start",
+      "original_known_consumers": "DesktopService.initialize/_start_flow, AnalysisSession.start, RawPipeline, Runtime.refresh_watchlist",
+      "unique_behavior": "Direct Bybit REST/WS and raw trade/orderbook/OI",
+      "mandatory_owner": "Grid",
+      "proposed_canonical_destination": "Grid sole Bybit REST/WS ingress, immutable raw trades and book/OI DTO",
+      "observable_acceptance_checks": [
+        "source+consumer graph",
+        "REST/WS raw trade and OI replay under Root lease",
+        "no parallel Bybit clients"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.02",
+      "meta_source_symbols": "history.py:collect_history; backfill.py; bybit_archive_download.py; archive_*; trade_archive.py:verify_archive",
+      "original_known_consumers": "History import, storage, test archive pipeline",
+      "unique_behavior": "Bounded backfill, archive checksums, checkpoint/resume/gaps",
+      "mandatory_owner": "Grid",
+      "proposed_canonical_destination": "Grid resumable historical import and checksummed exchange archives",
+      "observable_acceptance_checks": [
+        "archive byte SHA256 and checkpoint-resume",
+        "out-of-order and partial replay no loss",
+        "full oldest/newest archive readback"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.03",
+      "meta_source_symbols": "storage.py:Store.initialize/candle_batch/profile; market_store.py:MarketStore.book/open_interest; archive_db_import.py:import_verified_archive",
+      "original_known_consumers": "Collector, pipeline, desktop, old SQL consumers",
+      "unique_behavior": "Separate Meta market schema and DB writes",
+      "mandatory_owner": "Grid + Unified",
+      "proposed_canonical_destination": "Grid sole market writer plus Unified-provisioned schema and backup/restore",
+      "observable_acceptance_checks": [
+        "disposable original SQLite eight-table baseline",
+        "single Grid writer and SQL schema parity",
+        "original read-only state/backup restore"
+      ],
+      "original_runnable_partial_test": "tests/test_h_round35_original_g_sqlite_eight.py",
+      "current_partial_test_scope": "ORIGINAL_SOURCE_WRAPPER_ONLY_NOT_FULL_MIGRATION",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.04",
+      "meta_source_symbols": "core.py:price_bucket; core.py:Minute.poc; footprint.py:Footprint.poc; FootprintCell.delta; Footprint.delta",
+      "original_known_consumers": "Minute.add, PaperEngine.on_closed_minute, Footprint.add/snapshot, analysis_coordinator",
+      "unique_behavior": "Decimal tick rounding, trade POC vs footprint POC distinct tie handling",
+      "mandatory_owner": "Math",
+      "proposed_canonical_destination": "Math Decimal price_bucket and volume_profile_poc with trade/footprint tie policies",
+      "observable_acceptance_checks": [
+        "original Meta Minute/Footprint wrappers vs canonical Math",
+        "tie cases nearest-close vs lowest-tick",
+        "Decimal exact domain and unknown-side"
+      ],
+      "original_runnable_partial_test": "tests/test_h_round35_meta_original_consumer_math.py",
+      "current_partial_test_scope": "ORIGINAL_SOURCE_WRAPPER_ONLY_NOT_FULL_MIGRATION",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.05",
+      "meta_source_symbols": "core.py:untouched_levels; level_quality.py:verified_levels; history.py:validate_fixed_interval",
+      "original_known_consumers": "grid_history_adapter, ohlcv_research_adapter, level_publish, level_sync",
+      "unique_behavior": "Untouched HTF highs/lows and closed/covered candle gate",
+      "mandatory_owner": "Math",
+      "proposed_canonical_destination": "Math untouched_decimal_levels and closed/as-of causal quality",
+      "observable_acceptance_checks": [
+        "as-of and no-lookahead with old HTF source",
+        "equal wick invalidation",
+        "strict closure/coverage"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.06",
+      "meta_source_symbols": "orderflow_metrics.py:calculate; orderflow_aggregation.py:aggregate_by_time/aggregate_by_price; core.py:RollingFlow.metrics/wall_score",
+      "original_known_consumers": "desktop_service.load_orderflow_records, orderflow_view, paper/monitor",
+      "unique_behavior": "Buy/sell/unknown classification, delta, cumulative delta, turnover and tick buckets",
+      "mandatory_owner": "Math",
+      "proposed_canonical_destination": "Math signed volume delta and bounded ordered 100k+ streaming aggregates",
+      "observable_acceptance_checks": [
+        "100k streaming ordered trade exactness",
+        "unknown trade-side retained",
+        "replay idempotence and 20k limit"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.07",
+      "meta_source_symbols": "tape_velocity.py:TapeVelocity.add; wall_tracker.py:WallTracker.observe; book_summary.py:summarize_book; liquidity.py:large_levels",
+      "original_known_consumers": "analysis_coordinator, analysis_session, level signal, desktop telemetry",
+      "unique_behavior": "Tape acceleration/proximity, order-book walls, microstructure signals",
+      "mandatory_owner": "Math",
+      "proposed_canonical_destination": "Math tape velocity/book wall/level proximity kernels",
+      "observable_acceptance_checks": [
+        "book/proximity under varying event timing",
+        "wall lifecycle score and cancelled levels",
+        "correct tape rates"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.08",
+      "meta_source_symbols": "footprint_engine.py:FootprintEngine.execution/gap; market_clock.py:MarketClock.observe/align; crossing_quality.py",
+      "original_known_consumers": "AnalysisCoordinator.execution/book/gap, FlowBridge",
+      "unique_behavior": "Per-trade footprint windows, continuity and clock-skew gate",
+      "mandatory_owner": "Grid + Math",
+      "proposed_canonical_destination": "Grid event identity/continuity; Math footprint arithmetic/clock gates",
+      "observable_acceptance_checks": [
+        "clock skew and gap trust denial",
+        "footprint continuity and source provenance",
+        "partial window not AUTHORIZED"
+      ],
+      "original_runnable_partial_test": "tests/test_h_round35_meta_original_consumer_math.py",
+      "current_partial_test_scope": "ORIGINAL_SOURCE_WRAPPER_ONLY_NOT_FULL_MIGRATION",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.09",
+      "meta_source_symbols": "ports.py:MetaScalp.discover/connections/open_combos/levels/add_level/remove_level; level_sync.py:LevelSync.replace/crossed",
+      "original_known_consumers": "DesktopService, CrossingService, terminal_pipeline, saved level map",
+      "unique_behavior": "MetaScalp local API and owned-level reconciliation that must not delete foreign levels",
+      "mandatory_owner": "Terminan",
+      "proposed_canonical_destination": "Terminan owned-level adapter with foreign-level preserve and receipt replay",
+      "observable_acceptance_checks": [
+        "foreign-level ownership never deleted",
+        "level map restored from readonly receipt",
+        "duplicate acknowledgement safe"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.10",
+      "meta_source_symbols": "core.py:PaperEngine.on_closed_minute/on_trade; Position/PaperFill; runtime.py:Runtime.receive; desktop_service.py:configure_paper",
+      "original_known_consumers": "DesktopService, Store.paper_fill, desktop paper controls",
+      "unique_behavior": "Paper POC mean reversion, fee/slippage/stop/target, next-minute guard",
+      "mandatory_owner": "Terminan",
+      "proposed_canonical_destination": "Terminan paper journal/fees/slippage/stop/target and next-minute replay",
+      "observable_acceptance_checks": [
+        "paper fee+slippage+PnL golden differential",
+        "order/clock/fill replay and ACK",
+        "no orders in real account"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.11",
+      "meta_source_symbols": "desktop.py:Window; desktop_service.py:DesktopService; flow_style.py; flow_diff.py; freshness_style.py; orderflow_view.py; trader_theme.py",
+      "original_known_consumers": "Standalone meta-analyse launcher, saved UI behavior",
+      "unique_behavior": "Qt dashboards/market table/flow/quality/monitoring and coloring",
+      "mandatory_owner": "Terminan",
+      "proposed_canonical_destination": "Terminan chart+quality UI; no second Qt terminal hidden fallback",
+      "observable_acceptance_checks": [
+        "Chromium flow/layout and state restore",
+        "old UI signals/quality indicators",
+        "no duplicate standalone launcher"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.12",
+      "meta_source_symbols": "headless_service.py:PrivateServer/Handler/SourceVerifier/main; pg_cluster_plan.py:plan_only; commissioning/**; install.ps1",
+      "original_known_consumers": "CLI/service installer, HTTP research/health paths, native evidence",
+      "unique_behavior": "Local headless server, private admission, Windows cluster plans, installer and health",
+      "mandatory_owner": "Unified",
+      "proposed_canonical_destination": "Unified Root-managed admission/service/installer/restart/health",
+      "observable_acceptance_checks": [
+        "isolated Windows service install/uninstall PLAN_ONLY",
+        "Root bearer and lease pre/post",
+        "native crash/start and rollback"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.13",
+      "meta_source_symbols": "grid_history_adapter.py:analyze_grid_history; ohlcv_research_adapter.py:analyze_ohlcv_research",
+      "original_known_consumers": "headless_service.Handler research endpoints; scientific display",
+      "unique_behavior": "Immutable source/digest/causal-window research receipts",
+      "mandatory_owner": "Grid + Math + Unified",
+      "proposed_canonical_destination": "Grid provenance -> Math research -> Unified managed read-only receipt",
+      "observable_acceptance_checks": [
+        "authenticated immutable source and as-of provenance",
+        "DTO exact Decimal source comparison",
+        "no trading authorization"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.14",
+      "meta_source_symbols": "flow_history_storage.py:read_flow_history; orderflow_archive_reader.py:read_orderflow_trades",
+      "original_known_consumers": "DesktopService.load_flow_history, orderflow record adapters",
+      "unique_behavior": "Old bounded read-only SQL API; one SELECT path already merged in Meta PR #81",
+      "mandatory_owner": "Grid",
+      "proposed_canonical_destination": "Grid parameterized bounded read-only flow history, Terminan consumer",
+      "observable_acceptance_checks": [
+        "one bounded SELECT read parity by symbol/as-of",
+        "no new SQL reader",
+        "read-only page digest"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.15",
+      "meta_source_symbols": "health.py; market_health.py; feed_watchdog.py; history_retention.py; recovery.py; retention_report.py",
+      "original_known_consumers": "Mixed collectors and commissioning",
+      "unique_behavior": "Telemetry, stale detection, recovery, retention",
+      "mandatory_owner": "Grid + Unified",
+      "proposed_canonical_destination": "Grid market health plus Unified supervisor recovery and retention",
+      "observable_acceptance_checks": [
+        "retention/recovery preserves snapshots",
+        "no duplicate supervisord/DB process",
+        "failure/crash metadata verified"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.16",
+      "meta_source_symbols": "flow_bridge.py; analysis_session.py; terminal_pipeline.py; pipeline.py; raw_store.py; market_telemetry.py",
+      "original_known_consumers": "Desktop and headless entrypoints",
+      "unique_behavior": "Glue code and potentially duplicated orchestration",
+      "mandatory_owner": "Explicit per consumer: Grid/Math/Terminan/Unified",
+      "proposed_canonical_destination": "Split each source adapter by sole functional owner; no parallel process/DB client",
+      "observable_acceptance_checks": [
+        "full import/external consumer graph",
+        "all ownership acknowledgments",
+        "unique execution path for each adapter"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    },
+    {
+      "id": "meta.stage6.17",
+      "meta_source_symbols": "desktop.py:main; standalone console-script meta-analyse; install.ps1 Meta standalone launcher",
+      "original_known_consumers": "Legacy physical installs and CI scripts may still call it",
+      "unique_behavior": "Second final Qt terminal/installer disabled by Meta PR #81",
+      "mandatory_owner": "NONE - standalone launcher retirement requires external call proof",
+      "proposed_canonical_destination": "Disable standalone app only after all external entrypoints/data recovery accounted",
+      "observable_acceptance_checks": [
+        "all legacy launcher/CLI consumer exit points",
+        "old stored data accessible/rollback",
+        "no physical deletion before acceptance"
+      ],
+      "original_runnable_partial_test": null,
+      "current_partial_test_scope": "NOT_IMPLEMENTED",
+      "full_original_same_input_parity": "NOT_RUN",
+      "external_consumer_cutover": "NOT_PROVEN",
+      "owner_acceptance": "NOT_PROVEN",
+      "rollback_and_original_data_preserved": "NOT_PROVEN",
+      "source_removal_allowed": false
+    }
+  ]
+}
