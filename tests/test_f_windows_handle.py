@@ -239,6 +239,11 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         checking = ast.get_source_segment(source, verify)
         closing = ast.get_source_segment(source, close)
         self.assertIn("self.handles[key]=h", opening)
+        # MS CreateFileW requires FILE_FLAG_BACKUP_SEMANTICS for directories.
+        # I's original all-roster opens must choose directory-specific flags;
+        # OPEN_REPARSE_POINT alone cannot acquire a directory HANDLE.
+        self.assertIn("0x02000000", opening,
+                      "I_CUSTODY_DIRECTORY_HANDLE_REQUIRES_BACKUP_SEMANTICS")
         self.assertIn("0x1|0x2,None", opening)
         self.assertNotIn("0x1|0x2|0x4", opening)
         self.assertIn("self._read()==self.snapshot", checking)
