@@ -102,6 +102,85 @@ def _exclusive_code_removal_proven():
  return False
 
 
+
+def _win_handle_dispose_member(path, owned, kind):
+ """Candidate OS-object-bound removal; default APP_ONLY guard still DENIES.
+
+ No late Path.unlink/rmdir, no legacy fallback, no real-PC permission.
+ F/A native Windows hostile-writer qualification is still required.
+ """
+ # Direct callers cannot bypass the disabled APP_ONLY production entrypoint.
+ need(_exclusive_code_removal_proven())
+ need(os.name=='nt' and kind in ('FILE','DIRECTORY') and type(owned) is dict)
+ import ctypes
+ from ctypes import wintypes as w
+ import msvcrt
+ path=_safe(path)
+ initial=path.lstat()
+ need((stat.S_ISREG(initial.st_mode) if kind=='FILE' else stat.S_ISDIR(initial.st_mode))
+      and initial.st_dev>0 and initial.st_ino>0)
+ if kind=='FILE':
+  need(set(owned)=={'device','inode','bytes','mtime_ns','sha256'} and
+       type(owned['bytes']) is int and type(owned['sha256']) is str)
+ else:fingerprint(owned)
+ need((initial.st_dev,initial.st_ino)==(owned['device'],owned['inode']))
+ k=ctypes.WinDLL('kernel32',use_last_error=True)
+ k.CreateFileW.argtypes=(w.LPCWSTR,w.DWORD,w.DWORD,w.LPVOID,w.DWORD,w.DWORD,w.HANDLE)
+ k.CreateFileW.restype=w.HANDLE
+ k.GetFinalPathNameByHandleW.argtypes=(w.HANDLE,w.LPWSTR,w.DWORD,w.DWORD)
+ k.GetFinalPathNameByHandleW.restype=w.DWORD
+ k.GetFileInformationByHandleEx.argtypes=(w.HANDLE,ctypes.c_int,w.LPVOID,w.DWORD)
+ k.GetFileInformationByHandleEx.restype=w.BOOL
+ k.SetFileInformationByHandle.argtypes=(w.HANDLE,ctypes.c_int,w.LPVOID,w.DWORD)
+ k.SetFileInformationByHandle.restype=w.BOOL
+ k.CloseHandle.argtypes=(w.HANDLE,)
+ k.CloseHandle.restype=w.BOOL
+ # GENERIC_READ|DELETE; no sharing of writes/deletes; reparse point opened,
+ # not traversed. Preexisting incompatible handles cause a denied open.
+ flags=0x00200000|(0x02000000 if kind=='DIRECTORY' else 0)
+ handle=k.CreateFileW(str(path),0x80000000|0x00010000,0x00000001,None,3,flags,None)
+ need(handle not in (None,0,ctypes.c_void_p(-1).value))
+ responsible=True
+ try:
+  class AttributeTagInfo(ctypes.Structure):
+   _fields_=[('attributes',w.DWORD),('reparse_tag',w.DWORD)]
+  tag=AttributeTagInfo()
+  need(k.GetFileInformationByHandleEx(handle,9,ctypes.byref(tag),ctypes.sizeof(tag)))
+  need(not tag.attributes&0x400 and bool(tag.attributes&0x10)==(kind=='DIRECTORY'))
+  final=ctypes.create_unicode_buffer(32768)
+  n=k.GetFinalPathNameByHandleW(handle,final,len(final),0)
+  need(0<n<len(final) and final.value.startswith('\\\\?\\')
+       and final.value[4:].casefold()==str(path).casefold())
+  # CRT inherits ownership of the same original HANDLE, not a second name open.
+  fd=msvcrt.open_osfhandle(int(handle),os.O_RDONLY|getattr(os,'O_BINARY',0))
+  responsible=False
+  try:
+   before=os.fstat(fd)
+   fields=lambda s:(s.st_dev,s.st_ino,s.st_size,s.st_mtime_ns,s.st_nlink)
+   need(before.st_dev==owned['device'] and before.st_ino==owned['inode'])
+   if kind=='FILE':
+    need(stat.S_ISREG(before.st_mode) and before.st_nlink==1 and
+         before.st_size==owned['bytes'] and before.st_mtime_ns==owned['mtime_ns'])
+    digest=hashlib.sha256();size=0
+    while True:
+     chunk=os.read(fd,1024*1024)
+     if not chunk:break
+     size+=len(chunk);need(size<=owned['bytes']);digest.update(chunk)
+    need(size==owned['bytes'] and digest.hexdigest()==owned['sha256'])
+   else:
+    need(stat.S_ISDIR(before.st_mode) and not any(path.iterdir()))
+   need(fields(os.fstat(fd))==fields(before))
+   # FileDispositionInfoEx=21, DELETE=0x1, POSIX_SEMANTICS=0x2.
+   # Unsupported Windows/filesystem returns DENIED, never Path.unlink fallback.
+   flags=w.DWORD(3)
+   need(k.SetFileInformationByHandle(handle,21,ctypes.byref(flags),ctypes.sizeof(flags)))
+  finally:os.close(fd)
+ finally:
+  if responsible:k.CloseHandle(handle)
+ # A new foreign leaf or pending deletion is NOT evidence of success.
+ need(not path.exists() and not path.is_symlink())
+
+
 class Uninstaller:
  def __init__(self,resource,boundary):
   self.resource=resource;self.boundary=boundary;self.audit=Journal(resource.root/'ownership/uninstall.sqlite')
@@ -263,7 +342,9 @@ class Uninstaller:
     with self._critical():
      need(self._observe(record,plan,guard)=='ABSENT');self._roots(plan,record)
      need(identity(path.parent)==data['parent_identity'] and (image(path) if kind=='FILE' else identity(path))==data['identity'])
-     if kind=='FILE':path.unlink()
+     if os.name=='nt' and isinstance(self.boundary,WindowsRemovalBoundary):
+      _win_handle_dispose_member(path,data['identity'],kind)
+     elif kind=='FILE':path.unlink()  # disposable FakeRemoval fixture only
      else:need(not any(path.iterdir()));path.rmdir()
    self._append(plan,'COMPLETE','OBSERVED_OWNED_ABSENCE_STATE_RETAINED',guard);self._verify_final()
    return self._result('APP_ONLY_REMOVED',plan)
