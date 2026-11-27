@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "agent": "G",
   "snapshot_date": "2026-11-27",
-  "status": "ROUND27_EXECUTABLE_SOURCE_GATE_IMPLEMENTED",
+  "status": "ROUND29_B305_D130_MTF_PARITY_BLOCKED",
   "release_gate": "CODE_NO_GO / PRODUCTION_NO_GO",
   "provenance": "GitHub REST commits and recursive trees; tree results for working refs were not truncated",
   "main_heads": {
@@ -23,13 +23,15 @@
       "frozen_F_PR166": "9349d7f3ed93ef82d120976816b968e0b716b067"
     },
     "bybit-cluster-grid": {
-      "agent_B": "165aa614cf6f79d451eac2faa48d6084fbd03d31"
+      "agent_B": "165aa614cf6f79d451eac2faa48d6084fbd03d31",
+      "agent_B_mtf_historical": "00ac898ba658a546c308087db06cda78a108fd38"
     },
     "math": {
       "agent_D": "9e6acbd9e12a91189f57234828e31640983af553"
     },
     "Terminan": {
-      "agent_D": "cb11788144a9827d5ea7a2e1342c31520c7145dc"
+      "agent_D": "cb11788144a9827d5ea7a2e1342c31520c7145dc",
+      "agent_D_mtf_consumer": "78da418ac31acad0f750b98e3b89ea511cefad51"
     },
     "strattester": {
       "main": "37ff7e9d12a4d2dccd788fc493c28557dbe8bcea",
@@ -255,6 +257,19 @@
       "replacement": "Terminan read-only paper delivery subject to D/H acceptance",
       "tests": "NOT_RUN; unique file present in stage10 source",
       "rollback": "retain original until proven migrated"
+    },
+    {
+      "id": "G-012",
+      "status": "MIGRATED_SOURCE_ONLY_PARITY_BLOCKED",
+      "repo": "Terminan",
+      "path": "terminan/qualified_partial.py::qualified_timeframe_rows",
+      "owner": "D",
+      "consumers": [
+        "previous D #129 terminan/data.py::qualified_market_data_timeframe_chart; switched to B qualified-rollup in D #130"
+      ],
+      "replacement": "B Grid #305 qualified_rollup producer + D #130 terminan/qualified_rollup.py consumer",
+      "tests": "D #130 -68 duplicate source lines CONFIRMED; B #305 DTO source_declared_quality field missing D #130 _TOP; D recomputes delta from rounded binary64 operands; byte-pinned G negative guard 6 PASS local; original cross-repo runtime NOT_RUN; functional parity BLOCKED",
+      "rollback": "keep D #129 parent branch and original Math intact; revert D #130 scoped deletion if accepted positive/negative parity fails; no legacy Grid strategy/Meta retirement authorized"
     }
   ],
   "deletion_gate": {
@@ -275,7 +290,8 @@
     "runtime_regression": "NOT_RUN",
     "windows": "NOT_RUN",
     "linux": "NOT_RUN",
-    "real_host": "NOT_RUN"
+    "real_host": "NOT_RUN",
+    "G_round29_source_contract": "PASS 6 local exact GitHub code tests (synthetic fixtures), source cross-owner DTO FAIL; native E2E NOT_RUN"
   },
   "restrictions": [
     "no main merge",
@@ -309,5 +325,40 @@
     ],
     "deletion_count": 0,
     "rollback": "No runtime source changed; G gate can be removed by reverting isolated Draft PR commits."
+  },
+  "round29_execution": {
+    "grid_head": "00ac898ba658a546c308087db06cda78a108fd38",
+    "terminan_head": "78da418ac31acad0f750b98e3b89ea511cefad51",
+    "math_head": "9e6acbd9e12a91189f57234828e31640983af553",
+    "source_verification": {
+      "grid_rollup_blob": "a584aa19e8b46064fe10dfe88506386bbe93ce5e",
+      "terminan_consumer_blob": "6a89a67352319179036a09b6d6e5c7fc975e150d",
+      "github_compare": "PASS",
+      "contract_compatibility": "FAIL"
+    },
+    "diff_control": {
+      "terminan_removed_lines": 68,
+      "approved_for_retirement": false
+    },
+    "new_code": [
+      "tools/g_mtf_source_compat.py",
+      "tests/test_g_mtf_source_compat.py"
+    ],
+    "local_tests": {
+      "suite": "test_g_mtf_source_compat.py",
+      "source_and_test_exact_git_blob_match": true,
+      "pass": 6,
+      "fail": 0,
+      "error": 0,
+      "skip": 0
+    },
+    "original_B_D_E2E": "NOT_RUN",
+    "new_ci_workflows": 0,
+    "blocker": [
+      "B305 adds source_declared_quality: ['GOOD'] but D130 rejects unknown key",
+      "B305 calculates Decimal delta before binary64 directional DTO; D130 reconstructs from rounded DTO and can incorrectly reject valid cancellation case"
+    ],
+    "release_authorized": false,
+    "production_authorized": false
   }
 }
