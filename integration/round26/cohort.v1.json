@@ -68,8 +68,8 @@
       "role": "G",
       "repo": "YehorBabenko88/unified-system",
       "issue": 172,
-      "sha": "725c0bf2a872b5be56571d91ae94369ab13ed8a3",
-      "disposition": "PINNED_SOURCE_CANDIDATE_NOT_NATIVE_RELEASE",
+      "sha": "2e1087c735c7b00e9b1a1af2c7e667b383cf41ac",
+      "disposition": "PINNED_SOURCE_CANDIDATE_NOT_RELEASE",
       "pr": 177
     },
     {
@@ -84,16 +84,16 @@
       "role": "I",
       "repo": "YehorBabenko88/unified-system",
       "issue": 174,
-      "sha": "9c678f35b73d5fdc3fd81a425868ab0cb4317699",
-      "disposition": "PINNED_SOURCE_CANDIDATE_NOT_NATIVE_RELEASE",
+      "sha": "3509e40c407f645917b66d51336fc8050f17e3b6",
+      "disposition": "PINNED_SOURCE_CANDIDATE_NOT_RELEASE",
       "pr": 182
     },
     {
       "role": "J",
       "repo": "YehorBabenko88/unified-system",
       "issue": 175,
-      "sha": "03fbc83dcd49f87cdc8e78b217ddad131a043006",
-      "disposition": "PRE_MANIFEST_INTEGRATION_PARENT_ONLY"
+      "sha": "9375d2710c64ef9a6962eccf98ce6eae77eb75a0",
+      "disposition": "J_PRE_MANIFEST_HEAD_ONLY_NOT_ATTESTED"
     }
   ],
   "canonical_owners": {
@@ -126,15 +126,15 @@
     "native_c_wal_reply_loss": "NOT_RUN",
     "grid306_d130_schema_source": "PASS_26_OF_26",
     "grid306_d130_original_consumer_e2e": "NOT_RUN",
-    "mtf_precision_fidelity": "NOT_PROVEN",
+    "mtf_precision_fidelity": "FAIL_TO_CERTIFY_FULL_EXACT_DECIMAL_INPUT_DOMAIN",
     "full_market_completeness": "NOT_PROVEN",
-    "installer_recovery": "NOT_RUN",
-    "disposable_toctou": "NOT_QUALIFIED",
+    "installer_recovery": "SOURCE_ONLY_FAKE_SERVICE_TESTS_AUTHORED_NOT_EXECUTED_J",
+    "disposable_toctou": "NOT_QUALIFIED_DIRFD_FINAL_PATH_RACE",
     "protected_root": "DENIED",
     "release": "NO_GO"
   },
   "round": 29,
-  "integration_status": "A_CANONICAL_RUNTIME_C_E_OWNED_SOURCE_PRESENT_I_DISPOSABLE_STAGED_H_GRID306_SOURCE_SCHEMA_MATCH_PROTECTED_NO_GO",
+  "integration_status": "ROUND29_FOCUSED_OWNER_SOURCE_COHORT_A_C_E_G_H_I_PINS_B306_D130_MATH_BASE_NO_GO",
   "protected_admission": "DENIED",
   "integration_source_evidence": {
     "C": {
@@ -191,7 +191,7 @@
       "historical_asof": "SOURCE_ONLY_NOT_PROVIDER_ATTESTED"
     },
     "J": {
-      "reference_sha_before_manifest": "03fbc83dcd49f87cdc8e78b217ddad131a043006",
+      "reference_sha_before_manifest": "9375d2710c64ef9a6962eccf98ce6eae77eb75a0",
       "local_standalone_contract_oracle": {
         "methods": 3,
         "pass": 3,
@@ -205,7 +205,16 @@
         "matched": 26,
         "status": "SOURCE_PASS_NO_NATIVE_IMPORT"
       },
-      "last_cross_repo_original_tests": "NOT_RUN"
+      "last_cross_repo_original_tests": "NOT_RUN",
+      "original_file_owner_reused": [
+        "A",
+        "C",
+        "E",
+        "G",
+        "H",
+        "I"
+      ],
+      "g_and_i_current_source_transferred": true
     },
     "A": {
       "owner_pr": 162,
@@ -217,16 +226,34 @@
     },
     "I": {
       "owner_pr": 182,
-      "sha": "9c678f35b73d5fdc3fd81a425868ab0cb4317699",
-      "source_paths": [
-        "unified_system/installation_transaction.py",
-        "unified_system/disposable_installation.py",
-        "tests/test_agent_i_disposable_installation.py",
-        "docs/operations/AGENT_I_ROUND27_DISPOSABLE_INSTALL.md"
-      ],
-      "disposal": "DISPOSABLE_ONLY",
-      "adversarial_toctou": "NOT_QUALIFIED_F_INDEPENDENT_REVIEW_REQUIRED",
-      "native_install": "NOT_RUN"
+      "owner_sha": "3509e40c407f645917b66d51336fc8050f17e3b6",
+      "original_transaction_blob": "f2730cfd8dcdc34120a96aa626c2d4e0f325ded2",
+      "original_disposable_test_blob": "e10d8cb3ada4d6679bb1b9b25a1008276fea0269",
+      "original_service_fake_test_blob": "84356ff3b83d6709d742b1dee28685fecf3bbecd",
+      "test_methods": {
+        "disposable": 19,
+        "fake_service": 4
+      },
+      "actual_execution_at_J": "NOT_RUN",
+      "windows_dispose": "DENIED",
+      "native_host_service": "NOT_RUN",
+      "race_security": "NOT_QUALIFIED_UNLINK_PATH_RACE_AFTER_FINAL_STAT"
+    },
+    "G": {
+      "owner_pr": 177,
+      "owner_sha": "2e1087c735c7b00e9b1a1af2c7e667b383cf41ac",
+      "original_checker_blob": "f3e2c8a035fa0e6ab0fac61de4c1110113de9734",
+      "original_checker_test_blob": "91d9e2efc766e316de2c37f5177b30e2f08732f8",
+      "migration_ledger_blob": "24875131d29c854d8a26823c014274d246b95dcc",
+      "owner_original_tests": {
+        "pass": 6,
+        "fail": 0,
+        "error": 0,
+        "skip": 0,
+        "scope": "isolated_original_G_source_modules_synthetic_fixtures"
+      },
+      "legacy_unique_capabilities": "RETAINED_NO_DELETION",
+      "numeric_parity": "NOT_ACCEPTED"
     }
   },
   "g_h_i_status": "G_CUTOVER_ONLY_NO_LEGACY_FEATURE_RETIREMENT_I_DISPOSABLE_SOURCE_ONLY_H_CURRENT_SOURCE_COHORT"
