@@ -674,13 +674,28 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         workspace = Path(__file__).resolve().parent.parent
         fixture_parent = workspace / '.a2-disposable-native-child'
         fixture_parent.mkdir(exist_ok=True)
-        self.tmp = tempfile.TemporaryDirectory(
-            prefix='a-round33-job-', dir=str(fixture_parent))
+        # Python's TemporaryDirectory/mkdtemp requests mode 0o700. On
+        # Windows/Python 3.12+ that may give a fresh fixture a DACL unreadable
+        # by the LOW primary token, even under the same checkout directory.
+        # Create only disposable test bytes with the checkout-inherited DACL.
+        # Never chmod, modify SDDL, or loosen any existing object ACL.
+        import secrets
+        root = fixture_parent / ('a-round34-job-' + secrets.token_hex(12))
+        root.mkdir()  # Windows inherits checkout DACL; no explicit ACL edit
+        original = root.lstat()
+        def cleanup_fixture():
+            try:
+                observed = root.lstat()
+            except FileNotFoundError:
+                return
+            if (root.is_symlink() or (observed.st_dev, observed.st_ino)
+                    != (original.st_dev, original.st_ino)):
+                raise ValueError('disposable fixture identity changed: cleanup denied')
+            shutil.rmtree(root)
         self.addCleanup(lambda: fixture_parent.rmdir()
                         if fixture_parent.is_dir() and not any(fixture_parent.iterdir())
                         else None)
-        self.addCleanup(self.tmp.cleanup)
-        root = Path(self.tmp.name)
+        self.addCleanup(cleanup_fixture)
         self.worker = root / 'job_worker.py'
         self.worker.write_text(
             'import time\n'
@@ -1129,7 +1144,8 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
             'p=subprocess.Popen([sys.executable,"-c",'
             '"import time;time.sleep(30)"],close_fds=True);'
             'time.sleep(2);'
-            'sys.exit(83) if p.poll() is not None else time.sleep(28)'
+            'rc=p.poll();'
+            'sys.exit(rc) if rc is not None else time.sleep(28)'
         )
         program['argv'] = [original_argv[0], '-c', parent_code]
         op, child = self._start_detached_diagnostic_child()
@@ -1143,9 +1159,12 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         secondary.write_text('import time\ntime.sleep(30)\n', encoding='utf-8')
         self.worker.write_text(
             'import subprocess, sys, os, time\n'
-            'subprocess.Popen([sys.executable, os.path.join('
+            'p=subprocess.Popen([sys.executable, os.path.join('
             'os.path.dirname(__file__), "descendant_worker.py")], close_fds=True)\n'
-            'time.sleep(30)\n', encoding='utf-8')
+            'time.sleep(1)\n'
+            'rc=p.poll()\n'
+            'if rc is not None: sys.exit(rc)\n'
+            'time.sleep(29)\n', encoding='utf-8')
         program = self.driver.programs['market_data']
         program['file_pins']['job_worker.py'] = hashlib.sha256(
             self.worker.read_bytes()).hexdigest()
