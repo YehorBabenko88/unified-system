@@ -16,7 +16,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 G = ROOT / ".source" / "strattester-g123"
-HEAD = "ae6a47434dec459584105c5f877f749bc7676b16"
+HEAD = "fa9e0ff2235b35466a03c78781a80d42dbe1c4af"
 FILES = {
     "strattester/marketdata/sqlite_store.py": "0c00d5c886c43f6cc938e6f3bf29c2964d8037bb",
     "strattester/marketdata/schema.py": "5b76e76f2f39db5d9a2bcfaa882b6c32db1de690",
