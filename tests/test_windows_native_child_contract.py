@@ -657,8 +657,13 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         # whose access must still pass the original LOW-token SHA preflight.
         # No ACL, integrity label, privileges, or child-token change.
         workspace = Path(__file__).resolve().parent.parent
+        fixture_parent = workspace / '.a2-disposable-native-child'
+        fixture_parent.mkdir(exist_ok=True)
+        self.addCleanup(lambda: fixture_parent.rmdir()
+                        if fixture_parent.is_dir() and not any(fixture_parent.iterdir())
+                        else None)
         self.tmp = tempfile.TemporaryDirectory(
-            prefix='a-round33-job-', dir=str(workspace))
+            prefix='a-round33-job-', dir=str(fixture_parent))
         self.addCleanup(self.tmp.cleanup)
         root = Path(self.tmp.name)
         self.worker = root / 'job_worker.py'
