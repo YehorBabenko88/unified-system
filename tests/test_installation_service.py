@@ -144,6 +144,53 @@ class ServiceResourceTests(unittest.TestCase):
   self.assertEqual(ServiceResource.open(plan,self.backend).inspect(self.guard),snapshot)
   self.assertEqual(self.backend.service['state'],1);self.assertFalse(any(x in self.backend.calls for x in ('START','STOP','DELETE')))
   self.assertTrue(all(pin==plan['plan_sha256'] for _,pin in self.grants))
+ def test_r35_native_roster_includes_root_ancestors_and_undeclared_parents(self):
+  from unified_system import installation_service as service
+  p=self.plan();root=Path(p['root']);code=Path(p['code'])
+  manifest={'files':{'runtime/python/python.exe':{'sha256':'a'*64,'bytes':1}},
+            'directories':[]}
+  paths=service._native_roster_paths(root,code,manifest)
+  self.assertEqual(paths['root'],root)
+  self.assertEqual(paths['ancestor:0'],root.parent)
+  self.assertEqual(paths['parent:runtime'],code/'runtime')
+  self.assertEqual(paths['parent:runtime/python'],code/'runtime/python')
+  self.assertEqual(paths['file:lab-release.json'],code/'lab-release.json')
+  self.assertEqual(paths['file:runtime/python/python.exe'],code/'runtime/python/python.exe')
+  self.assertEqual(set(paths),set(dict(paths)))
+  for hostile in ('../foreign.bin','runtime/../../foreign.bin'):
+   with self.subTest(path=hostile),self.assertRaises(ValueError):
+    service._native_roster_paths(root,code,{'files':{hostile:{}},'directories':[]})
+
+ def test_r35_native_roster_repeated_handle_read_rejects_identity_drift(self):
+  from unified_system import installation_service as service
+  paths={'root':self.root,'ancestor:0':self.root.parent,'file:owner':self.root/'owner'}
+  good={'volume_serial':1,'file_id_128':'a'*32}
+  changed={'volume_serial':1,'file_id_128':'b'*32}
+  with patch.object(service,'_native_file_identity',return_value=good) as probe:
+   self.assertEqual(service._capture_native_roster(paths),dict.fromkeys(paths,good))
+   self.assertEqual(probe.call_count,2*len(paths))
+  calls=[0]
+  def changing(path):
+   calls[0]+=1
+   return changed if calls[0]==2*len(paths) else good
+  with patch.object(service,'_native_file_identity',side_effect=changing):
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._capture_native_roster(paths)
+  self.assertEqual(calls[0],2*len(paths))
+  with patch.object(service,'_native_file_identity',
+                    side_effect=lambda path: dict(good,volume_serial=2) if path==paths['ancestor:0'] else good):
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._capture_native_roster(paths)
+
+ def test_r35_oversized_v2_receipt_denied_before_journal(self):
+  from unified_system import installation_service as service
+  small={'schema':service.NATIVE_RECEIPT_SCHEMA,'entries':{},'manifest_sha256':'a'*64,
+         'receipt_sha256':'b'*64}
+  self.assertEqual(service._bounded_native_receipt(small),small)
+  oversized=dict(small,entries={'owner':'x'*65536})
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._bounded_native_receipt(oversized)
+
  def test_v2_native_installation_receipt_or_explicit_non_windows_denial(self):
   from unified_system.installation_service import NATIVE_RECEIPT_SCHEMA,_check_native_installation_receipt
   plan=self.plan();resource=ServiceResource.create(plan,self.backend,self.guard)
