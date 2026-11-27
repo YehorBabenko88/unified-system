@@ -33,7 +33,7 @@ jobs:
       - name: Read-only exact I service source (no native execution)
         uses: actions/checkout@v4
         with:
-          ref: e5d775fccb2425aee9b43617012f4ad6cf3153f4
+          ref: 3f4262c2096767096939f86df69da57358430e35
           path: .f-owner-i-checkout
           persist-credentials: false
           sparse-checkout: |
@@ -66,7 +66,7 @@ jobs:
       - name: Read-only exact I service source (no native execution)
         uses: actions/checkout@v4
         with:
-          ref: e5d775fccb2425aee9b43617012f4ad6cf3153f4
+          ref: 3f4262c2096767096939f86df69da57358430e35
           path: .f-owner-i-checkout
           persist-credentials: false
           sparse-checkout: |
