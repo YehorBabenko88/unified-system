@@ -363,7 +363,12 @@ class ConsulSessionAuthority:
                     and type(entry.get('KV')) is dict
                     and entry['KV'].get('Key') == target
                     and type(entry['KV'].get('ModifyIndex')) is int
-                    and entry['KV']['ModifyIndex'] > 0
+                    # A successful KV set commits at a *newer* Raft index
+                    # than the original leader acquisition. An old/forged
+                    # transaction echo must not be mistaken for a fresh
+                    # fenced write, even when the consistent leader read
+                    # still sees this owner's unchanged session/index.
+                    and lease.token < entry['KV']['ModifyIndex'] < (1 << 63)
                     for entry in result['Results']
                 )):
             self._deadlines[lease.session_id] = 0
