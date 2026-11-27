@@ -13,6 +13,8 @@ import hashlib
 import io
 import os
 import contextlib
+import functools
+import importlib.util
 import pathlib
 import re
 import stat
@@ -28,6 +30,23 @@ _WINDOWS_RESERVED = re.compile(r"(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?\
 
 def _digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+@functools.lru_cache(maxsize=1)
+def _win_backend():
+    """Load only our exact sibling module, never an ambient sys.path shadow.
+
+    This pin is a source-location guard, not a signed-release or ACL proof.
+    """
+    source = pathlib.Path(__file__).with_name("f_windows_handle.py")
+    if not source.is_file() or source.is_symlink():
+        raise ValueError("F Windows handle backend source unavailable")
+    spec = importlib.util.spec_from_file_location("_f_owned_windows_handle", source)
+    if spec is None or spec.loader is None:
+        raise ValueError("F Windows handle backend loader unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def _safe_member(name: str) -> tuple[str, ...]:
@@ -54,8 +73,7 @@ def _root_fd(installed_root):
     if os.name == "nt":
         # Same central wheel/RECORD/source validation; only the OS-backed
         # retained-handle reader differs. It does NOT issue runtime authority.
-        from f_windows_handle import WindowsInstalledRoot
-        with WindowsInstalledRoot(installed_root) as owned:
+        with _win_backend().WindowsInstalledRoot(installed_root) as owned:
             yield owned
         return
     if os.name != "posix" or not hasattr(os, "O_NOFOLLOW") or not hasattr(os, "O_DIRECTORY"):
@@ -147,8 +165,7 @@ def _installed_closure(root_fd: int) -> set[str]:
 def _wheel_bytes_snapshot(wheel) -> bytes:
     """Hash and ZipFile must inspect precisely this ONE immutable bytes object."""
     if os.name == "nt":
-        from f_windows_handle import wheel_snapshot
-        return wheel_snapshot(wheel)
+        return _win_backend().wheel_snapshot(wheel)
     if not hasattr(os, "O_NOFOLLOW"):
         raise ValueError("safe wheel descriptor inspection unsupported")
     try:
