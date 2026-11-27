@@ -6,10 +6,13 @@ from tests.test_lab_release import fixture
 from unified_system import lab_release
 from unified_system.installation_service import ServiceResource,service_plan,parse_service_sid,WindowsServiceBoundary
 
+# Inert simulated System32: production powershell_argv path guard is NOT mocked.
+FAKE_SYSTEM32 = Path(tempfile.gettempdir()).resolve() / 'UnifiedInertSystem32'
+
 class FakeWindows:
  def __init__(self):self.calls=[];self.service=None;self.fault=None;self.acl='a'*64;self.host='TEST-PC'
  def computer_name(self):return self.host
- def native_tools(self):return {'sc':{'path':str(Path(tempfile.gettempdir()).resolve()/'fixture-sc.exe'),'sha256':'a'*64},'powershell':{'path':str(Path(tempfile.gettempdir()).resolve()/'fixture-powershell.exe'),'sha256':'b'*64}}
+ def native_tools(self):return {'sc':{'path':str(Path(tempfile.gettempdir()).resolve()/'fixture-sc.exe'),'sha256':'a'*64},'powershell':{'path':str(FAKE_SYSTEM32/'WindowsPowerShell/v1.0/powershell.exe'),'sha256':'b'*64}}
  def sid(self,name):return 'S-1-5-80-1-2-3-4-5'
  def call(self,action,plan,guard):
   if guard is None or guard(action,plan['plan_sha256']) is not True:raise ValueError('approval')
@@ -255,7 +258,7 @@ class ServiceResourceTests(unittest.TestCase):
   command=command.replace(';if($value -cne',';'+phase('UNICODE_END')+'if($value -cne',1)
   command=command.replace('try{$null=[UnifiedStoppedServiceNative]::Run',phase('CAP_BEGIN')+'try{$null=[UnifiedStoppedServiceNative]::Run',1)
   command=command.replace(';if(-not $limited)',';'+phase('CAP_END')+'if(-not $limited)',1)+';'+phase('DONE')
-  result=run_phased([service._native_tools()['powershell']['path'],'-NoProfile','-NonInteractive','-Command',command],env=env,timeout=30)
+  result=run_phased(service.powershell_argv(service._native_tools()['powershell']['path'],command),env=env,timeout=30,cwd=service.child_directory())
   self.assertEqual(result.returncode,0,result.stderr.decode(errors='replace'));self.assertIn(b'DECLARATIONS_COMPILED',result.stdout);self.assertIn(b'UNICODE_AND_OUTPUT_BOUND_VERIFIED',result.stdout)
 
  def test_static_module_no_start_stop_delete_or_policy_bypass(self):
