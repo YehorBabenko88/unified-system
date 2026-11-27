@@ -270,8 +270,8 @@
       "consumers": [
         "previous D #129 terminan/data.py::qualified_market_data_timeframe_chart; switched to B qualified-rollup in D #130"
       ],
-      "replacement": "Current Grid B308 4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f modifies LIVE/historical exact UTC cursor in read_api.py blob 7ccf9ad288db4c803f253f77dfcf44b581c631d5; unchanged producer Grid blob 2f27598a2fd0f7a561e350996894cabcabd40050. Current Terminan D133 bcdf3287a47e60f6c50022adce7651bcb51e587f adds historical end-user UI index.html blob 0b5784b20b278931b47ead1c5b7d1ca752f87ec3; unchanged consumer blob 77c6855c52030d5d9b0e839e0c9245b947db41b5; workflow D still pins B307, not yet B308. Original Math9e6...",
-      "tests": "B308/D133 current source pair identified; v2 producer/consumer unchanged 29/29 top 15/15 row source-candidate only, B308 cursor full timeframe alignment and D133 new UI not original integrated E2E proven by G. D CI workflow still pinned B307. G012 deletion/functional parity acceptance BLOCKED until H/F/J original roundtrip and installer/native.",
+      "replacement": "Latest complementary owner Drafts: Grid B309 HEAD b2e3f9a77384080ecbb834b32d51d8816ed1aa2a (only CI integration changed; same executable canonical Grid B308 source 4287c5ca8e7fd4f88376cc3e9fa0f578db6a9a4f); Terminan D134 HEAD 3608e41b90b2dbf7a80d7daa86582a2440e11330 (CI pinned B308 + tests, same D133 historical UI and D132 strict numeric consumer); Math 9e6acbd9. No native/installed final parity.",
+      "tests": "B309/D134 original CI now owner-wired for exact B308/D133 + canonical Math original, but B309 first-page 15 QUEUED, D134 2 PENDING; 0 completed CI outcomes established. H original DOM fake/contract reported PASS, full protected hardware/PG18/Consul/Windows/installed packages NOT_RUN. G012 retirement still not approved.",
       "rollback": "D #129 previous independent aggregation must remain recoverable; do not delete legacy Grid strategy or Meta code; preserve full original 1m and research"
     }
   ],
@@ -459,6 +459,28 @@
       "user_data_deleted": false
     },
     "release_authorized": false,
-    "production_authorized": false
+    "production_authorized": false,
+    "current_followup": {
+      "grid_test_draft": 309,
+      "grid_test_head": "b2e3f9a77384080ecbb834b32d51d8816ed1aa2a",
+      "terminan_integration_draft": 134,
+      "terminan_integration_head": "3608e41b90b2dbf7a80d7daa86582a2440e11330",
+      "grid_math_producer_unchanged": true,
+      "terminan_math_consumer_unchanged": true,
+      "grid_ci_first_page": {
+        "queued": 15,
+        "completed": 0
+      },
+      "terminan_ci_first_page": {
+        "pending": 2,
+        "completed": 0
+      },
+      "strattester_ci_first_page": {
+        "queued": 1,
+        "completed": 0
+      },
+      "additional_file_repro_log_sha256": "971e261d1dc4ab5defbb8a26ade9004839e96ab89f974664cccfb7cf2fb26d7b",
+      "full_release": "NO_GO"
+    }
   }
 }
