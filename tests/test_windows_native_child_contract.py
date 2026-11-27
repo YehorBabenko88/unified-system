@@ -899,9 +899,9 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
 
         sentinel = self.worker.with_name('detached-child-executed')
         self.worker.write_text(
-            'import pathlib, time\n'
-            'pathlib.Path(%r).write_text("executed", encoding="utf-8")\n'
-            'time.sleep(30)\n' % str(sentinel), encoding='utf-8')
+            ('import pathlib, time\n'
+             'pathlib.Path(%r).write_text("executed", encoding="utf-8")\n'
+             'time.sleep(30)\n') % str(sentinel), encoding='utf-8')
         self.driver.programs['market_data']['file_pins']['job_worker.py'] = (
             hashlib.sha256(self.worker.read_bytes()).hexdigest())
         op, child = self._start_detached_diagnostic_child()
