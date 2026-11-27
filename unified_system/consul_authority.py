@@ -352,11 +352,37 @@ class ConsulSessionAuthority:
             raise CoordinationLost('Consul lease lost after control transaction')
 
     async def read_control(self, name):
-        rows = await self._request('GET', '/v1/kv/' + quote(self._state_key(name), safe='/'),
+        # Historical control data is readable, but is never a Root lease or
+        # a substitute for current leader/session/SQL fencing authority.
+        if self._closed:
+            raise CoordinationUnavailable('Consul authority already closed')
+        target = self._state_key(name)
+        rows = await self._request('GET', '/v1/kv/' + quote(target, safe='/'),
                                    params={'consistent': ''}, missing_ok=True)
         if rows is None:
             return None
+        if type(rows) is not list or len(rows) != 1 or type(rows[0]) is not dict:
+            raise CoordinationUnavailable('control record invalid')
+        row = rows[0]
         try:
-            return json.loads(base64.b64decode(rows[0]['Value'], validate=True))
+            if (row.get('Key') != target
+                    or type(row.get('ModifyIndex')) is not int
+                    or not 0 < row['ModifyIndex'] < (1 << 63)
+                    or type(row.get('Value')) is not str):
+                raise ValueError('control metadata invalid')
+            raw = base64.b64decode(row['Value'], validate=True)
+            if len(raw) > 32768:
+                raise ValueError('control data exceeds byte budget')
+            record = json.loads(raw, parse_constant=lambda _: (_ for _ in ()).throw(
+                ValueError('non-finite control data')))
+            if (type(record) is not dict
+                    or set(record) != {'owner', 'token', 'session_id', 'payload'}
+                    or type(record['owner']) is not str
+                    or not re.fullmatch(r'[A-Za-z0-9_.:-]{1,128}', record['owner'])
+                    or type(record['token']) is not int
+                    or not 0 < record['token'] < (1 << 63)
+                    or not _consul_session_id(record['session_id'])):
+                raise ValueError('control identity invalid')
+            return record
         except (KeyError, TypeError, ValueError, IndexError):
             raise CoordinationUnavailable('control record invalid') from None
