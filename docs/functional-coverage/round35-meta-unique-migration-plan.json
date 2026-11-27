@@ -440,6 +440,19 @@
       "local_tomllib_parse": "PASS",
       "new_math_module_in_py_modules": true,
       "built_wheel": "NOT_RUN"
+    },
+    "synthetic_wheel_smoke": {
+      "scope": "TEST_ONLY_WHEEL_EXACT_CANDIDATE_MODULE_WITH_ORIGINAL_EXTRACTED_MATH_KERNEL_AND_PLACEHOLDER_UNRELATED_MODULES",
+      "source_manifest_blob": "fb944447361b17cd2011732d843bc2f9f78be0bd",
+      "built_package": "unified_math_kernels-0.1.0-py3-none-any.whl",
+      "actual_wheel_build": "PASS",
+      "venv_pip_install_offline": "PASS",
+      "zip_embedded_wall_module_blob": "0e22810943294a8cf8163660b08b44a4cc54f9ed",
+      "embedded_source_byte_identical_to_candidate": true,
+      "real_committed_original_7_tests_via_venv_installed_wheel": "7_PASS_0_FAIL_0_ERROR_0_SKIP",
+      "complete_original_math_sdk": "NOT_RUN",
+      "production_installation": "NOT_RUN",
+      "evidence": "https://github.com/YehorBabenko88/math/pull/168#issuecomment-7223523486"
     }
   }
 }
