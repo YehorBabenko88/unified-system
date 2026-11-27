@@ -8,6 +8,7 @@ consensus. Source Git consistency and resource capacity are NOT_EVALUATED.
 Service creation, ACLs, migrations, enrollment and activation are absent.
 """
 import copy
+import hashlib
 import os
 from pathlib import Path
 import sqlite3
@@ -88,6 +89,65 @@ def source_plan(*,capsule_root,install_root,state_root,installation_id,node_id,o
   capsule_source_provenance=report['source_provenance'],
   application_boundary='EXISTING_EPHEMERAL_GUARD_UNCHANGED',
   service_boundary='BLOCKED_NSSM_CLOSURE_SCOPED_ACL_GIT_IDENTITY_PENDING'))
+
+
+def _anchored_deletion_supported():
+ """No Windows/path-only removal until the native handle owner is qualified."""
+ return (os.name=='posix' and hasattr(os,'O_DIRECTORY') and hasattr(os,'O_NOFOLLOW')
+         and os.unlink in os.supports_dir_fd and os.rmdir in os.supports_dir_fd
+         and os.open in os.supports_dir_fd and os.stat in os.supports_dir_fd)
+
+
+def _owned_dir_handle(path,fingerprint):
+ flags=os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW|getattr(os,'O_CLOEXEC',0)
+ fd=os.open(path,flags)
+ try:
+  info=os.fstat(fd)
+  need(stat.S_ISDIR(info.st_mode) and {'device':info.st_dev,'inode':info.st_ino}==fingerprint)
+  return fd
+ except BaseException:
+  os.close(fd);raise
+
+
+def _unlink_owned_member(path,pin,parent_fingerprint):
+ """Bind the deletion to the verified directory handle, never a late path.
+
+ This remains an inert disposable test primitive, not a hostile-race-proof
+ production delete-by-file-ID capability.
+ """
+ parent_fd=_owned_dir_handle(path.parent,parent_fingerprint)
+ try:
+  member_fd=os.open(path.name,os.O_RDONLY|os.O_NOFOLLOW|getattr(os,'O_CLOEXEC',0),dir_fd=parent_fd)
+  try:
+   before=os.fstat(member_fd)
+   need(stat.S_ISREG(before.st_mode) and before.st_nlink==1 and before.st_size==pin['bytes'])
+   digest=hashlib.sha256();count=0
+   while True:
+    data=os.read(member_fd,1024*1024)
+    if not data:break
+    count+=len(data);need(count<=pin['bytes']);digest.update(data)
+   after=os.fstat(member_fd)
+   path_stat=os.stat(path.name,dir_fd=parent_fd,follow_symlinks=False)
+   key=lambda x:(x.st_dev,x.st_ino,x.st_size,x.st_mtime_ns,x.st_nlink)
+   need(key(before)==key(after)==key(path_stat) and before.st_ctime_ns==after.st_ctime_ns
+        and count==pin['bytes'] and digest.hexdigest()==pin['sha256'])
+  finally:os.close(member_fd)
+  os.unlink(path.name,dir_fd=parent_fd)
+ finally:os.close(parent_fd)
+
+
+def _remove_owned_directory(path,identity,parent_fingerprint):
+ parent_fd=_owned_dir_handle(path.parent,parent_fingerprint)
+ try:
+  child_fd=os.open(path.name,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW|getattr(os,'O_CLOEXEC',0),dir_fd=parent_fd)
+  try:
+   info=os.fstat(child_fd)
+   found=os.stat(path.name,dir_fd=parent_fd,follow_symlinks=False)
+   need(stat.S_ISDIR(info.st_mode) and {'device':info.st_dev,'inode':info.st_ino}==identity
+        and (found.st_dev,found.st_ino)==(info.st_dev,info.st_ino))
+  finally:os.close(child_fd)
+  os.rmdir(path.name,dir_fd=parent_fd)
+ finally:os.close(parent_fd)
 
 
 class InstallationTransaction:
@@ -196,6 +256,9 @@ class InstallationTransaction:
   """
   need(approved_disposable is True)
   need(fail_after_members is None or (type(fail_after_members) is int and fail_after_members>=0))
+  # Path-only Windows unlink has an admitted TOCTOU weakness. A POSIX
+  # descriptor-relative disposable fixture is safer, but is never ROOT/SCM GO.
+  need(_anchored_deletion_supported())
   workspace=self.install.parent
   need(self.state.parent==workspace and workspace.name.startswith('unified-agent-i-'))
   need(workspace.parent.resolve()==Path(tempfile.gettempdir()).resolve())
@@ -219,20 +282,20 @@ class InstallationTransaction:
    item=self.release/rel
    parent=Path(rel).parent.as_posix()
    need(stamp(item.parent)==parent_stamps[parent])
-   need(lab_release.hash_file(item)==files[rel])
-   item.unlink()
+   _unlink_owned_member(item,files[rel],parent_stamps[parent])
    removed+=1
    if fail_after_members==removed:raise OSError('DISPOSABLE_INJECTED_INTERRUPTION')
   need(stamp(manifest_path.parent)==parent_stamps['.'])
   need(lab_release.hash_file(manifest_path)['sha256']==self.plan['manifest_sha256'])
-  manifest_path.unlink()
+  _unlink_owned_member(manifest_path,{'sha256':self.plan['manifest_sha256'],
+                                     'bytes':manifest_path.stat().st_size},parent_stamps['.'])
   removed+=1
   if fail_after_members==removed:raise OSError('DISPOSABLE_INJECTED_INTERRUPTION')
   for rel in sorted(dirs,key=lambda x:(len(Path(x).parts),x),reverse=True):
    target=self.release/rel
    need(stamp(target)==parent_stamps[rel])
    need(stamp(target.parent)==parent_stamps[Path(rel).parent.as_posix()])
-   target.rmdir()  # never recursive; unexpected children fail closed
+   _remove_owned_directory(target,parent_stamps[rel],parent_stamps[Path(rel).parent.as_posix()])
    removed+=1
    if fail_after_members==removed:raise OSError('DISPOSABLE_INJECTED_INTERRUPTION')
   need(stamp(self.release)==parent_stamps['.'] and not any(self.release.iterdir()))
