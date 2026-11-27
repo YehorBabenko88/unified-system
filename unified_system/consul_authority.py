@@ -81,6 +81,7 @@ class ConsulSessionAuthority:
         self._sessions = {}
         self._deadlines = {}
         self._owns_client = client is None
+        self._closed = False
         if client is not None and not config.isolated_lab:
             raise ValueError('injected HTTP transports are restricted to isolated lab configuration')
         if client is None:
@@ -93,6 +94,13 @@ class ConsulSessionAuthority:
         self.client = client
 
     async def close(self):
+        # Closing the authority always revokes local grants, even when the
+        # HTTP transport was injected and is owned by another caller.
+        # Do not silently destroy Consul sessions: original SQL/OS shutdown
+        # may still be UNKNOWN and needs independent Root reconciliation.
+        self._closed = True
+        for session in self._deadlines:
+            self._deadlines[session] = 0
         if self._owns_client:
             await self.client.aclose()
 
@@ -161,6 +169,8 @@ class ConsulSessionAuthority:
             return False
 
     async def acquire(self, owner):
+        if self._closed:
+            raise CoordinationUnavailable('Consul authority already closed')
         if type(owner) is not str or not re.fullmatch(r'[A-Za-z0-9_.:-]{1,128}', owner):
             raise ValueError('stable owner identifier required')
         started = self.clock()
@@ -175,6 +185,8 @@ class ConsulSessionAuthority:
             raise CoordinationUnavailable('Consul session identity invalid')
         destroy_attempted = False
         try:
+            if self._closed:
+                raise CoordinationLost('Consul authority closed during acquisition')
             value = canonical({'owner': owner, 'session_id': session, 'namespace': self.config.namespace})
             won = await self._request('PUT', '/v1/kv/' + quote(self.key, safe='/'),
                                       params={'acquire': session}, content=value)
@@ -193,7 +205,8 @@ class ConsulSessionAuthority:
             if type(token) is not int or not 0 < token < (1 << 63):
                 raise CoordinationLost('Consul fencing token invalid')
             lease = ConsulLease(owner, session, token)
-            if not self._matches(row, lease) or self.clock() >= started + self.config.ttl_seconds - 1:
+            if (self._closed or not self._matches(row, lease)
+                    or self.clock() >= started + self.config.ttl_seconds - 1):
                 raise CoordinationLost('Consul acquisition no longer current')
             self._sessions[session] = lease
             self._deadlines[session] = started + self.config.ttl_seconds - 1
@@ -212,7 +225,7 @@ class ConsulSessionAuthority:
     async def validate(self, lease):
         # A copied caller-built dataclass can equal the original lease by
         # value. Only the exact object issued by this authority is local proof.
-        if (type(lease) is not ConsulLease
+        if (self._closed or type(lease) is not ConsulLease
                 or self._sessions.get(lease.session_id) is not lease):
             return False
         deadline = self._deadlines.get(lease.session_id, 0)
@@ -228,7 +241,8 @@ class ConsulSessionAuthority:
             return False
 
     async def renew(self, lease):
-        if self._sessions.get(getattr(lease, 'session_id', None)) is not lease:
+        if (self._closed or
+                self._sessions.get(getattr(lease, 'session_id', None)) is not lease):
             return False
         started = self.clock()
         if started >= self._deadlines[lease.session_id]:
@@ -250,6 +264,12 @@ class ConsulSessionAuthority:
         except CoordinationUnavailable:
             self._deadlines[lease.session_id] = 0
             return False
+        except BaseException:
+            # asyncio.CancelledError is BaseException (not Exception).
+            # A renew request can have reached Consul before task shutdown.
+            # Never retain a locally trusted deadline after such ambiguity.
+            self._deadlines[lease.session_id] = 0
+            raise
 
     async def release(self, lease):
         if self._sessions.get(getattr(lease, 'session_id', None)) is not lease:
@@ -289,7 +309,11 @@ class ConsulSessionAuthority:
         # reconciliation; the caller must not replay or mint a new owner.
         try:
             result = await self._request('PUT', '/v1/txn', json=operations)
-        except CoordinationUnavailable:
+        except BaseException:
+            # Includes asyncio cancellation during the original network
+            # mutation; the server may have committed without an ACK.
+            # Quarantine the exact old lease, propagate cancellation, and
+            # never blindly replay the transaction.
             self._deadlines[lease.session_id] = 0
             raise
         # HTTP 200 without transaction Results is not a verifiable commit.
@@ -316,7 +340,14 @@ class ConsulSessionAuthority:
         # No caller may interpret that old write as current Root authority.
         # Re-read the original lease and consistent leader KV *after* the
         # network transaction, rejecting both timeout and changed owner.
-        if not await self.validate(lease):
+        try:
+            still_current = await self.validate(lease)
+        except BaseException:
+            # Even post-transaction read cancellation leaves the preceding
+            # mutation outcome uncertain to its caller.
+            self._deadlines[lease.session_id] = 0
+            raise
+        if not still_current:
             self._deadlines[lease.session_id] = 0
             raise CoordinationLost('Consul lease lost after control transaction')
 
