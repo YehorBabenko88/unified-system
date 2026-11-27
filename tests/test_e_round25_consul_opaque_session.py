@@ -1074,6 +1074,41 @@ class OpaqueSessionTests(unittest.TestCase):
             with self.subTest(case=case):
                 asyncio.run(exercise(case))
 
+    def test_control_read_closed_during_consistent_get_denies_late_reply(self):
+        # A consistent read started before shutdown must not return a stale
+        # state record after the authority has closed and revoked all leases.
+        async def exercise():
+            entered, released = asyncio.Event(), asyncio.Event()
+            record = {
+                "owner": "owner", "token": 41, "session_id": OBSERVED,
+                "payload": {"value": 17},
+            }
+            key = "isolated/round25/state/probe"
+            row = {
+                "Key": key, "ModifyIndex": 42,
+                "Value": base64.b64encode(json.dumps(record).encode()).decode(),
+            }
+            async def handler(req):
+                self.assertEqual(req.method, "GET")
+                self.assertEqual(req.url.path, "/v1/kv/" + key)
+                self.assertIn("consistent", req.url.params)
+                entered.set()
+                await released.wait()
+                return httpx.Response(200, json=[row])
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                pending = asyncio.create_task(authority.read_control("probe"))
+                await asyncio.wait_for(entered.wait(), timeout=1)
+                await authority.close()
+                released.set()
+                with self.assertRaises(CoordinationUnavailable):
+                    await asyncio.wait_for(pending, timeout=1)
+        asyncio.run(exercise())
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
