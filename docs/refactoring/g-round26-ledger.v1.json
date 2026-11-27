@@ -178,17 +178,19 @@
     },
     {
       "id": "G-006",
-      "status": "MIGRATE",
+      "status": "BLOCKED_UNIQUE_CONSUMERS_NOT_MIGRATED",
       "repo": "strattester",
       "path": "strattester/marketdata/bybit_client.py",
       "owner": "Grid",
       "consumers": [
-        "tests/marketdata/test_bybit_client.py",
-        "additional UNKNOWN"
+        "strattester/marketdata/sync_engine.py::_sync_rows (klines/mark/index/premium/OI/funding/long-short) blob 8e9cae734f54ebdcbda25659b8f68c9690e13e5e",
+        "strattester/marketdata/universe_sync.py::sync fetch_linear_symbols blob 579cee4dcd336d7741645c6915e7423860347e57",
+        "tests/marketdata/test_bybit_client.py blob 015c109f672686352d949c36aa04cefec2184e2e",
+        "other dynamic/CI/installer consumers not fully enumerated"
       ],
-      "replacement": "Grid versioned read/ingestion API pending B/H approval",
-      "tests": "NOT_RUN; deletion BLOCKED",
-      "rollback": "preserve historical tests and fixture"
+      "replacement": "Grid owner B sole Bybit client/qualified source with exact seven dataset DTOs + universe, B/H consumer parity ACK pending; do not replace unique OI/funding/index/mark/premium/long-short without coverage",
+      "tests": "Source verified on strattester HEAD 37ff7e9d12a4d2dccd788fc493c28557dbe8bcea, BybitClient blob a158962f2234538da02f5dd9d7f85fbff8eb4452; source imports/uses PASS; actual migration E2E NOT_RUN; deletion BLOCKED",
+      "rollback": "retain legacy BybitClient/SyncEngine/UniverseSynchronizer until B provides equivalent versioned Read API, D/H inventory and original negative regressions"
     },
     {
       "id": "G-007",
@@ -267,8 +269,8 @@
       "consumers": [
         "previous D #129 terminan/data.py::qualified_market_data_timeframe_chart; switched to B qualified-rollup in D #130"
       ],
-      "replacement": "B Grid #305 qualified_rollup producer + D #130 terminan/qualified_rollup.py consumer",
-      "tests": "D #130 -68 duplicate source lines CONFIRMED; B #305 DTO source_declared_quality field missing D #130 _TOP; D recomputes delta from rounded binary64 operands; byte-pinned G negative guard 6 PASS local; original cross-repo runtime NOT_RUN; functional parity BLOCKED",
+      "replacement": "Grid B lossless v2 exact Decimal DTO under B owner development + Terminan D131 strict future consumer, old B306/D131 incompatible; G retains original D #129 rollback",
+      "tests": "G R30 original source gate exact GitHub files 8 PASS after one fixture 1 FAIL corrected, diff D130 -68 lines real, lossless parity NOT_PROVEN; B306 currently drops valid exact 0.01 delta; original B/D full E2E NOT_RUN",
       "rollback": "keep D #129 parent branch and original Math intact; revert D #130 scoped deletion if accepted positive/negative parity fails; no legacy Grid strategy/Meta retirement authorized"
     }
   ],
@@ -358,6 +360,38 @@
       "B305 adds source_declared_quality: ['GOOD'] but D130 rejects unknown key",
       "B305 calculates Decimal delta before binary64 directional DTO; D130 reconstructs from rounded DTO and can incorrectly reject valid cancellation case"
     ],
+    "release_authorized": false,
+    "production_authorized": false
+  },
+  "round30_execution": {
+    "g_clean_pr": 183,
+    "g_clean_head_before_this_commit": "da5ce4869d31e4ccc3a0728fef0a85b524c54151",
+    "superseded_broad_pr": 177,
+    "superseded_closed": true,
+    "g_only_changed_paths": 5,
+    "byte_identity_all_five": "PASS",
+    "grid_head": "b55b03fdbaa6749d6b41bafb238ce98dfebd85e0",
+    "terminan_head": "c40740b8ac8104efff9bf9ca9e3e3b6db37a4ddd",
+    "canonical_math_head": "9e6acbd9e12a91189f57234828e31640983af553",
+    "tests": {
+      "exact_current_git_source_unittest_pass": 8,
+      "fail": 0,
+      "error": 0,
+      "skip": 0,
+      "initial_pre_fix_fail": 1,
+      "compile": "PASS",
+      "b_d_original_e2e": "NOT_RUN",
+      "native_windows_pg_consul": "NOT_RUN"
+    },
+    "g012_approved": false,
+    "g006_approved": false,
+    "legacy_keep": [
+      "strattester/marketdata/bybit_client.py",
+      "strattester/marketdata/sync_engine.py",
+      "strattester/marketdata/universe_sync.py",
+      "strattester/marketdata/l2_recorder.py"
+    ],
+    "owner_dependency": "B canonical alternate APIs and H differential consumer parity before source removal",
     "release_authorized": false,
     "production_authorized": false
   }
