@@ -91,7 +91,7 @@
     "windows_installer": "NOT_RUN",
     "ui_e2e": "NOT_RUN",
     "ci_scheduler": "J_PREJOB_0_JOBS_BUT_F_WORKFLOW_LATER_MATERIALIZED_JOBS_CAUSE_UNPROVEN",
-    "consul_compatibility": "J_DISPOSABLE_CONSUL_1_20_9_VS_E_TARGET_2_1_NOT_EQUIVALENT_NOT_RUN"
+    "consul_compatibility": "J_SYNTHETIC_1_20_9_VS_E_PLANNED_2_1_VERSION_MISMATCH; NO_EQUIVALENCE_CLAIM; E_SOURCE_IMPORT_ONLY"
   },
   "integration_policy": {
     "owner_blob_import": "REVIEWED_EXACT_ONLY",
@@ -123,10 +123,33 @@
       "integration": "SELECTIVE_IMPORTED_SOURCE_PARITY_ONLY"
     },
     "G": {
-      "tested_head": "ae6a47434dec459584105c5f877f749bc7676b16",
-      "owner_candidate_head": "5ff4f10d068bbed08db816e6e4ffdeb2b81ac338",
-      "ci": "2278_PASS_2_SKIP_4_JOBS_TESTED_HEAD_ONLY",
-      "integration": "EXTERNAL_STRATTESTER_PIN_ONLY_NO_GRID_PARITY"
+      "tested_head": "5ff4f10d068bbed08db816e6e4ffdeb2b81ac338",
+      "prior_tested_head": "ae6a47434dec459584105c5f877f749bc7676b16",
+      "original_run": "https://github.com/YehorBabenko88/Strattester/actions/runs/46026544488",
+      "original_run_head_verified": true,
+      "original_jobs": 4,
+      "linux311": {
+        "pass": 573,
+        "skip": 1
+      },
+      "linux313": {
+        "pass": 573,
+        "skip": 1
+      },
+      "windows311": {
+        "pass": 574,
+        "skip": 0
+      },
+      "windows313": {
+        "pass": 574,
+        "skip": 0
+      },
+      "total_pass": 2294,
+      "total_fail": 0,
+      "total_error": 0,
+      "total_skip": 2,
+      "meaning": "G_ORIGINAL_FIXTURE_PRESERVATION_ONLY_NOT_GRID_MIGRATION_PARITY",
+      "integration": "EXTERNAL_STRATTESTER_PIN_ONLY_NO_G006_G012_RETIREMENT"
     },
     "E": {
       "owner_sha": "1aef1d8b5138d7aa132c404d1d66f92cf958b017",
