@@ -104,14 +104,35 @@ def exercise_two_pinned_sql_sources(test, *, identity, stream, start_ms,
                     test.assertIs(observed["execution_authority"], False)
                     outcome = observed["state"]
             finally:
-                # Even unexpected SQLSTATE, fixture failure and readback
-                # mismatch retain the emitted original SQL hash in CI logs.
-                if raw.queries:
-                    test.assertEqual(len(raw.queries), 1)
-                    original_sql = raw.queries[0]
-                    test.assertIn("FOR SHARE OF f", original_sql)
-                    test.assertIn("relevant_pending AS (", original_sql)
+                # Log the original emitted SQL even if psycopg raises an
+                # unexpected SQLSTATE; assertions after finally must not mask
+                # the primary database exception.
+                for original_sql in raw.queries:
                     digest = hashlib.sha256(original_sql.encode("utf-8")).hexdigest()
                     print("C35_NATIVE_PG18_SQL_VARIANT "
                           f"source={expected_blob} sql_sha256={digest} "
                           f"chars={len(original_sql)} outcome={outcome}", flush=True)
+            test.assertEqual(len(raw.queries), 1)
+            test.assertIn("FOR SHARE OF f", raw.queries[0])
+            test.assertIn("relevant_pending AS (", raw.queries[0])
+
+        # Read-only native negative evidence: a different immutable
+        # fingerprint must NOT turn an existing checkpoint into an ACK.
+        # It is important that this runs after the positive case while
+        # retaining the same actual PostgreSQL fence and backend identity.
+        mismatch = dict(kwargs, fingerprint="5" * 64)
+        raw = _NativeRawSql(test.pg, connection)
+        outcome = "NOT_EXECUTED"
+        try:
+            observed = current.verify_existing_lab_checkpoint(raw, **mismatch)
+            test.assertEqual(observed["state"], "UNRESOLVED")
+            test.assertIs(observed["execution_authority"], False)
+            outcome = "UNRESOLVED"
+        finally:
+            for original_sql in raw.queries:
+                digest = hashlib.sha256(original_sql.encode("utf-8")).hexdigest()
+                print("C35_NATIVE_PG18_NEGATIVE "
+                      f"source={CURRENT_BLOB} sql_sha256={digest} "
+                      f"chars={len(original_sql)} outcome={outcome}", flush=True)
+        test.assertEqual(len(raw.queries), 1)
+        test.assertIn("FOR SHARE OF f", raw.queries[0])
