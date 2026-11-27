@@ -257,8 +257,24 @@ class ConsulSessionAuthority:
             {'KV': {'Verb': 'set', 'Key': self._state_key(name), 'Value': base64.b64encode(value).decode()}},
         ]
         result = await self._request('PUT', '/v1/txn', json=operations)
-        if type(result) is not dict or result.get('Errors'):
-            raise CoordinationLost('Consul fencing transaction rejected')
+        # HTTP 200 without transaction Results is not a verifiable commit.
+        # A successful set operation returns its KV key and ModifyIndex;
+        # check-session/check-index are still enforced by Consul atomically.
+        # Never treat {}, a malformed Errors field, or an unrelated KV row as
+        # confirmation of the original owner-controlled state write.
+        target = self._state_key(name)
+        if (type(result) is not dict
+                or result.get('Errors') not in (None, [])
+                or type(result.get('Results')) is not list
+                or not any(
+                    type(entry) is dict
+                    and type(entry.get('KV')) is dict
+                    and entry['KV'].get('Key') == target
+                    and type(entry['KV'].get('ModifyIndex')) is int
+                    and entry['KV']['ModifyIndex'] > 0
+                    for entry in result['Results']
+                )):
+            raise CoordinationLost('Consul fencing transaction unconfirmed')
 
     async def read_control(self, name):
         rows = await self._request('GET', '/v1/kv/' + quote(self._state_key(name), safe='/'),
