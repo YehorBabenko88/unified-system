@@ -150,6 +150,8 @@ def claim_lab_fence(pg, *, owner, namespace, generation, token,
         f"'{ids[2]}'::uuid,'{sha1}','{sha2}',pid,backend_start,true"
         " FROM pg_catalog.pg_stat_activity"
         f" WHERE pid={backend_pid} AND usename='lab_writer'"
+        " AND datname=current_database()"
+        " AND backend_type='client backend'"
         " ON CONFLICT(resource_id) DO UPDATE SET"
         " owner=EXCLUDED.owner,namespace=EXCLUDED.namespace,"
         " generation=EXCLUDED.generation,token=EXCLUDED.token,"
