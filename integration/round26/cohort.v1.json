@@ -16,7 +16,7 @@
       "role": "A",
       "repo": "YehorBabenko88/unified-system",
       "pr": 162,
-      "sha": "d2384b592768d0f1d712014e9df535706154c0df",
+      "sha": "c14bb55ece3b580600a6f6e528d1faa0b4790ea8",
       "disposition": "OWNER_SOURCE_IMPORTED_IMMUTABLE_MATCH_NATIVE_UNQUALIFIED"
     },
     {
@@ -50,21 +50,21 @@
       "role": "E",
       "repo": "YehorBabenko88/unified-system",
       "pr": 171,
-      "sha": "89642f6542d6682a2bce0eda35112ee8e1b465e8",
+      "sha": "2883dcb7c559d31606407f18ae57a45baefe42f4",
       "disposition": "OWNER_SOURCE_IMPORTED_IMMUTABLE_MATCH_NATIVE_UNQUALIFIED"
     },
     {
       "role": "F",
       "repo": "YehorBabenko88/unified-system",
       "pr": 180,
-      "sha": "1d5a72148ffff6e260521bce924f4171a1a1b07c",
+      "sha": "bfa0817afc1e08946a8f0059dd8a6fcd885e3830",
       "disposition": "OWNER_SOURCE_IMPORTED_IMMUTABLE_MATCH_NATIVE_UNQUALIFIED"
     },
     {
       "role": "G",
       "repo": "YehorBabenko88/unified-system",
       "issue": 172,
-      "sha": "6dfa58648f9a7cac8937bce4061f025a151e9344",
+      "sha": "d30abc103edeadd8e446191fc52487c596a19b4c",
       "disposition": "OWNER_SOURCE_IMPORTED_IMMUTABLE_MATCH_NATIVE_UNQUALIFIED",
       "pr": 183
     },
@@ -117,13 +117,13 @@
   "acceptance": {
     "source_revision": "A_C_E_H_I_ORIGINAL_BLOBS_PRESENT_AND_PINNED",
     "original_package_hashes": "NOT_VERIFIED",
-    "native_windows": "NOT_RUN_CURRENT_J",
-    "native_consul_pg": "NOT_RUN_PG18_AND_CONSUL2_1",
+    "native_windows": "PRIOR_OWNER_NATIVE_FAIL_CURRENT_OWNER_NOT_RUN",
+    "native_consul_pg": "NOT_RUN_PG18_AND_CONSUL_2_1",
     "native_c_wal_reply_loss": "NOT_RUN",
     "grid306_d130_schema_source": "PASS_26_OF_26",
     "grid306_d130_original_consumer_e2e": "NOT_RUN",
     "mtf_precision_fidelity": "SOURCE_CANDIDATE_EXACT_OVER_STORED_JSON_ONLY_NOT_PROVIDER_RAW",
-    "full_market_completeness": "NOT_PROVEN",
+    "full_market_completeness": "NOT_PROVEN_G006_G012_NO_RETIREMENT",
     "installer_recovery": "NATIVE_HANDLE_CANDIDATE_NO_INSTALL_TIME_SEALED_128BIT_FILEID_DENIED",
     "disposable_toctou": "NOT_QUALIFIED_DIRFD_FINAL_PATH_RACE",
     "protected_root": "DENIED",
@@ -136,18 +136,18 @@
     "grid308_d133_full_e2e": "NOT_RUN",
     "last_checked_integrated_sha": "a9acd074fc3c624def3f85fe07c4b18b2ab0ea1b",
     "current_integrated_actions": "NO_CURRENT_J_WORKFLOW_CONCLUSION_AT_LATEST_READ",
-    "original_integrated_python_tests": "NOT_RUN",
-    "source_file_hash_checks": "R34_16_OF_16_IMMUTABLE_TREE_BLOB_IDENTITIES_PASS",
+    "original_integrated_python_tests": "NOT_RUN_CURRENT_J",
+    "source_file_hash_checks": "R34_18_18_CURRENT_IMMUTABLE_GIT_TREE_MATCHES_PASS",
     "b308_d133_contract_execution": "NOT_RUN_AT_J",
     "immutable_source_file_blob_parity": "14_PASS_0_FAIL_0_ERROR_PLUS_F_TEST_CORRECTED_FROM_PINNED_SHA",
     "integration_runtime_tests": "NOT_RUN",
     "manual_host_acceptance": "NOT_RUN_NO_ADMINIT_ACCESS",
     "grid309_d134": "CI_COHORT_ONLY_NO_ORIGINAL_INSTALLED_E2E",
-    "strattester123": "PRIOR_SHA_2154_PASS_2_SKIP_NOT_TRANSFERABLE_NEW_SHA_529EBB",
+    "strattester123": "LATEST_GITHUB_566_PASS_1_FAIL_1_SKIP_UBUNTU311_OTHER_JOBS_CANCELLED",
     "crossrepo_d134_b309_original_execution": "SUPERSEDED_BY_D135_B309_SCOPED_RESULTS",
-    "native_uninstall": "NOT_RUN_DEFAULT_DENIED_BOTH_GATES",
-    "grid310_d135": "SCOPED_CI_MANAGED_HTTP_72_PASS_BROWSER_1_PASS_NOT_INSTALLED_PG_CONSUL",
-    "pg18_checkpoint": "C_076_STATIC_BALANCED_C_CAD4_STATIC_UNBALANCED_BOTH_NATIVE_NOT_RUN"
+    "native_uninstall": "NOT_RUN_BOTH_DEFAULT_DELETION_GATES_FALSE",
+    "grid310_d135": "D135_72_MANAGED_HTTP_PASS_1_CHROMIUM_PASS_STILL_NOT_INSTALLED",
+    "pg18_checkpoint": "076_BALANCED_STATIC_ONLY_CAD4_UNCLOSED_RELEVANT_PENDING_BOTH_NATIVE_NOT_RUN"
   },
   "round": 34,
   "integration_status": "ROUND34_SOURCE_REFRESH_COMPLETE_C_SQL_UNQUALIFIED_NATIVE_PG18_NOT_RUN",
@@ -361,22 +361,22 @@
     "round34": {
       "J_before_manifest_sha": "9c09300ef80860d9c315a6ebeda7ffe2b33fa05f",
       "owner_pins": {
-        "A": "d2384b592768d0f1d712014e9df535706154c0df",
-        "B": "e5864a933dc407b2ccc10a91cb2520e21ebfc447",
+        "A": "c14bb55ece3b580600a6f6e528d1faa0b4790ea8",
         "C": "a305c4cda93d5e84d8a1542962e188e9f0f7dfd8",
-        "D": "fd6a3f1dfa8ee832a51180410cb9920b8766c0a8",
-        "E": "89642f6542d6682a2bce0eda35112ee8e1b465e8",
-        "F": "1d5a72148ffff6e260521bce924f4171a1a1b07c",
-        "G": "6dfa58648f9a7cac8937bce4061f025a151e9344",
+        "E": "2883dcb7c559d31606407f18ae57a45baefe42f4",
+        "F": "bfa0817afc1e08946a8f0059dd8a6fcd885e3830",
+        "G": "d30abc103edeadd8e446191fc52487c596a19b4c",
         "H": "45574487e5961ade2054f28a86f38ce30716b1b8",
-        "I": "c8f4229ea3238f729acc0254fa2b33bbbc9a8b79"
+        "I": "c8f4229ea3238f729acc0254fa2b33bbbc9a8b79",
+        "B": "e5864a933dc407b2ccc10a91cb2520e21ebfc447",
+        "D": "fd6a3f1dfa8ee832a51180410cb9920b8766c0a8"
       },
       "source_owner_blob_parity": {
-        "pass": 16,
+        "pass": 18,
         "fail": 0,
         "error": 0,
         "skip": 0,
-        "scope": "exact original immutable Git tree blob identity not executed original tests"
+        "scope": "current immutable Git owner trees vs exact J tree, not original full-suite execution"
       },
       "canonical_math": "9e6acbd9e12a91189f57234828e31640983af553",
       "external_grid_production": {
@@ -389,8 +389,21 @@
       },
       "external_strattester": {
         "pr": 123,
-        "sha": "529ebb548159948c66976884f3b8e57454e90ed1",
-        "state": "FOUR_P0_UNFIXED_UNIQUE_FUNCTIONS_PRESERVED_NO_RETIREMENT"
+        "sha": "97e5e48c867370741e8349c422399384aef977ae",
+        "state": "G34_ZERO_VOLUME_TEST_FIXTURE_OUTSIDE_ADMITTED_WINDOW;LATEST_GITHUB_CI_FAILED",
+        "failure_job": 140508864335,
+        "original_ubuntu311": {
+          "pass": 566,
+          "fail": 1,
+          "error": 0,
+          "skip": 1
+        },
+        "diagnosis": "fixture [600000,660000,720000] outside calculated valid [660000,780000] for minutes3 at now900000; correct [660000,720000,780000]",
+        "no_retirement": [
+          "G006",
+          "G012"
+        ],
+        "latest_other_jobs": "CANCELLED_NOT_PASS"
       },
       "external_meta": "NO_RETIREMENT_UNIQUE_ANALYTICS_NOT_PROVEN_PARITY",
       "sql_candidate": {
@@ -427,7 +440,35 @@
         "user_database": "UNTOUCHED",
         "trades": "DISABLED",
         "adminit": "NOT_ACCESSED"
-      }
+      },
+      "J_source_verified_sha": "163d07fd68d0d08d99bc06a10b46a9a400107858",
+      "a_native_failures": {
+        "owner_sha": "d2384b592768d0f1d712014e9df535706154c0df",
+        "run_id": 45998852927,
+        "win2022_py311": {
+          "fail": 3,
+          "error": 0,
+          "skip": 2
+        },
+        "win2022_py312": {
+          "fail": 4,
+          "error": 23,
+          "skip": 2
+        },
+        "win2022_py313": {
+          "fail": 4,
+          "error": 23,
+          "skip": 2
+        },
+        "current_owner_sha": "c14bb55ece3b580600a6f6e528d1faa0b4790ea8",
+        "current_owner_native": "QUEUED_NOT_RUN"
+      },
+      "f_ci": {
+        "sha": "bfa0817afc1e08946a8f0059dd8a6fcd885e3830",
+        "first_page_runs": "COMPLETED_FAILURE_WITHOUT_JOB_PAYLOAD",
+        "original_native_qualification": "NOT_RUN_UNQUALIFIED"
+      },
+      "native_pg18_environment": "NO_PSQL_POSTGRES_INITDB_PG_CTL_OR_DOCKER_AVAILABLE;APT_INDEX_TIMEOUT;NOT_RUN"
     }
   },
   "g_h_i_status": "G_CUTOVER_ONLY_NO_LEGACY_FEATURE_RETIREMENT_I_DISPOSABLE_SOURCE_ONLY_H_CURRENT_SOURCE_COHORT"
