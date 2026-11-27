@@ -52,35 +52,76 @@ def _native_file_identity(path):
   _fields_=[('volume',ctypes.c_ulonglong),('identifier',ctypes.c_ubyte*16)]
  class TAG(ctypes.Structure):
   _fields_=[('attributes',w.DWORD),('reparse_tag',w.DWORD)]
+ class STANDARD(ctypes.Structure):
+  _fields_=[('allocation_size',ctypes.c_longlong),('end_of_file',ctypes.c_longlong),
+            ('number_of_links',w.DWORD),('delete_pending',w.BOOL),('directory',w.BOOL)]
  h=k.CreateFileW(str(root),0x80,0x1,None,3,0x00200000|0x02000000,None)
  need(h not in (None,0,ctypes.c_void_p(-1).value))
  try:
-  info=ID();tag=TAG()
+  info=ID();tag=TAG();standard=STANDARD()
   need(k.GetFileInformationByHandleEx(h,18,ctypes.byref(info),ctypes.sizeof(info)))
   need(k.GetFileInformationByHandleEx(h,9,ctypes.byref(tag),ctypes.sizeof(tag)))
+  need(k.GetFileInformationByHandleEx(h,5,ctypes.byref(standard),ctypes.sizeof(standard)))
   need(not tag.attributes&0x400 and info.volume>0 and any(info.identifier))
+  need(not standard.delete_pending and standard.number_of_links>=1)
+  need(bool(tag.attributes&0x10)==bool(standard.directory))
+  need(bool(standard.directory) or standard.number_of_links==1)
   return {'volume_serial':int(info.volume),'file_id_128':bytes(info.identifier).hex()}
  finally:need(k.CloseHandle(h))
+
+def _native_roster_paths(root,code,manifest):
+ """Deterministic namespace roster including every ancestor of the install root.
+
+ Path validation alone is not a hostile-writer lock. Every identity is observed
+ twice by native handles, and any drift rejects capture before ACL/SCM.
+ """
+ root=_safe(root);code=_safe(code)
+ need(code.parent==root and type(manifest) is dict)
+ need(type(manifest.get('files')) is dict and type(manifest.get('directories')) is list)
+ paths={'root':root,'code':code,'ownership':root/'ownership',
+        'state':root/'state','ownership:service.sqlite':root/'ownership/service.sqlite'}
+ need(len(root.parents)<=64)
+ for i,parent in enumerate(root.parents):paths['ancestor:'+str(i)]=_safe(parent)
+ need(len(manifest['files'])<=40000)
+ for relative in sorted(manifest['files']):
+  need(type(relative) is str and relative!='lab-release.json')
+  member=_safe(code/relative);need(member!=code and code in member.parents)
+  paths['file:'+relative]=member
+ paths['file:lab-release.json']=_safe(code/'lab-release.json')
+ for relative in sorted(set(manifest['directories'])):
+  need(type(relative) is str)
+  member=_safe(code/relative);need(member!=code and code in member.parents)
+  paths['directory:'+relative]=member
+ for member in tuple(paths.values()):
+  if code not in member.parents:continue
+  for parent in member.parents:
+   if parent==code:break
+   need(code in parent.parents)
+   relative=parent.relative_to(code).as_posix()
+   if 'directory:'+relative not in paths:paths['parent:'+relative]=_safe(parent)
+ need(len(paths)<=40064)
+ return paths
+
+def _capture_native_roster(paths):
+ """Two full independent native observations; fail closed on any drift."""
+ need(type(paths) is dict and 0<len(paths)<=40064 and 'root' in paths)
+ first={key:_native_file_identity(path) for key,path in paths.items()}
+ second={key:_native_file_identity(path) for key,path in paths.items()}
+ need(first==second)
+ need(all(value['volume_serial']==first['root']['volume_serial']
+          for value in first.values()))
+ return first
 
 def _native_installation_receipt(root,code,manifest,manifest_sha256):
  """Capture install-time parent, leaf and directory native identities, no SCM."""
  need(os.name=='nt')
  root=_safe(root);code=_safe(code)
  need(code.parent==root and root.is_dir() and code.is_dir())
- entries={'root':_native_file_identity(root),'code':_native_file_identity(code),
-          'ownership':_native_file_identity(root/'ownership'),
-          'state':_native_file_identity(root/'state'),
-          'ownership:service.sqlite':_native_file_identity(root/'ownership/service.sqlite')}
- members=sorted(manifest['files']);need(len(members)<=40000)
- for relative in members:
-  p=_safe(code/relative);need(p.is_file())
-  entries['file:'+relative]=_native_file_identity(p)
- # The staged release manifest itself is a code member and needs identity.
- need((code/'lab-release.json').is_file())
- entries['file:lab-release.json']=_native_file_identity(code/'lab-release.json')
- for relative in sorted(set(manifest['directories'])):
-  p=_safe(code/relative);need(p.is_dir())
-  entries['directory:'+relative]=_native_file_identity(p)
+ paths=_native_roster_paths(root,code,manifest)
+ for key,path in paths.items():
+  if key.startswith('file:') or key=='ownership:service.sqlite':need(path.is_file())
+  else:need(path.is_dir())
+ entries=_capture_native_roster(paths)
  body={'schema':NATIVE_RECEIPT_SCHEMA,'entries':entries,
        'manifest_sha256':manifest_sha256}
  receipt=dict(body,receipt_sha256=seal(body))
@@ -102,7 +143,7 @@ def _check_native_installation_receipt(receipt,plan):
        and all(ch in '0123456789abcdef' for ch in proof['file_id_128'])
        and int(proof['file_id_128'],16)>0)
  manifest=lab_release.verify_capsule(plan['capsule_root'],plan['manifest_sha256'])['manifest']
- expected={'root','code','ownership','state','ownership:service.sqlite','file:lab-release.json'}|{'file:'+p for p in manifest['files']}|{'directory:'+p for p in manifest['directories']}
+ expected=set(_native_roster_paths(Path(plan['root']),Path(plan['code']),manifest))
  need(set(entries)==expected and receipt['manifest_sha256']==plan['manifest_sha256'])
  # This code tree is beneath the installed root; foreign volume members are
  # not accepted by a whole-namespace receipt without explicit source proof.
