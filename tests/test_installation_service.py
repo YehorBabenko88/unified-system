@@ -190,6 +190,17 @@ class ServiceResourceTests(unittest.TestCase):
   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
    service._NativeReceiptCustody(paths)
  
+ def test_r35_retained_native_custody_handle_budget_fails_closed(self):
+  from unified_system import installation_service as service
+  paths={'root':self.root}
+  paths.update({'file:'+str(i):self.root/str(i) for i in range(512)})
+  if os.name!='nt':
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._NativeReceiptCustody(paths)
+  else:
+   with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+    service._NativeReceiptCustody(paths)
+
  def test_r35_retained_native_custody_closes_all_handles_after_crash(self):
   from unified_system import installation_service as service
   # Fake kernel only: no Win32 execution and no actual file removal.
