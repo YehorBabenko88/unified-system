@@ -83,7 +83,7 @@ class NativeWindowsRetainedHandleTests(unittest.TestCase):
         import f_windows_handle
         folder = self.install / "nested"
         folder.mkdir()
-        (folder / "file.py").write_bytes(b"nested=True\\n")
+        (folder / "file.py").write_bytes(b"nested=True\n")
         with WindowsInstalledRoot(self.install) as root:
             original_open = f_windows_handle._open
             count = {"n": 0}
