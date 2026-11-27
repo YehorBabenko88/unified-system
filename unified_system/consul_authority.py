@@ -275,6 +275,13 @@ class ConsulSessionAuthority:
                     for entry in result['Results']
                 )):
             raise CoordinationLost('Consul fencing transaction unconfirmed')
+        # A syntactically successful Consul write may finish only after the
+        # original local lease deadline (or after a concurrent release).
+        # No caller may interpret that old write as current Root authority.
+        # Re-read the original lease and consistent leader KV *after* the
+        # network transaction, rejecting both timeout and changed owner.
+        if not await self.validate(lease):
+            raise CoordinationLost('Consul lease lost after control transaction')
 
     async def read_control(self, name):
         rows = await self._request('GET', '/v1/kv/' + quote(self._state_key(name), safe='/'),
