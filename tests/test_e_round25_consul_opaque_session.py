@@ -1418,6 +1418,100 @@ class OpaqueSessionTests(unittest.TestCase):
                 self.assertFalse(await authority.renew(lease))
         asyncio.run(exercise())
 
+    def test_duplicate_renew_reply_then_restart_stale_writer_denied_mock(self):
+        # MODEL ONLY: independent authorities share a MockTransport state
+        # representing Consul's lock; this does NOT substitute for native
+        # Consul TTL/PG18 COMMIT recovery proof.
+        second_id = "21a62a4f-e35c-4c75-8d9d-61c3f4a0bb11"
+
+        async def exercise():
+            key = "isolated/round25/leader"
+            target = "isolated/round25/state/probe"
+            state = {
+                "sessions": [OBSERVED, second_id], "current": None,
+                "value": b"", "index": 40, "txns": 0,
+                "old_renews": 0,
+            }
+
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(
+                        200, json={"ID": state["sessions"].pop(0)})
+                if path == "/v1/kv/" + key:
+                    if req.method == "PUT":
+                        incoming = req.url.params.get("acquire")
+                        if state["current"] is not None:
+                            return httpx.Response(200, json=False)
+                        state["current"] = incoming
+                        state["value"] = req.content
+                        state["index"] += 1
+                        return httpx.Response(200, json=True)
+                    if state["current"] is None:
+                        return httpx.Response(404)
+                    return httpx.Response(200, json=[{
+                        "Key": key, "Session": state["current"],
+                        "ModifyIndex": state["index"],
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if path == "/v1/session/renew/" + OBSERVED:
+                    state["old_renews"] += 1
+                    return httpx.Response(200, content=(
+                        b'[{"ID":"forged","ID":"' +
+                        OBSERVED.encode() + b'"}]'))
+                if path == "/v1/txn":
+                    ops = json.loads(req.content)
+                    state["txns"] += 1
+                    self.assertEqual(
+                        [op["KV"]["Verb"] for op in ops],
+                        ["check-session", "check-index", "set"])
+                    if (ops[0]["KV"]["Session"] != state["current"]
+                            or ops[1]["KV"]["Index"] != state["index"]):
+                        return httpx.Response(409, json={"Errors": []})
+                    self.assertEqual(ops[2]["KV"]["Key"], target)
+                    return httpx.Response(200, json={
+                        "Results": [{"KV": {
+                            "Key": target,
+                            "ModifyIndex": state["index"] + 1,
+                        }}],
+                    })
+                raise AssertionError("unexpected Consul request: " + path)
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            config = ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True)
+            old = ConsulSessionAuthority(config, client=client)
+            successor = ConsulSessionAuthority(config, client=client)
+            async with client:
+                old_lease = await old.acquire("old_owner")
+                self.assertTrue(await old.validate(old_lease))
+                self.assertFalse(await old.renew(old_lease))
+                self.assertEqual(old._deadlines[old_lease.session_id], 0)
+                self.assertEqual(state["old_renews"], 1)
+
+                # Simulate remote TTL expiry, then a separate Root restart.
+                state["current"] = None
+                state["value"] = b""
+                new_lease = await successor.acquire("new_owner")
+                self.assertEqual(new_lease.session_id, second_id)
+                self.assertGreater(new_lease.token, old_lease.token)
+                self.assertTrue(await successor.validate(new_lease))
+                self.assertFalse(await old.validate(old_lease))
+                self.assertFalse(await old.renew(old_lease))
+                from unified_system.consul_authority import CoordinationLost
+                with self.assertRaises(CoordinationLost):
+                    await old.write_control(
+                        old_lease, "probe", {"obsolete": True})
+                self.assertEqual(state["txns"], 0)
+                self.assertIsNone(await successor.write_control(
+                    new_lease, "probe", {"successor": True}))
+                self.assertEqual(state["txns"], 1)
+                self.assertFalse(await old.validate(old_lease))
+                self.assertEqual(state["old_renews"], 1)
+
+        asyncio.run(exercise())
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
