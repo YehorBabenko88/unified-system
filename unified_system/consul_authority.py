@@ -359,6 +359,10 @@ class ConsulSessionAuthority:
         target = self._state_key(name)
         rows = await self._request('GET', '/v1/kv/' + quote(target, safe='/'),
                                    params={'consistent': ''}, missing_ok=True)
+        # A 404 is still a network reply. A concurrent close must not
+        # turn it into an apparently valid absence from a closed authority.
+        if self._closed:
+            raise CoordinationUnavailable('Consul authority already closed')
         if rows is None:
             return None
         if type(rows) is not list or len(rows) != 1 or type(rows[0]) is not dict:
