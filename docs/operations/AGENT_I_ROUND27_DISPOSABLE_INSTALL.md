@@ -368,12 +368,14 @@ remains separately mandatory. No roster is shortened, sampled, chunked,
 silently upgraded, or permitted to bypass native identity verification.
 This is a **denial policy**, not a throughput qualification.
 
-Because `lab_release.stage_capsule()` precedes these checks,
-a large but valid capsule may be **staged** and then left in an
-incomplete retained forensic state. That is intentionally NOT auto-deleted,
-NOT adopted, and NOT safe for a real-machine installation. The admission
-point may need to move to an independently reviewed earlier plan-only
-preflight once exact real release inventory is available.
+The same capacity check now also runs **before BEGIN/root creation and
+before `lab_release.stage_capsule()`**, after the existing source capsule
+verification. A deterministically oversize source roster is denied
+without creating an installed root or entering SCM. A second check remains
+after staging, before any retained handle is opened, to refuse unexpected
+changes or manifest drift; if that later check refuses, the partial root
+is retained as forensic evidence, never deleted or adopted automatically.
+These checks do not establish that a real release fits the budget.
 
 The repo fixture is small; no real assembled release manifest /
 file-and-directory inventory was independently available in this cycle.
