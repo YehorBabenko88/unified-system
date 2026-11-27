@@ -1,0 +1,46 @@
+name: F Round26 Windows retained-handle qualification (diagnostic only)
+on:
+  push:
+    branches:
+      - gpt/f-round26-windows-retained-handle-20261127
+    paths:
+      - 'tools/f_windows_handle.py'
+      - 'tools/f_wheel_qualification.py'
+      - 'tests/test_f_windows_handle.py'
+      - 'tests/test_f_wheel_qualification.py'
+      - '.github/workflows/f-round26-win-handle.yml'
+  pull_request:
+    paths:
+      - 'tools/f_windows_handle.py'
+      - 'tools/f_wheel_qualification.py'
+      - 'tests/test_f_windows_handle.py'
+      - 'tests/test_f_wheel_qualification.py'
+      - '.github/workflows/f-round26-win-handle.yml'
+permissions:
+  contents: read
+jobs:
+  native-handle-negative:
+    runs-on: windows-2022
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12']
+    env:
+      PYTHONPATH: tools
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Exact branch and source SHA receipt
+        shell: pwsh
+        run: |
+          git rev-parse HEAD
+          git status --porcelain
+          python --version
+      - name: Original F central qualifier synthetic negative regression
+        run: python -B -m unittest discover -s tests -p test_f_wheel_qualification.py -v
+      - name: Native Win32 retained-handle and junction gates
+        run: python -B -m unittest discover -s tests -p test_f_windows_handle.py -v
