@@ -239,3 +239,226 @@ F independent R32 review (#174 comments 7217336245 and 7217362080) identified tw
 **QUALIFICATION LIMITATIONS**: no native Windows2022/2025 execution of latest helper, no original full-suite APP_ONLY test PASS, no installation-time FileIdInfo seal, no attested user-PC ownership, no hostile concurrent writer/rename or restart/SCM/SQL exercised, no native directory emptiness proof PASS. Even with full held HANDLE checks, don't change either release gate until F/A independently approve the original Windows disposable matrix and source/identity binding. Exact R33 native candidate is NOT production installation/uninstall readiness.
 
 Runtime scope unchanged: no real host/Windows SCM, admin elevation, user PostgreSQL, trades, data deletion, main/force or frozen PR #166 changes. CODE NO_GO / PRODUCTION NO_GO.
+
+
+## ROUND34 — installation-time Win32 FileIdInfo V2 receipt (candidate; deletion DENIED)
+
+MASTER #111/7218376419 and I #174/7218372898 require installation-time VolumeSerial+128-bit FileId sealing, parent binding, strict V1 migration and crash evidence. This change uses the EXISTING `ServiceResource` journal and `Uninstaller` only. It does not create another installer, superuser service, file cleaner, mathematical apparatus, database or remote-client owner.
+
+`unified_system/installation_service.py` retains the V1 service plan schema and adds a SEPARATE typed `NATIVE_FILE_IDS` transition after `CODE_STAGED` and before `ACL_SEALED`. New private `NATIVE_RECEIPT_SCHEMA='unified.installed-file-identity.v2'`. Windows-only `_native_file_identity(path)` opens the original path with `CreateFileW(FILE_READ_ATTRIBUTES, FILE_SHARE_READ only, OPEN_EXISTING, OPEN_REPARSE_POINT|BACKUP_SEMANTICS)` and uses original retained handle `GetFileInformationByHandleEx(FileIdInfo=18)` to capture native nonzero volume serial plus exact 16-byte FileId, rejects reparse and closes the held handle. Captured entries cover root, code, ownership directory, preserved state directory, current ownership `service.sqlite` journal, EVERY original manifest file, each manifest directory, plus staged `lab-release.json`; all entries are protected by canonical receipt hash `seal(body)` and the existing durable SQLite hash chain. A 60KB canonical receipt cap prevents silent loss/truncation under the existing 64KB row/2MB journal limits. Oversized capsules remain an installer **NO_GO** until a separately reviewed chunked owner receipt exists.
+
+The original `ServiceResource._read()` recognizes 6-transition V1 and 7-transition V2 layouts. It never automatically upgrades V1 to native-qualified; V1 `recorded()['native_file_identity']` is `None`. Non-Windows test installs get an explicit versioned `{'schema':..., 'status':'NOT_RUN'}` marker, also `native_file_identity=None`: simulated IDs cannot become installed evidence. Partial V2 before REGISTERED is readable for forensic review, but `recorded()` and `inspect()` deny adoption. Registration is after native receipt; a failure before/after the transition retains resources for operator review, never retries or auto-deletes.
+
+`unified_system/installation_uninstall.py` has an additional V2 admission check in `_members` for the ORIGINAL `WindowsRemovalBoundary` (V1/partial/no native record DENIED) and binds the stored installation-time native identity of both parent and leaf to the SAME original Win32 handles in `_win_handle_dispose_member` before disposition; mismatched full volume or 128-bit IDs DENY. The original separate `_exclusive_code_removal_proven()` gate remains ALWAYS FALSE in BOTH the public APP_ONLY path and direct native helper; the other `InstallationTransaction._exclusive_namespace_proven()` is also ALWAYS FALSE. This is CANDIDATE correctness, not actual native uninstaller permission or user-machine readiness.
+
+The updated original tests exercise V2 layout and V1 fail-closed compatibility, invalid version/receipt/extra member/missing manifest entry/boolean volume, interrupted SEAL crash with retained staged code and refusal to adopt, and Windows-only native mismatched stored FileId or volume refusal. They must be executed in a complete native runner; only separate earlier unchanged original disposable 20-test suite is locally executable in the partial source checkout.
+
+Outstanding P0: NO native Windows2022/2025 original tests; no independent F/A installed-time full member FileId/retained-handle proof; no Windows SCM/ACL process acceptance; staged FileId captured post-stage, not protected by a retained native HANDLE held continuously since create; untrusted same-privilege administrative writers remain out of scope; large manifests cannot fit one native receipt; native file deletion/cross-volume/ancestor rename/restarter replay not independently qualified. F/A/J must run original service+uninstaller+scoped 28+32+4 test files and adversarial native tests without user data/real machine effects, then resolve these before any GO.
+
+No main merge, force, frozen PR #166 change, ADMINIT, user PostgreSQL/PG5432, real trade or data removal, Codex/Claude, or security policy weakening. CODE NO_GO / PRODUCTION NO_GO.
+
+ROUND34 source follow-up: `Uninstaller._members()` checks the current original FileIdInfo of installed root, ownership directory, preserved state directory and ownership/service.sqlite against V2 before it could admit the real Windows removal boundary. A present code directory must also keep its original install-time FileIdInfo. If code is absent, recovery can only proceed through preexisting durable intents; a new directory identity is never adopted. These checks are read-only and remain behind the disabled physical-delete entrypoint.
+
+Hosted GitHub Actions for the R34 candidate reported instant `completed/failure` with no jobs returned (e.g. 46000955207, 46000955607; created and updated one second apart). These cannot be counted as executed unittest FAIL, or as PASS; the reason requires runner/Actions service diagnosis by owners. No retry/dispatch/cancel performed. Independent local executable source evidence remains limited to the original unchanged 20 methods and exact V2 receipt validation excerpt.
+
+
+## ROUND 35 — V2 ancestor observations and crash/size gates (2026-11-27)
+
+**Still CODE NO_GO / PRODUCTION NO_GO.** Source change only; this
+does not authorize a service install or any physical deletion.
+
+In canonical `installation_service.py`, the V2 install-time FileId roster
+now includes the complete install-root ancestor chain, intermediate
+subdirectories omitted from the manifest's directory list, each manifest
+member, the installed manifest itself, and the service ownership journal.
+Both native observations must match for **every** member and ancestor before
+`NATIVE_FILE_IDS` can be journaled. Win32 FileStandardInfo additionally
+rejects delete-pending objects and regular files with multiple hardlinks;
+the native query or capability being unavailable fails closed.
+The existing 60000-byte journal receipt cap remains a refusal rather than
+a truncation. Earlier V2 receipts that lack the new mandatory roster will
+not be silently upgraded or admitted to native removal.
+
+**Security boundary:** two path-based native observations do NOT hold all
+parent handles continuously from initial staging, and cannot establish
+hostile-writer exclusion against an intermediate swap and restoration.
+The SHA-256 journal seal is not an independent publisher signature or OS
+trust root. Native Windows 2022/2025 SCM, FileIdInfo, FileStandardInfo,
+held-handle ancestor swap, junction/reparse, hardlink race, unsupported
+filesystem, interruption/restart, large capsule, ACL and recovery remain
+unqualified until tested on J's isolated disposable runner with A/F
+independent review. Both `_exclusive_code_removal_proven()` and
+`_exclusive_namespace_proven()` must remain unconditional **False**.
+
+New source tests in `tests/test_installation_service.py` exercise
+pure roster construction (including a manifest that omits parents),
+malformed traversal rejection, stable native mock reads, drift and volume
+negative cases, and 60000-byte receipt denial. These tests do not invoke
+real Windows SCM or disposition. The existing crash-before-ACL and V1
+recovery negative cases remain in the original suite. The per-HEAD
+PASS/FAIL/ERROR/SKIP/NOT_RUN classification is recorded in issue #174.
+Do not promote earlier R34 local PASS to R35 HEAD.
+
+J may selectively import **only** these five owned files after pinning
+the exact current HEAD and reviewing test evidence:
+`unified_system/installation_service.py`,
+`unified_system/installation_uninstall.py`,
+`tests/test_installation_service.py`,
+`tests/test_installation_uninstall.py`, and
+`docs/operations/AGENT_I_ROUND27_DISPOSABLE_INSTALL.md`.
+Do NOT import the whole PR #182 (inherited 2239-file diff),
+merge main, touch frozen #166, use live SCM/user data/PG, or
+enable any physical deletion gate.
+
+
+## ROUND 35 later cycle — retained native handle custody source candidate
+
+Follow-up to F security review: `_NativeReceiptCustody` now opens every
+observed namespace member and ancestor using `CreateFileW` with
+`FILE_SHARE_READ | FILE_SHARE_WRITE` (but **without FILE_SHARE_DELETE**),
+so SQLite can append to its ownership journal during the custody period.
+It captures native FileIdInfo/FileStandardInfo from the
+**same retained handles**, compares fresh native path observations, and keeps
+the original handles open through `NATIVE_FILE_IDS`, `ACL_SEALED`,
+`REGISTER_INTENT` and `REGISTERED` journal transitions. No delete sharing
+is granted by custody acquisition. A context manager closes every retained
+handle, including on the exception path; OS termination also closes process
+handles. Reopening after a crash never reuses these handles as proof.
+
+This is an **unqualified candidate**, not a completed hostile-writer proof:
+some Windows filesystem/SMB configurations may reject the new share mode;
+large manifests can exceed OS handle budgets; a malicious administrator,
+ACL modification, concurrent log/SQLite writes or an unsupported native API
+may prevent capture. Any such case must fail closed, not trigger a fallback
+or permission relaxation. A crash during SCM native registration may leave
+a stopped but incompletely receipted service, which must not be adopted.
+No previously installed V2 or V1 receipt is upgraded.
+
+Native Windows2022/2025 genuine tests, reboot/restart, hostile ancestor
+junction/swap, FileId drift, independent F acceptance, J selective
+integration and raw CI logs remain required. Scoped tests in the original
+service test file validate fake handle close order, exception cleanup,
+readback mismatch refusal, and static nesting of the registered transition
+inside the custody scope. Fake/static tests do not prove genuine Win32.
+
+**Both physical deletion gates remain unconditional FALSE**.
+No physical deletion, user data, real SCM deployment, ADMINIT, production
+PG, live trades, main merge, force push or frozen PR #166 changes. No
+code-retirement authorization is implied. **CODE NO_GO / PRODUCTION NO_GO.**
+
+### ROUND35 additional fail-closed handle budget
+
+`_NativeReceiptCustody` currently refuses to retain more than **512**
+handles and never falls back to path-only registration. This limit can
+reject normal large releases and is therefore an **installation blocker**
+until a separately reviewed bounded roster/chunk protocol exists; it is
+not a production-ready scalability feature. A static assertion confirms
+SQLite write sharing remains enabled while delete sharing is denied.
+The owner source and native retention tests remain subject to independent
+F and J acceptance and must not be counted as native PASS by this text.
+
+## ROUND35 follow-up — bounded original V2 roster preflight
+
+The last source iteration adds `_native_receipt_roster_budget(paths)`
+immediately before Windows `_NativeReceiptCustody` opens any handle.
+It enforces at most **512 identities**, each key at most **300 UTF-8
+bytes**, and a conservative `sum(112 + len(key UTF-8)) <= 56000`
+estimate. The existing exact canonical V2 row limit of **60000 bytes**
+remains separately mandatory. No roster is shortened, sampled, chunked,
+silently upgraded, or permitted to bypass native identity verification.
+This is a **denial policy**, not a throughput qualification.
+
+The same capacity check now also runs **before BEGIN/root creation and
+before `lab_release.stage_capsule()`**, after the existing source capsule
+verification. A deterministically oversize source roster is denied
+without creating an installed root or entering SCM. A second check remains
+after staging, before any retained handle is opened, to refuse unexpected
+changes or manifest drift; if that later check refuses, the partial root
+is retained as forensic evidence, never deleted or adopted automatically.
+These checks do not establish that a real release fits the budget.
+
+The repo fixture is small; no real assembled release manifest /
+file-and-directory inventory was independently available in this cycle.
+Thus a numeric claim that the present 512-handles/56000-byte limit
+fits the actual full unified release is **NOT_ATTESTED**. J must obtain
+the immutable release manifest and report exact required handle count,
+canonical receipt byte count, and Windows2022/2025 resources before
+any installer qualification. F must independently review root ancestor
+path/retained-handle semantics, journal sharing and cleanup on exceptions.
+
+New original tests cover a bounded small synthetic roster, count overflow,
+path-key overflow and preflight byte-estimate overflow. All current-HEAD
+original native Windows tests remain **NOT_RUN**, not PASS. The two
+physical deletion predicates remain unconditional `False`.
+**CODE NO_GO / PRODUCTION NO_GO.**
+
+### Canonical capsule capacity versus installer admission
+
+Original `unified_system/lab_release.py` at Git blob
+`1084158079d961c73d805350ff57731292c44137`
+accepts up to **100000 `files`** and up to **100000 `directories`**
+in the V1 manifest schema. That is a verified **source-contract
+mismatch** with the Windows V2 native custody limit of **512 total
+roster keys**, and the 60000-byte journal receipt cap. It is not proof
+that any particular assembled release actually contains more than 512.
+Do not raise the limit, truncate identities, split receipts or relax
+no-delete-sharing solely to make a large release pass. Large release
+support needs an independently reviewed design and real manifest
+counts and raw Windows fixture evidence. Until then the intended
+outcome for an oversized real candidate is safe pre-BEGIN rejection.
+
+Current exact-HEAD original tests are not executed by this document;
+GitHub source checks and synthetic method-count bounds are evidence
+only for static logic. **PRODUCTION NO_GO**.
+
+## ROUND35 P0 native directory-open correction (2026-11-27)
+
+Independent F review found that the retained Win32 custody opened **directories**
+without `FILE_FLAG_BACKUP_SEMANTICS`, which Microsoft requires for a
+`CreateFileW` directory HANDLE. The canonical owner code now chooses flags
+from the exact roster role, not an untrusted leaf-attribute probe:
+
+- `root`, `code`, `ownership`, `state`, `ancestor:*`,
+  `directory:*`, `parent:*`: `OPEN_REPARSE_POINT | BACKUP_SEMANTICS`
+  (`0x02200000`).
+- `file:*`, `ownership:service.sqlite`: `OPEN_REPARSE_POINT`
+  (`0x00200000`).
+- Unknown and empty role qualifiers are **rejected** before native open.
+
+For all roles the only share mode is `FILE_SHARE_READ|FILE_SHARE_WRITE`
+(`0x3`), **never** `FILE_SHARE_DELETE`. The original native
+`FILE_ID_INFO`, reparse, FileStandardInfo and receipt rules are unchanged.
+The held-handle path still runs across ACL/SCM receipt transitions, and
+releases each handle on failed acquisition, failure and normal exit.
+
+Original `tests/test_installation_service.py` includes executable
+role-to-flags cases and two fake-kernel tests of the **production**
+`_NativeReceiptCustody.__enter__` / `__exit__`: per-role Win32 flags,
+write/no-delete sharing, retained lifetime and reverse-order cleanup on
+partial handle failure. The fake Win32 tests **do not imply** that a native
+Windows2022/2025 handle open, SQLite sharing, ACL, SCM or crash has passed.
+All such original native cases and real release inventory sizing require
+independent F/J qualification at the exact commit. No physical deletion,
+no main merge or force push, no automatic promotion. Both gates are FALSE.
+**CODE NO_GO / PRODUCTION NO_GO.**
+
+
+### ROUND35 Unicode encoded-key regression
+
+The canonical I preflight now bounds **UTF-8 encoded bytes** per roster
+key, not Python Unicode code points. A key with 200 non-ASCII two-byte
+characters has fewer than 300 code points but more than 300 encoded
+bytes; it is refused before `BEGIN` and before Win32 HANDLE opens. This
+changes no installed manifest, receipt limit, publisher trust or physical
+deletion authority. The existing source test method
+`test_r35_complete_v2_roster_preflight_budget` includes this negative
+case without increasing test count.
+
+Isolated Linux Python 3.13.5 exercised the **unchanged original method
+body and exact I budget-function body** copied from their current GitHub
+source readbacks, with the surrounding package imports/test fixture
+replaced by a minimal fail-closed `need` and a disposable `self.root`
+path: **1 PASS, 0 FAIL, 0 ERROR, 0 SKIP**.
+This is **not** an original byte-identical full package checkout and
+does **not** count as native Windows or full original I-suite acceptance.
+Exact full installer Windows/SCM/ACL/crash tests remain NOT_RUN.
