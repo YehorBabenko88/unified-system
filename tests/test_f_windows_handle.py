@@ -207,6 +207,56 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         self.assertIn('"installation_ownership_attested": False', source)
         self.assertNotIn("SetFileInformationByHandle", source)
 
+    def test_i_native_roster_flag_classifier_exact_source_synthetic(self):
+        """Run only pure original I flag helpers, never SCM or native handles."""
+        import ast
+        import hashlib
+        from pathlib import Path
+        path = os.environ.get("F_I_V2_OWNER_SOURCE")
+        if not path:
+            self.skipTest("Exact I current owner source export not supplied")
+        source_bytes = Path(path).read_bytes()
+        blob = hashlib.sha1(b"blob " + str(len(source_bytes)).encode("ascii")
+                            + b"\0" + source_bytes).hexdigest()
+        self.assertEqual(blob, "725f2eac5e5b1e7c5e8b43e6a26f6c1433e7251c",
+                         "Owner I source drift: re-review before this test")
+        tree = ast.parse(source_bytes.decode("utf-8"))
+        funcs = {node.name: node for node in tree.body
+                 if isinstance(node, ast.FunctionDef)}
+        selected = ("_native_roster_is_file", "_native_roster_open_flags")
+        self.assertTrue(all(k in funcs for k in selected))
+        for name in selected:
+            calls = [n for n in ast.walk(funcs[name]) if isinstance(n, ast.Call)]
+            self.assertTrue(all(isinstance(n.func, ast.Name) and
+                                n.func.id in ("need", "_native_roster_is_file")
+                                for n in calls), "Unsafe calls in pure I flag helper")
+        def need(value):
+            if not value:
+                raise ValueError("OWNED_SERVICE_REJECTED")
+        namespace = {"need": need}
+        isolated = ast.Module(body=[funcs[n] for n in selected], type_ignores=[])
+        exec(compile(ast.fix_missing_locations(isolated), "<I-pinned-flag-helpers>", "exec"),
+             {"__builtins__": {}}, namespace)
+        kind = namespace["_native_roster_is_file"]
+        flags = namespace["_native_roster_open_flags"]
+        directory_keys = ("root", "code", "ownership", "state", "ancestor:0",
+                          "directory:nested", "parent:wheel", "ancestor:42")
+        file_keys = ("file:module.py", "file:lab-release.json", "ownership:service.sqlite")
+        for key in directory_keys:
+            with self.subTest(directory=key):
+                self.assertIs(kind(key), False)
+                self.assertEqual(flags(key), 0x02200000)
+        for key in file_keys:
+            with self.subTest(file=key):
+                self.assertIs(kind(key), True)
+                self.assertEqual(flags(key), 0x00200000)
+        for key in ("", "file:", "unknown", "ancestor:", "directory:", "parent:",
+                    "ownership:unexpected.db", "FILE:x", 123, None):
+            with self.subTest(denied=key):
+                with self.assertRaises(ValueError):
+                    flags(key)
+
+
     def test_i_r35_native_custody_source_gate_is_not_release_approval(self):
         """Pin I's revised handle-custody source, without native GO claims."""
         import ast
