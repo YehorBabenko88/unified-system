@@ -40,7 +40,7 @@ def check_source_minutes(starts, *, interval_minutes, first_start, cutoff_ms):
     cadence_ms = interval_minutes * 60000
     if first_start % cadence_ms:
         raise ValueError("UNALIGNED_START")
-    if type(starts) not in (tuple, list) or not 1 <= len(starts) <= 1000:
+    if type(starts) not in (tuple, list) or not 1 <= len(starts) <= 75:
         raise ValueError("SOURCE_PAGE_BOUND")
     if len(starts) % interval_minutes:
         raise ValueError("UNCLOSED_BUCKET")
@@ -78,6 +78,9 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
         spec = _load_contract()
         self.assertEqual(spec["status"], "CANDIDATE_NOT_RELEASE")
         self.assertEqual(spec["supported_intervals"], ["5m", "15m"])
+        self.assertEqual(spec["max_source_rows"],75)
+        self.assertEqual(spec["max_output_bars"],5)
+        self.assertEqual(spec["rejection"]["non_partial_source"],"HTTP_503_NO_ROWS")
         self.assertNotIn("READY", spec["status_only"])
         self.assertEqual(set(spec["negative_cases"]), EXACT_FAILURES)
         self.assertIn("paper_admitted false", spec["output_policy"])
@@ -113,7 +116,7 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
             check_source_minutes([i*60000 for i in range(5)],
                                  interval_minutes=3, first_start=0, cutoff_ms=300000)
         with self.assertRaisesRegex(ValueError, "SOURCE_PAGE_BOUND"):
-            check_source_minutes([i*60000 for i in range(1005)],
+            check_source_minutes([i*60000 for i in range(80)],
                                  interval_minutes=5, first_start=0, cutoff_ms=60300000)
         with self.assertRaisesRegex(ValueError, "UNALIGNED_START"):
             check_source_minutes([60000+i*60000 for i in range(5)],
