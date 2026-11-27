@@ -97,11 +97,17 @@ class GridWriterFenceModelTests(unittest.TestCase):
         # column, even when Root can safely carry them as opaque text.
         for bad in ("", "/invalid", "../escape", "slash/segment", "%2F",
                     "with space", "line\nfeed", "name:port", "é",
-                    "a" * 129, None, True, str(uuid.uuid4()).upper(),
+                    "a" * 129, True, str(uuid.uuid4()).upper(),
                     "ffffFFFF-ffff-ffff-ffff-ffffffffffff"):
             with self.subTest(session=repr(bad)):
                 with self.assertRaises(ResourceFenceBlocked):
                     identity(session=bad)
+        # identity(session=None) intentionally creates a fresh UUID4. To
+        # exercise rejection of an explicit None at the actual resource
+        # fence boundary, bypass that convenience helper without altering
+        # its established default/session generation behavior.
+        with self.assertRaises(ResourceFenceBlocked):
+            replace(identity(session=observed), session_id=None)
         current = identity(session=observed)
         for field in ("instance_id", "node_incarnation_id"):
             for bad in (str(uuid.uuid1()), str(uuid.uuid5(uuid.NAMESPACE_DNS, "x")),
