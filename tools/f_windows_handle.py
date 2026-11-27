@@ -31,7 +31,7 @@ _FILE_ATTRIBUTE_DEVICE = 0x40
 _FILE_ID_INFO_CLASS = 18
 _FILE_ATTRIBUTE_TAG_INFO_CLASS = 9
 _INVALID_HANDLE = ctypes.c_void_p(-1).value
-_RESERVED = re.compile(r"(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$", re.I)
+_RESERVED = re.compile(r"(?:con|prn|aux|nul|com[1-9¹²³]|lpt[1-9¹²³])(?:\..*)?$", re.I)
 
 
 class _FILE_ID_INFO(ctypes.Structure):
@@ -116,6 +116,7 @@ def _part(part):
     if type(part) is not str or not part or part in (".", ".."):
         raise ValueError("invalid Windows path component")
     if (unicodedata.normalize("NFC", part) != part
+            or any(ord(c) < 32 for c in part)
             or any(c in part for c in "\\/:*?\"<>|\x00")
             or part.endswith((" ", "."))
             or _RESERVED.fullmatch(part)):
@@ -287,25 +288,22 @@ class WindowsInstalledRoot:
             if len(visited) > _MAX_FILES:
                 raise ValueError("Windows directory count exceeded")
             with os.scandir(directory) as entries:
-                names = [item.name for item in entries]
+                originals = list(entries)
+            names = [item.name for item in originals]
             if len(names) != len(set(n.casefold() for n in names)):
                 raise ValueError("Windows case-colliding installed paths")
-            for name in names:
+            for entry in originals:
+                name = entry.name
                 _part(name)
                 rel = prefix + (name,)
                 path = ntpath.join(directory, name)
-                # Open with FILE_FLAG_OPEN_REPARSE_POINT and reject its real
-                # handle tag; never trust scandir's follow-symlink defaults.
-                # Probe attributes as a directory first only if the name was
-                # enumerated as a directory; mismatch is a hard failure.
-                with os.scandir(directory) as entries:
-                    matches = [e for e in entries if e.name == name]
-                if len(matches) != 1:
-                    raise ValueError("Windows enumeration changed")
-                if matches[0].is_dir(follow_symlinks=False):
+                # Enumerator metadata is NOT trusted for final authority:
+                # the retained CreateFileW handle independently verifies
+                # the exact original file ID and reparse tag.
+                if entry.is_dir(follow_symlinks=False):
                     self._retain_dir(path)
                     walk(path, rel)
-                elif matches[0].is_file(follow_symlinks=False):
+                elif entry.is_file(follow_symlinks=False):
                     if (name.lower().endswith((".pyc", ".pyo", ".pth", ".egg-link"))
                             or name.lower() in ("sitecustomize.py", "usercustomize.py")):
                         raise ValueError("untrusted Windows import hook or bytecode")
