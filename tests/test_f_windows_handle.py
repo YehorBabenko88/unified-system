@@ -230,7 +230,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
         def need(value):
             if not value:
                 raise ValueError("OWNED_SERVICE_REJECTED")
-        namespace = {"__builtins__": {"type": type, "len": len}, "need": need}
+        namespace = {"__builtins__": {"type": type, "len": len, "str": str}, "need": need}
         isolated = ast.Module(body=[funcs[n] for n in selected], type_ignores=[])
         exec(compile(ast.fix_missing_locations(isolated), "<I-pinned-flag-helpers>", "exec"),
              namespace)
