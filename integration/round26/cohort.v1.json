@@ -16,69 +16,69 @@
       "role": "A",
       "repo": "YehorBabenko88/unified-system",
       "pr": 162,
-      "sha": "4e39c311a7e90e4c2b433447010d42ec9eff1a14",
-      "disposition": "current_owner_candidate_pinned_not_release_qualified"
+      "sha": "0830bc2f8f1ecf03e14639f5aed15df87a5278b0",
+      "disposition": "CURRENT_CANDIDATE_PIN_NOT_PROTECTED_QUALIFIED"
     },
     {
       "role": "B",
       "repo": "YehorBabenko88/bybit-cluster-grid",
       "pr": 303,
       "sha": "2404a7a61c7ddde0ea96b45088cf6072a9235b1e",
-      "disposition": "current_owner_candidate_pinned_not_release_qualified"
+      "disposition": "CURRENT_CANDIDATE_PIN_NOT_PROTECTED_QUALIFIED"
     },
     {
       "role": "C",
       "repo": "YehorBabenko88/unified-system",
       "pr": 170,
-      "sha": "eff153f7b4a6ccc40f6486fc524e60bae3c84a41",
+      "sha": "9853b707be36281e49519eea160016dfd8d4dc9c",
       "candidate_pr": 170,
-      "candidate_sha": "eff153f7b4a6ccc40f6486fc524e60bae3c84a41",
-      "disposition": "current_owner_candidate_pinned_not_release_qualified"
+      "candidate_sha": "9853b707be36281e49519eea160016dfd8d4dc9c",
+      "disposition": "CURRENT_CANDIDATE_PIN_NOT_PROTECTED_QUALIFIED"
     },
     {
       "role": "D",
       "repo": "YehorBabenko88/Terminan",
       "pr": 129,
       "sha": "6e4a39c185d51eeab37f004964655da3b8dd938b",
-      "disposition": "current_owner_candidate_pinned_not_release_qualified"
+      "disposition": "CURRENT_CANDIDATE_PIN_NOT_PROTECTED_QUALIFIED"
     },
     {
       "role": "Math",
       "repo": "YehorBabenko88/math",
       "sha": "14d9ca92803b3ede19c7292e85c3627554d5c1d9",
-      "disposition": "current_owner_candidate_pinned_not_release_qualified",
+      "disposition": "CURRENT_CANDIDATE_PIN_NOT_PROTECTED_QUALIFIED",
       "pr": 167
     },
     {
       "role": "E",
       "repo": "YehorBabenko88/unified-system",
       "pr": 171,
-      "sha": "be95eff7cfb9a0b80feb6b0dbe4c18f452a4322c",
+      "sha": "c9aa226f34691396bb70c9ba5062512a2efc3fdc",
       "candidate_pr": 171,
-      "candidate_sha": "be95eff7cfb9a0b80feb6b0dbe4c18f452a4322c",
-      "disposition": "current_owner_candidate_pinned_not_release_qualified"
+      "candidate_sha": "c9aa226f34691396bb70c9ba5062512a2efc3fdc",
+      "disposition": "CURRENT_CANDIDATE_PIN_NOT_PROTECTED_QUALIFIED"
     },
     {
       "role": "F",
       "repo": "YehorBabenko88/unified-system",
       "pr": 180,
       "sha": "c6802ca9adef9f354d11d010b88f0a9dbf0e51a7",
-      "disposition": "current_owner_candidate_pinned_not_release_qualified"
+      "disposition": "CURRENT_CANDIDATE_PIN_NOT_PROTECTED_QUALIFIED"
     },
     {
       "role": "G",
       "repo": "YehorBabenko88/unified-system",
       "issue": 172,
-      "sha": "bd972e65aabc5ab2b650705649b3afeec7445050",
-      "disposition": "current_owner_candidate_pinned_not_release_qualified",
+      "sha": "251aa5d6b9ac5767d683db17e35e73cfb9999496",
+      "disposition": "CURRENT_CANDIDATE_PIN_NOT_PROTECTED_QUALIFIED",
       "pr": 177
     },
     {
       "role": "H",
       "repo": "YehorBabenko88/unified-system",
       "issue": 173,
-      "sha": "0981f949a6782bed1fdc88050a64a0a9ec8d6e98",
-      "disposition": "current_owner_candidate_pinned_not_release_qualified",
+      "sha": "630fa8a6321bedba0b41e717d9b99b7f1aa18693",
+      "disposition": "CURRENT_CANDIDATE_PIN_NOT_PROTECTED_QUALIFIED",
       "pr": 181
     },
     {
@@ -86,15 +86,15 @@
       "repo": "YehorBabenko88/unified-system",
       "issue": 174,
       "sha": "6539f14b433b6cd41660fd9384c88f062b31d8d6",
-      "disposition": "current_owner_candidate_pinned_not_release_qualified",
+      "disposition": "CURRENT_CANDIDATE_PIN_NOT_PROTECTED_QUALIFIED",
       "pr": 176
     },
     {
       "role": "J",
       "repo": "YehorBabenko88/unified-system",
       "issue": 175,
-      "sha": "3d2d9e33df67cc36cecdefb361896a4dd9769612",
-      "disposition": "round28_pre_manifest_parent_integrated_source_candidate"
+      "sha": "dde894aade7c7bdf810e7599908ff6744113dfe0",
+      "disposition": "PRE_MANIFEST_J_COMMIT_NOT_SELF_ATTESTED"
     }
   ],
   "canonical_owners": {
@@ -120,65 +120,80 @@
     "unverified_sha_is_not_accepted": true
   },
   "acceptance": {
-    "source_revision": "SCOPED_C_E_CODE_PRESENT_UNTESTED",
+    "source_revision": "C_E_TRANSITIVE_CODE_PRESENT_GITHUB_SOURCE_MATCH",
     "original_package_hashes": "NOT_VERIFIED",
     "native_windows": "FAIL",
-    "native_consul_pg": "NOT_PROVEN",
+    "native_consul_pg": "NOT_RUN",
+    "native_c_wal_reply_loss": "NOT_RUN",
     "full_market_completeness": "NOT_PROVEN",
     "installer_recovery": "NOT_RUN",
     "protected_root": "DENIED",
-    "release": "NO_GO"
+    "release": "NO_GO",
+    "j_automatic_actions": "26_QUEUED_1_PENDING_0_COMPLETED_AT_PRE_MANIFEST_HEAD"
   },
   "round": 28,
-  "integration_status": "C_RECOVERY_CHECKPOINT_E_LEASE_SOURCE_PRESENT_RUNTIME_UNVERIFIED",
+  "integration_status": "C_E_TRANSITIVE_SOURCE_CLOSED_H_MTF_CONTRACT_PINNED_NO_NATIVE_PASS",
   "protected_admission": "DENIED",
   "integration_source_evidence": {
     "C": {
-      "sha": "eff153f7b4a6ccc40f6486fc524e60bae3c84a41",
-      "paths": [
-        "unified_system/lab_pg_fence.py",
-        "unified_system/lab_postgres.py",
-        "unified_system/lab_pg_recovery.py",
-        "unified_system/lab_pg_checkpoint.py",
-        "tests/test_c_round14_pg_recovery.py"
-      ],
-      "original_recovery_blob": "c574e15352f14a6e26b44de0bb960710d451aa98",
-      "original_checkpoint_blob": "db87bea4a13e2f3782349c266a08a26146a9b981"
+      "owner_pr": 170,
+      "owner_sha": "9853b707be36281e49519eea160016dfd8d4dc9c",
+      "runtime_blobs": {
+        "unified_system/lab_pg_recovery.py": "c574e15352f14a6e26b44de0bb960710d451aa98",
+        "unified_system/lab_pg_checkpoint.py": "db87bea4a13e2f3782349c266a08a26146a9b981",
+        "unified_system/lab_pg_fence.py": "740ac2b2ec3150cce60be05cd8aae1c4dd55615e"
+      },
+      "native_wire_loss_test_blob": "550d1332124b9337db2866787439dd836f9f9193",
+      "native_tests": "AUTHORED_NOT_EXECUTED"
     },
     "E": {
-      "sha": "be95eff7cfb9a0b80feb6b0dbe4c18f452a4322c",
-      "paths": [
-        "unified_system/grid_writer_fence_model.py",
-        "unified_system/consul_authority.py",
-        "unified_system/lab_writer_revoke.py",
-        "tests/test_e_round25_consul_opaque_session.py"
-      ],
-      "original_consul_blob": "ca63b7e63cdcdcf26d985548ce14c05bf2c797ad"
+      "owner_pr": 171,
+      "owner_sha": "c9aa226f34691396bb70c9ba5062512a2efc3fdc",
+      "runtime_blobs": {
+        "unified_system/consul_authority.py": "21568d35509d940e74ad16ac2edc5d69e80770ba",
+        "unified_system/grid_writer_fence_model.py": "86a284b4b505e0d96f147afb8be08eb79e10b07b",
+        "unified_system/lab_writer_revoke.py": "de2f6d85d6e6331028f1f00749e01a264e2e0c5b"
+      },
+      "tests_blob": "2664e606bc44ebc30d7ea06fb787193222ec28f1",
+      "tests": "AUTHORED_NOT_EXECUTED"
     },
     "B": {
-      "sha": "2404a7a61c7ddde0ea96b45088cf6072a9235b1e",
       "repo": "YehorBabenko88/bybit-cluster-grid",
       "pr": 303,
+      "sha": "2404a7a61c7ddde0ea96b45088cf6072a9235b1e",
       "external_repo": true,
       "no_copy": true,
-      "market_timeframes": [
-        "5m",
-        "15m"
-      ],
-      "source_minute_max": 75,
-      "bars_max": 5,
-      "installed_package": "NOT_VERIFIED"
+      "first_mtf_5m_15m": "SOURCE_CANDIDATE",
+      "actual_wheel_record_and_entrypoint": "NOT_VERIFIED"
     },
     "D": {
+      "repo": "YehorBabenko88/Terminan",
+      "pr": 129,
       "sha": "6e4a39c185d51eeab37f004964655da3b8dd938b",
       "external_repo": true,
       "no_copy": true
     },
     "Math": {
+      "repo": "YehorBabenko88/math",
+      "pr": 167,
       "sha": "14d9ca92803b3ede19c7292e85c3627554d5c1d9",
       "external_repo": true,
       "no_copy": true
+    },
+    "H": {
+      "owner_pr": 181,
+      "sha": "630fa8a6321bedba0b41e717d9b99b7f1aa18693",
+      "contract_blob": "2c69a05f5860235192ee0992b7725a12cd362c2e",
+      "oracle_blob": "b4272ce1570e02f47dc56dbaa8abbb621329a1ab",
+      "differential_test": "EXTERNAL_PINNED_SOURCES_REQUIRED_NOT_COPIED"
+    },
+    "J": {
+      "reference_sha_before_manifest": "dde894aade7c7bdf810e7599908ff6744113dfe0",
+      "test": "tests/test_j_round28_integration_closure.py",
+      "test_execution": "NOT_RUN",
+      "relative_import_graph_source_check": "PASS",
+      "source_files_only": true
     }
   },
-  "g_h_i_status": "G_H_I_ROUND26_EVIDENCE_STAGED_LATEST_IMPLEMENTATION_NOT_YET_ACCEPTED"
+  "g_h_i_status": "G_H_I_SCOPED_EVIDENCE_ONLY_NO_CLEANUP_OR_INSTALLER_TRANSACTION"
 }
