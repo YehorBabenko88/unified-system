@@ -187,3 +187,56 @@ def exercise_two_pinned_sql_sources(test, *, identity, stream, start_ms,
         restored = current.verify_existing_lab_checkpoint(raw, **kwargs)
         test.assertEqual(restored["state"], "EXACT_ALREADY_ACKNOWLEDGED",
                          "C35_ORIGINAL_CHECKPOINT_NOT_RESTORED")
+
+        # The preliminary owner/backend revalidation runs in the original
+        # guarded API, but SQL must *independently* enforce the fence at the
+        # actual read snapshot. Flip only this disposable owner's fence in
+        # an uncommitted transaction. Its separate revalidation connection
+        # still sees the previous committed active fence, while the final
+        # SQL on THIS connection must see our inactive row and DENY.
+        # This verifies no stale preflight receipt becomes a writer permit.
+        from unified_system.lab_simulation_admission import LabAdmissionRejected
+        with connection.cursor() as cursor:
+            cursor.execute("BEGIN")
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "UPDATE public.lab_writer_fence SET active=false"
+                    " WHERE resource_id=%s AND active IS TRUE"
+                    " AND generation=%s AND token=%s RETURNING active",
+                    ("grid-market-data-primary", 1, identity.token))
+                test.assertEqual(cursor.fetchone(), (False,),
+                                 "C35_DISPOSABLE_FENCE_TOGGLE_UNVERIFIED")
+            raw = _NativeRawSql(test.pg, connection)
+            outcome = "NOT_EXECUTED"
+            try:
+                with test.assertRaisesRegex(
+                        LabAdmissionRejected, "LAB_CURSOR_STALE_OWNER"):
+                    current.verify_existing_lab_checkpoint(raw, **kwargs)
+                outcome = "UNCOMMITTED_INACTIVE_FENCE_DENIED"
+            finally:
+                for statement in raw.queries:
+                    print("C35_NATIVE_PG18_FENCE_NEGATIVE "
+                          f"source={CURRENT_BLOB} "
+                          f"sql_sha256={hashlib.sha256(statement.encode('utf-8')).hexdigest()} "
+                          f"chars={len(statement)} outcome={outcome}", flush=True)
+            test.assertEqual(len(raw.queries), 1,
+                             "C35_FENCE_NEGATIVE_SQL_NOT_EXECUTED")
+        finally:
+            # Do not persist a disabled fence or alter another original
+            # recovery test. A failed native assertion still attempts
+            # rollback, and the test fails if the connection cannot recover.
+            with connection.cursor() as cursor:
+                cursor.execute("ROLLBACK")
+
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT active FROM public.lab_writer_fence"
+                " WHERE resource_id=%s AND generation=%s AND token=%s",
+                ("grid-market-data-primary", 1, identity.token))
+            test.assertEqual(cursor.fetchone(), (True,),
+                             "C35_DISPOSABLE_FENCE_ROLLBACK_FAILED")
+        raw = _NativeRawSql(test.pg, connection)
+        restored = current.verify_existing_lab_checkpoint(raw, **kwargs)
+        test.assertEqual(restored["state"], "EXACT_ALREADY_ACKNOWLEDGED",
+                         "C35_FENCE_ROLLBACK_NOT_RESTORED")
