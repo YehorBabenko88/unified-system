@@ -35,6 +35,65 @@ class UninstallTests(unittest.TestCase):
   self.assertIsNone(self.backend.service);self.assertFalse(Path(self.service_plan['code']).exists())
   self.assertEqual((self.state/'user-data').read_bytes(),b'PRESERVE_DATA');self.assertEqual((self.state/'config').read_bytes(),b'PRESERVE_CONFIG');self.assertEqual(self.ownership.read_bytes(),self.ownership_before)
   self.assertEqual(self.uninstall.run(guard=self.guard)['status'],'APP_ONLY_REMOVED')
+ @unittest.skipUnless(os.name=='nt','Win32 original HANDLE disposable only; never real SCM')
+ def test_win_native_handle_removes_only_original_private_fixture_file(self):
+  from unified_system.installation_uninstall import image,_win_handle_dispose_member
+  with tempfile.TemporaryDirectory(prefix='unified-i-win32-fixture-') as base:
+   path=Path(base)/'owned.bin';path.write_bytes(b'PRIVATE_DISPOSABLE_BYTES')
+   proof=image(path)
+   _win_handle_dispose_member(path,proof,'FILE')
+   self.assertFalse(path.exists())
+   self.assertFalse(path.is_symlink())
+
+ @unittest.skipUnless(os.name=='nt','Win32 original HANDLE same-byte inode swap negative')
+ def test_win_native_handle_rejects_same_bytes_different_inode_without_delete(self):
+  from unified_system.installation_uninstall import image,_win_handle_dispose_member
+  with tempfile.TemporaryDirectory(prefix='unified-i-win32-fixture-') as base:
+   root=Path(base);path=root/'owned.bin';payload=b'IDENTICAL-BYTES'
+   path.write_bytes(payload);old=image(path)
+   path.rename(root/'original-retained.bin')
+   path.write_bytes(payload)
+   with self.assertRaises(ValueError):
+    _win_handle_dispose_member(path,old,'FILE')
+   self.assertEqual(path.read_bytes(),payload)
+   self.assertEqual((root/'original-retained.bin').read_bytes(),payload)
+
+ @unittest.skipUnless(os.name=='nt','Win32 original HANDLE empty directory disposition')
+ def test_win_native_handle_removes_only_original_empty_disposable_directory(self):
+  from unified_system.installation_uninstall import identity,_win_handle_dispose_member
+  with tempfile.TemporaryDirectory(prefix='unified-i-win32-fixture-') as base:
+   path=Path(base)/'empty';path.mkdir();pin=identity(path)
+   _win_handle_dispose_member(path,pin,'DIRECTORY')
+   self.assertFalse(path.exists())
+
+ @unittest.skipUnless(os.name=='nt','Win32 original HANDLE refuses nonempty directory')
+ def test_win_native_handle_rejects_directory_with_foreign_member(self):
+  from unified_system.installation_uninstall import identity,_win_handle_dispose_member
+  with tempfile.TemporaryDirectory(prefix='unified-i-win32-fixture-') as base:
+   path=Path(base)/'nonempty';path.mkdir();foreign=path/'foreign.bin'
+   foreign.write_bytes(b'MUST_PRESERVE');pin=identity(path)
+   with self.assertRaises(ValueError):_win_handle_dispose_member(path,pin,'DIRECTORY')
+   self.assertEqual(foreign.read_bytes(),b'MUST_PRESERVE')
+
+ def test_native_handle_primitive_direct_call_without_os_proof_is_denied(self):
+  from unified_system.installation_uninstall import _win_handle_dispose_member,image
+  with tempfile.TemporaryDirectory(prefix='unified-i-no-native-permit-') as base:
+   path=Path(base)/'not-deletable';path.write_bytes(b'PRESERVE')
+   original=image(path)
+   with patch('unified_system.installation_uninstall._exclusive_code_removal_proven',return_value=False):
+    with self.assertRaisesRegex(ValueError,'APP_ONLY_UNINSTALL_REJECTED'):
+     _win_handle_dispose_member(path,original,'FILE')
+   self.assertEqual(path.read_bytes(),b'PRESERVE')
+
+ def test_non_windows_handle_disposer_denied_without_effect(self):
+  if os.name=='nt':self.skipTest('POSIX native boundary refusal only')
+  from unified_system.installation_uninstall import _win_handle_dispose_member
+  with tempfile.TemporaryDirectory(prefix='unified-i-posix-fixture-') as base:
+   path=Path(base)/'protected';path.write_bytes(b'KEEP')
+   with self.assertRaises(ValueError):
+    _win_handle_dispose_member(path,{'device':1,'inode':1},'FILE')
+   self.assertEqual(path.read_bytes(),b'KEEP')
+
  def test_default_owned_app_only_denied_before_audit_or_service_effect(self):
   code=Path(self.service_plan['code']);member=code/'runtime.json'
   raw=member.read_bytes();service_before=copy.deepcopy(self.backend.service)

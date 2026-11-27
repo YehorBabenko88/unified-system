@@ -210,3 +210,18 @@ and real host removal remain **DENIED / NOT_RUN**.
 
 No actual service, user DB/PG5432, caller data or installed folder was
 modified. **CODE NO_GO / PRODUCTION NO_GO**.
+
+
+## ROUND32 — native Windows original HANDLE removal candidate; still DENIED
+
+The canonical APP_ONLY Uninstaller now has `_win_handle_dispose_member` INSIDE the existing original owner module, not a second service remover. Its candidate uses CreateFileW(GENERIC_READ|DELETE, FILE_SHARE_READ only, OPEN_EXISTING, FILE_FLAG_OPEN_REPARSE_POINT), plus FILE_FLAG_BACKUP_SEMANTICS for directories. It refuses reparse, identity/mtime/size/hash mismatch, hardlinks, unsupported final handle paths and native API failures. A retained CRT descriptor reads the SAME originally opened OS HANDLE, compares the original journal device/inode/bytes/mtime_ns/sha256, then uses SetFileInformationByHandle(FileDispositionInfoEx=21, DELETE|POSIX_SEMANTICS) on THAT original kernel file object, not a second pathname lookup. Unsupported native operations have NO Path.unlink/Path.rmdir fallback. A nonempty directory is DENIED.
+
+IMPORTANT: both Uninstaller._run(APP_ONLY) AND the primitive directly check `_exclusive_code_removal_proven()` which still ALWAYS RETURNS FALSE. This keeps all normal file deletion DENIED even when a caller attempts to import the helper directly. No caller boolean/temp-root/service receipt lifts it. The test-only mock patch does not constitute F/A release authorization. The Windows primitive is CODE CANDIDATE, not native-accepted or capable of host installation.
+
+Six additional original existing-suite negative/native tests in tests/test_installation_uninstall.py: exact original handle owned disposable file deletion (Win32-only); same-byte different inode refusal (Win32-only); empty directory original-handle delete (Win32-only); nonempty directory foreign member retention (Win32-only); direct helper invocation without independent proof refusal (cross-platform); non-Windows call refuses without mutation (POSIX-only). Total APP_ONLY authored methods now 28, plus four separate scoped FakeWindows methods. Four Win32-only cases require original native runner; Linux cannot prove them. 28 original suite methods and four scoped fixture methods remain NOT_RUN in the partial checkout until J/A/F acquire full source/fixture test execution.
+
+Owner F/A must verify native FILE_ID_INFO/Python fstat cross-representation, retention/multiple preexisting handles, directory CRT support, path aliases, reparse and hardlink attacks, thread races, restart/wire loss and durable journal correctness before even proposing a security gate change. The original APP_ONLY path-based mock test semantics are retained; the production Windows path has no late name-delete fallback.
+
+References: https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew ; https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfileinformationbyhandle .
+
+No main merge, force push, frozen #166 change, ADMINIT, real service/host operations, user DB/data, trades, or security weakening. CODE NO_GO / PRODUCTION NO_GO.
