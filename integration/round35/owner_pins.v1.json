@@ -1,7 +1,7 @@
 {
   "schema": "unified-system.j.round35.disposable.v1",
   "scope": "SYNTHETIC_ISOLATED_CI_ONLY_NO_RELEASE_AUTHORITY",
-  "source_j_head": "0fc19d6635afcb4bb600c057eedbb861f8f8d345",
+  "source_j_head": "653efebdc269c003fd506163ea9080dc2e4b27dc",
   "frozen_pr166_sha": "9349d7f3ed93ef82d120976816b968e0b716b067",
   "release": "CODE_NO_GO_PRODUCTION_NO_GO",
   "authorize_release": false,
@@ -90,7 +90,8 @@
     "consul_acl_ttl": "NOT_RUN",
     "windows_installer": "NOT_RUN",
     "ui_e2e": "NOT_RUN",
-    "ci_scheduler": "J_PREJOB_0_JOBS_BUT_F_WORKFLOW_LATER_MATERIALIZED_JOBS_CAUSE_UNPROVEN"
+    "ci_scheduler": "J_PREJOB_0_JOBS_BUT_F_WORKFLOW_LATER_MATERIALIZED_JOBS_CAUSE_UNPROVEN",
+    "consul_compatibility": "UNQUALIFIED_VERSION_E_OWNER_CONSUL_RUNTIME_VERSION_NOT_YET_EXACTLY_VERIFIED"
   },
   "integration_policy": {
     "owner_blob_import": "REVIEWED_EXACT_ONLY",
@@ -98,7 +99,7 @@
     "recorded_roster_delist": "DENIED",
     "legacy_retirement": "DENIED"
   },
-  "observation_epoch": "round35-next-cycle",
+  "observation_epoch": "round35-master-7222478307",
   "previous_source_shas": {
     "A": "c14bb55ece3b580600a6f6e528d1faa0b4790ea8",
     "B": "8719dfb0a865fa3b4cce09050c8f15e36f2dfe16",
@@ -110,5 +111,60 @@
     "H": "e23c3785c0ed8ec68d4a9993941d4c04dc5fdddc",
     "I": "da42b3e7d047f65f0ef78a18f1b8c2bf2d38f52f"
   },
-  "provenance_statement": "Exact PR metadata observed; acceptance is not inherited; these are frozen identity observations, not future current-head claims."
+  "provenance_statement": "Separate immutable current-candidate observations from historically tested HEADs. A exact 2 files selectively imported with byte parity; G remains external and only immutable tested parent is qualified for 8-table fixture preservation, not grid parity.",
+  "qualified_source_pins": {
+    "A": {
+      "tested_head": "89b78cc4075a2fcb845b3494cceda20dec0cc64c",
+      "reviewed_owner_head": "3ff47bba6c6eef74e4a14c3bbc938097681c23ec",
+      "code_semantics": "SAME_PRODUCTION_LOGIC_COMMENT_ONLY_NEWER_HEAD",
+      "ci": "WIN2022_PY311_312_313_558_PASS_6_SKIP_WIN2025_NOT_RUN",
+      "runtime_process_blob": "bd9bb626f41f2daf5fc7ceb3f8cb8a89acd2e3e9",
+      "test_blob": "47ea8c0a101fbf752e68fec5a4d292a9ae31a63f",
+      "integration": "SELECTIVE_IMPORTED_SOURCE_PARITY_ONLY"
+    },
+    "G": {
+      "tested_head": "ae6a47434dec459584105c5f877f749bc7676b16",
+      "owner_candidate_head": "5ff4f10d068bbed08db816e6e4ffdeb2b81ac338",
+      "ci": "2278_PASS_2_SKIP_4_JOBS_TESTED_HEAD_ONLY",
+      "integration": "EXTERNAL_STRATTESTER_PIN_ONLY_NO_GRID_PARITY"
+    }
+  },
+  "latest_owner_observations": {
+    "A": {
+      "sha": "3ff47bba6c6eef74e4a14c3bbc938097681c23ec",
+      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+    },
+    "B": {
+      "sha": "eee29d8fae7c52d5b489a86a5a9ec08718265f18",
+      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+    },
+    "C": {
+      "sha": "e6e72d1e3e7c20abe39cab9750743fda7f6c8ab7",
+      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+    },
+    "D": {
+      "sha": "fe4316d7c1580b9799903b57d8471034b5281996",
+      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+    },
+    "E": {
+      "sha": "1aef1d8b5138d7aa132c404d1d66f92cf958b017",
+      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+    },
+    "F": {
+      "sha": "847eeeced4a5561db6b149e51817a60bd8d2cd9f",
+      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+    },
+    "G": {
+      "sha": "5ff4f10d068bbed08db816e6e4ffdeb2b81ac338",
+      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+    },
+    "H": {
+      "sha": "ebf668dc13be0cc2b6cd8c16c02e9dce6a6ac38e",
+      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+    },
+    "I": {
+      "sha": "fbce3d80d425e5a02c87b58b691531161634b25a",
+      "status": "CANDIDATE_NOT_INHERITED_FROM_PAST_CI"
+    }
+  }
 }
