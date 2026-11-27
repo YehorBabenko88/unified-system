@@ -123,7 +123,8 @@ class DisposableInstallationTests(unittest.TestCase):
 
 
     @unittest.skipUnless(os.name == "posix", "POSIX descriptor-relative sandbox only; native Windows removal denied")
-    def test_dispose_inactive_removes_only_closed_code_and_preserves_state(self):
+    @patch("unified_system.installation_transaction._exclusive_namespace_proven", return_value=True)
+    def test_dispose_inactive_removes_only_closed_code_and_preserves_state(self, _test_only_exclusive):
         tx = self.subject()
         tx.stage(disposable_approval=True)
         marker = self.state / "user-data"
@@ -162,7 +163,8 @@ class DisposableInstallationTests(unittest.TestCase):
         self.assertEqual(tx.observe()["status"], "STAGED_INACTIVE")
 
     @unittest.skipUnless(os.name == "posix", "POSIX descriptor-relative sandbox only; native Windows removal denied")
-    def test_dispose_failpoint_retains_audit_and_requires_manual_review(self):
+    @patch("unified_system.installation_transaction._exclusive_namespace_proven", return_value=True)
+    def test_dispose_failpoint_retains_audit_and_requires_manual_review(self, _test_only_exclusive):
         tx = self.subject()
         tx.stage(disposable_approval=True)
         marker = self.state / "userdata.bin"
@@ -209,7 +211,8 @@ class DisposableInstallationTests(unittest.TestCase):
         self.assertTrue((self.install / "release" / "runtime.json").is_file())
 
     @unittest.skipUnless(os.name == "posix", "requires POSIX dir_fd for real symlink swap")
-    def test_parent_swap_before_unlink_preserves_foreign_file(self):
+    @patch("unified_system.installation_transaction._exclusive_namespace_proven", return_value=True)
+    def test_parent_swap_before_unlink_preserves_foreign_file(self, _test_only_exclusive):
         from unified_system import installation_transaction as core
         tx = self.subject()
         tx.stage(disposable_approval=True)
@@ -273,6 +276,18 @@ class DisposableInstallationTests(unittest.TestCase):
             tx.dispose_inactive(disposable_approval=True)
         self.assertEqual(foreign.read_bytes(), b"KEEP_ME")
         self.assertTrue(member.is_symlink())
+
+    def test_real_disposal_denied_without_native_exclusive_namespace(self):
+        tx = self.subject()
+        staged = tx.stage(disposable_approval=True)
+        member = self.install / "release" / "runtime.json"
+        previous = member.read_bytes()
+        with self.assertRaises(ValueError):
+            tx.dispose_inactive(disposable_approval=True)
+        self.assertEqual(member.read_bytes(), previous)
+        self.assertEqual(tx.observe()["status"], "STAGED_INACTIVE")
+        self.assertTrue((self.state / "transaction.sqlite").exists())
+        self.assertFalse(staged["execution_authority"])
 
     def test_no_runtime_executor_in_wrapper(self):
         import inspect

@@ -91,6 +91,21 @@ def source_plan(*,capsule_root,install_root,state_root,installation_id,node_id,o
   service_boundary='BLOCKED_NSSM_CLOSURE_SCOPED_ACL_GIT_IDENTITY_PENDING'))
 
 
+
+def _exclusive_namespace_proven():
+ """Native, immutable single-writer namespace proof is NOT implemented.
+
+ An ordinary tempfile prefix, private POSIX permission bits or caller boolean
+ cannot exclude another process running with the same credentials. In
+ particular POSIX fstat/stat followed by unlinkat is still vulnerable to
+ an adversarial LAST-COMPONENT name swap. Keep destructive paths inaccessible
+ until F/A provide OS-held exclusive namespace attestation. No CLI permit.
+ A unit test may patch this private guard solely to exercise failure handling
+ inside its own disposable fixture; that does not qualify production effects.
+ """
+ return False
+
+
 def _anchored_deletion_supported():
  """No Windows/path-only removal until the native handle owner is qualified."""
  return (os.name=='posix' and hasattr(os,'O_DIRECTORY') and hasattr(os,'O_NOFOLLOW')
@@ -259,6 +274,10 @@ class InstallationTransaction:
   # Path-only Windows unlink has an admitted TOCTOU weakness. A POSIX
   # descriptor-relative disposable fixture is safer, but is never ROOT/SCM GO.
   need(_anchored_deletion_supported())
+  # Caller approval is not an ownership/security capability. No irreversible
+  # unlink even in a writable temporary directory until independent OS-bound
+  # exclusivity of the leaf namespace is demonstrated.
+  need(_exclusive_namespace_proven())
   workspace=self.install.parent
   need(self.state.parent==workspace and workspace.name.startswith('unified-agent-i-'))
   need(workspace.parent.resolve()==Path(tempfile.gettempdir()).resolve())

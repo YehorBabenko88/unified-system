@@ -117,3 +117,47 @@ physical acceptance remain **NOT_RUN/DENIED**.
 Exact I HEAD and Git blobs must be frozen again by F/J after selective
 transplant; this document does not authorize release. **CODE NO_GO /
 PRODUCTION NO_GO**.
+
+## ROUND30 — last-component TOCTOU: DENY until proven exclusive namespace
+
+F/J independently identified that the ROUND29 POSIX descriptor-relative guard
+protects the **parent** but does not make the leaf file `stat`/hash and
+`unlink(name, dir_fd=...)` atomic against an adversary swapping the final
+name. Exact code already has a durable intent and fail-closed recovery, but
+that is **not** sufficient to prevent deletion of a replaced foreign leaf.
+
+Rather than invent a second file owner or falsely claiming atomic unlink,
+the canonical existing `InstallationTransaction.dispose_inactive` now
+requires `_exclusive_namespace_proven()` before any durable intent or
+unlink. That internal predicate **always returns False** until an independently
+reviewed OS-held single-writer namespace proof is implemented by A/F.
+Neither `approved_disposable=True`, temporary directory naming, POSIX
+permission bits, an owned journal nor SCM state substitutes for this proof.
+The fail-closed gate applies on **all platforms**, including POSIX. Windows
+remains denied by the prior `_anchored_deletion_supported` guard.
+
+The three deliberately destructive/fault-injection unit tests override this
+internal predicate through `unittest.mock.patch` **inside disposable
+test fixture only** to verify existing journal semantics and ensure the
+regression suite remains executable. This test override is **not an API
+or an authorization mechanism for users or production**. A new 20th test
+uses the ordinary unpatched source and verifies exact staged bytes and
+journal remain unchanged when someone supplies `disposable_approval=True`.
+No normal source path deletes files.
+
+Execution: verified original source files in the isolated Linux partial
+checkout and ran `python -m unittest tests.test_agent_i_disposable_installation
+-v`: **20 PASS / 0 FAIL / 0 ERROR / 0 SKIP**, Python 3.13.5, exit 0.
+The earlier ROUND30 baseline of 19/19 PASS was also executed. This is
+**not** full-repository or native Windows CI, nor installed wheel/Root
+attestation. Four existing stopped-service `FakeWindows`/APP_ONLY
+composition methods were inspected against the original GitHub source
+but are **NOT_RUN** in the incomplete checkout. Existing Windows
+`ServiceResource` and `Uninstaller` remain authoritative, unchanged,
+and unqualified for physical machine use.
+
+Release gates: **CODE NO_GO / PRODUCTION NO_GO**, no host actions, no
+destructive real-PC or user-state operations, no native service deletion,
+no validated full uninstall or real rollback, no main merge or frozen
+#166 changes. Do not accept the fact that test-only `unlink` scenarios
+PASS as permission for a real uninstall.
