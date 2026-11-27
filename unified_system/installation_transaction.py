@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 import sqlite3
 import stat
+import tempfile
 from contextlib import closing
 from . import lab_release
 from .contracts import canonical,seal
@@ -128,12 +129,17 @@ class InstallationTransaction:
     need(status=='RESERVED' and fingerprint==owned);status='STAGE_INTENT'
    elif kind=='STAGED_INACTIVE':
     need(status=='STAGE_INTENT' and fingerprint==stamp(self.release));release_owned=fingerprint;status='STAGED_INACTIVE'
+   elif kind=='DISPOSE_INTENT':
+    need(status=='STAGED_INACTIVE' and fingerprint==release_owned);status=kind
+   elif kind=='DISPOSED_INACTIVE':
+    need(status=='DISPOSE_INTENT' and fingerprint==release_owned);status=kind
    elif kind=='ROLLED_BACK_RETAINED':
     need(status in ('PREPARED','RESERVED','STAGE_INTENT','STAGED_INACTIVE') and fingerprint==owned);status=kind
    else:need(False)
   if owned is None:need(not self.install.exists())
   else:need(stamp(self.install)==owned)
   if release_owned is not None:need(stamp(self.release)==release_owned)
+  if status=='DISPOSED_INACTIVE':need(not any(self.release.iterdir()))
   return records,status,owned
  def _append(self,records,kind,fingerprint):
   need(len(records)<MAX_RECORDS)
@@ -146,9 +152,9 @@ class InstallationTransaction:
    plan_sha256=self.plan_hash,transaction_receipt_sha256=seal(records[-1]),sequence=records[-1]['sequence'],status=status,
    activation='BLOCKED',installed='NOT_PROVEN',readiness='NOT_PROVEN',source_proof='NOT_EVALUATED',
    capacity_gate='NOT_EVALUATED',capsule_source_provenance=self.plan['capsule_source_provenance'],execution_authority=False,physical_acceptance='NOT_RUN',
-   public_progress_projection='NOT_CONNECTED',rollback='NO_ACTIVATION_RESOURCES_RETAINED')
+   public_progress_projection='NOT_CONNECTED',rollback=('DISPOSAL_UNCERTAIN_REVIEW_REQUIRED' if status=='DISPOSE_INTENT' else 'NO_ACTIVATION_CODE_DISPOSED' if status=='DISPOSED_INACTIVE' else 'NO_ACTIVATION_RESOURCES_RETAINED'))
  def stage(self):
-  records,status,owned=self._read();need(status!='ROLLED_BACK_RETAINED')
+  records,status,owned=self._read();need(status not in ('ROLLED_BACK_RETAINED','DISPOSE_INTENT','DISPOSED_INACTIVE'))
   if status=='STAGED_INACTIVE':return self.snapshot()
   admit(self.plan)
   if status=='PREPARED':
@@ -175,5 +181,60 @@ class InstallationTransaction:
   This receipt is not proof that a running service was stopped or uninstalled.
   """
   records,status,owned=self._read()
+  need(status not in ('DISPOSE_INTENT','DISPOSED_INACTIVE'))
   if status!='ROLLED_BACK_RETAINED':self._append(records,'ROLLED_BACK_RETAINED',owned)
+  return self.snapshot()
+
+ def dispose_inactive(self,*,approved_disposable=False,fail_after_members=None):
+  """Dispose only a fully-verified inactive capsule in a fresh temp fixture.
+
+  The original durable journal first records DISPOSE_INTENT, then each closed
+  source member is reverified immediately before unlink. Unknown/interrupted
+  outcomes block all further disposal and retain ownership evidence. This
+  is NOT native APP_ONLY Windows-service removal or trusted release cleanup.
+  The sandbox name/parent test is a guard, not host ACL attestation.
+  """
+  need(approved_disposable is True)
+  need(fail_after_members is None or (type(fail_after_members) is int and fail_after_members>=0))
+  workspace=self.install.parent
+  need(self.state.parent==workspace and workspace.name.startswith('unified-agent-i-'))
+  need(workspace.parent.resolve()==Path(tempfile.gettempdir()).resolve())
+  records,status,_=self._read()
+  if status=='DISPOSED_INACTIVE':return self.snapshot()
+  need(status=='STAGED_INACTIVE')
+  report=admit(self.plan,self.release);manifest=report['manifest']
+  files=manifest['files'];dirs=manifest['directories']
+  need(len(files)+len(dirs)<=4096)
+  parent_stamps={'.':stamp(self.release)}
+  for rel in dirs:parent_stamps[rel]=stamp(self.release/rel)
+  # Verify the manifest itself as a closed extra member. No foreign files or
+  # directories are allowed: admit() compared exact inventories.
+  manifest_path=lab_release.regular(self.release/'lab-release.json')
+  need(lab_release.hash_file(manifest_path)['sha256']==self.plan['manifest_sha256'])
+  self._append(records,'DISPOSE_INTENT',stamp(self.release))
+  records,status,_=self._read();need(status=='DISPOSE_INTENT')
+  removed=0
+  if fail_after_members==0:raise OSError('DISPOSABLE_INJECTED_INTERRUPTION')
+  for rel in sorted(files):
+   item=self.release/rel
+   parent=Path(rel).parent.as_posix()
+   need(stamp(item.parent)==parent_stamps[parent])
+   need(lab_release.hash_file(item)==files[rel])
+   item.unlink()
+   removed+=1
+   if fail_after_members==removed:raise OSError('DISPOSABLE_INJECTED_INTERRUPTION')
+  need(stamp(manifest_path.parent)==parent_stamps['.'])
+  need(lab_release.hash_file(manifest_path)['sha256']==self.plan['manifest_sha256'])
+  manifest_path.unlink()
+  removed+=1
+  if fail_after_members==removed:raise OSError('DISPOSABLE_INJECTED_INTERRUPTION')
+  for rel in sorted(dirs,key=lambda x:(len(Path(x).parts),x),reverse=True):
+   target=self.release/rel
+   need(stamp(target)==parent_stamps[rel])
+   need(stamp(target.parent)==parent_stamps[Path(rel).parent.as_posix()])
+   target.rmdir()  # never recursive; unexpected children fail closed
+   removed+=1
+   if fail_after_members==removed:raise OSError('DISPOSABLE_INJECTED_INTERRUPTION')
+  need(stamp(self.release)==parent_stamps['.'] and not any(self.release.iterdir()))
+  self._append(records,'DISPOSED_INACTIVE',stamp(self.release))
   return self.snapshot()
