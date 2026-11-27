@@ -182,6 +182,71 @@ class ServiceResourceTests(unittest.TestCase):
    with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
     service._capture_native_roster(paths)
 
+ def test_r35_retained_native_custody_fails_closed_outside_windows(self):
+  from unified_system import installation_service as service
+  paths={'root':self.root,'ancestor:0':self.root.parent}
+  if os.name=='nt':
+   self.skipTest('Native custody is tested only with disposable Windows native runner')
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   service._NativeReceiptCustody(paths)
+ 
+ def test_r35_retained_native_custody_closes_all_handles_after_crash(self):
+  from unified_system import installation_service as service
+  # Fake kernel only: no Win32 execution and no actual file removal.
+  class FakeKernel:
+   def __init__(self):self.closed=[]
+   def CloseHandle(self,h):
+    self.closed.append(h);return True
+  obj=object.__new__(service._NativeReceiptCustody)
+  obj.paths={'root':self.root,'ancestor:0':self.root.parent}
+  obj.handles={'root':101,'ancestor:0':102}
+  obj.kernel=FakeKernel();obj.closed=False
+  with self.assertRaisesRegex(RuntimeError,'INJECTED_RECEIPT_CRASH'):
+   try:
+    raise RuntimeError('INJECTED_RECEIPT_CRASH')
+   finally:obj.close()
+  self.assertEqual(obj.kernel.closed,[102,101])
+  self.assertEqual(obj.handles,{})
+  self.assertTrue(obj.closed)
+  obj.close()
+  self.assertEqual(obj.kernel.closed,[102,101])
+
+ def test_r35_retained_native_custody_detects_drift_before_register(self):
+  from unified_system import installation_service as service
+  obj=object.__new__(service._NativeReceiptCustody)
+  obj.paths={'root':self.root,'ancestor:0':self.root.parent}
+  obj.handles={'root':101,'ancestor:0':102}
+  obj.kernel=None;obj.closed=False
+  expected={'volume_serial':5,'file_id_128':'1'*32}
+  obj.snapshot={'root':dict(expected),'ancestor:0':dict(expected)}
+  with patch.object(obj,'_read',return_value=copy.deepcopy(obj.snapshot)) as handle_read:
+   with patch.object(service,'_native_file_identity',return_value=dict(expected)) as reopened:
+    self.assertEqual(obj.verify(),obj.snapshot)
+    self.assertEqual(handle_read.call_count,2)
+    self.assertEqual(reopened.call_count,2)
+  with patch.object(obj,'_read',return_value=copy.deepcopy(obj.snapshot)):
+   with patch.object(service,'_native_file_identity',
+                     side_effect=[dict(expected),dict(expected,file_id_128='2'*32)]):
+    with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+     obj.verify()
+  obj.closed=True
+  with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+   obj.verify()
+
+ def test_r35_windows_registration_retains_custody_through_registered_transition(self):
+  from unified_system import installation_service as service
+  # Exact scoped static order gate: real Windows resource tests remain NOT_RUN.
+  import inspect
+  source=inspect.getsource(service.ServiceResource.create)
+  self.assertIn('with _NativeReceiptCustody(paths) as custody:',source)
+  block=source.split('with _NativeReceiptCustody(paths) as custody:',1)[1].split('  else:',1)[0]
+  for required in ('NATIVE_FILE_IDS','ACL_SEALED','REGISTER_INTENT','REGISTERED'):
+   self.assertIn(required,block)
+  self.assertLess(block.index("'NATIVE_FILE_IDS'"),block.index("'ACL_SEALED'"))
+  self.assertLess(block.index("'ACL_SEALED'"),block.index("'REGISTER_INTENT'"))
+  self.assertLess(block.index("'REGISTER_INTENT'"),block.index("'REGISTERED'"))
+  self.assertGreaterEqual(block.count('custody.verify()'),3)
+
  def test_r35_oversized_v2_receipt_denied_before_journal(self):
   from unified_system import installation_service as service
   small={'schema':service.NATIVE_RECEIPT_SCHEMA,'entries':{},'manifest_sha256':'a'*64,
