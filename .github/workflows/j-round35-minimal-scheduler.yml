@@ -1,0 +1,14 @@
+name: J R35 minimal CI scheduler probe
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/j-round35-minimal-scheduler.yml'
+permissions:
+  contents: read
+jobs:
+  scheduler:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Confirm GitHub hosted job materializes
+        run: echo "J_R35_SCHEDULER_MATERIALIZED"
