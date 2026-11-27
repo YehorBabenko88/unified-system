@@ -86,6 +86,32 @@ class QualificationTests(unittest.TestCase):
     def test_installed_module_tamper(self):
         (self.install / MOD).write_bytes(b"tampered")
         self.deny()
+    @unittest.skipUnless(__import__("os").name == "posix", "POSIX retained inode check only")
+    def test_same_bytes_leaf_swap_after_final_fstat_denied(self):
+        """Identical bytes at a replacement pathname cannot inherit old inode custody."""
+        import os
+        from unittest.mock import patch
+        import f_wheel_qualification as owner
+        member = self.install / MOD
+        detached = self.base / "detached-original.py"
+        original_inode = member.stat().st_ino
+        real_fstat = os.fstat
+        seen = []
+        def swap_after_final(fd):
+            info = real_fstat(fd)
+            if info.st_ino == original_inode:
+                seen.append(info.st_ino)
+                if len(seen) == 2:
+                    member.rename(detached)
+                    member.write_bytes(SRC)
+            return info
+        with patch.object(owner.os, "fstat", side_effect=swap_after_final):
+            self.deny()
+        self.assertEqual(len(seen), 2)
+        self.assertEqual(detached.read_bytes(), SRC)
+        self.assertEqual(member.read_bytes(), SRC)
+        self.assertNotEqual(member.stat().st_ino, original_inode)
+
     def test_missing_installed_record(self):
         (self.install / RECORD).unlink()
         self.deny()
