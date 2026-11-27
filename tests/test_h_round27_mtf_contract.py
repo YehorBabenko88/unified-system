@@ -240,5 +240,49 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
 
 
 
+    def test_round33_original_four_cell_http_is_scoped_not_release(self):
+        g = _load_contract()["round33_gate"]
+        self.assertEqual(g["status"],
+                         "ORIGINAL_FOUR_CELL_HTTP_PASS_BROWSER_FAIL_NOT_RELEASE")
+        self.assertIs(g["original_cross_repo_runtime_pass"], True)
+        ev = g["original_cross_repo_http_tests"]
+        self.assertEqual(ev["workflow_run_id"], 45991815725)
+        self.assertEqual(ev["passed"], 72)
+        self.assertEqual((ev["failed"], ev["errors"], ev["skipped"]), (0, 0, 0))
+        self.assertEqual((ev["ubuntu_python311"], ev["ubuntu_python312"],
+                          ev["windows_python311"], ev["windows_python312"]),
+                         (18, 18, 18, 18))
+        self.assertEqual(ev["producer_sha"], g["grid_producer_sha"])
+        self.assertEqual(ev["canonical_math_sha"], g["canonical_math_sha"])
+        self.assertFalse(g["browser_full_e2e_pass"])
+        self.assertFalse(g["native_pg18_consul_windows_installer_pass"])
+        self.assertFalse(g["deduplicated_68_lines_equivalence_pass"])
+        self.assertFalse(g["production_release_admitted"])
+
+    def test_round33_browser_failure_is_not_promoted_to_pass(self):
+        g = _load_contract()["round33_gate"]
+        e = g["browser_test_failure"]
+        self.assertEqual(e["workflow_run_id"], 45991815731)
+        self.assertEqual(e["job_id"], 140481243214)
+        self.assertEqual(e["failing_line"], 87)
+        self.assertEqual((e["passed"], e["failed"], e["errors"], e["skipped"]),
+                         (0, 1, 0, 0))
+        self.assertFalse(g["browser_full_e2e_pass"])
+        self.assertFalse(g["historical_ui_e2e_pass"])
+
+    def test_round33_strattester_guard_pass_not_full_grid_migration(self):
+        g = _load_contract()["round33_gate"]
+        e = g["strattester_guard_ci"]
+        self.assertEqual(e["head_sha"],
+                         "c95ced815575ab3fe25f619f97e9bf040d58f3da")
+        self.assertEqual(e["run_id"], 45995842410)
+        self.assertEqual(e["windows311_pass"] + e["windows313_pass"]
+                         + e["ubuntu311_pass"] + e["ubuntu313_pass"], 2154)
+        self.assertEqual(e["ubuntu311_skip"] + e["ubuntu313_skip"], 2)
+        self.assertFalse(e["release_admitted"])
+        self.assertFalse(e["managed_root_capability_verified"])
+        self.assertFalse(g["full_strattester_unique_function_migration_pass"])
+
+
 if __name__ == "__main__":
     unittest.main()
