@@ -130,7 +130,7 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
     def test_round29_original_math_and_historical_boundaries(self):
         spec = _load_contract()
         self.assertEqual(spec["pins"], {
-            "Grid": "00ac898ba658a546c308087db06cda78a108fd38",
+            "Grid": "b55b03fdbaa6749d6b41bafb238ce98dfebd85e0",
             "Math": "9e6acbd9e12a91189f57234828e31640983af553",
             "Terminan": "78da418ac31acad0f750b98e3b89ea511cefad51",
         })
@@ -143,7 +143,7 @@ class HMultiTimeframeAcceptanceTests(unittest.TestCase):
                          "Terminan PR130 LIVE only")
         self.assertEqual(spec["rejection"]["historical_asof"],
                          "SOURCE_ONLY_CANDIDATE_UNATTESTED")
-        self.assertIn("MUST NOT recompute delta", spec["numeric_policy"])
+        self.assertIn("strictly REFUSES uncheckable cancellation", spec["numeric_policy"])
 
     def test_float_presentation_cancellation_is_not_source_delta(self):
         from decimal import Decimal
