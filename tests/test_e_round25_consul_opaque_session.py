@@ -44,6 +44,35 @@ class OpaqueSessionTests(unittest.TestCase):
         with self.assertRaises(ResourceFenceBlocked):
             self.identity("OpaqueSession_2")
 
+    def test_sql_session_canonical_uuid_shapes_and_transport_separation(self):
+        from unified_system.grid_writer_fence_model import (
+            _consul_session_id, _sql_consul_session_id,
+        )
+        # Server-issued opaque syntax can safely travel through Consul APIs,
+        # but the protected PostgreSQL ABI only accepts canonical UUID text.
+        for value in (OBSERVED, str(uuid.uuid4()),
+                      str(uuid.uuid5(uuid.NAMESPACE_DNS, "consul.example")),
+                      str(uuid.uuid1())):
+            with self.subTest(value=value):
+                self.assertTrue(_consul_session_id(value))
+                self.assertTrue(_sql_consul_session_id(value))
+                self.assertEqual(self.identity(value).session_id, value)
+        for value in ("OpaqueSession_2", "foreign-session", OBSERVED.upper(),
+                      "ffffffff-ffff-ffff-ffff-ffffffffffff",
+                      "00000000-0000-0000-0000-000000000000"):
+            with self.subTest(value=value):
+                # For non-canonical or SQL-ineligible values fail closed.
+                if value not in ("ffffffff-ffff-ffff-ffff-ffffffffffff",
+                                 "00000000-0000-0000-0000-000000000000"):
+                    self.assertTrue(_consul_session_id(value))
+                if _sql_consul_session_id(value):
+                    # Canonical all-f/all-zero text has valid PG uuid syntax;
+                    # it is NOT authority without authentic lease checks.
+                    self.assertEqual(self.identity(value).session_id, value)
+                else:
+                    with self.assertRaises(ResourceFenceBlocked):
+                        self.identity(value)
+
     def test_uuid4_instance_node_stay_strict(self):
         original = self.identity()
         for field in ("instance_id", "node_incarnation_id"):
