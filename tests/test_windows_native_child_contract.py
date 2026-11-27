@@ -855,6 +855,31 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.addCleanup(self._cleanup)
         return op, self.driver.children[op]
 
+    def test_native_detached_inline_python_distinguishes_script_open_failure(self):
+        """Use pinned Python -c to separate interpreter startup from file open.
+
+        Still the original LOW restricted token, suspended Job, original handles
+        and test-only DETACHED_PROCESS. An inline PASS cannot qualify the
+        file-backed production worker, SCM child or release admission.
+        """
+        program = self.driver.programs['market_data']
+        argv = program['argv']
+        # Only this disposable test substitutes arguments. Executable pin,
+        # token, environment, Job and its original handles remain unchanged.
+        program['argv'] = [argv[0], '-c', 'import sys; sys.exit(71)']
+        self.addCleanup(lambda: program.__setitem__('argv', argv))
+        op, child = self._start_detached_diagnostic_child()
+        status = child.wait(timeout=8)
+        print('LAB_CHILD_EXIT2_DIAG inline_python_exit=%s file_python_exit_prior=2'
+              % status, flush=True)
+        self.assertEqual(
+            status, 71, 'detached restricted Python inline startup not proven')
+        self.driver.stop(op)
+        receipt = self.driver.job_extinction_receipt(op)
+        self.assertEqual(receipt.active_members, 0)
+        self.assertEqual(receipt.process_handle, child._handle)
+        self.assertEqual(receipt.job_handle, child._job._handle)
+
     def test_native_detached_worker_executes_and_single_use_receipt(self):
         """A distinctive child exit proves script execution, not just DLL load."""
         import hashlib
