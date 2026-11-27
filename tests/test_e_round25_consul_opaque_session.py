@@ -561,6 +561,12 @@ class OpaqueSessionTests(unittest.TestCase):
             {"Results": [None]},
             {"Results": [{"KV": {"Key": "foreign", "ModifyIndex": 42}}]},
             {"Results": [{"KV": {"Key": target, "ModifyIndex": 0}}]},
+            # Set acknowledgement must carry a strictly *newer* global
+            # Consul Raft ModifyIndex than the session-acquire leader token
+            # (41); a replayed/equal/overflow index is not a new commit.
+            {"Results": [{"KV": {"Key": target, "ModifyIndex": 40}}]},
+            {"Results": [{"KV": {"Key": target, "ModifyIndex": 41}}]},
+            {"Results": [{"KV": {"Key": target, "ModifyIndex": 1 << 63}}]},
             {"Results": [{"KV": {"Key": target, "ModifyIndex": True}}]},
             {"Results": [{"KV": {"Key": target, "ModifyIndex": 42}}],
              "Errors": "invalid"},
