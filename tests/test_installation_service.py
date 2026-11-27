@@ -202,6 +202,25 @@ class ServiceResourceTests(unittest.TestCase):
   self.assertIn("self.close()",source)
   # This is a static source contract, not a Win32 share-mode experiment.
 
+ def test_r35_roster_capacity_checked_before_root_creation(self):
+  from unified_system import installation_service as service
+  import inspect
+  code=inspect.getsource(service.ServiceResource.create)
+  self.assertLess(code.index('_native_receipt_roster_budget(preflight)'),
+                  code.index("resource._call('BEGIN',guard)"))
+  self.assertLess(code.index("resource._call('BEGIN',guard)"),
+                  code.index('lab_release.stage_capsule('))
+  # On Windows the original boundary must remain untouched when the
+  # preflight rejects; this test uses only the private fake SCM boundary.
+  if os.name=='nt':
+   plan=self.plan()
+   with patch.object(service,'_native_receipt_roster_budget',
+                     side_effect=ValueError('OWNED_SERVICE_REJECTED')):
+    with self.assertRaisesRegex(ValueError,'OWNED_SERVICE_REJECTED'):
+     service.ServiceResource.create(plan,self.backend,self.guard)
+   self.assertEqual(self.backend.calls,[])
+   self.assertFalse(Path(plan['root']).exists())
+
  def test_r35_complete_v2_roster_preflight_budget(self):
   from unified_system import installation_service as service
   tiny={'root':self.root,'ancestor:0':self.root.parent}
