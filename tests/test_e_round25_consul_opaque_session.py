@@ -362,6 +362,81 @@ class OpaqueSessionTests(unittest.TestCase):
                         remote_expired=remote_expired,
                     ))
 
+    def test_destroy_false_or_lost_reply_retains_revoked_session_witness(self):
+        # Genuine Consul destroy returns literal JSON true on success; even
+        # HTTP 200 false is NOT proof that the old session was destroyed.
+        # Preserve the locally revoked identity to permit exact retry.
+        from unified_system.consul_authority import CoordinationLost
+
+        async def exercise(first_reply):
+            state = {"held": False, "value": b"", "reply": first_reply,
+                     "destroy_calls": 0, "kv_reads": 0}
+            key = "isolated/round25/leader"
+
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == "/v1/kv/" + key:
+                    if req.method == "PUT":
+                        state["held"] = True
+                        state["value"] = req.content
+                        return httpx.Response(200, json=True)
+                    state["kv_reads"] += 1
+                    return httpx.Response(200, json=[{
+                        "Key": key,
+                        "Session": OBSERVED if state["held"] else "",
+                        "ModifyIndex": 41,
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if path == "/v1/session/destroy/" + OBSERVED:
+                    state["destroy_calls"] += 1
+                    if state["reply"] == "lost":
+                        raise httpx.ReadTimeout("destroy outcome unknown")
+                    if state["reply"] == "false":
+                        return httpx.Response(200, json=False)
+                    if state["reply"] == "wrong_type":
+                        return httpx.Response(200, json={"ok": True})
+                    state["held"] = False
+                    return httpx.Response(200, json=True)
+                raise AssertionError("unexpected Consul request")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client)
+            async with client:
+                lease = await authority.acquire("owner")
+                self.assertTrue(await authority.validate(lease))
+                if first_reply == "lost":
+                    expected = CoordinationUnavailable
+                else:
+                    expected = CoordinationLost
+                with self.assertRaises(expected):
+                    await authority.release(lease)
+
+                self.assertIs(authority._sessions[OBSERVED], lease)
+                self.assertEqual(authority._deadlines[OBSERVED], 0)
+                kv_reads = state["kv_reads"]
+                self.assertFalse(await authority.validate(lease))
+                self.assertFalse(await authority.renew(lease))
+                self.assertEqual(state["kv_reads"], kv_reads)
+                self.assertEqual(state["destroy_calls"], 1)
+
+                # A later, explicitly confirmed idempotent destroy may clean
+                # the local tracking record; still never issue a writer grant.
+                state["reply"] = "true"
+                await authority.release(lease)
+                self.assertEqual(state["destroy_calls"], 2)
+                self.assertNotIn(OBSERVED, authority._sessions)
+                self.assertFalse(await authority.validate(lease))
+                self.assertFalse(await authority.renew(lease))
+
+        for first_reply in ("false", "lost", "wrong_type"):
+            with self.subTest(first_reply=first_reply):
+                asyncio.run(exercise(first_reply))
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
