@@ -208,6 +208,160 @@ class OpaqueSessionTests(unittest.TestCase):
                 ResourceFenceBlocked, "NATIVE_DB_FENCE_NOT_ADMITTED"):
             native_writer_admission()
 
+    def test_original_lease_to_revoker_unknown_sql_remains_blocked(self):
+        # One cross-module synthetic path using the ORIGINAL E revoker.
+        # No real A Job / C PostgreSQL / Consul process and no native GO.
+        from types import SimpleNamespace
+        from unified_system.lab_writer_revoke import LabWriterRevoker
+        from unified_system.lab_process_extinction import (
+            RootProcessObservation, UNKNOWN,
+        )
+
+        async def exercise(*, uncertain_sql, remote_expired):
+            events = []
+            state = {"held": False, "value": b"", "destroy": 0}
+            key = "isolated/round25/leader"
+
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == "/v1/kv/" + key:
+                    if req.method == "PUT":
+                        state["held"] = True
+                        state["value"] = req.content
+                        return httpx.Response(200, json=True)
+                    return httpx.Response(200, json=[{
+                        "Key": key, "Session": OBSERVED if state["held"] else "",
+                        "ModifyIndex": 41,
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if path == "/v1/session/destroy/" + OBSERVED:
+                    state["destroy"] += 1
+                    state["held"] = False
+                    return httpx.Response(200, json=True)
+                raise AssertionError("unexpected Consul path")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25", isolated_lab=True,
+            ), client=client)
+            async with client:
+                lease = await authority.acquire("owner")
+                self.assertTrue(await authority.validate(lease))
+                identity = self.identity(token=lease.token)
+                self.assertEqual(identity.session_id, lease.session_id)
+                alive = {"value": True}
+                guard = SimpleNamespace(_identity=identity, blocked=False)
+
+                def block_transfer():
+                    events.append("TRANSFER_BLOCKED")
+                    guard.blocked = True
+
+                guard.block_transfer = block_transfer
+
+                def live_c(pg, *, identity, generation, backend_pid):
+                    events.append("C_LIVE_READ")
+                    if not alive["value"]:
+                        raise ValueError("old backend gone")
+                    return {
+                        "schema": "lab-postgres-fence-revalidation.v1",
+                        "scope": "ISOLATED_LAB_ONLY",
+                        "resource_id": "grid-market-data-primary",
+                        "owner": identity.owner,
+                        "namespace": identity.namespace,
+                        "generation": generation, "token": identity.token,
+                        "backend_pid": backend_pid,
+                        "backend_start": "2026-11-27T09:00:00+00:00",
+                        "session_id": identity.session_id,
+                        "instance_id": identity.instance_id,
+                        "node_incarnation_id": identity.node_incarnation_id,
+                        "source_sha256": identity.source_sha256,
+                        "schema_sha256": identity.schema_sha256,
+                        "db_backend_observed": True,
+                        "db_fence_current_at_read": True,
+                        "native_writer_admitted": False,
+                        "trading_authorized": False,
+                    }
+
+                def exact_c(pg, *, owner, namespace, generation, token,
+                            backend_pid, backend_start, timeout=120):
+                    events.append("C_EXACT_REVOKE")
+                    self.assertTrue(guard.blocked)
+                    self.assertFalse(alive["value"])
+                    self.assertEqual((owner, namespace, generation, token),
+                                     ("owner", "isolated/round25", 9, lease.token))
+                    self.assertEqual((backend_pid, backend_start),
+                                     (4042, "2026-11-27T09:00:00+00:00"))
+                    if uncertain_sql:
+                        raise RuntimeError("SQL UPDATE outcome unknown")
+                    return False
+
+                exact_c.__module__ = "unified_system.lab_pg_fence"
+
+                class Executor:
+                    poisoned = False
+                    async def call(self, task, timeout):
+                        return task()
+
+                class StopLane:
+                    async def stop_owned(self, handle, *, timeout):
+                        events.append("A_STOP")
+                        alive["value"] = False
+                    async def old_child_extinct(self, handle, *, timeout):
+                        return RootProcessObservation(
+                            "unified.root-process-observation.v1", UNKNOWN,
+                            handle, 4042, ["created", "image"], "UNKNOWN",
+                        )
+
+                revoker = object.__new__(LabWriterRevoker)
+                revoker._guard = guard
+                revoker._driver = object()
+                revoker._handle = "original-job"
+                revoker._authority = authority
+                revoker._lease = lease
+                revoker._pg = object()
+                revoker._c = SimpleNamespace(
+                    revoke_lab_fence=exact_c,
+                    revalidate_lab_fence=live_c,
+                    LabAdmissionRejected=ValueError,
+                )
+                revoker._generation = 9
+                revoker._token = lease.token
+                revoker._backend_pid = 4042
+                revoker._once = False
+                revoker._last = None
+                revoker._executor = Executor()
+                revoker._stop_lane = StopLane()
+
+                if remote_expired:
+                    state["held"] = False
+                    self.assertFalse(await authority.validate(lease))
+                result = await revoker.revoke(blocking_timeout=1)
+                self.assertEqual(result.result, "PARTIAL_DENIED")
+                self.assertTrue(guard.blocked)
+                self.assertFalse(result.sql_fence_revoked)
+                self.assertFalse(result.old_backend_rejected)
+                self.assertFalse(result.consul_released)
+                self.assertFalse(result.native_admitted)
+                self.assertFalse(result.trading_authorized)
+                self.assertEqual(state["destroy"], 0)
+                self.assertEqual(events, [
+                    "TRANSFER_BLOCKED", "C_LIVE_READ", "A_STOP",
+                    "C_EXACT_REVOKE",
+                ])
+                self.assertIs(await revoker.revoke(blocking_timeout=1), result)
+                self.assertEqual(state["destroy"], 0)
+
+        for uncertain_sql in (False, True):
+            for remote_expired in (False, True):
+                with self.subTest(uncertain_sql=uncertain_sql,
+                                  remote_expired=remote_expired):
+                    asyncio.run(exercise(
+                        uncertain_sql=uncertain_sql,
+                        remote_expired=remote_expired,
+                    ))
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
