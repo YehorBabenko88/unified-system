@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "agent": "G",
   "snapshot_date": "2026-11-27",
-  "status": "ROUND33_G006_SECOND_CONSUMER_HARDENED_DRAFT_NO_GO",
+  "status": "ROUND34_G006_FOUR_P0_FIXES_DRAFT_CI_PENDING",
   "release_gate": "CODE_NO_GO / PRODUCTION_NO_GO",
   "provenance": "GitHub REST commits and recursive trees; tree results for working refs were not truncated",
   "main_heads": {
@@ -190,8 +190,8 @@
         "other dynamic/CI/installer consumers not fully enumerated",
         "Strattester UniverseSynchronizer previously accepted a single string/dict as an iterable symbol snapshot, risking erroneous MISSING/DELISTED; G33 source validates finite USDT symbol collection before registry mutation, current DRAFT not yet CI accepted."
       ],
-      "replacement": "FIRST PRACTICAL consumer source migration: Strattester Draft PR123 HEAD 8cf29408edfea6d59388a042604fcec352a0dd0e removes auto BybitClient and fixed-name DB unlink from download_smoke only. B/Root/J must supply provenance-qualified Grid reader injection for CLI; ALL OTHER original SyncEngine/Universe/BybitClient unique datasets retained pending parity and consent G33 next consumer hardened in same Strattester PR123 at HEAD 529ebb548159948c66976884f3b8e57454e90ed1; not a managed Grid source cutover or permission to retire old Bybit transport.",
-      "tests": "Exact GitHub original main smoke blob 4876bafaef666ce22e3b82df464681fb8b8ad622 reproduced deletion of existing named user sentinel after sqlite3.DatabaseError in disposable fixture. Fixed source blob 13a21d3a357385dd3621f255ee09aa642f9b80e0 and new tests blob d16db22eaeb0a54e09627432d5aca98a2452d1a6 byte-exact local; 10 pytest PASS 0 FAIL 0 ERROR 0 SKIP with minimal sqlite3-backed harness; full original SQLiteMarketStore/Root Grid read CI NOT_RUN; G33 added UniverseSynchronizer original source blob 4afa8336c9ef00402f9d19ae4f4bf941d06d2557 and new original pytest blob 260cb681ec6d342f89fefd518b18eb1ac6e5c2dd; new original CI QUEUED/NOT_RUN at check snapshot.",
+      "replacement": "FIRST PRACTICAL consumer source migration: Strattester Draft PR123 HEAD 8cf29408edfea6d59388a042604fcec352a0dd0e removes auto BybitClient and fixed-name DB unlink from download_smoke only. B/Root/J must supply provenance-qualified Grid reader injection for CLI; ALL OTHER original SyncEngine/Universe/BybitClient unique datasets retained pending parity and consent G33 next consumer hardened in same Strattester PR123 at HEAD 529ebb548159948c66976884f3b8e57454e90ed1; not a managed Grid source cutover or permission to retire old Bybit transport. G34 source changes: direct injected smoke OHLCV rejects binary64 underflow nonzero→zero, zero OHLC, Decimal negative zero; UniverseSync rejects low overlap even for same-size disjoint snapshots before original SQLite reconciliation; no qualified source granted.",
+      "tests": "Exact GitHub original main smoke blob 4876bafaef666ce22e3b82df464681fb8b8ad622 reproduced deletion of existing named user sentinel after sqlite3.DatabaseError in disposable fixture. Fixed source blob 13a21d3a357385dd3621f255ee09aa642f9b80e0 and new tests blob d16db22eaeb0a54e09627432d5aca98a2452d1a6 byte-exact local; 10 pytest PASS 0 FAIL 0 ERROR 0 SKIP with minimal sqlite3-backed harness; full original SQLiteMarketStore/Root Grid read CI NOT_RUN; G33 added UniverseSynchronizer original source blob 4afa8336c9ef00402f9d19ae4f4bf941d06d2557 and new original pytest blob 260cb681ec6d342f89fefd518b18eb1ac6e5c2dd; new original CI QUEUED/NOT_RUN at check snapshot. G34 four current original Git blobs: download_smoke.py 74356fe3fd49a30dd3d58f2d307985c84c4aa1f3; universe_sync.py 04b28a6936f2c7b7bc2a1cd8c8fdeacc6e02fb5a; test_download_smoke_g32.py b8c743fbd8597ba64c1fa2391036aeb2c2d65522; test_universe_sync_g33.py 30e688d04faba809e797cb686aedb038a856d7d0. New original tests authored but latest head queued/NOT_RUN at snapshot; G33 prior latest 529ebb original workflow 45996979742 success 555 Windows, 554+1 SKIP Ubuntu per matrix.",
       "rollback": "PR123 Draft unmerged; baseline main and old BybitClient intact for unique dataset consumers; never use fixed user DB path; require B/H/J authorized managed source before enabling CLI"
     },
     {
@@ -300,7 +300,9 @@
     "G_R32_smoke_migration": "Original changed smoke source byte-exact to GitHub and exact existing smoke tests 2 + new tests 8 = 10 PASS under local SQLite backed harness (not full original store); original vulnerability reproduced on byte-exact old source disposable data only; full integration NOT_RUN",
     "G_round33_full_original_prior_SHA": "PASS original four-job Strattester Actions 2154 PASS/0 FAIL/0 ERROR/2 SKIP, only prior c95ced8 HEAD.",
     "G_round33_universe_new_SHA": "NOT_RUN on newest 529ebb5 at snapshot; automatic workflow QUEUED.",
-    "Terminan_D134_original_browser": "FAIL original market-data-browser one test, job 140481243214, run 45991815731; D owner notified."
+    "Terminan_D134_original_browser": "FAIL original market-data-browser one test, job 140481243214, run 45991815731; D owner notified.",
+    "G_round34_strattester_new_sha": "QUEUED auto Actions 45999989212; original test status NOT_RUN at snapshot",
+    "G_round33_original_latest_sha": "Original full four-job Github Actions 2218 PASS/0 FAIL/0 ERROR/2 SKIP at 529ebb548159948c66976884f3b8e57454e90ed1"
   },
   "restrictions": [
     "no main merge",
@@ -550,5 +552,60 @@
     "canonical_grid_reader_binding": "PENDING_B_J_OWNER",
     "release_authorized": false,
     "production_authorized": false
+  },
+  "round34_execution": {
+    "round": 34,
+    "g_strattester_pr": 123,
+    "previous_sha": "529ebb548159948c66976884f3b8e57454e90ed1",
+    "new_sha": "97e5e48c867370741e8349c422399384aef977ae",
+    "four_commits_fast_forward": true,
+    "changed_owned_paths": {
+      "strattester/marketdata/download_smoke.py": "74356fe3fd49a30dd3d58f2d307985c84c4aa1f3",
+      "strattester/marketdata/universe_sync.py": "04b28a6936f2c7b7bc2a1cd8c8fdeacc6e02fb5a",
+      "tests/marketdata/test_download_smoke_g32.py": "b8c743fbd8597ba64c1fa2391036aeb2c2d65522",
+      "tests/marketdata/test_universe_sync_g33.py": "30e688d04faba809e797cb686aedb038a856d7d0"
+    },
+    "change": "four P0 fixes from MASTER: nonzero Decimal binary64 underflow, zero OHLC, signed zero volume/turnover, equal-size fully disjoint universe replacement via overlap; tests SQLite user-root sentinel and repeated original SQLite registry invariant",
+    "original_g33_ci": {
+      "head": "529ebb548159948c66976884f3b8e57454e90ed1",
+      "run": 45996979742,
+      "linux_py311": {
+        "pass": 554,
+        "fail": 0,
+        "error": 0,
+        "skip": 1
+      },
+      "linux_py313": {
+        "pass": 554,
+        "fail": 0,
+        "error": 0,
+        "skip": 1
+      },
+      "windows_py311": {
+        "pass": 555,
+        "fail": 0,
+        "error": 0,
+        "skip": 0
+      },
+      "windows_py313": {
+        "pass": 555,
+        "fail": 0,
+        "error": 0,
+        "skip": 0
+      },
+      "note": "Original full Strattester tests, prior SHA only. 2218 PASS and 2 SKIP across four job executions."
+    },
+    "original_g34_ci": {
+      "head": "97e5e48c867370741e8349c422399384aef977ae",
+      "run": 45999989212,
+      "status": "QUEUED",
+      "result": "NOT_RUN at recorded snapshot"
+    },
+    "managed_grid_reader": "PENDING_B_OWNER_CANONICAL_AUTHORITATIVE_READER_AND_PROVENANCE",
+    "g006_retirement": false,
+    "g012_retirement": false,
+    "release_authorized": false,
+    "production_authorized": false,
+    "scope_limits": "Original mounted installed Grid+Root+PG18+Consul+Windows, provider custody, OI/funding/mark/index/premium/long-short parity NOT_RUN"
   }
 }
