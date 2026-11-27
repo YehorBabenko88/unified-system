@@ -913,6 +913,32 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         self.driver.stop(op)
         self.assertEqual(self.driver.job_extinction_receipt(op).active_members, 0)
 
+    def test_native_detached_imports_without_owner_pycache_prefix(self):
+        """Restricted Python imports stdlib without referencing owner cache.
+
+        The original LOW token, original Windows Job and retained process
+        handle are unchanged; no cache ACL or directory is granted to child.
+        A positive diagnostic cannot qualify the standard console mode.
+        """
+        program = self.driver.programs['market_data']
+        original_argv = program['argv']
+        self.addCleanup(lambda: program.__setitem__('argv', original_argv))
+        code = (
+            'import os,sys,pathlib;'
+            'sys.exit(71 if os.environ.get("PYTHONPYCACHEPREFIX") is None '
+            'and os.environ.get("PYTHONDONTWRITEBYTECODE")=="1" '
+            'and sys.dont_write_bytecode else 78)'
+        )
+        program['argv'] = [original_argv[0], '-c', code]
+        op, child = self._start_detached_diagnostic_child()
+        status = child.wait(timeout=8)
+        print('LAB_PYCACHE_DIAG restricted_stdlib_exit=%s' % status,
+              flush=True)
+        self.assertEqual(status, 71,
+                         'restricted Python failed cache-free stdlib import')
+        self.driver.stop(op)
+        self.assertEqual(self.driver.job_extinction_receipt(op).active_members, 0)
+
     def test_native_detached_inline_python_distinguishes_script_open_failure(self):
         """Use pinned Python -c to separate interpreter startup from file open.
 
