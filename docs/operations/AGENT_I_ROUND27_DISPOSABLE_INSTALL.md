@@ -362,7 +362,7 @@ F and J acceptance and must not be counted as native PASS by this text.
 The last source iteration adds `_native_receipt_roster_budget(paths)`
 immediately before Windows `_NativeReceiptCustody` opens any handle.
 It enforces at most **512 identities**, each key at most **300 UTF-8
-characters**, and a conservative `sum(112 + len(key UTF-8)) <= 56000`
+bytes**, and a conservative `sum(112 + len(key UTF-8)) <= 56000`
 estimate. The existing exact canonical V2 row limit of **60000 bytes**
 remains separately mandatory. No roster is shortened, sampled, chunked,
 silently upgraded, or permitted to bypass native identity verification.
@@ -441,3 +441,24 @@ All such original native cases and real release inventory sizing require
 independent F/J qualification at the exact commit. No physical deletion,
 no main merge or force push, no automatic promotion. Both gates are FALSE.
 **CODE NO_GO / PRODUCTION NO_GO.**
+
+
+### ROUND35 Unicode encoded-key regression
+
+The canonical I preflight now bounds **UTF-8 encoded bytes** per roster
+key, not Python Unicode code points. A key with 200 non-ASCII two-byte
+characters has fewer than 300 code points but more than 300 encoded
+bytes; it is refused before `BEGIN` and before Win32 HANDLE opens. This
+changes no installed manifest, receipt limit, publisher trust or physical
+deletion authority. The existing source test method
+`test_r35_complete_v2_roster_preflight_budget` includes this negative
+case without increasing test count.
+
+Isolated Linux Python 3.13.5 exercised the **unchanged original method
+body and exact I budget-function body** copied from their current GitHub
+source readbacks, with the surrounding package imports/test fixture
+replaced by a minimal fail-closed `need` and a disposable `self.root`
+path: **1 PASS, 0 FAIL, 0 ERROR, 0 SKIP**.
+This is **not** an original byte-identical full package checkout and
+does **not** count as native Windows or full original I-suite acceptance.
+Exact full installer Windows/SCM/ACL/crash tests remain NOT_RUN.
