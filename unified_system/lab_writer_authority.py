@@ -1,0 +1,511 @@
+"""E-owned fail-closed LAB writer authority lifecycle.
+
+This module tracks one private process-local authority epoch. It is not a
+serializable capability, a credential, a SQL executor, or an alternative Root
+supervisor. Creating this object never authorizes a process by itself: the
+Root caller must pass genuine ConsulSessionAuthority/ConsulLease,
+StartupSourceAdmission, C-owned revalidation and host quiescence evidence.
+A read-only successful check is not a PostgreSQL write grant. Native
+service_module_runtime admission remains denied until the A/B/C runtime
+integration and real-process acceptance are separately completed.
+"""
+from dataclasses import dataclass
+from types import ModuleType
+import asyncio
+import secrets
+from .grid_writer_fence_model import (
+    ResourceFenceBlocked, WriterLeaseIdentity, _need,
+)
+from .lab_owner_executor import LabOwnerExecutor
+from .lab_root_child_witness import RootGridChildWitness, RootManagedQuiescence
+
+_SCHEMA = "unified.lab-root-writer-authority.v1"
+_SCOPE = "ISOLATED_LAB_ONLY"
+_ISSUANCE_SEAL = object()  # only Root authority method below can use this
+
+
+@dataclass(frozen=True)
+class LabAuthorityStatus:
+    schema: str
+    scope: str
+    epoch: str
+    generation: int
+    state: str
+    native_admitted: bool = False
+    trading_authorized: bool = False
+
+
+class LabWriterAuthority:
+    """One Root-owned revocable lifetime, never trusted based on caller flags.
+
+    Constructed only from existing full owner objects; readiness checks are
+    intentionally read-only and must run again before any protected action.
+    Neither a positive status nor this instance can bypass the C SQL fence.
+    """
+
+    __slots__ = (
+        "_authority", "_lease", "_source", "_identity", "_generation",
+        "_pg", "_c", "_quiescence", "_backend_pid", "_postmaster",
+        "_process", "_epoch", "_revoked", "_executor", "_writer_grant",
+        "_transfer_blocked",
+    )
+
+    def __init__(self, *, authority, lease, source, identity, generation,
+                 pg, c_module, quiescence, backend_pid, process, executor=None):
+        from .consul_authority import ConsulLease, ConsulSessionAuthority
+        from .service_source_admission import StartupSourceAdmission
+        _need(type(authority) is ConsulSessionAuthority
+              and authority.config.isolated_lab is True
+              and type(lease) is ConsulLease,
+              "LAB_ROOT_CONSUL_OWNER_REQUIRED")
+        _need(type(source) is StartupSourceAdmission,
+              "LAB_ROOT_SOURCE_OWNER_REQUIRED")
+        _need(type(identity) is WriterLeaseIdentity
+              and identity.owner == lease.owner
+              and identity.namespace == authority.config.namespace
+              and identity.session_id == lease.session_id
+              and identity.token == lease.token,
+              "LAB_ROOT_LEASE_IDENTITY_REJECTED")
+        _need(type(generation) is int and 0 < generation < (1 << 63)
+              and type(backend_pid) is int and 1 < backend_pid < (1 << 31),
+              "LAB_ROOT_BACKEND_IDENTITY_REJECTED")
+        _need(pg is not None and pg.started is True
+              and callable(getattr(pg, "_verify_owned", None))
+              and callable(getattr(pg, "_verify_postmaster", None)),
+              "LAB_ROOT_OWNED_POSTGRES_REQUIRED")
+        _need(type(c_module) is ModuleType
+              and c_module.__name__ == "unified_system.lab_pg_fence"
+              and callable(getattr(c_module, "revalidate_lab_fence", None))
+              and callable(getattr(c_module, "revoke_lab_fence", None)),
+              "LAB_ROOT_CANONICAL_SQL_REQUIRED")
+        _need(type(executor) is LabOwnerExecutor,
+              "LAB_ROOT_SERIAL_EXECUTOR_REQUIRED")
+        _need(type(quiescence) is RootManagedQuiescence,
+              "LAB_ROOT_OS_QUIESCENCE_REQUIRED")
+        # Process is a Root-controlled lifecycle witness; neither PID strings
+        # nor caller-produced boolean values are accepted.
+        _need(type(process) is RootGridChildWitness,
+              "LAB_ROOT_PROCESS_WITNESS_REQUIRED")
+        _need(process._source_commit == source.source_identity("market_data")["commit"]
+              and quiescence._current is process,
+              "LAB_ROOT_PROCESS_SOURCE_MISMATCH")
+        self._authority, self._lease = authority, lease
+        self._source, self._identity = source, identity
+        self._generation, self._pg, self._c = generation, pg, c_module
+        self._quiescence, self._backend_pid = quiescence, backend_pid
+        self._process = process
+        self._executor = executor
+        self._epoch = secrets.token_hex(32)
+        self._revoked = False
+        # Fail-closed original Root epoch latch. External Consul loss or an
+        # uncertain SQL/OS result cannot authorize another owner on expiry.
+        # Only a separate, verified C/A/Consul takeover protocol could ever
+        # admit a fresh epoch; this instance never resets the latch.
+        self._transfer_blocked = False
+        self._writer_grant = None
+        try:
+            _need(pg._verify_owned() is None,
+                  "LAB_ROOT_PG_OWNERSHIP_REJECTED")
+            self._postmaster = pg._verify_postmaster()
+            _need(type(self._postmaster) is int and self._postmaster > 1,
+                  "LAB_ROOT_POSTMASTER_REJECTED")
+        except ResourceFenceBlocked:
+            raise
+        except Exception:
+            raise ResourceFenceBlocked("LAB_ROOT_POSTMASTER_REJECTED") from None
+
+    @property
+    def epoch(self):
+        return self._epoch
+
+    async def require_current(self):
+        """Typed async LAB read guard for B; no boolean admission conversion.
+
+        Deliberately has no synchronous counterpart. B must await this method
+        and inspect the returned LabAuthorityStatus; True is never returned.
+        A positive read is not a service, exchange, or database write grant.
+        """
+        return await self.check()
+
+
+    async def issue_lab_writer_grant(self):
+        """Issue one LAB-only owner grant from live protected Windows Root.
+
+        Requires actual protected activation and exact pinned new Grid
+        collector, journal and writer adapter. No caller flags or diagnostic status can issue a grant.
+        This is NOT service_module_runtime native startup authorization.
+        """
+        from .service_bootstrap import ProtectedActivation
+        from .grid_writer_lab_bridge import verified_grid_runtime_cohort_pin
+        _need(self._writer_grant is None and not self._revoked,
+              "LAB_ROOT_GRANT_ALREADY_ISSUED")
+        protected = self._source._grant
+        _need(type(protected) is ProtectedActivation
+              and protected.require_current() is True,
+              "LAB_ROOT_PROTECTED_ACTIVATION_REQUIRED")
+        status = await self.check()
+        _need(type(status) is LabAuthorityStatus
+              and status.state == "READ_ONLY_REVALIDATED_NOT_NATIVE"
+              and status.epoch == self._epoch,
+              "LAB_ROOT_GRANT_EVIDENCE_NOT_CURRENT")
+        pin = verified_grid_runtime_cohort_pin(
+            self._source, self._source._manifest,
+            self._source._roots["market_data"])
+        _need(type(pin) is dict
+              and pin.get("schema") == "unified.grid-lab-runtime-cohort.v1"
+              and pin.get("scope") == _SCOPE
+              and pin.get("native_admitted") is False
+              and pin.get("trading_authorized") is False,
+              "LAB_ROOT_GRID_WRITER_NOT_PINNED")
+        _need(protected.require_current() is True,
+              "LAB_ROOT_PROTECTED_ACTIVATION_REVOKED")
+        status = await self.check()
+        _need(type(status) is LabAuthorityStatus and status.epoch == self._epoch,
+              "LAB_ROOT_GRANT_EPOCH_CHANGED")
+        grant = LabWriterGrant(_ISSUANCE_SEAL, self, pin)
+        self._writer_grant = grant
+        return grant
+
+    async def issue_operation_permit(self, *, executor, operation_id,
+                                     content_id, package_identity, entrypoint,
+                                     symbol=None, start_ms=None, fingerprint=None):
+        """Issue a bounded non-bool operation capability from this Root owner.
+
+        Issuance is inert unless the original, protected LabWriterGrant was
+        admitted. C's attested backend_start is read from its real SQL fence.
+        The only SQL writer remains B; a permit is not a DB authorization.
+        """
+        import re
+        from .service_bootstrap import ProtectedActivation
+        _need(not self.transfer_blocked, "LAB_OPERATION_TRANSFER_BLOCKED")
+        _need(type(executor) is LabOwnerExecutor and executor is self._executor
+              and not executor.poisoned,
+              "LAB_OPERATION_EXECUTOR_MISMATCH")
+        _need(type(operation_id) is str
+              and re.fullmatch(r"[0-9a-f]{32}", operation_id) is not None
+              and type(content_id) is str
+              and re.fullmatch(r"[0-9a-f]{64}", content_id) is not None,
+              "LAB_OPERATION_IDENTITY_REJECTED")
+        _need(type(package_identity) is str
+              and re.fullmatch(r"[0-9a-f]{64}", package_identity) is not None
+              and type(entrypoint) is str
+              and entrypoint == "grid.canonical_lab_fenced_writer",
+              "LAB_OPERATION_PACKAGE_IDENTITY_REJECTED")
+        _need(type(symbol) is str and re.fullmatch(r"[A-Z0-9]{1,32}", symbol) is not None
+              and type(start_ms) is int and 0 <= start_ms < 2**63
+              and start_ms % 60000 == 0
+              and type(fingerprint) is str
+              and re.fullmatch(r"[0-9a-f]{64}", fingerprint) is not None,
+              "LAB_OPERATION_RECORD_IDENTITY_REJECTED")
+        # The canonical record identity must be derived independently by
+        # the original B writer. Repeating caller input is NOT proof.
+        # The complete B/C ABI is still denied until this is attested.
+        grant = self._writer_grant
+        _need(type(grant) is LabWriterGrant
+              and not grant._revoked and not self._revoked,
+              "LAB_OPERATION_ORIGINAL_ROOT_GRANT_REQUIRED")
+        _need(await grant.require_write_current() is grant,
+              "LAB_OPERATION_GRANT_STALE")
+        protected=self._source._grant
+        _need(type(protected) is ProtectedActivation
+              and protected.require_current() is True,
+              "LAB_OPERATION_PROTECTED_ROOT_REQUIRED")
+        def read_backend():
+            return self._c.revalidate_lab_fence(
+                self._pg, identity=self._identity,
+                generation=self._generation, backend_pid=self._backend_pid)
+        try:
+            receipt=await executor.call(read_backend,timeout=10.0)
+        except BaseException:
+            # The original C call may still be running after cancellation;
+            # the complete Root epoch is no longer usable.
+            self.revoke()
+            raise
+        _need(type(receipt) is dict
+              and receipt.get("scope")==_SCOPE
+              and receipt.get("resource_id")=="grid-market-data-primary"
+              and receipt.get("schema")=="lab-postgres-fence-revalidation.v1"
+              and receipt.get("backend_pid")==self._backend_pid
+              and type(receipt.get("backend_start")) is str
+              and bool(receipt["backend_start"])
+              and receipt.get("owner")==self._identity.owner
+              and receipt.get("namespace")==self._identity.namespace
+              and receipt.get("generation")==self._generation
+              and receipt.get("token")==self._identity.token
+              and receipt.get("session_id")==self._identity.session_id
+              and receipt.get("source_sha256")==self._identity.source_sha256
+              and receipt.get("schema_sha256")==self._identity.schema_sha256
+              and receipt.get("db_backend_observed") is True
+              and receipt.get("db_fence_current_at_read") is True
+              and receipt.get("native_writer_admitted") is False
+              and receipt.get("root_consul_admitted") is False
+              and receipt.get("trading_authorized") is False,
+              "LAB_OPERATION_C_BACKEND_UNVERIFIED")
+        _need(not self._revoked and not grant._revoked
+              and protected.require_current() is True
+              and self._source.require_current() is True
+              and await self._authority.validate(self._lease) is True
+              and not self._revoked and not grant._revoked,
+              "LAB_OPERATION_ISSUANCE_REVOKED")
+        # F's current qualify_wheel() explicitly returns
+        # release_authenticated=False, installed_record_verified=False,
+        # import_origin_verified=False and entrypoint_verified=False.
+        # These diagnostics MUST NOT be converted into Root permission.
+        # A caller may choose any 64-character digest; until Root validates
+        # it against the installed wheel, denying is mandatory. This code
+        # intentionally does not manufacture acceptance from source pins.
+        # No trusted installed-wheel attestor is exposed by this Root/E
+        # interface yet. A caller-controlled 64-hex digest is NOT evidence
+        # that the exact approved B package is installed. Do not mint a live
+        # operation permit until F/A bind real wheel+entrypoint attestation.
+        raise ResourceFenceBlocked("LAB_OPERATION_INSTALLED_WHEEL_UNVERIFIED")
+
+    @property
+    def transfer_blocked(self):
+        # Read-only status, NEVER proof that transfer has become safe.
+        # An incompletely initialized/forged authority is not a safe owner.
+        return (getattr(self, "_transfer_blocked", True) is True
+                or getattr(self, "_revoked", True) is True)
+
+    def block_transfer(self):
+        """Irreversibly quarantine this original Root epoch on uncertainty.
+
+        Local latch only: it neither alters C's durable SQL fence nor
+        consumes A's Job receipt. A replacement owner must separately prove
+        old backend/process extinction, committed exact SQL revoke,
+        reconciliation and a protected new lease/release.
+        """
+        self._transfer_blocked = True
+        self.revoke()
+
+    def revoke(self):
+        # Local deny first; SQL/Consul/OS require the separate Root revoker.
+        # Uninitialized/forged instances must also fail CLOSED, rather
+        # than masking the original denial with AttributeError.
+        self._transfer_blocked = True
+        self._revoked = True
+        grant = getattr(self, "_writer_grant", None)
+        if type(grant) is LabWriterGrant:
+            grant.revoke()
+
+    async def check(self):
+        """Re-read owner state; refuse stale lease/backend/child or any outage."""
+        try:
+            _need(not self.transfer_blocked, "LAB_ROOT_AUTHORITY_REVOKED")
+            _need(self._source.require_current() is True,
+                  "LAB_ROOT_SOURCE_REVOKED")
+            _need(await self._authority.validate(self._lease) is True,
+                  "LAB_ROOT_CONSUL_LOST")
+            def owner_revalidation():
+                _need(self._quiescence.require_current() is True
+                      and self._quiescence.confirmed_quiescent() is True,
+                      "LAB_ROOT_OLD_PROCESS_UNVERIFIED")
+                _need(self._process.require_current() is True
+                      and self._process.confirmed_single_child() is True,
+                      "LAB_ROOT_CHILD_NOT_UNIQUE")
+                _need(self._pg.started is True
+                      and self._pg._verify_owned() is None
+                      and self._pg._verify_postmaster() == self._postmaster,
+                      "LAB_ROOT_POSTMASTER_CHANGED")
+                return self._c.revalidate_lab_fence(
+                    self._pg, identity=self._identity,
+                    generation=self._generation, backend_pid=self._backend_pid)
+            # C calls synchronous PostgreSQL. A Root-owned single-worker lane
+            # preserves one-at-a-time custody and keeps asyncio heartbeat live.
+            # Timeout/cancellation poisons the executor; no COMMIT assumption.
+            receipt = await self._executor.call(owner_revalidation, timeout=10.0)
+            # The C owner ABI is intentionally strict; a synthetic positive
+            # receipt does not elevate this LAB-only object to native authority.
+            _need(type(receipt) is dict
+                  and receipt.get("schema") == "lab-postgres-fence-revalidation.v1"
+                  and receipt.get("scope") == _SCOPE
+                  and receipt.get("generation") == self._generation
+                  and receipt.get("token") == self._identity.token
+                  and receipt.get("backend_pid") == self._backend_pid
+              and type(receipt.get("backend_start")) is str
+              and bool(receipt.get("backend_start"))
+                  and receipt.get("session_id") == self._identity.session_id
+                  and receipt.get("source_sha256") == self._identity.source_sha256
+                  and receipt.get("schema_sha256") == self._identity.schema_sha256
+                  and receipt.get("db_backend_observed") is True
+                  and receipt.get("db_fence_current_at_read") is True
+                  and receipt.get("native_writer_admitted") is False
+                  and receipt.get("trading_authorized") is False,
+                  "LAB_ROOT_PG_RECEIPT_INVALID")
+            _need(self._source.require_current() is True
+                  and await self._authority.validate(self._lease) is True,
+                  "LAB_ROOT_AUTHORITY_CHANGED")
+            _need(not self._revoked, "LAB_ROOT_AUTHORITY_REVOKED")
+            return LabAuthorityStatus(
+                _SCHEMA, _SCOPE, self._epoch, self._generation,
+                "READ_ONLY_REVALIDATED_NOT_NATIVE")
+        except ResourceFenceBlocked:
+            self.revoke()
+            raise
+        except asyncio.CancelledError:
+            # A cancelled task may leave the C backend operation in flight.
+            # Poison the entire epoch; never retry a possibly committed SQL.
+            self.revoke()
+            raise
+        except Exception:
+            self.revoke()
+            raise ResourceFenceBlocked("LAB_ROOT_AUTHORITY_UNVERIFIED") from None
+
+
+class LabWriterGrant:
+    """Sealed per-epoch Root LAB writer permit, never a JSON/boolean bearer.
+
+    B may call require_write_current before every C-owned operation. It
+    returns the SAME exact class instance only after protected activation,
+    pinned new Grid writer bytes, current C backend and live Consul+OS proof.
+    SQL fencing remains exclusively in C; the permit does not do SQL writes,
+    start services or authorize trading. Python object identity is not an
+    OS security boundary: the protected Root process must own this instance.
+    """
+
+    __slots__ = ("_authority", "_epoch", "_pin", "_revoked")
+
+    def __init__(self, seal, authority, pin):
+        _need(seal is _ISSUANCE_SEAL
+              and type(authority) is LabWriterAuthority
+              and type(pin) is dict
+              and authority._writer_grant is None
+              and not authority._revoked,
+              "LAB_ROOT_GRANT_NOT_ISSUED")
+        self._authority = authority
+        self._epoch = authority._epoch
+        self._pin = pin.copy()
+        self._revoked = False
+
+    @property
+    def epoch(self):
+        return self._epoch
+
+    def revoke(self):
+        self._revoked = True
+
+    async def require_write_current(self):
+        from .service_bootstrap import ProtectedActivation
+        from .grid_writer_lab_bridge import verified_grid_runtime_cohort_pin
+        try:
+            _need(not self._revoked and not self._authority._revoked
+                  and self._authority._writer_grant is self,
+                  "LAB_ROOT_GRANT_REVOKED")
+            protected = self._authority._source._grant
+            _need(type(protected) is ProtectedActivation
+                  and protected.require_current() is True,
+                  "LAB_ROOT_PROTECTED_ACTIVATION_REVOKED")
+            status = await self._authority.check()
+            _need(type(status) is LabAuthorityStatus
+                  and status.epoch == self._epoch
+                  and status.generation == self._authority._generation,
+                  "LAB_ROOT_GRANT_OWNER_ROTATED")
+            current_pin = verified_grid_runtime_cohort_pin(
+                self._authority._source, self._authority._source._manifest,
+                self._authority._source._roots["market_data"])
+            _need(current_pin == self._pin,
+                  "LAB_ROOT_GRID_WRITER_PIN_CHANGED")
+            _need(protected.require_current() is True
+                  and not self._authority._revoked
+                  and not self._revoked,
+                  "LAB_ROOT_GRANT_CHANGED_DURING_CHECK")
+            return self
+        except BaseException:
+            # A failed per-operation check is an irreversible epoch loss.
+            # The Root lifecycle separately stops the child and revokes C/Consul.
+            self.revoke()
+            # A forged or incompletely initialized grant has no original
+            # Root authority to revoke. Never dereference a missing owner
+            # while handling the original fail-closed denial.
+            owner = getattr(self, "_authority", None)
+            if type(owner) is LabWriterAuthority:
+                owner.revoke()
+            raise
+
+
+class LabWriterOperationPermit:
+    """One Root-issued, one-operation, owner-thread typed LAB capability.
+
+    A synchronous local identity gate cannot replace the C SQL fence. B must
+    validate it inside its original SQL transaction both before and after
+    actual SQL, with the C fence still enforcing the durable generation.
+    """
+    __slots__=("_grant","_executor","_thread","_operation_id",
+               "_content_id","_package_identity","_entrypoint","_backend_start",
+               "_owner","_namespace","_generation","_token","_epoch",
+               "_backend_pid","_used","_revoked","_symbol","_start_ms","_fingerprint","_deadline")
+
+    def __init__(self,seal,grant,executor,operation_id,content_id,
+                 package_identity,entrypoint,backend_start, *, symbol=None,
+                 start_ms=None,fingerprint=None):
+        _need(seal is _ISSUANCE_SEAL and type(grant) is LabWriterGrant
+              and grant._authority._writer_grant is grant
+              and not grant._revoked and not grant._authority._revoked
+              and type(executor) is LabOwnerExecutor
+              and executor is grant._authority._executor,
+              "LAB_OPERATION_NOT_ROOT_ISSUED")
+        a=grant._authority
+        self._grant,self._executor=grant,executor
+        self._thread=None
+        self._operation_id,self._content_id=operation_id,content_id
+        self._package_identity,self._entrypoint=package_identity,entrypoint
+        self._backend_start=backend_start
+        self._owner,self._namespace=a._identity.owner,a._identity.namespace
+        self._generation,self._token=a._generation,a._identity.token
+        self._epoch,self._backend_pid=a._epoch,a._backend_pid
+        import time
+        self._symbol,self._start_ms,self._fingerprint=symbol,start_ms,fingerprint
+        self._deadline=time.monotonic()+5.0
+        self._used=False
+        self._revoked=False
+
+    def revoke(self):
+        self._revoked=True
+
+    def require_current(self, *, executor, operation_id, content_id,
+                        package_identity, entrypoint, backend_pid,
+                        backend_start, symbol, start_ms, fingerprint,
+                        owner, namespace, generation, token, epoch):
+        """Synchronous and IO-free check, MUST run in original SQL worker."""
+        from threading import get_ident
+        import time
+        a=self._grant._authority
+        _need(type(self) is LabWriterOperationPermit
+              and time.monotonic() < self._deadline
+              and not self._used and not self._revoked
+              and not self._grant._revoked and not a._revoked
+              and a._writer_grant is self._grant
+              and a._executor is self._executor
+              and executor is self._executor
+              and self._executor.owner_thread_id==get_ident()
+              and not self._executor.poisoned,
+              "LAB_OPERATION_WRONG_OWNER_OR_REVOKED")
+        _need(type(symbol) is str and self._symbol==symbol
+              and type(start_ms) is int and self._start_ms==start_ms
+              and type(fingerprint) is str and self._fingerprint==fingerprint
+              and type(owner) is str and self._owner==owner
+              and type(namespace) is str and self._namespace==namespace
+              and type(generation) is int and self._generation==generation
+              and type(token) is int and self._token==token
+              and type(epoch) is str and self._epoch==epoch
+              and self._operation_id==operation_id
+              and self._content_id==content_id
+              and self._package_identity==package_identity
+              and self._entrypoint==entrypoint
+              and self._backend_pid==backend_pid
+              and self._backend_start==backend_start
+              and type(self._backend_start) is str
+              and bool(self._backend_start)
+              and self._generation==a._generation
+              and self._token==a._identity.token
+              and self._epoch==a._epoch
+              and self._owner==a._identity.owner
+              and self._namespace==a._identity.namespace,
+              "LAB_OPERATION_IDENTITY_CHANGED")
+        return self
+
+    def consume(self, **kwargs):
+        """One-way post-SQL validation; denial leaves C transaction to abort."""
+        self.require_current(**kwargs)
+        self._used=True
+        return self
