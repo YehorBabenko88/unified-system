@@ -19,7 +19,10 @@
     "family_rows": 17,
     "source_discrepancy_is_expected_possible_evolution": true,
     "all_original_83_blobs_preserved_as_sha_references": true,
-    "full_symbol_coverage_proven": false
+    "full_symbol_coverage_proven": false,
+    "drifted_source_symbols_reviewed_as_names_only": true,
+    "drifted_semantic_parity_proven": false,
+    "new_file_ownership_accepted": false
   },
   "features": [
     {
@@ -549,7 +552,9 @@
       "consumers_checked": false,
       "original_tests_confirmed": false,
       "same_input_parity_confirmed": false,
-      "removal_allowed": false
+      "removal_allowed": false,
+      "review_notes": "Original standalone price_bucket symbol removed in newer source; verify canonical Math delegate and all callers, distinct POC tie rules",
+      "unique_parity_gate": "CANONICAL_MATH_PRICE_BUCKET_AND_PAPERENGINE_PARITY"
     },
     {
       "path": "src/meta_analyse/crossing_quality.py",
@@ -731,7 +736,9 @@
       "consumers_checked": false,
       "original_tests_confirmed": false,
       "same_input_parity_confirmed": false,
-      "removal_allowed": false
+      "removal_allowed": false,
+      "review_notes": "Footprint class still present; method bodies/imports changed, verify trade-vs-footprint POC and delta tie policy",
+      "unique_parity_gate": "ORIGINAL_TIE_RULES_PARITY"
     },
     {
       "path": "src/meta_analyse/freshness_style.py",
@@ -969,7 +976,9 @@
       "consumers_checked": false,
       "original_tests_confirmed": false,
       "same_input_parity_confirmed": false,
-      "removal_allowed": false
+      "removal_allowed": false,
+      "review_notes": "LiquiditySignal remains; smaller body, inspect Math-owned delegation for large-level scoring parity",
+      "unique_parity_gate": "LIQUIDITY_SIGNAL_SAME_INPUT"
     },
     {
       "path": "src/meta_analyse/market_clock.py",
@@ -1067,7 +1076,14 @@
       "consumers_checked": false,
       "original_tests_confirmed": false,
       "same_input_parity_confirmed": false,
-      "removal_allowed": false
+      "removal_allowed": false,
+      "review_notes": "Previously unlisted: digest-checked bounded offline fixture replay into Terminan PaperJournal/PaperReplayLedger; contiguous sequence, checkpoint, ack and fill readback",
+      "unique_parity_gate": "TERMINAN_IDEMPOTENT_OFFLINE_PAPER_REPLAY",
+      "source_symbols": [
+        "deliver",
+        "main"
+      ],
+      "target_recommended": "Terminan"
     },
     {
       "path": "src/meta_analyse/ohlcv_research_adapter.py",
@@ -1151,7 +1167,9 @@
       "consumers_checked": false,
       "original_tests_confirmed": false,
       "same_input_parity_confirmed": false,
-      "removal_allowed": false
+      "removal_allowed": false,
+      "review_notes": "Old _summarize removed; new _adapt added; test original aggregation order, Decimal, 20k/100k streaming and unknown side",
+      "unique_parity_gate": "ORDERFLOW_STREAMING_PARITY"
     },
     {
       "path": "src/meta_analyse/orderflow_archive_reader.py",
@@ -1179,7 +1197,9 @@
       "consumers_checked": false,
       "original_tests_confirmed": false,
       "same_input_parity_confirmed": false,
-      "removal_allowed": false
+      "removal_allowed": false,
+      "review_notes": "Trade and FlowMetrics retained but method body/imports changed; test source classification and cumulative delta",
+      "unique_parity_gate": "DELTA_AND_CLASSIFICATION_PARITY"
     },
     {
       "path": "src/meta_analyse/orderflow_view.py",
@@ -1347,7 +1367,14 @@
       "consumers_checked": false,
       "original_tests_confirmed": false,
       "same_input_parity_confirmed": false,
-      "removal_allowed": false
+      "removal_allowed": false,
+      "review_notes": "Previously unlisted: read-only scoped receipts for paper_fills, level_map, checkpoints and archived paper fills transfer with digest/row ordering and stable source ID",
+      "unique_parity_gate": "UNIFIED_CLUSTER_ADMISSION_AND_TERMINAN_PAPER_ARCHIVE",
+      "source_symbols": [
+        "persisted_state_receipt",
+        "archive_paper_fills"
+      ],
+      "target_recommended": "SPLIT_BY_SYMBOL_UNIFIED_AND_TERMINAN"
     },
     {
       "path": "src/meta_analyse/runtime.py",
@@ -1361,7 +1388,9 @@
       "consumers_checked": false,
       "original_tests_confirmed": false,
       "same_input_parity_confirmed": false,
-      "removal_allowed": false
+      "removal_allowed": false,
+      "review_notes": "New DurableSinksRequired and _require_safe_feed_mode; must preserve fail-closed durable sink/feed admission",
+      "unique_parity_gate": "DURABLE_SINKS_SOURCE_MODE_SECURITY"
     },
     {
       "path": "src/meta_analyse/storage_migrations.py",
@@ -1417,7 +1446,9 @@
       "consumers_checked": false,
       "original_tests_confirmed": false,
       "same_input_parity_confirmed": false,
-      "removal_allowed": false
+      "removal_allowed": false,
+      "review_notes": "TapeSnapshot and TapeVelocity still present; confirm acceleration/proximity and gap/stale semantics via original vectors",
+      "unique_parity_gate": "TAPE_VELOCITY_PARITY"
     },
     {
       "path": "src/meta_analyse/terminal_pipeline.py",
@@ -1487,7 +1518,9 @@
       "consumers_checked": false,
       "original_tests_confirmed": false,
       "same_input_parity_confirmed": false,
-      "removal_allowed": false
+      "removal_allowed": false,
+      "review_notes": "WallObservation and WallTracker retained, body changed; verify notional, duplicate wall and expiry semantics",
+      "unique_parity_gate": "WALL_TRACKER_PARITY"
     },
     {
       "path": "src/meta_analyse/write_drain.py",
@@ -1507,8 +1540,8 @@
   "cross_owner_actions": {
     "Grid": "Prove single original provider, market database writer, archives and OI/funding/orderbook/tick source behavior",
     "Math": "Prove original tie policies/tape velocity/wall tracking/Decimal/HTF levels and bounded streaming with differential vectors",
-    "Terminan": "Prove MetaScalp foreign-level ownership, PaperEngine fill rules, charts and UI behavior in real browser",
-    "Unified": "Prove original headless/service/PostgreSQL/installer behavior and scoped rollback",
+    "Terminan": "Prove MetaScalp foreign-level ownership, PaperEngine fill rules, charts and UI behavior in real browser; preserve offline_paper_delivery.deliver source hash, checkpoint/replay/ACK and persisted-state paper receipts",
+    "Unified": "Prove original headless/service/PostgreSQL/installer behavior and scoped rollback; approve scoped read-only persisted_state_receipt cluster access and safe state transfer",
     "H": "Close gaps in two newly unlisted files and eight drifted blobs before parity/retirement",
     "G": "No Meta code removal until each original source symbol has accepted owner, consumer import and differential evidence",
     "J": "Pin approved source blobs and execute native multi-owner E2E, not old CSV by itself"
