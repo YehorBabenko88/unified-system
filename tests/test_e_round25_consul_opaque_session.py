@@ -570,6 +570,77 @@ class OpaqueSessionTests(unittest.TestCase):
             with self.subTest(bad=repr(bad)):
                 asyncio.run(exercise(bad, False))
 
+    def test_control_txn_does_not_return_success_after_lease_loss(self):
+        # The Consul transaction might have committed just before the
+        # locally observed expiry. Such an unknown/stale write is NOT a new
+        # operation permit, and the caller must never retry blindly.
+        from unified_system.consul_authority import CoordinationLost
+
+        async def exercise(loss):
+            state = {
+                "now": 100.0, "held": False, "value": b"",
+                "modify": 41, "kv_reads": 0, "txns": 0,
+            }
+            key = "isolated/round25/leader"
+            target = "isolated/round25/state/probe"
+            def clock():
+                return state["now"]
+
+            def handler(req):
+                path = req.url.path
+                if path == "/v1/session/create":
+                    return httpx.Response(200, json={"ID": OBSERVED})
+                if path == "/v1/kv/" + key:
+                    if req.method == "PUT":
+                        state["held"] = True
+                        state["value"] = req.content
+                        return httpx.Response(200, json=True)
+                    state["kv_reads"] += 1
+                    return httpx.Response(200, json=[{
+                        "Key": key, "Session": OBSERVED if state["held"] else "",
+                        "ModifyIndex": state["modify"],
+                        "Value": base64.b64encode(state["value"]).decode(),
+                    }])
+                if path == "/v1/txn":
+                    self.assertEqual(len(json.loads(req.content)), 3)
+                    state["txns"] += 1
+                    if loss == "deadline":
+                        state["now"] = 115.0
+                    elif loss == "session":
+                        state["held"] = False
+                    elif loss == "modify-index":
+                        state["modify"] += 1
+                    return httpx.Response(200, json={
+                        "Results": [{"KV": {"Key": target, "ModifyIndex": 42}}],
+                    })
+                raise AssertionError("unexpected Consul path")
+
+            client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+            authority = ConsulSessionAuthority(ConsulConfig(
+                ("http://127.0.0.1:8500",), "isolated/round25",
+                isolated_lab=True,
+            ), client=client, clock=clock)
+            async with client:
+                lease = await authority.acquire("owner")
+                if loss:
+                    with self.assertRaises(CoordinationLost):
+                        await authority.write_control(
+                            lease, "probe", {"value": 17})
+                else:
+                    self.assertIsNone(await authority.write_control(
+                        lease, "probe", {"value": 17}))
+                # Exactly one (potentially completed) write transaction;
+                # there is no retry even if the reply proves stale authority.
+                self.assertEqual(state["txns"], 1)
+                self.assertEqual(state["kv_reads"], 3 if loss != "deadline"
+                                 else 2)
+                if loss:
+                    self.assertFalse(await authority.validate(lease))
+
+        for loss in (None, "deadline", "session", "modify-index"):
+            with self.subTest(loss=loss):
+                asyncio.run(exercise(loss))
+
     def test_malformed_server_session_never_calls_kv_acquire(self):
         async def scenario(bad):
             seen = []
