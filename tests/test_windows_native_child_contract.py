@@ -90,6 +90,21 @@ class PortableContractTests(unittest.TestCase):
         self.assertEqual(seen['cwd'], str(self.system))
 
 
+    def test_job_launcher_denies_missing_pins_before_native_token_or_job(self):
+        """Internal direct callers cannot bypass the original LOW pin witness."""
+        from unified_system import runtime_process as runtime
+        for pins, external in (
+                (None, None), ({}, None), ([], None),
+                ({'worker.py': '0' * 64}, [])):
+            with self.subTest(pins=pins, external=external), \
+                    patch.object(runtime.os, 'name', 'nt'), \
+                    patch.object(runtime, '_WindowsNonServiceLabToken',
+                                 side_effect=AssertionError('token must not open')):
+                with self.assertRaisesRegex(ValueError, 'requires pinned artifact inventory'):
+                    runtime._launch_owned_windows_job_process(
+                        ['python.exe'], '/not-used', {},
+                        file_pins=pins, external_file_pins=external)
+
     def test_restricted_windows_launch_uses_detached_original_handle_contract(self):
         """Portable call-contract test of original A Win32 function, no spawn."""
         import ctypes
@@ -651,7 +666,19 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         import socket
         import sys
         from unified_system.runtime_process import ProcessDriver
-        self.tmp = tempfile.TemporaryDirectory(prefix='a-round17-job-')
+        # The hosted runner's user-private TEMP root denies file reads to
+        # the original restricted LOW token (observed Win2022 Py3.12/3.13).
+        # Use a disposable private fixture under the checked-out workspace,
+        # whose access must still pass the original LOW-token SHA preflight.
+        # No ACL, integrity label, privileges, or child-token change.
+        workspace = Path(__file__).resolve().parent.parent
+        fixture_parent = workspace / '.a2-disposable-native-child'
+        fixture_parent.mkdir(exist_ok=True)
+        self.tmp = tempfile.TemporaryDirectory(
+            prefix='a-round33-job-', dir=str(fixture_parent))
+        self.addCleanup(lambda: fixture_parent.rmdir()
+                        if fixture_parent.is_dir() and not any(fixture_parent.iterdir())
+                        else None)
         self.addCleanup(self.tmp.cleanup)
         root = Path(self.tmp.name)
         self.worker = root / 'job_worker.py'
@@ -1256,6 +1283,7 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
             k.CloseHandle(token)
 
     def test_native_createprocess_failure_no_published_child(self):
+        import hashlib
         import os
         from unified_system.runtime_process import _launch_owned_windows_job_process
         not_an_executable = self.worker.with_name('absent-program.exe')
@@ -1264,12 +1292,15 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
                 ValueError, 'suspended process creation denied'):
             _launch_owned_windows_job_process(
                 [str(not_an_executable)], str(self.worker.parent),
-                dict(os.environ))
+                dict(os.environ), file_pins={
+                    'job_worker.py': hashlib.sha256(
+                        self.worker.read_bytes()).hexdigest()})
         self.assertNotIn(self.op, self.driver.children)
         self.assertNotIn(self.op, self.driver._job_launch_bindings)
 
     def test_native_failed_launch_does_not_leak_kernel_handles(self):
         import ctypes
+        import hashlib
         import os
         from ctypes import wintypes as w
         from unified_system.runtime_process import _launch_owned_windows_job_process
@@ -1285,7 +1316,9 @@ class WindowsNativeSuspendedLaunchTests(unittest.TestCase):
         for _ in range(4):
             with self.assertRaises(ValueError):
                 _launch_owned_windows_job_process(
-                    [str(missing)], str(self.worker.parent), dict(os.environ))
+                    [str(missing)], str(self.worker.parent), dict(os.environ),
+                    file_pins={'job_worker.py': hashlib.sha256(
+                        self.worker.read_bytes()).hexdigest()})
         self.assertTrue(k.GetProcessHandleCount(k.GetCurrentProcess(),
                                                 ctypes.byref(count)))
         self.assertLessEqual(int(count.value), initial + 2,
