@@ -1051,7 +1051,8 @@ class NativeCRecoveryTests(unittest.TestCase):
         # These fixtures are INSERTed by the disposable PG owner only;
         # no alternate market writer or Root authority is created.
         from unified_system.lab_pg_checkpoint import (
-            clear_verified_lab_pending, read_lab_pending)
+            clear_verified_lab_pending, read_lab_pending,
+            verify_existing_lab_checkpoint)
         stream="bybit:BTCUSDT:1m"
         ms=300000
         fp,cid="3"*64,"4"*64
@@ -1080,6 +1081,11 @@ class NativeCRecoveryTests(unittest.TestCase):
                 backend_pid=self.old["backend_pid"],stream_id=stream)
         self.assertEqual(read_lab_pending(
             self.pg,stream_id=stream)["fingerprint"],fp)
+        self.assertEqual(verify_existing_lab_checkpoint(
+            self.pg,identity=identity,generation=1,
+            backend_pid=self.old["backend_pid"],stream_id=stream,
+            symbol="BTCUSDT",start_ms=ms,fingerprint=fp,
+            content_id=cid)["state"],"UNRESOLVED")
         # Namespace is also part of ownership, not merely decoration.
         self.pg.sql(
             "UPDATE public.lab_stream_checkpoint SET"
@@ -1092,12 +1098,22 @@ class NativeCRecoveryTests(unittest.TestCase):
                 backend_pid=self.old["backend_pid"],stream_id=stream)
         self.assertEqual(read_lab_pending(
             self.pg,stream_id=stream)["content_id"],cid)
+        self.assertEqual(verify_existing_lab_checkpoint(
+            self.pg,identity=identity,generation=1,
+            backend_pid=self.old["backend_pid"],stream_id=stream,
+            symbol="BTCUSDT",start_ms=ms,fingerprint=fp,
+            content_id=cid)["state"],"UNRESOLVED")
         # Exact owner AND namespace may resolve the immutable checkpoint,
         # but this remains a LAB-only local SQL acknowledgement.
         self.pg.sql(
             "UPDATE public.lab_stream_checkpoint"
             " SET namespace='unified/lab'"
             f" WHERE stream_id='{stream}'")
+        self.assertEqual(verify_existing_lab_checkpoint(
+            self.pg,identity=identity,generation=1,
+            backend_pid=self.old["backend_pid"],stream_id=stream,
+            symbol="BTCUSDT",start_ms=ms,fingerprint=fp,
+            content_id=cid)["state"],"EXACT_ALREADY_ACKNOWLEDGED")
         self.assertTrue(clear_verified_lab_pending(
             self.pg,identity=identity,generation=1,
             backend_pid=self.old["backend_pid"],stream_id=stream))
