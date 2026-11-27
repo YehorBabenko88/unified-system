@@ -1045,6 +1045,63 @@ class NativeCRecoveryTests(unittest.TestCase):
             datetime.fromisoformat(
                 self.old["backend_start"].replace(" ","T")))
         self.assertEqual(receipt["backend_pid"],self.old["backend_pid"])
+        # A matching checkpoint row from another owner must not resolve
+        # our original pending write even when all four immutable fields
+        # and monotonically bounded generation/token happen to match.
+        # These fixtures are INSERTed by the disposable PG owner only;
+        # no alternate market writer or Root authority is created.
+        from unified_system.lab_pg_checkpoint import (
+            clear_verified_lab_pending, read_lab_pending)
+        stream="bybit:BTCUSDT:1m"
+        ms=300000
+        fp,cid="3"*64,"4"*64
+        self.pg.sql(
+            "INSERT INTO public.provenance_minutes("
+            "fingerprint,content_id,symbol,start_ms,record)"
+            f" VALUES ('{fp}','{cid}','BTCUSDT',{ms},"
+            f"'{{\"dataset_fingerprint\":\"{fp}\"}}'::jsonb)")
+        self.pg.sql(
+            "INSERT INTO public.lab_stream_pending("
+            "stream_id,symbol,start_ms,fingerprint,content_id,"
+            "owner,namespace,generation,token,source_sha256,schema_sha256)"
+            f" VALUES ('{stream}','BTCUSDT',{ms},'{fp}','{cid}',"
+            "'unified-system','unified/lab',1,100,"
+            f"'{self.source}','{self.schema}')")
+        self.pg.sql(
+            "INSERT INTO public.lab_stream_checkpoint("
+            "stream_id,symbol,cursor_value,source_start_ms,"
+            "fingerprint,content_id,owner,namespace,generation,token)"
+            f" VALUES ('{stream}','BTCUSDT',{ms},{ms},"
+            f"'{fp}','{cid}','foreign-owner','unified/lab',1,100)")
+        with self.assertRaisesRegex(
+                LabAdmissionRejected,"LAB_PENDING_CLEAR_UNVERIFIED"):
+            clear_verified_lab_pending(
+                self.pg,identity=identity,generation=1,
+                backend_pid=self.old["backend_pid"],stream_id=stream)
+        self.assertEqual(read_lab_pending(
+            self.pg,stream_id=stream)["fingerprint"],fp)
+        # Namespace is also part of ownership, not merely decoration.
+        self.pg.sql(
+            "UPDATE public.lab_stream_checkpoint SET"
+            " owner='unified-system',namespace='foreign/lab'"
+            f" WHERE stream_id='{stream}'")
+        with self.assertRaisesRegex(
+                LabAdmissionRejected,"LAB_PENDING_CLEAR_UNVERIFIED"):
+            clear_verified_lab_pending(
+                self.pg,identity=identity,generation=1,
+                backend_pid=self.old["backend_pid"],stream_id=stream)
+        self.assertEqual(read_lab_pending(
+            self.pg,stream_id=stream)["content_id"],cid)
+        # Exact owner AND namespace may resolve the immutable checkpoint,
+        # but this remains a LAB-only local SQL acknowledgement.
+        self.pg.sql(
+            "UPDATE public.lab_stream_checkpoint"
+            " SET namespace='unified/lab'"
+            f" WHERE stream_id='{stream}'")
+        self.assertTrue(clear_verified_lab_pending(
+            self.pg,identity=identity,generation=1,
+            backend_pid=self.old["backend_pid"],stream_id=stream))
+        self.assertIsNone(read_lab_pending(self.pg,stream_id=stream))
         self._recover()
         with self.assertRaises(LabAdmissionRejected):
             revalidate_lab_fence(
