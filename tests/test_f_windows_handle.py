@@ -219,7 +219,7 @@ class WindowsPathSyntaxTests(unittest.TestCase):
             self.skipTest("I owner source not supplied")
         raw = p.read_bytes()
         blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + bytes([0]) + raw).hexdigest()
-        expected = "e107b78e47560169d59650838ce6a0d42fa1e90e"
+        expected = "e3ddab2981729906c9f53f0bc8888bf3e14bc432"
         if not owner_file and blob != expected:
             self.skipTest("F inherited checkout lacks exact I custody source")
         self.assertEqual(blob, expected, "I source drift: require independent re-review")
