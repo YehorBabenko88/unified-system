@@ -436,7 +436,15 @@ class NativeCRecoveryTests(unittest.TestCase):
                                 frame = server_buffer[:frame_end]
                                 server_buffer = server_buffer[frame_end:]
                                 if commit_phase:
-                                    reply_discarded.set()
+                                    # An arbitrary packet drop is NOT proof
+                                    # that PostgreSQL executed COMMIT. Demand
+                                    # the exact PG v3 CommandComplete tag.
+                                    if (frame[:1] == b"C" and
+                                            frame[5:] == b"COMMIT\x00"):
+                                        reply_discarded.set()
+                                    elif frame[:1] == b"E":
+                                        raise RuntimeError(
+                                            "LAB_PROXY_COMMIT_ERROR_RESPONSE")
                                 else:
                                     front.sendall(frame)
             except (OSError, RuntimeError) as exc:
