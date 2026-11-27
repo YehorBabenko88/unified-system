@@ -1022,6 +1022,12 @@ def _launch_owned_windows_job_process(argv, cwd, env, *, file_pins=None,
     """
     if os.name != 'nt' or type(argv) is not list or not argv:
         raise ValueError('owned Windows launch unavailable')
+    # Even private callers must not bypass the original LOW-token artifact
+    # witness.  A caller-provided executable hash alone does not prove that
+    # the restricted child can read its SHA-pinned script and dependencies.
+    if (type(file_pins) is not dict or not file_pins
+            or type(external_file_pins) not in (dict, type(None))):
+        raise ValueError('owned Windows Job requires pinned artifact inventory')
     from ctypes import wintypes as w
 
     class StartupInfo(ctypes.Structure):
@@ -1072,9 +1078,8 @@ def _launch_owned_windows_job_process(argv, cwd, env, *, file_pins=None,
     # No unrestricted fallback when restricted token creation/SCM probe fails.
     security_token = _WindowsNonServiceLabToken()
     try:
-        if file_pins is not None:
-            security_token.verify_restricted_pinned_read(
-                cwd, file_pins, external_file_pins or {})
+        security_token.verify_restricted_pinned_read(
+            cwd, file_pins, external_file_pins or {})
         job = OwnedWindowsJob()
     except BaseException:
         security_token.close()
