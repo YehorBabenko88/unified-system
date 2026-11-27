@@ -138,10 +138,12 @@ class _NativeReceiptCustody:
    need(0<len(self.paths)<=40064)
    for key,path in self.paths.items():
     target=_safe(path)
-    # SQLite service.sqlite must remain writable while its journal is
-    # appended. Share READ|WRITE but NEVER DELETE; the same anchored
-    # native FileId must survive the entire receipt/SCM transaction.
-    h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,0x00200000,None)
+    # Directory handles REQUIRE FILE_FLAG_BACKUP_SEMANTICS (0x02000000).
+    # Reparse processing is disabled for both files and directories; never
+    # share DELETE. Preserve SQLite journal WRITE sharing through append.
+    is_file=key.startswith('file:') or key=='ownership:service.sqlite'
+    flags=0x00200000 if is_file else 0x00200000|0x02000000
+    h=k.CreateFileW(str(target),0x80,0x1|0x2,None,3,flags,None)
     need(h not in (None,0,ctypes.c_void_p(-1).value))
     self.handles[key]=h
    self.snapshot=self._read()
